@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <title>Registro de Producto</title>
+    <link rel="icon" type="image/x-icon" href="res/Icono-AIO-positivo.ico">
+</head>
+<body>
+    <div id="contenedor">
+        <header>
+            <div>
+                <h1>Ingresar neumático</h1>
+            </div>
+        </header>
+        <div class="foto">
+            <img src="res/AIO Positivo.png" alt="LOGO AIO" class="Logo">
+        </div>
+        <div class="form">
+            <form method="POST" action="validacion.php">
+                <div class="contenedorInput">
+                    <input class="input" id="idNeumatico" name="idNeumatico" type="text" placeholder="ID de neumático (12 dígitos)"
+                        inputmode="numeric" pattern="\d{12}" title="Debe tener exactamente 12 dígitos" required>
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="upc" name="upc" type="text" placeholder="UPC (13 dígitos)"
+                        inputmode="numeric" pattern="\d{13}" title="Debe tener exactamente 13 dígitos" required>
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="marca" name="marca" type="text" placeholder="Marca" required>
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="mod" name="mod" type="text" placeholder="Modelo" required>
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="tmano" name="tmano" type="text" placeholder="Tamaño (Ej. 245/60R16)" pattern="\d{3}/\d{2}R\d{2}" title="Formato: 245/60R16" required>
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="tipo" name="tipo" type="text" placeholder="Tipo (Ej. AT, HT, etc.)" maxlength="2" pattern="[a-zA-Z]{2}" title="Debe tener exactamente 2 letras" required>
+                </div>
+                <div class="contenedorInput">
+                    <input class="input-precio" id="precio" name="precio" type="number" placeholder="Precio ($UYU)" step="0.01" min="0" required>
+                </div>
+                <div class="contenedorBoton">
+                    <button type="submit" id="submit">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <title>Cliente Sign-Up</title>
+    <link rel="icon" type="image/x-icon" href="res/Icono-AIO-positivo.ico">
+</head>
+
+<body>
+    <div id="contenedor">
+        <header>
+            <div>
+                <h1>Registrar Cliente AIO</h1>
+            </div>
+        </header>
+        <div class="foto">
+            <img src="res/AIO Positivo.png" alt="LOGO AIO" class="Logo">
+        </div>
+        <div class="form">
+            <form method="POST" action="validacion.php">
+
+                <div class="contenedorInput">
+                    <input class="input" id="email" name="email" type="email" placeholder="Correo">
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="nom" name="nom" type="text" placeholder="Nombre">
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="ape" name="ape" type="text" placeholder="Apellido">
+                </div>
+                <div class="contenedorInput">
+                    <input class="prefijo" value="(+598)" readonly>
+                    <input class="input-tel" id="tel" name="tel" type="+number" placeholder="Telefono" 
+                        inputmode="numeric" min="0" maxlength="8">
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="pswd" name="pswd" type="password" placeholder="Contraseña">
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="pswdConf" name="pswdConf" type="password" placeholder="Confirmar contraseña">
+                </div>
+                    
+                <div class="contenedorBoton">
+                    <button type="submit" id="submit">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
