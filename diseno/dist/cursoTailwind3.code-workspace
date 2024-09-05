@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../cursoTailwind3"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "tailwind"
+	}
+}
