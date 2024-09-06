@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <title>Reserva de Parking</title>
+    <link rel="icon" type="image/x-icon" href="res/Icono-AIO-positivo.ico">
+</head>
+
+<body>
+    <div id="contenedor">
+        <header>
+            <div>
+                <h1>Reservar AIO Parking</h1>
+            </div>
+        </header>
+        <div class="foto">
+            <img src="res/AIO Positivo.png" alt="LOGO AIO" class="Logo">
+        </div>
+        <div class="form">
+            <form method="POST" action="validacion.php">
+
+                <div class="contenedorInput">
+                    <input class="input" id="nroPlaza" name="nroPlaza" type="number" placeholder="Nro. Plaza"
+                        inputmode="numeric" min="0" maxlength="3">
+                </div>                    
+                <div class="contenedorInput">
+                    <input class="input" id="fechaInicio" name="fechaInicio" type="datetime-local" placeholder="Fecha de inicio"></input>
+                </div>
+                <div class="contenedorInput">
+                    <input class="input" id="fechaFin" name="fechaFin" type="datetime-local" placeholder="Fecha de finalización"></input>
+                </div>
+                <div class="contenedorInput">
+                    <input class="input-moto" id="tipoPlaza" name="tipoPlaza" type="checkbox">
+                    <input class="tipoPlaza" value="¿Moto?" readonly>
+                </div>
+                <div class="contenedorInput">
+                    <input class="input-plazo" id="lrgPlazo" name="lrgPlazo" type="checkbox">
+                    <input class="lrgPlazo" value="¿Sólo una vez?" readonly>
+                </div>
+                <div class="contenedorBoton">
+                    <button type="submit" id="submit">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
