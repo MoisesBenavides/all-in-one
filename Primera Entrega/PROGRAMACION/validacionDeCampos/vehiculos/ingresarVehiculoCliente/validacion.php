@@ -31,3 +31,4 @@ if (isset($_POST["matric"], $_POST["marca"], $_POST["mod"], $_POST["email"])
         echo "La marca ingresada es inválida";
 } else
     echo "Debe llenar todos los campos.";
+?>
