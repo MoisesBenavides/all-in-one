@@ -138,5 +138,4 @@ CREATE TABLE detalle_orden_producto (
     PRIMARY KEY (id_producto, id_orden),
     FOREIGN KEY (id_producto) REFERENCES producto(id),
     FOREIGN KEY (id_orden) REFERENCES orden(id)
-)
-
+);
