@@ -26,29 +26,33 @@ CREATE TABLE tiene (
     FOREIGN KEY (id_cliente) REFERENCES cliente(id),
     FOREIGN KEY (matricula) REFERENCES vehiculo(matricula)
 ), 
--- Neumatico
-CREATE TABLE neumatico (
+-- Producto
+CREATE TABLE producto (
     id_producto INT NOT NULL,
     upc VARCHAR(13) NOT NULL UNIQUE,
     precio DECIMAL(10,2) NOT NULL,
     marca VARCHAR(23) NOT NULL,
     fecha_creacion DATETIME NOT NULL,
     stock INT NOT NULL,
+    PRIMARY KEY (id)
+), 
+-- Neumatico
+CREATE TABLE neumatico (
+    id_producto INT NOT NULL,
     tamano VARCHAR(11) NOT NULL,
     modelo VARCHAR(23) NOT NULL,
     tipo CHAR(2) NOT NULL,
-    PRIMARY KEY (id_producto)
+    PRIMARY KEY (id_producto),
+    FOREIGN KEY (id_producto) REFERENCES producto(id)
+), 
+    
 ), 
 -- Otro_producto
 CREATE TABLE otro_producto (
     id_producto INT NOT NULL,
-    upc VARCHAR(13) NOT NULL UNIQUE,
-    precio DECIMAL(10,2) NOT NULL,
-    marca VARCHAR(23) NOT NULL,
-    fecha_creacion DATETIME NOT NULL,
-    stock INT NOT NULL,
     nombre VARCHAR(23),
-    PRIMARY KEY (id_producto)
+    PRIMARY KEY (id_producto),
+    FOREIGN KEY (id_producto) REFERENCES producto(id)
 ), 
 -- Transaccion
 CREATE TABLE transaccion (
@@ -57,35 +61,36 @@ CREATE TABLE transaccion (
     tipo ENUM('ingreso', 'egreso'),
     fecha DATETIME NOT NULL,
     PRIMARY KEY (id_producto),
---    FOREIGN KEY (id_producto) REFERENCES producto(id)
+    FOREIGN KEY (id_producto) REFERENCES producto(id)
 ), 
--- Taller
-CREATE TABLE taller (
-    id_servicio INT NOT NULL,
+-- Servicio
+CREATE TABLE servicio (
+    id INT NOT NULL,
     matricula VARCHAR(8) NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
     fecha_inicio DATETIME NOT NULL,
     fecha_final DATETIME NOT NULL,
     estado ENUM('pendiente', 'realizado', 'cancelado'),
+    PRIMARY KEY (id),
+    FOREIGN KEY (matricula) REFERENCES vehiculo(matricula)
+), 
+-- Taller
+CREATE TABLE taller (
+    id_servicio INT NOT NULL,
     tipo VARCHAR(3) NOT NULL,
     descripcion TEXT NOT NULL,
     tiempo_estimado INT NOT NULL,
     diagnostico TEXT NULL,
     PRIMARY KEY (id_servicio),
-    FOREIGN KEY (matricula) REFERENCES vehiculo(matricula)
+    FOREIGN KEY (id_servicio) REFERENCES servicio(id)
 ), 
 -- Parking
 CREATE TABLE parking (
     id_servicio INT NOT NULL,
-    matricula VARCHAR(8) NOT NULL,
-    precio DECIMAL(10,2) NOT NULL,
-    fecha_inicio DATETIME NOT NULL,
-    fecha_final DATETIME NOT NULL,
-    estado ENUM('pendiente', 'realizado', 'cancelado'),
     largo_plazo BOOLEAN NOT NULL,
     tipo_plazo ENUM('auto', 'moto'),
     PRIMARY KEY (id_servicio),
-    FOREIGN KEY (matricula) REFERENCES vehiculo(matricula)
+    FOREIGN KEY (id_servicio) REFERENCES servicio(id)
 ), 
 -- Numero de plaza
 CREATE TABLE numero_plaza (
