@@ -28,7 +28,7 @@ CREATE TABLE tiene (
 ), 
 -- Producto
 CREATE TABLE producto (
-    id_producto INT NOT NULL,
+    id INT NOT NULL,
     upc VARCHAR(13) NOT NULL UNIQUE,
     precio DECIMAL(10,2) NOT NULL,
     marca VARCHAR(23) NOT NULL,
@@ -120,14 +120,14 @@ CREATE TABLE orden (
     fecha_orden DATETIME NOT NULL,
     estado_pago ENUM('no pago', 'pago', 'cancelado') NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id)
 ), 
 -- Detalle de orden de servicio
 CREATE TABLE detalle_orden_servicio (
     id_servicio INT NOT NULL,
     id_orden INT NOT NULL,
     PRIMARY KEY (id_servicio),
---    FOREIGN KEY (id_servicio) REFERENCES servicio(id),
+    FOREIGN KEY (id_servicio) REFERENCES servicio(id),
     FOREIGN KEY (id_orden) REFERENCES orden(id)
 ), 
 -- Detalle de orden de producto
@@ -136,7 +136,7 @@ CREATE TABLE detalle_orden_producto (
     id_orden INT NOT NULL,
     cantidad INT NOT NULL,
     PRIMARY KEY (id_producto, id_orden),
---    FOREIGN KEY (id_producto) REFERENCES producto(id),
+    FOREIGN KEY (id_producto) REFERENCES producto(id),
     FOREIGN KEY (id_orden) REFERENCES orden(id)
 )
 
