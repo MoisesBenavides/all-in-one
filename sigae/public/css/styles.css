@@ -574,6 +574,10 @@ video {
   top: 1.5rem;
 }
 
+.top-2 {
+  top: 0.5rem;
+}
+
 .float-left {
   float: left;
 }
@@ -655,6 +659,10 @@ video {
   height: 100vh;
 }
 
+.h-\[768px\] {
+  height: 768px;
+}
+
 .w-\[1336px\] {
   width: 1336px;
 }
@@ -697,6 +705,10 @@ video {
 
 .w-\[92px\] {
   width: 92px;
+}
+
+.w-\[1366px\] {
+  width: 1366px;
 }
 
 .origin-left {
@@ -849,6 +861,10 @@ video {
 
 .pt-\[45px\] {
   padding-top: 45px;
+}
+
+.pt-3 {
+  padding-top: 0.75rem;
 }
 
 .text-left {
