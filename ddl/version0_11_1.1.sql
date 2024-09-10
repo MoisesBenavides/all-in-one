@@ -8,7 +8,8 @@ CREATE TABLE cliente (
     apellido VARCHAR(23) NOT NULL,
     telefono INT NOT NULL,
     PRIMARY KEY (id)
-), 
+);
+
 -- Vehiculo
 CREATE TABLE vehiculo (
     matricula VARCHAR(8) NOT NULL,
@@ -17,7 +18,8 @@ CREATE TABLE vehiculo (
     tipo ENUM('auto', 'moto', 'camioneta', 'camion', 'utilitario') NOT NULL,
     color VARCHAR(6) NOT NULL,
     PRIMARY KEY (matricula)
-), 
+);
+
 -- tiene
 CREATE TABLE tiene (
     id_cliente INT NOT NULL,
@@ -25,7 +27,8 @@ CREATE TABLE tiene (
     PRIMARY KEY (id_cliente, matricula),
     FOREIGN KEY (id_cliente) REFERENCES cliente(id),
     FOREIGN KEY (matricula) REFERENCES vehiculo(matricula)
-), 
+);
+
 -- Producto
 CREATE TABLE producto (
     id INT NOT NULL,
@@ -35,7 +38,8 @@ CREATE TABLE producto (
     fecha_creacion DATETIME NOT NULL,
     stock INT NOT NULL,
     PRIMARY KEY (id)
-), 
+);
+
 -- Neumatico
 CREATE TABLE neumatico (
     id_producto INT NOT NULL,
@@ -44,16 +48,16 @@ CREATE TABLE neumatico (
     tipo CHAR(2) NOT NULL,
     PRIMARY KEY (id_producto),
     FOREIGN KEY (id_producto) REFERENCES producto(id)
-), 
-    
-), 
+);
+
 -- Otro_producto
 CREATE TABLE otro_producto (
     id_producto INT NOT NULL,
     nombre VARCHAR(23),
     PRIMARY KEY (id_producto),
     FOREIGN KEY (id_producto) REFERENCES producto(id)
-), 
+);
+
 -- Transaccion
 CREATE TABLE transaccion (
     id_producto INT NOT NULL,
@@ -62,7 +66,8 @@ CREATE TABLE transaccion (
     fecha DATETIME NOT NULL,
     PRIMARY KEY (id_producto),
     FOREIGN KEY (id_producto) REFERENCES producto(id)
-), 
+);
+
 -- Servicio
 CREATE TABLE servicio (
     id INT NOT NULL,
@@ -73,7 +78,8 @@ CREATE TABLE servicio (
     estado ENUM('pendiente', 'realizado', 'cancelado'),
     PRIMARY KEY (id),
     FOREIGN KEY (matricula) REFERENCES vehiculo(matricula)
-), 
+);
+
 -- Taller
 CREATE TABLE taller (
     id_servicio INT NOT NULL,
@@ -83,7 +89,8 @@ CREATE TABLE taller (
     diagnostico TEXT NULL,
     PRIMARY KEY (id_servicio),
     FOREIGN KEY (id_servicio) REFERENCES servicio(id)
-), 
+);
+
 -- Parking
 CREATE TABLE parking (
     id_servicio INT NOT NULL,
@@ -91,19 +98,22 @@ CREATE TABLE parking (
     tipo_plazo ENUM('auto', 'moto'),
     PRIMARY KEY (id_servicio),
     FOREIGN KEY (id_servicio) REFERENCES servicio(id)
-), 
+);
+
 -- Numero de plaza
 CREATE TABLE numero_plaza (
     numero_plaza INT NOT NULL,
     id_servicio INT NOT NULL,
     PRIMARY KEY (numero_plaza, id_servicio),
     FOREIGN KEY (id_servicio) REFERENCES parking(id_servicio)
-), 
+);
+
 -- Ejecutivo
 CREATE TABLE ejecutivo (
     id_empleado INT NOT NULL,
     PRIMARY KEY (id_empleado)
-), 
+);
+
 -- realiza
 CREATE TABLE realiza (
     id_empleado INT NOT NULL,
@@ -111,7 +121,8 @@ CREATE TABLE realiza (
     PRIMARY KEY (id_empleado, id_servicio),
     FOREIGN KEY (id_empleado) REFERENCES ejecutivo(id_empleado),
     FOREIGN KEY (id_servicio) REFERENCES taller(id_servicio)
-), 
+);
+
 -- Orden
 CREATE TABLE orden (
     id INT NOT NULL,
@@ -121,7 +132,8 @@ CREATE TABLE orden (
     estado_pago ENUM('no pago', 'pago', 'cancelado') NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_cliente) REFERENCES cliente(id)
-), 
+);
+
 -- Detalle de orden de servicio
 CREATE TABLE detalle_orden_servicio (
     id_servicio INT NOT NULL,
@@ -129,7 +141,8 @@ CREATE TABLE detalle_orden_servicio (
     PRIMARY KEY (id_servicio),
     FOREIGN KEY (id_servicio) REFERENCES servicio(id),
     FOREIGN KEY (id_orden) REFERENCES orden(id)
-), 
+);
+
 -- Detalle de orden de producto
 CREATE TABLE detalle_orden_producto (
     id_producto INT NOT NULL,
