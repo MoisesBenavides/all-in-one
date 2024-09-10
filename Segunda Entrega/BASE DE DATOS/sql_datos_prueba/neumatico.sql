@@ -1,3 +1,4 @@
+--700 NEUMATICOS
 insert into neumatico (id_producto, tamano, modelo, tipo) values (1, '259/74-37-51-a5', 'SolsticeSailor', 'at');
 insert into neumatico (id_producto, tamano, modelo, tipo) values (2, '864/12-77-65-s', 'RallyRacer', 'mt');
 insert into neumatico (id_producto, tamano, modelo, tipo) values (3, '46/40-63-92-j', 'ValleyVoyager', 'at');

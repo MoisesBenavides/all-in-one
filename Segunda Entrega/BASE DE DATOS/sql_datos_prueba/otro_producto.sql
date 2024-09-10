@@ -1,3 +1,4 @@
+--300 OTROS_PRODUCTOS
 insert into otro_producto (id_producto, nombre) values (701, 'Aceite Mineral 1L');
 insert into otro_producto (id_producto, nombre) values (702, 'Filtro de Aceite');
 insert into otro_producto (id_producto, nombre) values (703, 'Bujías de Encendido');

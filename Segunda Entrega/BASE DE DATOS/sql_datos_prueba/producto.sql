@@ -1,3 +1,4 @@
+-- 1000 PRODUCTOS
 insert into producto (id, upc, precio, marca, fecha_creacion, stock) values (1, '914617498857', 75669.29, 'Michelin', '2024-05-19 02:57:07', 1950);
 insert into producto (id, upc, precio, marca, fecha_creacion, stock) values (2, '262877280916', 76589.55, 'Bridgestone', '2024-06-20 09:25:49', 3508);
 insert into producto (id, upc, precio, marca, fecha_creacion, stock) values (3, '894887177306', 56547.39, 'Pirelli', '2024-06-19 13:38:27', 3158);
