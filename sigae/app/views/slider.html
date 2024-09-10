@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrusel con Tailwind CSS y JavaScript</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="relative w-full max-w-3xl mx-auto">
+        <div id="carousel" class="overflow-hidden rounded-lg shadow-lg">
+            <div id="slide-container" class="flex transition-transform duration-300 ease-in-out">
+                <img src="/api/placeholder/800/400" alt="Slide 1" class="w-full h-auto flex-shrink-0">
+                <img src="/api/placeholder/800/400" alt="Slide 2" class="w-full h-auto flex-shrink-0">
+                <img src="/api/placeholder/800/400" alt="Slide 3" class="w-full h-auto flex-shrink-0">
+            </div>
+        </div>
+        <button id="prevBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-r-lg hover:bg-opacity-75 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+        <button id="nextBtn" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-l-lg hover:bg-opacity-75 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+        <div id="indicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        </div>
+    </div>
+
+    <script>
+        const carousel = document.getElementById('carousel');
+        const slideContainer = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicators = document.getElementById('indicators');
+
+        let currentIndex = 0;
+        const slides = slideContainer.children;
+        const totalSlides = slides.length;
+
+        // Crear indicadores
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('w-3', 'h-3', 'rounded-full', 'bg-gray-400');
+            dot.addEventListener('click', () => goToSlide(i));
+            indicators.appendChild(dot);
+        }
+
+        function updateCarousel() {
+            slideContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+            updateIndicators();
+        }
+
+        function updateIndicators() {
+            const dots = indicators.children;
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].classList.toggle('bg-white', i === currentIndex);
+                dots[i].classList.toggle('bg-gray-400', i !== currentIndex);
+            }
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Inicializar el carrusel
+        updateCarousel();
+    </script>
+</body>
+</html>

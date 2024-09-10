@@ -13,3 +13,14 @@ module.exports = {
   },
   plugins: [],
 }
+module.exports = {
+  content: ['../app/views/*.html'],
+  media: false,
+  theme: {
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};

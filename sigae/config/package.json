@@ -12,5 +12,10 @@
   "description": "",
   "devDependencies": {
     "tailwindcss": "^3.4.10"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.45",
+    "swiper": "^11.1.12"
   }
 }
