@@ -1,41 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../../public/css/styles.css">
+    <title>AIO Talleres</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<header>
-  <div class="flex flex-col ">
-    <div class="w-screen h-[118px] bg-neutral-200 flex-col justify-center items-center flex">
-      <div class=" h-[118px] p-2.5 justify-center items-center gap-[117px] inline-flex">
-        <div class="w-[166px] h-[78px] justify-center items-center flex">
-          <img class="w-[166px] h-[78px]" src="../../public/img/AIO Positivo.png" />
+<body class="bg-gray-100">
+    <header class="bg-neutral-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="w-40 h-auto mb-4 md:mb-0">
+                    <img class="w-full h-auto" src="../../public/img/AIO Positivo.png" alt="AIO Logo" />
+                </div>
+                <nav class="flex flex-wrap justify-center md:justify-end space-x-4">
+                    <a href="#" class="text-black text-lg md:text-xl font-bold font-['Teachers']">Servicios Mecánicos</a>
+                    <a href="#" class="text-black text-lg md:text-xl font-bold font-['Teachers']">Parking</a>
+                    <a href="#" class="text-black text-lg md:text-xl font-bold font-['Teachers']">Mis Reservas</a>
+                    <a href="#" class="text-black text-lg md:text-xl font-bold font-['Teachers']">Productos Destacados</a>
+                    <a href="#" class="text-black text-lg md:text-xl font-bold font-['Teachers']">FAQ</a>
+                </nav>
+                <img class="w-10 h-10 mt-4 md:mt-0" src="../../public/img/user.png" alt="User">
+            </div>
         </div>
-        <nav class="h-[29px] px-5 justify-around items-center flex">
-          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">Servicios Mecanicos</a>
-          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">Parking</a>
-          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">Mis Reservas</a>
-          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">Productos Destacados</a>
-          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">FAQ</a>
-        </nav>
-        <img class="w-[45px] h-[45px]" src="../../public/img/user.png">
-      </div>
-     
-    </div>
-  </div>
-</header>
+    </header>
 
-<body>
-    <div id="overview" class="flex flex-col justify-center">
-    <div name="containerDentro" class="flex flex-col items-center justify-evenly">
-        <div class="w-screen ">
-            <div id="carousel" class="overflow-hidden rounded-lg " style="z-index: 1;">
-                <div id="slide-container" class="h-[700px] flex  transition-transform duration-300 ease-in-out">
-                    <img src="../../public/img/ImagenNuevaSlider.jpg"  alt="Slide 1" class="h-[700px] w-full flex-shrink-0">
-                    <img src="../../public/img/FotoSlider2.png"  alt="Slide 2" class="w-full  flex-shrink-0">
-                    <img src="../../public/img/FotoSlider3.png"  alt="Slide 3" class="w-full  flex-shrink-0">
+    <main class="container mx-auto px-4 py-8">
+        <section id="carousel" class="relative mb-12">
+            <div class="overflow-hidden rounded-lg">
+                <div id="slide-container" class="relative w-full h-64 md:h-96 lg:h-[700px] overflow-hidden">
+                    <div class="slide absolute w-full h-full">
+                        <img src="../../public/img/ImagenNuevaSlider3.jpg" class="w-full h-full object-cover" alt="Slide 1">
+                    </div>
+                    <div class="slide absolute w-full h-full">
+                        <img src="../../public/img/ImagenNuevaSlider2.jpg" class="w-full h-full object-cover" alt="Slide 2">
+                    </div>
+                    <div class="slide absolute w-full h-full">
+                        <img src="../../public/img/ImagenNuevaSlider4.jpg" class="w-full h-full object-cover" alt="Slide 3">
+                    </div>
                 </div>
             </div>
             <button id="prevBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-r-lg hover:bg-opacity-75 transition-all">
@@ -48,80 +50,77 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
             </button>
-            <div id="indicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            <div id="indicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"></div>
+        </section>
+
+        <section id="parking" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
+            <div class="flex flex-col items-center text-center">
+                <img class="w-48 md:w-64 lg:w-80 mb-6" src="../../public/img/AIO Parking positivo.png" alt="AIO Parking" />
+                <p class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold font-['Teachers'] mb-6">AIO PARKING es nuestro servicio de parking inteligente.<br/>Clickea debajo para reservar una plaza</p>
+                <a href="#" class="bg-[#1f3de0] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold font-['Teachers'] py-3 px-6 rounded-[10px]">AIO PARKING</a>
             </div>
-         </div>
-         <div name="content2" class="justify-around px-5 pt-3">
-          <div class=" flex-col justify-center items-center flex">
-            <div name="Parking" class="mb-10 self-stretch h-[574px] px-[66px] pt-[116px] pb-[109px] bg-neutral-50 rounded-[21px] border border-black flex-col justify-center items-center gap-[35px] flex" style="z-index: 2;">
-                <div class="w-[402px] h-[204px] justify-center items-center inline-flex">
-              <img class="w-[402px] h-[204px]" src="../../public/img/AIO Parking positivo.png" />
+        </section>
+
+        <section id="reservas" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
+            <div class="flex flex-col items-center text-center">
+                <h2 class="text-[#161212] text-3xl md:text-4xl lg:text-5xl font-bold font-['Teachers'] mb-4">¿Ya reservaste?</h2>
+                <p class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium font-['Teachers'] mb-6">Si ya reservaste accede a nuestro apartado de "Mis reservas"</p>
+                <a href="#" class="bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold font-['Teachers'] py-3 px-6 rounded-[10px]">Mis reservas</a>
             </div>
-            <div class="w-[675px] text-center text-[#161212] text-[32px] font-semibold font-['Teachers']">AIO PARKING es nuestro servicio de parking inteligente.<br/>Clickea debajo para reservar una plaza</div>
-            <div class="w-[712px] h-[90px] px-7 py-2.5 bg-[#1f3de0] rounded-[10px] justify-center items-center gap-1.5 inline-flex">
-              <div class="text-neutral-50 text-[32px] font-bold font-['Teachers'] leading-[51.78px]">AIO PARKING</div>
+        </section>
+
+        <section id="productos" class="bg-neutral-50 rounded-[21px] border border-black p-8">
+            <h2 class="text-center text-[#161212] text-3xl md:text-4xl lg:text-5xl font-semibold font-['Teachers'] mb-8">Productos destacados</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="flex flex-col items-center">
+                    <img class="w-full h-auto mb-4" src="../../public/img/Cubierta Pirelli1.webp" alt="Cubierta Pirelli" />
+                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold font-['Teachers']">Cubierta Pirelli 175/70 R14 Scorpion Atr</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <img class="w-full h-auto mb-4" src="../../public/img/Neumático Bridgestone1.webp" alt="Neumático Bridgestone" />
+                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold font-['Teachers']">Neumático Bridgestone Ecopia EP150 P 185/55R16 83 V</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <img class="w-full h-auto mb-4" src="../../public/img/Cubierta Pirelli cinturato.webp" alt="Cubierta Pirelli Cinturato" />
+                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold font-['Teachers']">Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <img class="w-full h-auto mb-4" src="../../public/img/Aceite1.webp" alt="Aceite Motul" />
+                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold font-['Teachers']">Aceite para motor Motul sintético 5W-40</p>
+                </div>
             </div>
-          </div>
-          <div name="tus reservas" class="self-stretch h-[493px] px-[66px] pt-[216px]  pb-[209px] bg-neutral-50 rounded-[21px] border border-black flex-col justify-center items-center gap-[22px] flex">
-            <div class="mt-10 text-[#161212] text-[42px] font-bold font-['Teachers']">¿Ya reservaste?</div>
-            <div class="w-[444px] text-center text-[#161212] text-[32px] font-medium font-['Teachers']">Si ya reservaste accede a nuestro apartado de “Mis reservas”</div>
-            <div class="w-[712px] h-[90px] px-7 py-2.5 bg-[#950d03] rounded-[10px] justify-center items-center gap-1.5 inline-flex">
-              <div class="text-neutral-50 text-[32px] font-bold font-['Teachers'] leading-[51.78px]">Mis reservas</div>
+            <div class="text-center mt-8">
+                <a href="#" class="bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold font-['Teachers'] py-3 px-6 rounded-[7px] inline-block">Ver todos</a>
             </div>
-          </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#514e4e] text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-8 md:mb-0">
+                    <img class="w-48 h-auto mb-6" src="../../public/img/AIO Negativo (1).png" alt="AIO Logo" />
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <img class="w-8 h-8 mr-4" src="../../public/img/InstagramLogo.png" alt="Instagram" />
+                            <span class="text-lg font-bold font-['Teachers']">@Aiotalleres</span>
+                        </div>
+                        <div class="flex items-center">
+                            <img class="w-8 h-8 mr-4" src="../../public/img/XLogo.png" alt="Twitter" />
+                            <span class="text-lg font-bold font-['Teachers']">@Aiotalleres</span>
+                        </div>
+                        <div class="flex items-center">
+                            <img class="w-8 h-8 mr-4" src="../../public/img/TelefonoLogo.png" alt="Teléfono" />
+                            <span class="text-lg font-bold font-['Teachers']">+598 99 123 456</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 h-64 md:h-72">
+                    <div id="map" class="w-full h-full rounded-lg"></div>
+                </div>
+            </div>
         </div>
-        <div name="Productos" class="mb-10 mt-10 py-[19px] bg-neutral-50 rounded-[21px] border border-black flex-col justify-start items-center gap-5 flex">
-          <div class="self-stretch h-[31px] text-center text-[#161212] text-[42px] font-semibold font-['Teachers']">Productos destacados</div>
-          <div class="w-[1273px] h-[688px] p-2.5 flex-col justify-start items-center gap-[21px] flex">
-            <div class="self-stretch h-[584px] p-2.5 justify-center items-center gap-2.5 inline-flex">
-              <div class="w-[300px] h-[548px] pb-[42.38px] flex-col justify-start items-center inline-flex">
-                <img class="w-[300px] h-[391.43px]" src="../../public/img/Cubierta Pirelli1.webp" />
-                <div class="w-[220px] h-[114.33px] text-center text-[#161212] text-2xl font-bold font-['Teachers'] leading-[28.80px]">Cubierta Pirelli 175/70 <br/>R14 Scorpion Atr<br/></div>
-              </div>
-              <div class="w-[300px] h-[548px] pb-[50px] flex-col justify-start items-start gap-[0.35px] inline-flex">
-                <img class="w-[300px] h-[417.65px]" src="../../public/img/Neumático Bridgestone1.webp" />
-                <div class="w-[300px] h-20 text-center text-[#161212] text-2xl font-bold font-['Teachers'] leading-[28.80px]">Neumático Bridgestone Ecopia EP150 P 185/55R16 83 V<br/></div>
-              </div>
-              <div class="w-[300px] h-[548px] pb-[17px] flex-col justify-start items-start inline-flex">
-                <img class="w-[300px] h-[424.46px]" src="../../public/img/Cubierta Pirelli cinturato.webp" />
-                <div class="w-[300px] h-[107px] text-center text-[#161212] text-2xl font-bold font-['Teachers'] leading-[28.80px]">Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato<br/></div>
-              </div>
-              <div class="w-[300px] h-[548px] pb-[58.15px] flex-col justify-start items-start gap-[0.36px] inline-flex">
-                <img class="w-[300px] h-[430.35px]" src="../../public/img/Aceite1.webp" />
-                <div class="w-[300px] h-[59.14px] text-center text-[#161212] text-2xl font-bold font-['Teachers'] leading-[28.80px]">Aceite para motor Motul sintético 5W-40 </div>
-              </div>
-            </div>
-            <div class="w-[362px] h-[73px] px-7 py-2.5 bg-[#950d03] rounded-[7px] justify-center items-center gap-1.5 inline-flex">
-              <div class="text-neutral-50 text-[32px] font-bold font-['Teachers'] leading-[51.78px]">Ver todos</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-<div class="self-stretch w-screen top-3 h-[556px] px-[51px] py-[57px] bg-[#514e4e] justify-between gap-0 inline-flex">
-  <div class="w-[360px] h-[363px] flex-col justify-center items-center inline-flex">
-    <div class="w-[310px] h-36 justify-center items-center inline-flex">
-              <img class="w-[310px] h-36" src="../../public/img/AIO Negativo (1).png" />
-            </div>
-            <div class="self-stretch h-[219px] px-3 py-3.5 flex-col justify-center items-start gap-[19px] flex">
-              <div class="justify-start items-center gap-[19px] inline-flex">
-                <img class="w-[50px] h-[50px]" src="../../public/img/InstagramLogo.png" />
-                <div class="text-center text-white text-2xl font-bold font-['Teachers'] leading-[28.80px]">@Aiotalleres</div>
-              </div>
-              <div class="justify-start items-center gap-[19px] inline-flex">
-                <img class="w-[45px] h-[45px]" src="../../public/img/XLogo.png" />
-                <div class="text-center text-white text-2xl font-bold font-['Teachers'] leading-[28.80px]">@Aiotalleres</div>
-              </div>
-              <div class="justify-start items-center gap-[19px] inline-flex">
-                <img class="w-[45px] h-[45px]" src="../../public/img/TelefonoLogo.png" />
-                <div class="text-center text-white text-2xl font-bold font-['Teachers'] leading-[28.80px]">+598 99 123 456</div>
-              </div>
-            </div>
-          </div>
-          <div name="mapa" class="w-[501px] h-[274px] flex-col justify-between items-center  inline-flex">
-            <div id="map" style="width: 100%; height: 100%;"></div>
-          </div>  
+    </footer>
           <script>
             function initMap() {
               const map = new google.maps.Map(document.getElementById("map"), {
@@ -136,58 +135,68 @@
           ></script>
         </div>
 
-      <script>
-        const carousel = document.getElementById('carousel');
-        const slideContainer = document.getElementById('slide-container');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const indicators = document.getElementById('indicators');
-
-        let currentIndex = 0;
-        const slides = slideContainer.children;
-        const totalSlides = slides.length;
-
-        // Crear indicadores
-        for (let i = 0; i < totalSlides; i++) {
-            const dot = document.createElement('button');
-            dot.classList.add('w-3', 'h-3', 'rounded-full', 'bg-gray-400');
-            dot.addEventListener('click', () => goToSlide(i));
-            indicators.appendChild(dot);
-        }
-
-        function updateCarousel() {
-            slideContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
-            updateIndicators();
-        }
-
-        function updateIndicators() {
-            const dots = indicators.children;
-            for (let i = 0; i < dots.length; i++) {
-                dots[i].classList.toggle('bg-white', i === currentIndex);
-                dots[i].classList.toggle('bg-gray-400', i !== currentIndex);
+        <script>
+            const carousel = document.getElementById('carousel');
+            const slideContainer = document.getElementById('slide-container');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicators = document.getElementById('indicators');
+    
+            let currentIndex = 0;
+            const slides = slideContainer.children;
+            const totalSlides = slides.length;
+    
+            // Inicializar posiciones de las diapositivas
+            for (let i = 0; i < totalSlides; i++) {
+                slides[i].style.transform = `translateX(${100 * i}%)`;
             }
-        }
-
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % totalSlides;
+    
+            // Crear indicadores
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('w-3', 'h-3', 'rounded-full', 'bg-gray-400');
+                dot.addEventListener('click', () => goToSlide(i));
+                indicators.appendChild(dot);
+            }
+    
+            function updateCarousel() {
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].style.transform = `translateX(${100 * (i - currentIndex)}%)`;
+                }
+                updateIndicators();
+            }
+    
+            function updateIndicators() {
+                const dots = indicators.children;
+                for (let i = 0; i < dots.length; i++) {
+                    dots[i].classList.toggle('bg-white', i === currentIndex);
+                    dots[i].classList.toggle('bg-gray-400', i !== currentIndex);
+                }
+            }
+    
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateCarousel();
+            }
+    
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+    
+            function goToSlide(index) {
+                currentIndex = index;
+                updateCarousel();
+            }
+    
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+    
+            // Inicializar el carrusel
             updateCarousel();
-        }
-
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-            updateCarousel();
-        }
-
-        function goToSlide(index) {
-            currentIndex = index;
-            updateCarousel();
-        }
-
-        nextBtn.addEventListener('click', nextSlide);
-        prevBtn.addEventListener('click', prevSlide);
-
-        // Inicializar el carrusel
-        updateCarousel();
-    </script>
+    
+            // Opcional: Cambio automático de diapositivas
+            setInterval(nextSlide, 5000);
+        </script>
 </body>
 </html>
