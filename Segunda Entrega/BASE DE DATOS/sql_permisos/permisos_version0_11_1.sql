@@ -33,6 +33,10 @@ GRANT SELECT ON aio.otro_producto TO 'cliente';
 /*El ejecutivo puede ingresar la marca, modelo y color de un vehículo*/
 GRANT SELECT, UPDATE ON aio.vehiculo TO 'ejecutivo';
 
+GRANT SELECT, INSERT, UPDATE ON aio.realiza TO 'ejecutivo';
+GRANT SELECT, UPDATE ON aio.servicio TO 'ejecutivo';
+GRANT SELECT, UPDATE ON aio.taller TO 'ejecutivo';
+
 -- SET ROLES
 SET ROLE 'gerente';
 SET ROLE 'cajero';
