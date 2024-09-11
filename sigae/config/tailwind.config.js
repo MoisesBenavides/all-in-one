@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    '../app/views/*.html',    // Ruta a tus archivos HTML (si los tienes)
+    '../app/views/*/*.html',    // Ruta a tus archivos HTML (si los tienes)
   ],
   theme: {
     extend: {
@@ -14,7 +14,7 @@ module.exports = {
   plugins: [],
 }
 module.exports = {
-  content: ['../app/views/*.html'],
+  content: ['../app/views/*/*.html'],
   media: false,
   theme: {
     extend: {},
