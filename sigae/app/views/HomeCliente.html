@@ -6,34 +6,34 @@
     <title>Document</title>
     <link rel="stylesheet" href="../../public/css/styles.css">
 </head>
+<header>
+  <div class="flex flex-col ">
+    <div class="w-screen h-[118px] bg-neutral-200 flex-col justify-center items-center flex">
+      <div class=" h-[118px] p-2.5 justify-center items-center gap-[117px] inline-flex">
+        <div class="w-[166px] h-[78px] justify-center items-center flex">
+          <img class="w-[166px] h-[78px]" src="https://via.placeholder.com/166x78" />
+        </div>
+        <nav class="h-[29px] px-5 justify-around items-center flex">
+          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">Servicios Mecanicos</a>
+          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">Parking</a>
+          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">Mis Reservas</a>
+          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">Productos Destacados</a>
+          <a class="text-black px-3 text-2xl font-bold font-['Teachers']">FAQ</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
 <body>
     <div id="overview" class="flex flex-col justify-center">
-    <div name="content" class="flex flex-col">
-        <div class="flex flex-col ">
-          <div class="w-screen h-[118px] bg-neutral-200 flex-col justify-center items-center flex">
-            <div class=" h-[118px] p-2.5 justify-center items-center gap-[117px] inline-flex">
-              <div class="w-[166px] h-[78px] justify-center items-center flex">
-                <img class="w-[166px] h-[78px]" src="https://via.placeholder.com/166x78" />
-              </div>
-              <div class="h-[29px] px-5 justify-around items-center flex">
-                <div class="text-black px-3 text-2xl font-bold font-['Teachers']">Servicios Mecanicos</div>
-                <div class="text-black px-3 text-2xl font-bold font-['Teachers']">Parking</div>
-                <div class="text-black px-3 text-2xl font-bold font-['Teachers']">Mis Reservas</div>
-                <div class="text-black px-3 text-2xl font-bold font-['Teachers']">Productos Destacados</div>
-                <div class="text-black px-3 text-2xl font-bold font-['Teachers']">FAQ</div>
-              </div>
-            </div>
-          </div>
-       
-        </div>
-    </div>
     <div name="containerDentro" class="flex flex-col">
         <div class="w-screen h-1000px">
             <div id="carousel" class="overflow-hidden rounded-lg shadow-lg" style="z-index: 1;">
-                <div id="slide-container" class="flex h-1000px transition-transform duration-300 ease-in-out">
-                    <img src="/api/placeholder/800/400" alt="Slide 1" class="w-full h-1000px flex-shrink-0">
-                    <img src="/api/placeholder/800/400" alt="Slide 2" class="w-full h-1000px flex-shrink-0">
-                    <img src="/api/placeholder/800/400" alt="Slide 3" class="w-full h-1000px flex-shrink-0">
+                <div id="slide-container" class="flex  transition-transform duration-300 ease-in-out">
+                    <img src="../../public/img/FotoSlider.png"  alt="Slide 1" class="w-full flex-shrink-0">
+                    <img src="../../public/img/FotoSlider2.png"  alt="Slide 2" class="w-full  flex-shrink-0">
+                    <img src="../../public/img/FotoSlider3.png"  alt="Slide 3" class="w-full  flex-shrink-0">
                 </div>
             </div>
             <button id="prevBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-r-lg hover:bg-opacity-75 transition-all">
@@ -49,7 +49,8 @@
             <div id="indicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
             </div>
          </div>
-        <div class="w-[1273px] h-[1100px] flex-col   gap-[33px] flex">
+      <div name="content2" class="px-5 pt-3">
+        <div class=" flex-col justify-center items-center flex">
             <div name="Parking" class="self-stretch h-[574px] px-[66px] pt-[116px] pb-[109px] bg-neutral-50 rounded-[21px] border border-black flex-col justify-center items-center gap-[35px] flex" style="z-index: 2;">
                 <div class="w-[402px] h-[204px] justify-center items-center inline-flex">
               <img class="w-[402px] h-[204px]" src="https://via.placeholder.com/402x204" />
@@ -67,7 +68,7 @@
             </div>
           </div>
         </div>
-        <div class="w-[1273px] h-[831px] py-[19px] bg-neutral-50 rounded-[21px] border border-black flex-col justify-start items-center gap-5 flex">
+        <div class=" py-[19px] bg-neutral-50 rounded-[21px] border border-black flex-col justify-start items-center gap-5 flex">
           <div class="self-stretch h-[31px] text-center text-[#161212] text-[42px] font-semibold font-['Teachers']">Productos destacados</div>
           <div class="w-[1273px] h-[688px] p-2.5 flex-col justify-start items-center gap-[21px] flex">
             <div class="self-stretch h-[584px] p-2.5 justify-center items-center gap-2.5 inline-flex">
@@ -93,6 +94,7 @@
             </div>
           </div>
         </div>
+      </div>
     </div>
 </div>
         <div class="self-stretch h-[556px] px-[51px] py-[57px] bg-[#514e4e] justify-center items-center gap-[459px] inline-flex">
