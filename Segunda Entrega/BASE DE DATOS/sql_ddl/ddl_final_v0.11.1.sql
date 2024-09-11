@@ -13,10 +13,10 @@ CREATE TABLE cliente (
 -- Vehiculo
 CREATE TABLE vehiculo (
     matricula VARCHAR(8) NOT NULL,
-    marca VARCHAR(32) NOT NULL,
-    modelo VARCHAR(32) NOT NULL,
+    marca VARCHAR(32) NULL,
+    modelo VARCHAR(32) NULL,
     tipo ENUM('auto', 'moto', 'camioneta', 'camion', 'utilitario') NOT NULL,
-    color VARCHAR(6) NOT NULL,
+    color VARCHAR(6) NULL,
     PRIMARY KEY (matricula)
 );
 
