@@ -1,5 +1,5 @@
 -- 300 OTROS_PRODUCTOS
-insert into otro_producto (id_producto, nombre) values (701, 'Aceite Mineral 1L');
+/*insert into otro_producto (id_producto, nombre) values (701, 'Aceite Mineral 1L');
 insert into otro_producto (id_producto, nombre) values (702, 'Filtro de Aceite');
 insert into otro_producto (id_producto, nombre) values (703, 'Bujías de Encendido');
 insert into otro_producto (id_producto, nombre) values (704, 'Pastillas de Freno');
@@ -15,7 +15,7 @@ insert into otro_producto (id_producto, nombre) values (713, 'Limpiaparabrisas 2
 insert into otro_producto (id_producto, nombre) values (714, 'Aceite Sintético 5L');
 insert into otro_producto (id_producto, nombre) values (715, 'Juego de Rótulas');
 insert into otro_producto (id_producto, nombre) values (716, 'Filtro de Combustible');
-insert into otro_producto (id_producto, nombre) values (717, 'Bomba de Agua');
+insert into otro_producto (id_producto, nombre) values (717, 'Bomba de Agua');*/
 insert into otro_producto (id_producto, nombre) values (718, 'Amortiguadores Delanteros');
 insert into otro_producto (id_producto, nombre) values (719, 'Pastillas de Freno Traseras');
 insert into otro_producto (id_producto, nombre) values (720, 'Sensor de Oxígeno');
