@@ -43,7 +43,7 @@ CREATE TABLE producto (
 -- Neumatico
 CREATE TABLE neumatico (
     id_producto INT NOT NULL,
-    tamano VARCHAR(12) NOT NULL,
+    tamano VARCHAR(16) NOT NULL,
     modelo VARCHAR(23) NOT NULL,
     tipo CHAR(2) NOT NULL,
     PRIMARY KEY (id_producto),
