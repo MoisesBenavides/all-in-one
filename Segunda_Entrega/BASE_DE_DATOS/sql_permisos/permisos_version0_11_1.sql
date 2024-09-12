@@ -6,7 +6,7 @@ CREATE ROLE 'cajero';
 CREATE ROLE 'jefe_diagnostico';
 CREATE ROLE 'jefe_taller';
 CREATE ROLE 'valet_parking';
-
+C:\Users\moise\Documents\github\all-in-one\Segunda Entrega\BASE DE DATOS\sql_datos_prueba
 -- PERMISOS
 -- gerente
 GRANT SELECT, INSERT, UPDATE, DELETE ON aio.* TO 'gerente';
