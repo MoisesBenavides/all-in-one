@@ -977,10 +977,6 @@ video {
   width: 100vw;
 }
 
-.w-\[\] {
-  width: ;
-}
-
 .max-w-3xl {
   max-width: 48rem;
 }
@@ -1421,6 +1417,54 @@ video {
   font-family: 'Teachers';
 }
 
+.font-\[\] {
+  font-family: ;
+}
+
+.font-\[\.\.\/\] {
+  font-family: ../;
+}
+
+.font-\[\.\.\/\.\.\/\.\] {
+  font-family: ../../.;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/\] {
+  font-family: ../../.../;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/publi\] {
+  font-family: ../../.../publi;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/public\/\] {
+  font-family: ../../.../public/;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/public\/font\] {
+  font-family: ../../.../public/font;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/public\/font\/\] {
+  font-family: ../../.../public/font/;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/public\/font\/teachers\] {
+  font-family: ../../.../public/font/teachers;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/public\/font\/teachers-\] {
+  font-family: ../../.../public/font/teachers-;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/public\/font\/teachers-Variable\] {
+  font-family: ../../.../public/font/teachers-Variable;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/public\/font\/teachers-VariableFont_\] {
+  font-family: ../../.../public/font/teachers-VariableFont;
+}
+
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -1486,6 +1530,14 @@ video {
 
 .font-semibold {
   font-weight: 600;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\.\/public\/font\/teachers-VariableFont_wght\.ttf\] {
+  font-weight: ../../.../public/font/teachers-VariableFont wght.ttf;
+}
+
+.font-\[\.\.\/\.\.\/\.\.\/public\/font\/teachers-VariableFont_wght\.ttf\] {
+  font-weight: ../../../public/font/teachers-VariableFont wght.ttf;
 }
 
 .leading-\[28\.80px\] {

@@ -6,25 +6,39 @@
     <title>Reserva de Vehículo</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<style>
+    @font-face {
+        font-family: 'Teachers';
+        src: url('sigae/public/font/Teachers-VariableFont_wght.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    /* Apply the 'Teachers' font to all text elements */
+    body, input, select, button, option {
+        font-family: 'Teachers', sans-serif;
+    }
+</style>
+
 <body class="bg-white">
- <iframe src="../contents/header.html" class="w-screen"></iframe>
+ <iframe src="../contents/headerParking.html" class="w-screen"></iframe>
 
     <main class="container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto space-y-12">
             <section>
-                <h2 class="text-center text-black text-2xl font-semibold font-['Teachers'] mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese la fecha</h2>
+                <h2 class="text-center text-black text-2xl font-semibold  mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese la fecha</h2>
                 <div class="w-full max-w-[340px] mx-auto">
-                    <input type="datetime-local" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold font-['Teachers']">
+                    <input type="datetime-local" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold ">
                 </div>
             </section>
 
             <section>
-                <h2 class="text-center text-black text-2xl font-semibold font-['Teachers'] mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese El tipo de vehículo</h2>
+                <h2 class="text-center text-black text-2xl font-semibold  mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese El tipo de vehículo</h2>
                 <form id="vehicleForm" action="proceso.php" method="POST" class="w-full max-w-[340px] mx-auto">
                     <div class="relative mb-2">
                         <!-- Dropdown Button y Menú: Posicionados en la esquina superior derecha -->
                         <div id="dropdownButton" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                            <div id="selectedOption" class="text-center text-black text-xl font-semibold font-['Teachers']">Tipo</div>
+                            <div id="selectedOption" class="text-center text-black text-xl font-semibold ">Tipo</div>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
@@ -39,21 +53,21 @@
                             </div>
                         </div>
                     </div>
-                    <div id="priceInfo" class="text-center text-black text-sm font-semibold font-['Teachers'] hidden"></div>
+                    <div id="priceInfo" class="text-center text-black text-sm font-semibold  hidden"></div>
                     <input type="hidden" id="selectedVehicleType" name="vehicleType" value="">
                 </form>
             </section>
 
             <section class="text-center">
-                <button class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold font-['Teachers'] leading-[51.78px]">
+                <button class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold  leading-[51.78px]">
                     Continuar
                 </button>
             </section>
 
             <section>
-                <h2 class="text-center text-black text-2xl font-semibold font-['Teachers'] mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
+                <h2 class="text-center text-black text-2xl font-semibold  mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
                 <div class="relative w-full max-w-[340px] mx-auto">
-                    <select id="vehiculosDropdown" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold font-['Teachers']">
+                    <select id="vehiculosDropdown" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold ">
                         <option value="">Selecciona un vehículo</option>
                         <!-- Aquí se insertarán las matrículas de los vehículos -->
                     </select>
