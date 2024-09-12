@@ -53,7 +53,7 @@ CREATE TABLE neumatico (
 -- Otro_producto
 CREATE TABLE otro_producto (
     id_producto INT NOT NULL,
-    nombre VARCHAR(23),
+    nombre VARCHAR(63),
     PRIMARY KEY (id_producto),
     FOREIGN KEY (id_producto) REFERENCES producto(id)
 );
