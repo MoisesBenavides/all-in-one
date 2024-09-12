@@ -1,3 +1,4 @@
+-- 1000 DETALLES DE ORDEN DE PRODUCTO
 insert into detalle_orden_producto (id_producto, id_orden, cantidad) values (1, 1, 2);
 insert into detalle_orden_producto (id_producto, id_orden, cantidad) values (2, 2, 8);
 insert into detalle_orden_producto (id_producto, id_orden, cantidad) values (3, 3, 8);
