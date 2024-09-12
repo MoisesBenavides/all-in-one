@@ -95,7 +95,7 @@ CREATE TABLE taller (
 CREATE TABLE parking (
     id_servicio INT NOT NULL,
     largo_plazo BOOLEAN NOT NULL,
-    tipo_plazo ENUM('auto', 'moto'),
+    tipo_plaza ENUM('auto', 'moto'),
     PRIMARY KEY (id_servicio),
     FOREIGN KEY (id_servicio) REFERENCES servicio(id)
 );
