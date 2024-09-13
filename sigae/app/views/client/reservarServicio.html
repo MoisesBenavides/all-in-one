@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Selection</title>
+    <link rel="stylesheet" href="../../../public/css/styles.css">
+</head>
+<body>
+    <iframe src="../contents/headerParking.html" class="w-screen"></iframe>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto space-y-12">
+            <section>
+                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese la fecha</h2>
+                <div class="w-full max-w-[340px] mx-auto">
+                    <input type="datetime-local" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Seleccione el Servicio</h2>
+                <form id="servicioForm" action="proceso.php" method="POST" class="w-full max-w-[340px] mx-auto">
+                    <div class="relative mb-2">
+                        <div id="dropdownButton1" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                            <div id="selectedOption1" class="text-center text-black text-xl font-semibold">Servicio</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <div id="dropdownMenu1" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                            <div class="py-1">
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="alineacion">Alineación</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="balanceo">Balanceo</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="neumaticos">Servicios neumáticos</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="diagnostico">Diagnóstico</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="completo">Servicio completo</div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selectedServiceType" name="serviceType" value="">
+                </form>
+            </section>
+
+            <section>
+                <form id="tipoServicioForm" action="proceso.php" method="POST" class="w-full max-w-[340px] mx-auto">
+                    <div class="relative mb-2">
+                        <div id="dropdownButton2" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                            <div id="selectedOption2" class="text-center text-black text-xl font-semibold">Tipo</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <div id="dropdownMenu2" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                            <div id="tipoServicioOptions" class="py-1">
+                                <!-- Options will be dynamically populated based on the selected service -->
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selectedServiceSubtype" name="serviceSubtype" value="">
+                </form>
+            </section>
+
+            <section>
+                <h2 class="text-center text-black text-2xl font-semibold  mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese El tipo de vehículo</h2>
+                <form id="vehicleFormtipo" action="proceso.php" method="POST" class="w-full max-w-[340px] mx-auto">
+                    <div class="relative mb-2">
+                        <!-- Dropdown Button y Menú: Posicionados en la esquina superior derecha -->
+                        <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                            <div id="selectedOption" class="text-center text-black text-xl font-semibold ">Tipo</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <!-- Menú dropdown en la esquina superior derecha -->
+                        <div id="dropTipoVehiculo" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                            <div class="py-1">
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="1" data-price="100">Motocicleta</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="2" data-price="250">Camioneta</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="3" data-price="200">Auto</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="4" data-price="300">Pequeño camión</div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="vehiculoElegido" name="vehicleType" value="">
+                </form>
+                <script>
+                           // Dropdown functionality for service selection
+        const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+        const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
+        const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+        const selectedVehicleType = document.getElementById('vehiculoElegido');
+
+        dropdownButtonAuto.addEventListener('click', () => {
+            dropdownMenuAuto.classList.toggle('hidden');
+        });
+
+        const optionsAuto = document.querySelectorAll('#dropdownMenuAuto .option');
+        options1.forEach(option => {
+            option.addEventListener('click', () => {
+                selectedOptionAuto.textContent = option.textContent;
+                selectedVehicleType.value = option.dataset.value;
+                dropdownMenuAuto.classList.add('hidden');
+                updateServiceSubtypes(option.dataset.value);
+            });
+        });
+                </script>
+         
+            </section>
+           
+
+            <section class="text-center">
+                <button class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">
+                    Continuar
+                </button>
+            </section>
+            <section>
+                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
+                <div class="relative w-full max-w-[340px] mx-auto">
+                    <select id="vehiculosDropdown" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                        <option value="">Selecciona un vehículo</option>
+                        <!-- Vehicle options will be inserted here -->
+                    </select>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Dropdown functionality for service selection
+        const dropdownButton1 = document.getElementById('dropdownButton1');
+        const dropdownMenu1 = document.getElementById('dropdownMenu1');
+        const selectedOption1 = document.getElementById('selectedOption1');
+        const selectedServiceType = document.getElementById('selectedServiceType');
+
+        dropdownButton1.addEventListener('click', () => {
+            dropdownMenu1.classList.toggle('hidden');
+        });
+
+        const options1 = document.querySelectorAll('#dropdownMenu1 .option');
+        options1.forEach(option => {
+            option.addEventListener('click', () => {
+                selectedOption1.textContent = option.textContent;
+                selectedServiceType.value = option.dataset.value;
+                dropdownMenu1.classList.add('hidden');
+                updateServiceSubtypes(option.dataset.value);
+            });
+        });
+
+        // Dropdown functionality for service subtype
+        const dropdownButton2 = document.getElementById('dropdownButton2');
+        const dropdownMenu2 = document.getElementById('dropdownMenu2');
+        const selectedOption2 = document.getElementById('selectedOption2');
+        const selectedServiceSubtype = document.getElementById('selectedServiceSubtype');
+        const tipoServicioOptions = document.getElementById('tipoServicioOptions');
+
+        dropdownButton2.addEventListener('click', () => {
+            dropdownMenu2.classList.toggle('hidden');
+        });
+
+        function updateServiceSubtypes(serviceType) {
+            const subtypes = {
+                alineacion: ['Delantera', 'Trasera', 'Completa'],
+                balanceo: ['Estático', 'Dinámico', 'Dinámico camioneta', 'Estático camioneta'],
+                neumaticos: ['Montaje', 'Desmontaje', 'Rotación', 'Inflado'],
+                diagnostico: ['Diagnóstico general'],
+                completo: ['Servicio completo']
+            };
+
+            tipoServicioOptions.innerHTML = '';
+            subtypes[serviceType].forEach(subtype => {
+                const div = document.createElement('div');
+                div.className = 'option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100';
+                div.textContent = subtype;
+                div.addEventListener('click', () => {
+                    selectedOption2.textContent = subtype;
+                    selectedServiceSubtype.value = subtype;
+                    dropdownMenu2.classList.add('hidden');
+                });
+                tipoServicioOptions.appendChild(div);
+            });
+
+            // Reset the subtype selection
+            selectedOption2.textContent = 'Tipo';
+            selectedServiceSubtype.value = '';
+        }
+
+        // Function to load vehicles
+        async function cargarVehiculos() {
+            try {
+                const response = await fetch('ARCHIVO DE MATRICULAS');
+                const data = await response.json();
+        
+                const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+                
+                // Clear previous options (except the first one)
+                vehiculosDropdown.innerHTML = '<option value="">Selecciona un vehículo</option>';
+                
+                // Add license plates as options
+                data.forEach(vehiculo => {
+                    const option = document.createElement('option');
+                    option.value = vehiculo.matricula;
+                    option.textContent = vehiculo.matricula;
+                    vehiculosDropdown.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar las matrículas:', error);
+            }
+        }
+
+        // Call the function when the page loads
+        window.onload = cargarVehiculos;
+    </script>
+</body>
+</html>
