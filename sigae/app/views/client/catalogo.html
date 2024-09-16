@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../../public/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: ('sigae/public/font/Teachers-VariableFont_wght.ttf') ;
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+
+        .product {
+            transition: opacity 0.3s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="../contents/header.html" class="w-screen"></iframe>
+    <div class="w-[1440px] h-[1577px] bg-white flex-col justify-start items-center gap-[61px] inline-flex">
+        <div class="w-[1022px] flex-col justify-start items-center gap-5 flex">
+            <div class="self-stretch h-[73px] bg-[#d4d2d2] rounded-md justify-between items-center inline-flex">
+                <div class="w-[287px] h-[31px] text-center text-black text-[32px] font-semibold ">Nuestros productos</div>
+            </div>
+            <div class="self-stretch justify-center items-center gap-[18px] inline-flex">
+                <div class="w-[400px] h-[60px] p-3 justify-center items-center flex">
+                    <div class="rounded-md border border-black w-[500px] h-[60px] flex items-center relative">
+                        <input type="text" id="buscar" placeholder="Buscar" class="rounded-md w-full h-full pr-[40px] pl-[10px]">
+                        <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-full flex items-center pr-[10px]">
+                            <img id="searchIcon" class="w-[24px] h-[24px]" src="../../../public/svg/search.svg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="productosContainer" class="self-stretch justify-center items-center gap-7 inline-flex flex-wrap">
+            <div class="product w-[300px] h-[548px] pb-[42.38px] flex-col justify-start items-center inline-flex">
+                <img class="w-[300px] h-[391.43px]" src="../../../public/img/Cubierta Pirelli1.webp" />
+                <div class="w-[220px] h-[114.33px] text-center text-[#161212] text-2xl font-bold leading-[28.80px]">Cubierta Pirelli 175/70 <br/>R14 Scorpion Atr<br/></div>
+            </div>
+            <div class="product w-[300px] h-[548px] pb-[50px] flex-col justify-start items-start gap-[0.35px] inline-flex">
+                <img class="w-[300px] h-[417.65px]" src="../../../public/img/Neumático Bridgestone1.webp" />
+                <div class="w-[300px] h-20 text-center text-[#161212] text-2xl font-bold leading-[28.80px]">Neumático Bridgestone Ecopia EP150 P 185/55R16 83 V<br/></div>
+            </div>
+            <div class="product w-[300px] h-[548px] pb-[17px] flex-col justify-start items-start inline-flex">
+                <img class="w-[300px] h-[424.46px]" src="../../../public/img/Cubierta Pirelli1.webp" />
+                <div class="w-[300px] h-[107px] text-center text-[#161212] text-2xl font-bold leading-[28.80px]">Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato<br/></div>
+            </div>
+            <div class="product w-[300px] h-[548px] pb-[58.15px] flex-col justify-start items-start gap-[0.36px] inline-flex">
+                <img class="w-[300px] h-[430.35px]" src="../../../public/img/Aceite1.webp" />
+                <div class="w-[300px] h-[59.14px] text-center text-[#161212] text-2xl font-bold leading-[28.80px]">Aceite para motor Motul sintético 5W-40 </div>
+            </div>
+        </div>
+    </div>
+    <iframe id="footer" class="h-[400px] w-screen" src="../../views/contents/footer.html"></iframe>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputBuscar = document.getElementById('buscar');
+        const productos = document.querySelectorAll('.product');
+        const searchIcon = document.getElementById('searchIcon');
+
+        function buscarProductos() {
+            const textoBusqueda = inputBuscar.value.toLowerCase();
+            productos.forEach(producto => {
+                const textoProducto = producto.textContent.toLowerCase();
+                if (textoProducto.includes(textoBusqueda) || textoBusqueda === '') {
+                    producto.classList.remove('hidden');
+                } else {
+                    producto.classList.add('hidden');
+                }
+            });
+        }
+
+        inputBuscar.addEventListener('input', buscarProductos);
+        inputBuscar.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                buscarProductos();
+            }
+        });
+
+        searchIcon.addEventListener('click', function() {
+            inputBuscar.focus();
+        });
+    });
+    </script>
+</body>
+</html>
