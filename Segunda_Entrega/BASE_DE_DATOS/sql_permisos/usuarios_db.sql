@@ -1,6 +1,6 @@
 -- CREACION DE USUARIOS
 -- admin
-CREATE USER 'admin'@'localhost' IDENTIFIED BY '1234';
+CREATE USER 'admin'@'localhost' IDENTIFIED BY '';
 
 -- cliente predeterminado
 CREATE USER 'def_cliente'@'localhost' IDENTIFIED BY '';
@@ -14,7 +14,7 @@ CREATE USER 'def_ejecutivo'@'localhost' IDENTIFIED BY '';
 -- cajero predeterminado
 CREATE USER 'def_cajero'@'localhost' IDENTIFIED BY '';
 
--- jefe de diagnostico predeterminado
+-- jefe de diagnosticos predeterminado
 CREATE USER 'def_jefe_diagnostico'@'localhost' IDENTIFIED BY '';
 
 -- jefe de taller predeterminado
@@ -41,7 +41,7 @@ GRANT 'ejecutivo' TO 'def_ejecutivo'@'localhost';
 -- cajero predeterminado
 GRANT 'cajero' TO 'def_cajero'@'localhost';
 
--- jefe de diagnostico predeterminado
+-- jefe de diagnosticos predeterminado
 GRANT 'jefe_diagnostico' TO 'def_jefe_diagnostico'@'localhost';
 
 -- jefe de taller predeterminado
