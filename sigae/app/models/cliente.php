@@ -4,6 +4,7 @@ class Cliente{
     private $id;
     private $ci;
     private $email;
+    private $hash_contrasena;
     private $nombre;
     private $apellido;
     private $telefono;
@@ -34,6 +35,16 @@ class Cliente{
         $this->email = $email;
         return $this;
     }
+    
+    public function getHash_contrasena(){
+        return $this->hash_contrasena;
+    }
+
+    public function setHash_contrasena($hash_contrasena){
+        $this->hash_contrasena = $hash_contrasena;
+
+        return $this;
+    }
 
     public function getNombre(){
         return $this->nombre;
@@ -61,4 +72,5 @@ class Cliente{
         $this->telefono = $telefono;
         return $this;
     }
+
 }
