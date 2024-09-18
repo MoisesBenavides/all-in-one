@@ -4,7 +4,7 @@ CREATE TABLE cliente (
     id INT NOT NULL,
     ci INT NULL UNIQUE,
     email VARCHAR(63) NOT NULL UNIQUE,
-    hash_contrasena VARCHAR(255) NULL UNIQUE,
+    hash_contrasena CHAR(60) NULL UNIQUE,
     nombre VARCHAR(23) NOT NULL,
     apellido VARCHAR(23) NULL,
     telefono INT NULL,
