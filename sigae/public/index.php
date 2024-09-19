@@ -22,6 +22,9 @@ switch ($action) {
     case 'forgotPassword':
         $controladorCliente->forgotPassword();
         break;
+    case 'services':
+        $controladorCliente->services();
+        break;
     case 'home':
         $controladorCliente->home();
         break;
