@@ -57,6 +57,11 @@ class ControladorCliente{
     function forgotPassword(){
         include '../app/views/account/forgotPassword.html';
     }
+
+    function services(){
+        include '../app/views/client/serviciosMecanicos.html';
+    }
+
     function home(){
         include '../app/views/client/homeCliente.html';
     }
