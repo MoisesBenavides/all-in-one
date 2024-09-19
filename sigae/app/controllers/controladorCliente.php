@@ -27,10 +27,7 @@ class ControladorCliente{
         include '../app/views/client/homeCliente.html';
     }
     function forgotPassword(){
-        //implementar validacion
-        //enviar formulario a modelo Cliente
-        //redireccionar a login
-        include '../app/views/client/login.html';
+        include '../app/views/account/forgotPassword.html';
     }
     function home(){
         include '../app/views/client/homeCliente.html';
