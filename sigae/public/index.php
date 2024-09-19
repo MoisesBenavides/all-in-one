@@ -4,10 +4,28 @@ require_once '../app/controllers/ControladorCliente.php';
 
 $controladorCliente = new ControladorCliente();
 
-$action = isset($_GET['action']) ? $_GET['action'] : 'home';
+$action = isset($_GET['action']) ? $_GET['action'] : 'login';
 
 switch ($action) {
-    default: 
-        $controladorCliente->mostrarHome();
+    case 'login':
+        $controladorCliente->login();
+        break;
+    case 'doLogin':
+        $controladorCliente->doLogin();
+        break;
+    case 'signup':
+        $controladorCliente->signup();
+        break;
+    case 'doSignUp':
+        $controladorCliente->doSignup();
+        break;
+    case 'forgotPassword':
+        $controladorCliente->forgotPassword();
+        break;
+    case 'home':
+        $controladorCliente->home();
+        break;
+    default:
+        $controladorCliente->login();
         break;
 }
