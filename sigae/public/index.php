@@ -4,7 +4,7 @@ require_once '../app/controllers/ControladorCliente.php';
 
 $controladorCliente = new ControladorCliente();
 
-$action = isset($_GET['action']) ? $_GET['action'] : 'login';
+$action = isset($_GET['action']) ? $_GET['action'] : 'signup';
 
 switch ($action) {
     case 'login':
@@ -16,7 +16,7 @@ switch ($action) {
     case 'signup':
         $controladorCliente->signup();
         break;
-    case 'doSignUp':
+    case 'doSignup':
         $controladorCliente->doSignup();
         break;
     case 'forgotPassword':
@@ -29,6 +29,6 @@ switch ($action) {
         $controladorCliente->home();
         break;
     default:
-        $controladorCliente->login();
+        $controladorCliente->signup();
         break;
 }
