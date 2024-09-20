@@ -12,6 +12,7 @@ class Cliente{
     private $telefono;
 
     public function agregarCliente($email, $contrasena, $nombre, $apellido) {
+        // Encriptar contraseña (bcrypt)
         $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
         try {
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");
