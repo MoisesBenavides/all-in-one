@@ -52,8 +52,10 @@ class ControladorCliente{
                     if($contrasena==$repContrasena){
                         if($this->cliente->agregarCliente($email, $contrasena, $nombre, $apellido)) {
                             $response['success'] = true;
+                            header('Location: index.php?action=home');
                         } else {
                             $response['errors'][] = "Error al agregar cliente.";
+                            header('Content-Type: application/json');
                         }
                     } else {
                         $response['errors'][] = "Las contraseñas no coinciden.";
@@ -72,8 +74,6 @@ class ControladorCliente{
                 array_keys($_POST)
             );
         }
-
-        header('Content-Type: application/json');
         echo json_encode($response);
         exit;
     }
