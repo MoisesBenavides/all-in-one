@@ -11,10 +11,48 @@ class ControladorCliente{
         include '../app/views/account/login.html';
     }
     function doLogin(){
-        //implementar validacion
-        //enviar formulario a modelo Cliente
-        //redireccionar a home
-        include '../app/views/client/homeCliente.html';
+        $response=['success' => false, 'errors' => [], 'debug' => []];
+
+        // Debug: Log all received data
+        $response['debug']['received_data']=$_POST;
+
+        // Validacion de campos vacios
+        if (isset($_POST["email"], $_POST["contrasena"]) && 
+            !empty($_POST["email"]) && !empty($_POST["contrasena"])) {
+
+            $email = $_POST["email"];
+            $contrasena = $_POST["contrasena"];
+
+            // Debug: Log processed data
+            $response['debug']['processed_data'] = [
+                'email' => $email,
+                'contrasena' => 'REDACTED',
+            ];
+
+            // Validar email
+            if (!$this->validarEmail($email, 63)) {
+                $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
+            } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
+                $response['errors'][] = "Por favor, ingrese una contraseña válida.";
+            } else {
+                if ($this->cliente->iniciarCliente($email, $contrasena)) {
+                    $response['success'] = true;
+                    header('Location: index.php?action=home');
+                } else {
+                    $response['errors'][] = "Error al iniciar sesión.";
+                }
+            }
+        } else {
+            $response['errors'][] = "Debe llenar todos los campos.";
+            // Debug: Log which fields are missing
+            $response['debug']['missing_fields'] = array_diff(
+                ['email', 'contrasena'],
+                array_keys($_POST)
+            );
+        }
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit;
     }
     function signup(){
         include '../app/views/account/signup.html';
@@ -58,7 +96,7 @@ class ControladorCliente{
                     $response['success'] = true;
                     header('Location: index.php?action=home');
                 } else {
-                    $response['errors'][] = "Error al agregar cliente.";
+                    $response['errors'][] = "Error al registrarse.";
                 }
             }
         } else {
