@@ -8,12 +8,11 @@ function conectarDB($user, $pswd, $hostname){
         $conexionBD->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
         return $conexionBD;
     } catch(PDOException $e) {
-        /* En caso de un error de conexión, registra un mensaje con el error 
-        en un log y retorna el mensaje */
+        // Retornar un mensaje de error, lanza una excepción
         error_log("Error de conexión: " . $e->getMessage());
-        return "Fallo en la conexión: " . $e->getMessage();
-        exit();
+        throw new Exception("Fallo en la conexión a la base de datos: " . $e->getMessage());
     }
+    exit();
 }
 
 ?>
