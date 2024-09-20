@@ -3,7 +3,6 @@ require_once '../app/models/Cliente.php';
 
 class ControladorCliente{
     private $cliente;
-    private $errores = [];
 
     public function __construct(){
         $this->cliente=new Cliente();
@@ -45,28 +44,24 @@ class ControladorCliente{
                 'repContrasena' => 'REDACTED'
             ];
 
-            // validar email
-            if ($this->validarEmail($email, 63)) {
-                if ($this->validarNombreApellido($nombre, 23) && $this->validarNombreApellido($apellido, 23)) {
-                    // validar contraseña
-                    if($contrasena==$repContrasena){
-                        if($this->cliente->agregarCliente($email, $contrasena, $nombre, $apellido)) {
-                            $response['success'] = true;
-                            header('Location: index.php?action=home');
-                        } else {
-                            $response['errors'][] = "Error al agregar cliente.";
-                            header('Content-Type: application/json');
-                        }
-                    } else {
-                        $response['errors'][] = "Las contraseñas no coinciden.";
-                    }
-                } else {
-                    $response['errors'][] = "Por favor, ingrese un nombre o apellido válido.";
-                }
-            } else {
+            // Validar email
+            if (!$this->validarEmail($email, 63)) {
                 $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
+            } elseif (!$this->validarNombreApellido($nombre, 23) || !$this->validarNombreApellido($apellido, 23)) {
+                $response['errors'][] = "Por favor, ingrese un nombre o apellido válido.";
+            } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
+                $response['errors'][] = "Use un mínimo de 6 caracteres con mayúsculas, minúsculas y números.";
+            } elseif ($contrasena !== $repContrasena) {
+                $response['errors'][] = "Las contraseñas no coinciden.";
+            } else {
+                if ($this->cliente->agregarCliente($email, $contrasena, $nombre, $apellido)) {
+                    $response['success'] = true;
+                    header('Location: index.php?action=home');
+                } else {
+                    $response['errors'][] = "Error al agregar cliente.";
+                }
             }
-        } else{
+        } else {
             $response['errors'][] = "Debe llenar todos los campos.";
             // Debug: Log which fields are missing
             $response['debug']['missing_fields'] = array_diff(
@@ -74,6 +69,7 @@ class ControladorCliente{
                 array_keys($_POST)
             );
         }
+        header('Content-Type: application/json');
         echo json_encode($response);
         exit;
     }
@@ -90,16 +86,23 @@ class ControladorCliente{
         include '../app/views/client/homeCliente.html';
     }
 
-    private function validarEmail($str, $ext) {
+    private function validarContrasena($str, $min, $max) {
+        /* Verifica si la contraseña contiene mayusculas, minusculas y numeros
+        y si la extension de la cadena se ncuentra en el rango especificado por las variables $min y $max. */ 
+        return ((preg_match('/[A-Z]/', $str) && preg_match('/[a-z]/', $str) && preg_match('/[0-9]/', $str) 
+                && strlen($str) <= $max && strlen($str) <= $min));
+
+    }
+    private function validarEmail($str, $max) {
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres y contiene un dominio de correo valido
-        y si la extension de la cadena es menor o igual al maximo especificado por la variable $ext. */ 
-        return (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $str) && strlen($str) <= $ext);
+        y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */ 
+        return (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $str) && strlen($str) <= $max);
     }
 
-    private function validarNombreApellido($str, $ext) {
+    private function validarNombreApellido($str, $max) {
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene letras, espacios, tildes, apostrofes o guiones)
-        y si la extension de la cadena es menor o igual al maximo especificado por la variable $ext. */
-        return (preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $ext);
+        y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */
+        return (preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $max);
     }
 
 }
