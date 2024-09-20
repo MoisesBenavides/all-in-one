@@ -1,5 +1,7 @@
 <?php
 
+require_once '../app/db_config/db_conn.php';
+
 class Cliente{
     private $id;
     private $ci;
@@ -13,7 +15,11 @@ class Cliente{
         $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
         try {
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-
+            
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+    
             if ($this->nuevoEmail($email)) {
                 // Consulta con parámetros
                 $stmt = $conn->prepare('INSERT INTO cliente (email, hash_contrasena, nombre, apellido) VALUES (:email, :hash_con, :nom, :ape)');
