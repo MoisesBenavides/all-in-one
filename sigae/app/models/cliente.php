@@ -21,7 +21,7 @@ class Cliente{
                 throw new Exception("No se pudo conectar a la base de datos.");
             }
     
-            if ($this->nuevoEmail($email)) {
+            if (!$this->existeEmail($email)) {
                 // Consulta con parámetros
                 $stmt = $conn->prepare('INSERT INTO cliente (email, hash_contrasena, nombre, apellido) VALUES (:email, :hash_con, :nom, :ape)');
             
@@ -46,7 +46,7 @@ class Cliente{
         }
     }
 
-    function nuevoEmail($email){
+    function existeEmail($email){
         try{
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");
 
@@ -58,7 +58,7 @@ class Cliente{
     
             $count = $stmt->fetchColumn();
 
-            return $count == 0 ? true : false;
+            return $count != 0 ? true : false;
 
         } catch (Exception $e){
             echo $e->getMessage();
