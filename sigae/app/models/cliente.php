@@ -11,6 +11,10 @@ class Cliente{
     private $apellido;
     private $telefono;
 
+    public function iniciarCliente($email, $contrasena){
+        
+    }
+
     public function agregarCliente($email, $contrasena, $nombre, $apellido) {
         // Encriptar contraseña (bcrypt)
         $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
