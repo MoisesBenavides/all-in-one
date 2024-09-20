@@ -1,7 +1,7 @@
 -- CREACION DE TABLAS
 -- Cliente
 CREATE TABLE cliente (
-    id INT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     ci INT NULL UNIQUE,
     email VARCHAR(63) NOT NULL UNIQUE,
     hash_contrasena CHAR(60) NULL UNIQUE,
@@ -32,7 +32,7 @@ CREATE TABLE tiene (
 
 -- Producto
 CREATE TABLE producto (
-    id INT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     upc VARCHAR(13) NOT NULL UNIQUE,
     precio DECIMAL(10,2) NOT NULL,
     marca VARCHAR(23) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE transaccion (
 
 -- Servicio
 CREATE TABLE servicio (
-    id INT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     matricula VARCHAR(8) NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
     fecha_inicio DATETIME NOT NULL,
@@ -126,7 +126,7 @@ CREATE TABLE realiza (
 
 -- Orden
 CREATE TABLE orden (
-    id INT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     id_cliente INT NOT NULL,
     total DECIMAL(10,2) NOT NULL,
     fecha_orden DATETIME NOT NULL,
