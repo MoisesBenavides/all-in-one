@@ -29,8 +29,7 @@
 
 <body>
   <div class="flex justify-center items-center h-screen ">
-    <div name="Contenedor"
-      class="  w-[830px] h-[707px]  bg-white rounded-3xl border borders-black flex-col justify-center items-center  flex absolute mx-auto">
+    <div name="Contenedor" class="  w-[830px] h-[707px]  bg-white rounded-3xl border borders-black flex-col justify-center items-center  flex absolute mx-auto">
       <div name="LOGO" class=" w-[310px] h-36 justify-center items-center inline-flex">
         <img class="w-[310px] h-36" src="../../../public/img/AIO Positivo.png" />
       </div>
@@ -62,6 +61,40 @@
         class="w-[614px] h-12 px-2.5 py-1.5 bg-[#950d03] rounded-md justify-center items-center top-6 gap-1.5 inline-flex">
         <div class="text-right text-neutral-50 text-2xl font-medium  leading-[28.80px]">Continuar con Google</div>
       </div>
+      <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
+                .then(response => response.json())
+                .then(data => {
+                    const errorContainer = document.getElementById('error-container');
+                    const errorList = document.getElementById('error-list');
+                    
+                    errorList.innerHTML = '';
+                    
+                    if (data.success) {
+                        window.location.href = 'index.php?action=home';
+                    } else {
+                        errorContainer.classList.remove('hidden');
+                        data.errors.forEach(error => {
+                            const li = document.createElement('li');
+                            li.textContent = error;
+                            errorList.appendChild(li);
+                        });
+        
+                        // Debug information
+                        console.log('Debug info:', data.debug);
+                        const debugInfo = document.createElement('pre');
+                        debugInfo.textContent = JSON.stringify(data.debug, null, 2);
+                        errorList.appendChild(debugInfo);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+        </script>
     </div>
   </div>
 
