@@ -1,9 +1,9 @@
 <?php
-
 require_once '../app/models/Cliente.php';
 
 class ControladorCliente{
     private $cliente;
+    private $errores = [];
 
     public function __construct(){
         $this->cliente=new Cliente();
@@ -21,39 +21,63 @@ class ControladorCliente{
         include '../app/views/account/signup.html';
     }
     function doSignup(){
+        $response=['success' => false, 'errors' => [], 'debug' => []];
+
+        // Debug: Log all received data
+        $response['debug']['received_data']=$_POST;
+
         // Validacion de campos vacios
-        if (isset($_POST["email"], $_POST["nombre"], $_POST["apellido"], $_POST["contrasena"], $_POST["repContrasena"]) && !empty($_POST["email"]) 
-        && !empty($_POST["nombre"]) && !empty($_POST["apellido"]) && !empty($_POST["contrasena"]) && !empty($_POST["repContrasena"])){
-            
+        if (isset($_POST["email"], $_POST["nombre"], $_POST["apellido"], $_POST["contrasena"], $_POST["repContrasena"]) && 
+            !empty($_POST["email"]) && !empty($_POST["nombre"]) && !empty($_POST["apellido"]) && !empty($_POST["contrasena"]) && !empty($_POST["repContrasena"])) {
+
             $email = $_POST["email"];
             $nombre = $_POST["nombre"];
             $apellido = $_POST["apellido"];
             $contrasena = $_POST["contrasena"];
             $repContrasena = $_POST["repContrasena"];
-            
-            if (validarEmail($email, 63)) {
-                if (validarNombreApellido($nombre, 23) && validarNombreApellido($apellido, 23)) {
+
+            // Debug: Log processed data
+            $response['debug']['processed_data'] = [
+                'email' => $email,
+                'nombre' => $nombre,
+                'apellido' => $apellido,
+                'contrasena' => 'REDACTED',
+                'repContrasena' => 'REDACTED'
+            ];
+
+            // validar email
+            if ($this->validarEmail($email, 63)) {
+                if ($this->validarNombreApellido($nombre, 23) && $this->validarNombreApellido($apellido, 23)) {
                     // validar contraseña
                     if($contrasena==$repContrasena){
-                        $this->cliente->agregarCliente($email, $contrasena, $nombre, $apellido);
+                        if($this->cliente->agregarCliente($email, $contrasena, $nombre, $apellido)) {
+                            $response['success'] = true;
+                        } else {
+                            $response['errors'][] = "Error al agregar cliente.";
+                        }
                     } else {
-                        echo "Las contraseñas no coinciden.";
+                        $response['errors'][] = "Las contraseñas no coinciden.";
                     }
                 } else {
-                    echo "Por favor, ingrese un nombre o apellido válido.";
+                    $response['errors'][] = "Por favor, ingrese un nombre o apellido válido.";
                 }
             } else {
-                echo "Por favor, ingrese un correo electrónico válido.";
+                $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
             }
-            
         } else{
-            echo "Debe llenar todos los campos.";
+            $response['errors'][] = "Debe llenar todos los campos.";
+            // Debug: Log which fields are missing
+            $response['debug']['missing_fields'] = array_diff(
+                ['email', 'nombre', 'apellido', 'contrasena', 'repContrasena'],
+                array_keys($_POST)
+            );
         }
 
-        //enviar formulario a modelo Cliente
-        //redireccionar a home
-        include '../app/views/client/homeCliente.html';
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit;
     }
+
     function forgotPassword(){
         include '../app/views/account/forgotPassword.html';
     }
@@ -66,29 +90,16 @@ class ControladorCliente{
         include '../app/views/client/homeCliente.html';
     }
 
-    private function validarNombreApellido($str, $ext){
-        $esValido;
-
-        /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene letras, espacios, tildes, apostrofes o guiones)
-        y si la extension de la cadena es menor o igual al maximo especificado por la variable $ext. */
-        if (preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $ext){
-            $esValido = true;
-        } else {
-            $esValido = false;
-        }
-        return $esValido;
-    }
-
-    private function validarEmail($str, $ext){
-        $esValido;
-
+    private function validarEmail($str, $ext) {
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres y contiene un dominio de correo valido
         y si la extension de la cadena es menor o igual al maximo especificado por la variable $ext. */ 
-        if (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $str) && strlen($str) <= $ext){
-            $esValido = true;
-        } else {
-            $esValido = false;
-        }
-        return $esValido;
+        return (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $str) && strlen($str) <= $ext);
     }
+
+    private function validarNombreApellido($str, $ext) {
+        /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene letras, espacios, tildes, apostrofes o guiones)
+        y si la extension de la cadena es menor o igual al maximo especificado por la variable $ext. */
+        return (preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $ext);
+    }
+
 }
