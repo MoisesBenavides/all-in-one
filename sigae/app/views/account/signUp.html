@@ -40,23 +40,23 @@
       <form class="CorreoContra" action="index.php?action=doSignup" class="flex items-center justify-around top-0 left-0 right-0" method="POST">
         <div class="h-[52px]   ">
           <!--INPUT PARA MAIL-->
-          <input id="email" type="mail" placeholder="Correo" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal  tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
+          <input id="email" name="email" type="mail" placeholder="Correo" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal  tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
         </div>
         <div class="h-[52px]  ">
           <!--INPUT PARA NOMBRE-->
-          <input id="nombre" type="text" placeholder="Nombre" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
+          <input id="nombre" name="nombre" type="text" placeholder="Nombre" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
         </div>
         <div class="h-[52px]  ">
           <!--INPUT PARA APELLIDO-->
-          <input id="apellido" type="text" placeholder="Apellido" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
+          <input id="apellido" name="apellido" type="text" placeholder="Apellido" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
         </div>
         <div class="h-[52px]  ">
           <!--INPUT PARA CONTRASEÑA-->
-          <input id="contrasena" type="password" placeholder="Contraseña" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
+          <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
         </div>
         <div class="h-[52px]  ">
           <!--INPUT PARA CONTRASENA-->
-          <input id="repContrasena" type="password" placeholder="Repetir contraseña" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
+          <input id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
         </div>
         <div name="contenedor submit" class="space-y-4">
           <!--Enviar-->
@@ -71,8 +71,40 @@
     <div class="w-[614px] h-12 px-2.5 py-1.5 bg-[#950d03] rounded-md justify-center items-center gap-1.5 inline-flex">
       <div class="text-right text-neutral-50 text-2xl font-medium  leading-[28.80px]">Continuar con Google</div>
     </div>
+    <script>
+      document.getElementById('signup-form').addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
+              .then(response => response.json())
+              .then(data => {
+                  const errorContainer = document.getElementById('error-container');
+                  const errorList = document.getElementById('error-list');
+                  
+                  errorList.innerHTML = '';
+                  
+                  if (data.success) {
+                      window.location.href = 'index.php?action=home';
+                  } else {
+                      errorContainer.classList.remove('hidden');
+                      data.errors.forEach(error => {
+                          const li = document.createElement('li');
+                          li.textContent = error;
+                          errorList.appendChild(li);
+                      });
+      
+                      // Debug information
+                      console.log('Debug info:', data.debug);
+                      const debugInfo = document.createElement('pre');
+                      debugInfo.textContent = JSON.stringify(data.debug, null, 2);
+                      errorList.appendChild(debugInfo);
+                  }
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+      });
+      </script>
   </div>
-  </div>
-  </div>
-
+</body>
 </html>
