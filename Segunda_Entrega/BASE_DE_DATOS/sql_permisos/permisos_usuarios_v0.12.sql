@@ -34,7 +34,7 @@ GRANT SELECT ON aio_db.otro_producto TO 'cliente';
 GRANT SELECT, INSERT, UPDATE, DELETE ON aio_db.* TO 'gerente';
 
 -- ejecutivo
---El ejecutivo puede ingresar la marca, modelo y color de un vehículo
+-- El ejecutivo puede ingresar la marca, modelo y color de un vehículo
 GRANT SELECT, UPDATE ON aio_db.vehiculo TO 'ejecutivo';
 GRANT SELECT, INSERT, UPDATE ON aio_db.realiza TO 'ejecutivo';
 GRANT SELECT, UPDATE ON aio_db.servicio TO 'ejecutivo';
@@ -75,31 +75,11 @@ GRANT SELECT, INSERT, UPDATE ON aio_db.parking TO 'valet_parking';
 GRANT SELECT, INSERT, UPDATE ON aio_db.numero_plaza TO 'valet_parking';
 
 -- CREACIÓN DE USUARIOS
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password_admin';
-CREATE USER 'def_cliente'@'localhost' IDENTIFIED BY 'password_cliente';
-CREATE USER 'def_gerente'@'localhost' IDENTIFIED BY 'password_gerente';
-CREATE USER 'def_ejecutivo'@'localhost' IDENTIFIED BY 'password_ejecutivo';
-CREATE USER 'def_cajero'@'localhost' IDENTIFIED BY 'password_cajero';
-CREATE USER 'def_jefe_diagnostico'@'localhost' IDENTIFIED BY 'password_jefe_diagnostico';
-CREATE USER 'def_jefe_taller'@'localhost' IDENTIFIED BY 'password_jefe_taller';
-CREATE USER 'def_valet_parking'@'localhost' IDENTIFIED BY 'password_valet_parking';
-
--- ASIGNACIÓN DE ROLES A USUARIOS
-GRANT 'admin_rol' TO 'admin'@'localhost';
-GRANT 'cliente' TO 'def_cliente'@'localhost';
-GRANT 'gerente' TO 'def_gerente'@'localhost';
-GRANT 'ejecutivo' TO 'def_ejecutivo'@'localhost';
-GRANT 'cajero' TO 'def_cajero'@'localhost';
-GRANT 'jefe_diagnostico' TO 'def_jefe_diagnostico'@'localhost';
-GRANT 'jefe_taller' TO 'def_jefe_taller'@'localhost';
-GRANT 'valet_parking' TO 'def_valet_parking'@'localhost';
-
--- ACTIVACIÓN DE ROLES
-SET ROLE 'admin_rol';
-SET ROLE 'cliente';
-SET ROLE 'gerente';
-SET ROLE 'ejecutivo';
-SET ROLE 'cajero';
-SET ROLE 'jefe_diagnostico';
-SET ROLE 'jefe_taller';
-SET ROLE 'valet_parking';
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password_admin' DEFAULT ROLE 'admin_rol';
+CREATE USER 'def_cliente'@'localhost' IDENTIFIED BY 'password_cliente' DEFAULT ROLE 'cliente';
+CREATE USER 'def_gerente'@'localhost' IDENTIFIED BY 'password_gerente' DEFAULT ROLE 'gerente';
+CREATE USER 'def_ejecutivo'@'localhost' IDENTIFIED BY 'password_ejecutivo' DEFAULT ROLE 'ejecutivo';
+CREATE USER 'def_cajero'@'localhost' IDENTIFIED BY 'password_cajero' DEFAULT ROLE 'cajero';
+CREATE USER 'def_jefe_diagnostico'@'localhost' IDENTIFIED BY 'password_jefe_diagnostico' DEFAULT ROLE 'jefe_diagnostico';
+CREATE USER 'def_jefe_taller'@'localhost' IDENTIFIED BY 'password_jefe_taller' DEFAULT ROLE 'jefe_taller';
+CREATE USER 'def_valet_parking'@'localhost' IDENTIFIED BY 'password_valet_parking' DEFAULT ROLE 'valet_parking';
