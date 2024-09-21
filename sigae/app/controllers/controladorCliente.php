@@ -37,6 +37,18 @@ class ControladorCliente{
             } else {
                 if ($this->cliente->iniciarCliente($email, $contrasena)) {
                     $response['success'] = true;
+                    
+                    // Iniciar sesión del cliente
+                    session_start();
+                    $_SESSION['logged']= true;
+                    $_SESSION['id']=$this->cliente->getId();
+                    $_SESSION['ci']=$this->cliente->getCi();
+                    $_SESSION['email']=$this->cliente->getEmail();
+                    $_SESSION['nombre']=$this->cliente->getNombre();
+                    $_SESSION['apellido']=$this->cliente->getApellido();
+                    $_SESSION['telefono']=$this->cliente->getTelefono();
+
+                    // Redirigir a la home page
                     header('Location: index.php?action=home');
                 } else {
                     $response['errors'][] = "Error al iniciar sesión.";
@@ -82,23 +94,30 @@ class ControladorCliente{
                 'repContrasena' => 'REDACTED'
             ];
 
-            // Validar email
             if (!$this->validarEmail($email, 63)) {
                 $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
+
             } elseif (!$this->validarNombreApellido($nombre, 23) || !$this->validarNombreApellido($apellido, 23)) {
                 $response['errors'][] = "Por favor, ingrese un nombre o apellido válido.";
+
             } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
                 $response['errors'][] = "Use un mínimo de 6 caracteres con mayúsculas, minúsculas y números.";
+
             } elseif ($contrasena !== $repContrasena) {
                 $response['errors'][] = "Las contraseñas no coinciden.";
+
+            } elseif($this->cliente->existeEmail($email)) {
+                $response['errors'][]= "Ya existe un usuario con el correo ingresado.";
+
+            } elseif(!$this->cliente->guardarCliente(null, $email, $contrasena, $nombre, $apellido, null)){
+                $response['errors'][] = "Error al registrarse.";
+
             } else {
-                if ($this->cliente->agregarCliente($email, $contrasena, $nombre, $apellido)) {
-                    $response['success'] = true;
-                    header('Location: index.php?action=login');
-                } else {
-                    $response['errors'][] = "Error al registrarse.";
-                }
+                $response['success'] = true;
+                // Redirigir al login
+                header('Location: index.php?action=login');
             }
+            
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
             // Debug: Log which fields are missing
@@ -111,13 +130,18 @@ class ControladorCliente{
         echo json_encode($response);
         exit;
     }
-
     function forgotPassword(){
         include '../app/views/account/forgotPassword.html';
     }
-
     function services(){
         include '../app/views/client/serviciosMecanicos.html';
+    }
+    function bookService(){
+        include '../app/views/client/reservarServicio.html';
+    }
+
+    function parking(){
+        include '../app/views/client/parking.html';
     }
 
     function myUser(){
@@ -126,7 +150,6 @@ class ControladorCliente{
     function home(){
         include '../app/views/client/homeCliente.html';
     }
-
     private function validarContrasena($str, $min, $max) {
         /* Verifica si la contraseña contiene mayusculas, minusculas y numeros
         y si la extension de la cadena se ncuentra en el rango especificado por las variables $min y $max. */ 
