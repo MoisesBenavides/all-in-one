@@ -25,6 +25,12 @@ switch ($action) {
     case 'services':
         $controladorCliente->services();
         break;
+    case 'bookService':
+        $controladorCliente->bookService();
+        break;
+    case 'aioParking':
+        $controladorCliente->parking();
+        break;
     case 'myUser':
         $controladorCliente->myUser();
         break;
