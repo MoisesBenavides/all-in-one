@@ -19,8 +19,97 @@
         }
     </style>
 </head>
+<header class=" w-screen"></header>
+    <link rel="stylesheet" href="../../../public/css/styles.css">
+    <div class="container mx-auto px-4 py-4">
+        <div class="relative flex flex-col md:flex-row justify-between items-center">
+            
+            <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
+            <div class="absolute top-2 left-4 md:hidden">
+                <button id="hamburger" class="text-black focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Logo -->
+            <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
+                <!-- Presionar logo para volver al home del cliente (href) -->
+                <img href="../../../public/index.php?action=home" class="w-full h-auto" src="../../../public/img/AIO Positivo.png" alt="AIO Logo" />
+            </div>
+
+            <!-- Navegación - visible solo en pantallas medianas y grandes -->
+            <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
+                <a href="../client/serviciosMecanicos.html" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Servicios</a>
+                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">AIO Parking</a>
+                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Repuestos y accesorios</a>
+                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">FAQ</a>
+            </nav>
+
+            <!-- User icon - Alineado a la derecha en móviles -->
+            <div class="absolute top-2 right-4 md:static">
+                <img class="w-10 h-10" src="../../../public/img/user.png" alt="User">
+            </div>
+        </div>
+
+        <!-- Menú hamburguesa desplegable (oculto por defecto) -->
+        <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+            <a href="../client/serviciosMecanicos.html" class="block text-black text-sm font-bold font-['Teachers']">Servicios</a>
+            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">AIO Parking</a>
+            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Mis reservas</a>
+            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Repuestos y accesorios</a>
+            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">FAQ</a>
+        </nav>
+    </div>
+
+    <script>
+        // Lógica del menú hamburguesa
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+       <script>
+        const dropdownButton = document.getElementById('dropdownButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const selectedOption = document.getElementById('selectedOption');
+        const options = document.querySelectorAll('.option');
+        const hiddenInput = document.getElementById('selectedVehicleType');
+        const arrow = dropdownButton.querySelector('svg');
+        const priceInfo = document.getElementById('priceInfo');
+
+        dropdownButton.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        });
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                selectedOption.textContent = option.textContent;
+                hiddenInput.value = option.getAttribute('data-value');
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+
+                // Mostrar el precio por hora
+                const price = option.getAttribute('data-price');
+                priceInfo.textContent = `Precio por hora: ${price} pesos`;
+                priceInfo.classList.remove('hidden');
+            });
+        });
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.addEventListener('click', (e) => {
+            if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        });
+    </script>
+</header>
 <body class="bg-gray-100">
-    <iframe src="/app/views/contents/header.html" class="w-screen"></iframe>
 
     <main class="container mx-auto px-4 py-8">
         <section id="carousel" class="relative mb-12">
