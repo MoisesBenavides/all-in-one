@@ -12,7 +12,35 @@ class Cliente{
     private $telefono;
 
     public function iniciarCliente($email, $contrasena){
-        
+        try{
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+
+            $stmt = $conn->prepare('SELECT hash_contrasena FROM cliente WHERE email = :email');
+
+            $stmt->bindParam(':email', $email);
+            
+            $stmt->execute();
+
+            $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($cliente && password_verify($contrasena, $cliente['hash_contrasena'])) {
+                return true;
+            } else {
+                echo "Correo o contraseña incorrectos.";
+                return false;
+            }
+
+        } catch(Exception $e){
+            error_log($e->getMessage());
+            echo "Error al iniciar sesión: " . $e->getMessage();
+            return false;
+        } finally {
+            $conn = null;
+        }
     }
 
     public function agregarCliente($email, $contrasena, $nombre, $apellido) {
@@ -43,7 +71,7 @@ class Cliente{
 
         } catch (Exception $e) {
             error_log($e->getMessage());
-            echo "Error al agregar cliente: " . $e->getMessage();
+            echo "Error al registrarse: " . $e->getMessage();
             return false;
         } finally {
             $conn = null;
