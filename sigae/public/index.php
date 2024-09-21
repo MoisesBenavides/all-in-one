@@ -25,6 +25,9 @@ switch ($action) {
     case 'services':
         $controladorCliente->services();
         break;
+    case 'myUser':
+        $controladorCliente->myUser();
+        break;
     case 'home':
         $controladorCliente->home();
         break;
