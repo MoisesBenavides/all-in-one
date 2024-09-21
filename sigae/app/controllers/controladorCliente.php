@@ -94,7 +94,7 @@ class ControladorCliente{
             } else {
                 if ($this->cliente->agregarCliente($email, $contrasena, $nombre, $apellido)) {
                     $response['success'] = true;
-                    header('Location: index.php?action=home');
+                    header('Location: index.php?action=login');
                 } else {
                     $response['errors'][] = "Error al registrarse.";
                 }
@@ -120,6 +120,9 @@ class ControladorCliente{
         include '../app/views/client/serviciosMecanicos.html';
     }
 
+    function myUser(){
+        include '../app/views/client/miUsuario.html';
+    }
     function home(){
         include '../app/views/client/homeCliente.html';
     }
