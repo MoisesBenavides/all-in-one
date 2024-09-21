@@ -134,12 +134,23 @@ class ControladorCliente{
         include '../app/views/account/forgotPassword.html';
     }
     function services(){
+        session_start();
+        error_log($_SESSION['email']. " abrió la página de servicios");
+        error_log(print_r($_SESSION, true));
         include '../app/views/client/serviciosMecanicos.html';
     }
     function bookService(){
+        session_start();
+        error_log($_SESSION['email']. " abrió la página de reserva de servicios");
+        error_log(print_r($_SESSION, true));
         include '../app/views/client/reservarServicio.html';
     }
-
+    function doBookService(){
+        session_start();
+        error_log($_SESSION['email']. " abrió la página de reserva de servicios");
+        error_log(print_r($_SESSION, true));
+        include '../app/views/client/reservarServicio.html';
+    }
     function parking(){
         include '../app/views/client/parking.html';
     }
@@ -148,6 +159,9 @@ class ControladorCliente{
         include '../app/views/client/miUsuario.html';
     }
     function home(){
+        session_start();
+        error_log($_SESSION['email']. " abrió la página home");
+        error_log(print_r($_SESSION, true));
         include '../app/views/client/homeCliente.html';
     }
     private function validarContrasena($str, $min, $max) {
