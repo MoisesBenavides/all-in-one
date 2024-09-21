@@ -28,6 +28,7 @@
     
             .contenedores1-20, .contenedores31-50, .contenedores21-30 {
                 display: flex;
+                padding-left: 20px;
                 justify-content: flex-start; /* Para alinear el contenido al inicio */
                 width: 100%;
                 flex-wrap: nowrap; 
@@ -36,9 +37,9 @@
     
             .contenedores21-30 {
                 display: flex;
-                justify-content: flex-start;
+                justify-content: flex-end;
                 width: 100%;
-            
+                float: left;
             }
     
             .parking-spot {
@@ -61,8 +62,8 @@
             }
     
             .parking-spot.selected {
-                background-color: #4CAF50;
-                color: white;
+                background-color: #5381c6;
+                color: #f0f0f0;
             }
     
             .parking-number {
@@ -198,9 +199,11 @@
         <div class="w-full max-w-[388px] h-[79px] justify-between items-center inline-flex">
             <div class="w-full max-w-[340px] h-[62px] px-4 py-2 justify-start items-center gap-2.5 flex">
                 <div class="w-full h-[62px] justify-center items-center flex">
-                    <div class="w-full h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg justify-center items-center gap-1.5 inline-flex">
-                        <div class="text-neutral-50 text-2xl md:text-[32px] font-bold font-['Teachers'] leading-tight">Continuar</div>
-                    </div>
+                    <section class="text-center">
+                        <button class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold  leading-[51.78px]">
+                            Continuar
+                        </button>
+                    </section>
                 </div>
             </div>
         </div>
