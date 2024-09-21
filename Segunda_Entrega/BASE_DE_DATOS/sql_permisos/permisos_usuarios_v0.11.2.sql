@@ -10,7 +10,7 @@ CREATE ROLE 'valet_parking';
 
 -- PERMISOS
 -- admin
-GRANT ALL PRIVILEGES ON *.* TO 'admin_rol' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON aio_db.* TO 'admin_rol' WITH GRANT OPTION;
 
 -- cliente
 GRANT SELECT, INSERT, UPDATE, DELETE ON aio_db.cliente TO 'cliente';
@@ -34,7 +34,6 @@ GRANT SELECT ON aio_db.otro_producto TO 'cliente';
 GRANT SELECT, INSERT, UPDATE, DELETE ON aio_db.* TO 'gerente';
 
 -- ejecutivo
--- El ejecutivo puede ingresar la marca, modelo y color de un vehículo
 GRANT SELECT, UPDATE ON aio_db.vehiculo TO 'ejecutivo';
 GRANT SELECT, INSERT, UPDATE ON aio_db.realiza TO 'ejecutivo';
 GRANT SELECT, UPDATE ON aio_db.servicio TO 'ejecutivo';
