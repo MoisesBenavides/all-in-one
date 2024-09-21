@@ -33,7 +33,7 @@ class ControladorCliente{
             if (!$this->validarEmail($email, 63)) {
                 $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
             } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
-                $response['errors'][] = "Por favor, ingrese una contraseña válida.";
+                $response['errors'][] = "La contraseña debe tener entre 6 y 60 caracteres.";
             } else {
                 if ($this->cliente->iniciarCliente($email, $contrasena)) {
                     $response['success'] = true;
@@ -128,7 +128,7 @@ class ControladorCliente{
         /* Verifica si la contraseña contiene mayusculas, minusculas y numeros
         y si la extension de la cadena se ncuentra en el rango especificado por las variables $min y $max. */ 
         return ((preg_match('/[A-Z]/', $str) && preg_match('/[a-z]/', $str) && preg_match('/[0-9]/', $str) 
-                && strlen($str) <= $max && strlen($str) <= $min));
+                && strlen($str) <= $max && strlen($str) >= $min));
 
     }
     private function validarEmail($str, $max) {
