@@ -1,202 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../../../public/css/styles.css">
-    <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
-    <style>
-        @font-face {
-            font-family: 'Teachers';
-            src: ('sigae/public/font/Teachers-VariableFont_wght.ttf') ;
-            font-weight: normal;
-            font-style: normal;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="../../../public/css/styles.css">
+        <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
+        <style>
+            @font-face {
+                font-family: 'Teachers';
+                src: url('sigae/public/font/Teachers-VariableFont_wght.ttf');
+                font-weight: normal;
+                font-style: normal;
+            }
+        
+            body, input, select, button, option {
+                font-family: 'Teachers', sans-serif;
+            }
     
-        body, input, select, button, option {
-            font-family: 'Teachers', sans-serif;
-        }
-    </style>
-</head>
+            .contenedorCampos {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 100%;
+                width: 100%;
+            }
+    
+            .contenedores1-20, .contenedores31-50, .contenedores21-30 {
+                display: flex;
+                justify-content: flex-start; /* Para alinear el contenido al inicio */
+                width: 100%;
+                flex-wrap: nowrap; 
+                overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
+            }
+    
+            .contenedores21-30 {
+                display: flex;
+                justify-content: flex-start;
+                width: 100%;
+            
+            }
+    
+            .parking-spot {
+                flex: 0 0 auto;
+                width: 40px;
+                height: 60px;
+                border: 1px solid black;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 1px 4px;
+                margin: 1px;
+                cursor: pointer;
+                transition: background-color 0.3s, width 0.3s, height 0.3s;
+                background-color: white;
+            }
+    
+            .parking-spot:hover {
+                background-color: #f0f0f0;
+            }
+    
+            .parking-spot.selected {
+                background-color: #4CAF50;
+                color: white;
+            }
+    
+            .parking-number {
+                text-align: center;
+                color: #161212;
+                font-size: 12px;
+                font-weight: 900;
+            }
+    
+            .scroll-container {
+                width: 100%;
+                overflow-x: auto; /* Permitir scroll horizontal */
+            }
+    
+            /* Responsive  */
+            @media (max-width: 768px) {
+                .contenedores1-20, .contenedores31-50, .contenedores21-30  {
+                    overflow-x: auto; /* Activar el desplazamiento horizontal en pantallas más pequeñas */
+                }
+            }
+        </style>
+    </head>
 <body>
     <iframe src="../contents/headerParking.html" class="w-screen"></iframe>
-<!--CAMBIAR TIPOGRAFIA-->
-    <div class="w-[1440px] h-[839px] px-[97px] pt-[45px] pb-[54px] bg-white flex-col justify-start items-center gap-[61px] inline-flex">
-        <div class="w-[896px] h-[46px] px-[153px] py-[13px] bg-[#d9d9d9] rounded-[10px] border border-[#c5b8b8] justify-center items-center gap-2.5 inline-flex">
+
+    <div class="w-full max-w-[1440px] px-4 py-8 bg-white flex-col justify-start items-center gap-8 inline-flex">
+        <div class="w-full max-w-[896px] h-[46px] px-4 py-2 bg-[#d9d9d9] rounded-[10px] border border-[#c5b8b8] justify-center items-center gap-2.5 inline-flex">
             <img class="w-[30px] h-[100px]" src="https://via.placeholder.com/30x100" />
             <div class="text-center text-black text-base font-medium font-['Teachers']">Piso 1</div>
             <img class="w-[30px] h-[100px]" src="https://via.placeholder.com/30x100" />
         </div>
-        <div class="w-[27px] h-[27px] relative"></div>
-        <div class="w-[896px] h-[359px] px-[66px] bg-white border border-black flex-col justify-center items-start gap-2.5 flex">
-            <div class="w-[800px] h-20 justify-start items-center inline-flex">
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="self-stretch text-center text-[#161212] text-[13px] font-black ">A1</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="self-stretch text-center text-[#161212] text-[13px] font-black ">A2</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="self-stretch text-center text-[#161212] text-[13px] font-black ">A3</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="self-stretch text-center text-[#161212] text-[13px] font-black ">A4</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="self-stretch text-center text-[#161212] text-[13px] font-black ">A5</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="self-stretch text-center text-[#161212] text-[13px] font-black  ">A6</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="self-stretch text-center text-[#161212] text-[13px] font-black  ">A7</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="self-stretch text-center text-[#161212] text-[13px] font-black ">A8</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="self-stretch text-center text-[#161212] text-[13px] font-black ">A9</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A10</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-7 text-center text-[#161212] text-[13px] font-black ">A11</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-7 text-center text-[#161212] text-[13px] font-black ">A12</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-7 text-center text-[#161212] text-[13px] font-black ">A13</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-7 text-center text-[#161212] text-[13px] font-black ">A14</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-7 text-center text-[#161212] text-[13px] font-black ">A15</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-7 text-center text-[#161212] text-[13px] font-black ">A16</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A17</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-7 text-center text-[#161212] text-[13px] font-black ">A18</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A19</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black flex-col justify-center items-center gap-2.5 inline-flex">
-                    <div class="w-[30px] text-right text-[#161212] text-[13px] font-black ">A20</div>
-                </div>
+        <div class="contenedorCampos w-full max-w-[896px] h-auto min-h-[359px] p-4 bg-white border border-black">
+            <div class="scroll-container">
+                <div id="contenedores1-20" class="contenedores1-20"></div>
             </div>
-            <div class="w-[422px] justify-center items-center gap-0.5 inline-flex">
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A21</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A22</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A23</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A24 </div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A25</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A26</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A27</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A28</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A29</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-center items-center gap-2.5 flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A30</div>
-                </div>
+            <div class="contenedores21-30">
+                <div id="contenedores21-30" class="flex"></div>
+                <div class="w-[108px] h-[85px] relative border-l border-r border-t border-black"></div>
             </div>
-            <div class="w-[108px] h-[85px] relative border-l border-r border-t border-black"></div>
-            <div class="w-[803px] h-[79px] justify-start items-center inline-flex">
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A31</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A32</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A33</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A34</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A35</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A36</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A37</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A38</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A39</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A40</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-7 text-center text-[#161212] text-[13px] font-black ">A41</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-7 text-center text-[#161212] text-[13px] font-black ">A42</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A43</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A44</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A45</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A46</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A47</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A48</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-center text-[#161212] text-[13px] font-black ">A49</div>
-                </div>
-                <div class="w-10 h-20 px-1 py-[17px] border-l border-black justify-between items-center flex">
-                    <div class="w-[30px] text-right text-[#161212] text-[13px] font-black ">A50</div>
-                </div>
+            <div class="scroll-container">
+                <div id="contenedores31-50" class="contenedores31-50"></div>
             </div>
         </div>
-        <div class="w-[388px] h-[79px] justify-between items-center inline-flex">
-            <div class="w-[340px] h-[62px] px-[23px] py-[9px] justify-start items-center gap-2.5 flex">
-                <div class="w-[340px] h-[62px] justify-center items-center flex">
-                    <div class="w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg justify-center items-center gap-1.5 inline-flex">
-                        <div class="text-neutral-50 text-[32px] font-bold font-['Teachers'] leading-[51.78px]">Continuar</div>
+        <div class="w-full max-w-[388px] h-[79px] justify-between items-center inline-flex">
+            <div class="w-full max-w-[340px] h-[62px] px-4 py-2 justify-start items-center gap-2.5 flex">
+                <div class="w-full h-[62px] justify-center items-center flex">
+                    <div class="w-full h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg justify-center items-center gap-1.5 inline-flex">
+                        <div class="text-neutral-50 text-2xl md:text-[32px] font-bold font-['Teachers'] leading-tight">Continuar</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        let selectedSpot = null;
+
+        function generateParkingSpots(start, end, containerId) {
+            const container = document.getElementById(containerId);
+            for (let i = start; i <= end; i++) {
+                const spot = document.createElement('button');
+                spot.className = 'parking-spot';
+                spot.innerHTML = `<div class="parking-number">A${i}</div>`;
+                spot.addEventListener('click', function() {
+                    if (selectedSpot) {
+                        selectedSpot.classList.remove('selected');
+                    }
+                    if (selectedSpot !== this) {
+                        this.classList.add('selected');
+                        selectedSpot = this;
+                    } else {
+                        selectedSpot = null;
+                    }
+                });
+                container.appendChild(spot);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            generateParkingSpots(1, 20, 'contenedores1-20');
+            generateParkingSpots(21, 30, 'contenedores21-30');
+            generateParkingSpots(31, 50, 'contenedores31-50');
+        });
+    </script>
 </body>
 </html>
