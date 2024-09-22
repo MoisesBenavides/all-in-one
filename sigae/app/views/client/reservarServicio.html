@@ -137,7 +137,7 @@
                         </div>
                      </div>
                   </div>
-                  <input type="hidden" id="selectedServiceSubtype" name="nombreServicio" value="">
+                  <input type="hidden" id="selectedServiceSubtype" name="tipoServicio" value="">
                </section>
                <section>
                   <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese el tipo de vehículo</h2>
@@ -234,11 +234,11 @@
          
          function updateServiceSubtypes(serviceType) {
             const subtypes = {
-                 alineacion: ['delantera', 'trasera', 'completa'],
-                 balanceo: ['estatico', 'dinamico', 'dinamico_camioneta', 'estatico_camioneta'],
-                 neumaticos: ['montaje', 'desmontaje', 'rotacion', 'inflado'],
-                 diagnostico: ['diagnostico_general'],
-                 completo: ['servicio_completo']
+                 alineacion: ['A01', 'A02', 'A03'],
+                 balanceo: ['B01', 'B02', 'B03', 'B04'],
+                 neumaticos: ['N01', 'N02', 'N03', 'N04'],
+                 diagnostico: ['D01'],
+                 completo: ['SVG']
              };
          
              tipoServicioOptions.innerHTML = '';
