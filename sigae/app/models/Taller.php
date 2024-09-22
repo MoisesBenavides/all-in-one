@@ -1,5 +1,8 @@
 <?php
 
+require_once '../app/db_config/db_conn.php';
+require_once 'Servicio.php';
+
 class Taller extends Servicio{
     private $tipo;
     private $descripcion;
