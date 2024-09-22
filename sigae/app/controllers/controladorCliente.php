@@ -145,12 +145,7 @@ class ControladorCliente{
         error_log(print_r($_SESSION, true));
         include '../app/views/client/reservarServicio.html';
     }
-    function doBookService(){
-        session_start();
-        error_log($_SESSION['email']. " abrió la página de reserva de servicios");
-        error_log(print_r($_SESSION, true));
-        include '../app/views/client/reservarServicio.html';
-    }
+    
     function parking(){
         include '../app/views/client/parking.html';
     }
