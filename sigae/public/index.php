@@ -1,8 +1,10 @@
 <?php
 
 require_once '../app/controllers/ControladorCliente.php';
+require_once '../app/controllers/ControladorTaller.php';
 
 $controladorCliente = new ControladorCliente();
+$controladorTaller = new ControladorTaller();
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'login';
 
@@ -29,7 +31,7 @@ switch ($action) {
         $controladorCliente->bookService();
         break;
     case 'doBookService':
-        $controladorCliente->doBookService();
+        $controladorTaller->doBookService();
         break;
     case 'aioParking':
         $controladorCliente->parking();
