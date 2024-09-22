@@ -48,4 +48,8 @@ class Taller extends Servicio{
     public function setTiempo_estimado($tiempo_estimado){
         $this->tiempo_estimado = $tiempo_estimado;
     }
+
+    public function guardarServicio(){
+
+    }
 }

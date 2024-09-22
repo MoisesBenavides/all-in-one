@@ -62,4 +62,6 @@ abstract class Servicio{
     public function setEstado(EstadoServicio $estado){
         $this->estado = $estado;
     }
+
+    abstract public function guardarServicio();
 }
