@@ -307,6 +307,40 @@
              cargarVehiculos();
          });
       </script>
+      <script>
+         document.getElementById('signup-form').addEventListener('submit', function(e) {
+             e.preventDefault();
+             
+             fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
+                 .then(response => response.json())
+                 .then(data => {
+                     const errorContainer = document.getElementById('error-container');
+                     const errorList = document.getElementById('error-list');
+                     
+                     errorList.innerHTML = '';
+                     
+                     if (data.success) {
+                         window.location.href = 'index.php?action=home';
+                     } else {
+                         errorContainer.classList.remove('hidden');
+                         data.errors.forEach(error => {
+                             const li = document.createElement('li');
+                             li.textContent = error;
+                             errorList.appendChild(li);
+                         });
+         
+                         // Debug information
+                         console.log('Debug info:', data.debug);
+                         const debugInfo = document.createElement('pre');
+                         debugInfo.textContent = JSON.stringify(data.debug, null, 2);
+                         errorList.appendChild(debugInfo);
+                     }
+                 })
+                 .catch(error => {
+                     console.error('Error:', error);
+                 });
+         });
+      </script>
    </body>
    <iframe id="footer" class="h-[400px] w-screen" src="../../views/contents/footer.html"></iframe>
 </html>
