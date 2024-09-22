@@ -58,6 +58,11 @@
       "descripcion": "Inflado de neumáticos",
       "precio": 300.00,
       "tiempo_estimado": 10
+    },
+    "SVC": {
+    "descripcion": "Servicio completo (neumáticos, alineación, balanceo)",
+    "precio": 8500.00,
+    "tiempo_estimado": 110
     }
     
 }
