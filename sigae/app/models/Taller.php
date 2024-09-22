@@ -13,4 +13,36 @@ class Taller extends Servicio{
         $this->diagnostico = $diagnostico;
         $this->tiempo_estimado = $tiempo_estimado;
     }
+
+    public function getTipo(){
+        return $this->tipo;
+    }
+
+    public function setTipo($tipo){
+        $this->tipo = $tipo;
+    }
+
+    public function getDescripcion(){
+        return $this->descripcion;
+    }
+
+    public function setDescripcion($descripcion){
+        $this->descripcion = $descripcion;
+    }
+
+    public function getDiagnostico(){
+        return $this->diagnostico;
+    }
+
+    public function setDiagnostico($diagnostico){
+        $this->diagnostico = $diagnostico;
+    }
+
+    public function getTiempo_estimado(){
+        return $this->tiempo_estimado;
+    }
+
+    public function setTiempo_estimado($tiempo_estimado){
+        $this->tiempo_estimado = $tiempo_estimado;
+    }
 }
