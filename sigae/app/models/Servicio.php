@@ -1,5 +1,7 @@
 <?php
 
+require_once 'EstadoServicio.php';
+
 abstract class Servicio{
     protected $id;
     protected $precio;
@@ -11,7 +13,7 @@ abstract class Servicio{
         $this->precio = $precio;
         $this->fecha_inicio = $fecha_inicio;
         $this->fecha_final = $fecha_final;
-        $this->estado = 'pendiente';
+        $this->estado = EstadoServicio::Pendiente;
     }
 
     public function getId(){
@@ -54,15 +56,15 @@ abstract class Servicio{
         return $this;
     }
 
-    public function getEstado(): EstadoServicio{
-        return $this->estado;
+    public function getEstado(): string{
+        return $this->estado->value;
     }
 
     public function setEstado(EstadoServicio $estado){
         $this->estado = $estado;
     }
 
-    abstract public function reservarServicio();
+    abstract public function reservarServicio($matricula);
 
     abstract public function cambiarServicio();
 
