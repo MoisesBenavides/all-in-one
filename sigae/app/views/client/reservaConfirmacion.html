@@ -12,39 +12,52 @@
     <h1>Confirmación de Reserva</h1>
     <div id="confirmationData" data-session='<?php echo htmlspecialchars($jsonSessionData, ENT_QUOTES); ?>'></div>
 
-<script>
-    // Obtener los datos de sesión desde el atributo data
-    const sessionData = JSON.parse(document.getElementById('confirmationData').getAttribute('data-session'));
+    <script>
+        // Obtener los datos de sesión desde el atributo data
+        const sessionData = JSON.parse(document.getElementById('confirmationData').getAttribute('data-session'));
 
-    // Generar salida de datos
-    let output = `<p>Email: ${sessionData.email}</p>`;
-    output += `<p>ID de usuario: ${sessionData.id}</p>`;
-    output += `<p>Nombre: ${sessionData.nombre}</p>`;
-    output += `<p>Apellido: ${sessionData.apellido}</p>`;
-    if (sessionData.telefono){
-        output += `<p>Teléfono: ${sessionData.telefono}</p>`;
-    }
+        // Generar salida de datos
+        let output = `<p>Email: ${sessionData.email}</p>`;
+        output += `<p>ID de usuario: ${sessionData.id}</p>`;
+        output += `<p>Nombre: ${sessionData.nombre}</p>`;
+        output += `<p>Apellido: ${sessionData.apellido}</p>`;
+        output += `<p>Servicio: ${sessionData.servicio}</p>`;
+        if (sessionData.telefono) {
+            output += `<p>Teléfono: ${sessionData.telefono}</p>`;
+        }
+
+
+        if (sessionData.reserva) {
+            output += `<h2>Detalles de la Reserva</h2>`;
+            output += `<p>ID del servicio: ${sessionData.reserva.id}</p>`;
+            output += `<p>Matricula: ${sessionData.reserva.matricula}</p>`;
+            output += `<p>Precio: ${sessionData.reserva.precio}</p>`;
+            output += `<p>Fecha de inicio: ${sessionData.reserva.fecha_inicio}</p>`;
+            output += `<p>Fecha de finalización: ${sessionData.reserva.fecha_final}</p>`;
+            output += `<p>Estado: ${sessionData.reserva.estado}</p>`;
+
+            if (sessionData.servicio === 'parking') {
+                output += `<h3>Detalles Adicionales para Parking</h3>`;
+                output += `<p>Largo plazo: ${sessionData.reserva.largo_plazo}</p>`;
+                output += `<p>Tipo de plaza: ${sessionData.reserva.tipo_plaza}</p>`;
+                output += `<a href="index.php?action=aioParking" id="boton_volver" class="button">Volver a AIO Parking</a>`;
+            } else
+                if (sessionData.servicio === 'taller') {
+                    output += `<h3>Detalles Adicionales para Taller</h3>`;
+                    output += `<p>Tipo: ${sessionData.reserva.tipo}</p>`;
+                    output += `<p>Descripción: ${sessionData.reserva.descripcion}</p>`;
+                    output += `<p>Tiempo estimado: ${sessionData.reserva.tiempo_estimado} minutos</p>`;
+                    output += `<a href="index.php?action=services" id="boton_volver" class="button">Volver a Servicios</a>`;
+                }
+        } else {
+            output += `<p>No hay detalles de reserva disponibles.</p>`;
+        }
+
+        // Insertar el contenido generado en el div
+        document.getElementById('confirmationData').innerHTML += output;
+    </script>
     
-
-    if (sessionData.reserva) {
-        output += `<h2>Detalles de la Reserva</h2>`;
-        output += `<p>ID del servicio: ${sessionData.reserva.id}</p>`;
-        output += `<p>Matricula: ${sessionData.reserva.matricula}</p>`;
-        output += `<p>Precio: ${sessionData.reserva.precio}</p>`;
-        output += `<p>Fecha de inicio: ${sessionData.reserva.fecha_inicio}</p>`;
-        output += `<p>Fecha de finalización: ${sessionData.reserva.fecha_final}</p>`;
-        output += `<p>Estado: ${sessionData.reserva.estado}</p>`;
-        output += `<p>Tipo: ${sessionData.reserva.tipo}</p>`;
-        output += `<p>Descripción: ${sessionData.reserva.descripcion}</p>`;
-        output += `<p>Tiempo estimado: ${sessionData.reserva.tiempo_estimado} minutos</p>`;
-    } else {
-        output += `<p>No hay detalles de reserva disponibles.</p>`;
-    }
-
-    // Insertar el contenido generado en el div
-    document.getElementById('confirmationData').innerHTML += output;
-</script>
-<a href="index.php?action=services" id="boton_volver" class="button">Volver a Servicios</a>
+    
 </body>
 
 </html>

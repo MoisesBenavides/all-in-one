@@ -1,6 +1,6 @@
 <?php
 
 enum TipoPlazaParking: String{
-    case Auto = 'auto';
-    case Moto = 'moto';
+    case auto = 'auto';
+    case moto = 'moto';
 }

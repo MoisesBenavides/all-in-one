@@ -70,5 +70,5 @@ abstract class Servicio{
 
     abstract public function cancelarServicio();
 
-    abstract public function getServices($matricula);
+    abstract public function getServicios();
 }

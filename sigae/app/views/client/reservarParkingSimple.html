@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserva de Vehículo</title>
+    <title>Reserva de Parking Simple | AIO</title>
     <link rel="stylesheet" href="../../../public/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
 </head>
 <style>
     @font-face {
@@ -40,8 +41,8 @@
 
             <!-- Navegación - visible solo en pantallas medianas y grandes -->
             <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
-                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar</a>
-                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar a largo plazo</a>
+                <a href="index.php?action=aioParkingBookSimple" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar</a>
+                <a href="index.php?action=aioParkingBookLongTerm" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar a largo plazo</a>
                 <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Mis Reservas</a>
                 <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">FAQ</a>
             </nav>
@@ -54,10 +55,9 @@
 
         <!-- Menú hamburguesa desplegable (oculto por defecto) -->
         <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
-            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Servicios Mecánicos</a>
-            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Parking</a>
+            <a href="index.php?action=aioParkingBookSimple" class="block text-black text-sm font-bold font-['Teachers']">Reservar</a>
+            <a href="index.php?action=aioParkingBookLongTerm" class="block text-black text-sm font-bold font-['Teachers']">Reservar a largo plazo</a>
             <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Mis Reservas</a>
-            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Productos Destacados</a>
             <a href="#" class="block text-black text-sm font-bold font-['Teachers']">FAQ</a>
         </nav>
     </div>
@@ -108,88 +108,158 @@
         });
     </script>
 </header>
-<body class="bg-white">
-
+<body>
     <main class="container mx-auto px-4 py-8">
-        <div class="max-w-3xl mx-auto space-y-12">
-            <section>
-                <h2 class="text-center text-black text-2xl font-semibold  mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese la fecha</h2>
+       <div class="max-w-3xl mx-auto space-y-12">
+          <form id="servicioForm" action="index.php?action=bookParkingSimple" method="POST" class="w-full max-w-[340px] mx-auto">
+             <section>
+                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese la fecha de inicio</h2>
                 <div class="w-full max-w-[340px] mx-auto">
-                    <input type="datetime-local" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold ">
+                   <input type="datetime-local" name= "fecha_inicio" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
                 </div>
-            </section>
-
-            <section>
-                <h2 class="text-center text-black text-2xl font-semibold  mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese El tipo de vehículo</h2>
-                <form id="vehicleForm" action="proceso.php" method="POST" class="w-full max-w-[340px] mx-auto">
-                    <div class="relative mb-2">
-                        <!-- Dropdown Button y Menú: Posicionados en la esquina superior derecha -->
-                        <div id="dropdownButton" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                            <div id="selectedOption" class="text-center text-black text-xl font-semibold ">Tipo</div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
-                        <!-- Menú dropdown en la esquina superior derecha -->
-                        <div id="dropdownMenu" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
-                            <div class="py-1">
-                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="1" data-price="100">Motocicleta</div>
-                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="2" data-price="250">Camioneta</div>
-                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="3" data-price="200">Auto</div>
-                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="4" data-price="300">Pequeño camión</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="priceInfo" class="text-center text-black text-sm font-semibold  hidden"></div>
-                    <input type="hidden" id="selectedVehicleType" name="vehicleType" value="">
-                </form>
-            </section>
-
-            <section class="text-center">
-                <button class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold  leading-[51.78px]">
-                    Continuar
-                </button>
-            </section>
-
-            <section>
-                <h2 class="text-center text-black text-2xl font-semibold  mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
+             </section>
+             <section>
+                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese la fecha final</h2>
+                <div class="w-full max-w-[340px] mx-auto">
+                   <input type="datetime-local" name= "fecha_final" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                </div>
+             </section>
+             <section>
+                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese el tipo de vehículo</h2>
+                <div class="relative mb-2">
+                   <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                      <div id="selectedOptionAuto" class="text-center text-black text-xl font-semibold">Tipo</div>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
+                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                   </div>
+                   <div id="dropTipoVehiculo" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                      <div class="py-1">
+                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="moto" data-price="100">Moto</div>
+                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camioneta" data-price="250">Camioneta</div>
+                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="auto" data-price="200">Auto</div>
+                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camion" data-price="300">Pequeño camión</div>
+                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="utilitario" data-price="300">Pequeño utilitario</div>
+                      </div>
+                   </div>
+                </div>
+                <input type="hidden" id="vehiculoElegido" name="tipoVehiculo" value="">
+             </section>
+             <script>
+                // Dropdown functionality for vehicle type selection
+                const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+                const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
+                const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+                const selectedVehicleType = document.getElementById('vehiculoElegido');
+                
+                dropdownButtonAuto.addEventListener('click', () => {
+                    dropdownMenuAuto.classList.toggle('hidden');
+                });
+                
+                const optionsAuto = document.querySelectorAll('#dropTipoVehiculo .option');
+                optionsAuto.forEach(option => {
+                    option.addEventListener('click', () => {
+                        selectedOptionAuto.textContent = option.textContent;
+                        selectedVehicleType.value = option.dataset.value;
+                        dropdownMenuAuto.classList.add('hidden');
+                    });
+                });
+             </script>
+             <section>
+                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
                 <div class="relative w-full max-w-[340px] mx-auto">
-                    <select id="vehiculosDropdown" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold ">
-                        <option value="">Selecciona un vehículo</option>
-                        <!-- Aquí se insertarán las matrículas de los vehículos -->
-                    </select>
+                   <select id="vehiculosDropdown" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                      <option value="">Selecciona un vehículo</option>
+                      <!-- Vehicle options will be inserted here -->
+                   </select>
                 </div>
-                <script>
-                    // Función para obtener los vehículos desde PHP
-                    async function cargarVehiculos() {
-                        try {
-                            const response = await fetch('ARCHIVO DE MATRICULAS');
-                            const data = await response.json();
-                
-                            const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-                            
-                            // Limpiar cualquier opción previa (excepto la primera opción)
-                            vehiculosDropdown.innerHTML = '<option value="">Selecciona un vehículo</option>';
-                            
-                            // Añadir las matrículas como opciones
-                            data.forEach(vehiculo => {
-                                const option = document.createElement('option');
-                                option.value = vehiculo.matricula;
-                                option.textContent = vehiculo.matricula;
-                                vehiculosDropdown.appendChild(option);
-                            });
-                        } catch (error) {
-                            console.error('Error al cargar las matrículas:', error);
-                        }
-                    }
-                
-                    // Llamar a la función cuando la página cargue
-                    window.onload = cargarVehiculos;
-                </script>
-            </section>
-        </div>
+             </section>
+             <div class="h-[52px] relative  ">
+                <!--INPUT PARA MATRICULA-->
+                <input id="matricula" name="matricula" type="text" placeholder="O registra ya con Matrícula" class="space-x-6  p-2 w-[340px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
+             </div>
+             <section class="text-center"></section>
+             <!--Continuar-->
+             <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
+             </section>
+          </form>
+       </div>
     </main>
-
- 
-</body>
+    <!--ESTE SCRIPT DE DEBAJO FUNCIONA, LO PROBE CON UN ARCHIVO DE PRUEBA DE PHP EN MI CARPETA www-->
+    <script>
+       function cargarVehiculos() {
+           $.ajax({
+               url: 'archivo_para_matricula', // Asegúrate de que la ruta sea correcta
+               type: 'GET',
+               dataType: 'text', // Esperamos que la respuesta sea texto plano
+               success: function(data) {
+                   var vehiculosDropdown = $('#vehiculosDropdown');
+                   
+                   // Limpiar las opciones previas
+                   vehiculosDropdown.find('option:not(:first)').remove();
+                   
+                   // Separar la respuesta en líneas
+                   var lines = data.trim().split('\n');
+                   
+                   // Procesar cada línea
+                   lines.forEach(function(line) {
+                       var parts = line.split(' - Tipo: ');
+                       if (parts.length === 2) {
+                           var matricula = parts[0].replace('Matrícula: ', '');
+                           var tipo = parts[1];
+                           
+                           // Agregar la opción al dropdown
+                           vehiculosDropdown.append($('<option>', {
+                               value: matricula,
+                               text: matricula + ' - ' + tipo
+                           }));
+                       }
+                   });
+               },
+               error: function(xhr, status, error) {
+                   console.error('Error al cargar las matrículas:', error);
+               }
+           });
+       }
+       
+       // Llamar la función cuando se carga la página
+       $(document).ready(function() {
+           cargarVehiculos();
+       });
+    </script>
+    <script>
+       document.getElementById('signup-form').addEventListener('submit', function(e) {
+           e.preventDefault();
+           
+           fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
+               .then(response => response.json())
+               .then(data => {
+                   const errorContainer = document.getElementById('error-container');
+                   const errorList = document.getElementById('error-list');
+                   
+                   errorList.innerHTML = '';
+                   
+                   if (data.success) {
+                       window.location.href = 'index.php?action=home';
+                   } else {
+                       errorContainer.classList.remove('hidden');
+                       data.errors.forEach(error => {
+                           const li = document.createElement('li');
+                           li.textContent = error;
+                           errorList.appendChild(li);
+                       });
+       
+                       // Debug information
+                       console.log('Debug info:', data.debug);
+                       const debugInfo = document.createElement('pre');
+                       debugInfo.textContent = JSON.stringify(data.debug, null, 2);
+                       errorList.appendChild(debugInfo);
+                   }
+               })
+               .catch(error => {
+                   console.error('Error:', error);
+               });
+       });
+    </script>
+ </body>
 </html>

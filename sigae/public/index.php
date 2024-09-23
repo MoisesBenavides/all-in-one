@@ -2,9 +2,11 @@
 
 require_once '../app/controllers/ControladorCliente.php';
 require_once '../app/controllers/ControladorTaller.php';
+require_once '../app/controllers/ControladorParking.php';
 
 $controladorCliente = new ControladorCliente();
 $controladorTaller = new ControladorTaller();
+$controladorParking = new ControladorParking();
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'login';
 
@@ -42,8 +44,17 @@ switch ($action) {
     case 'aioParkingBookSimple':
         $controladorCliente->parkingSimple();
         break;
+    case 'bookParkingSimple':
+        $controladorParking->bookParkingSimple();
+        break;
     case 'aioParkingBookLongTerm':
         $controladorCliente->parkingLongTerm();
+        break;
+    case 'bookParkingLongTerm':
+        $controladorParking->bookParkingLongTerm();
+        break;
+    case 'parkingConfirmation':
+        $controladorParking->parkingConfirmation();
         break;
     case 'myUser':
         $controladorCliente->myUser();

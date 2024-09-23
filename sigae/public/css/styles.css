@@ -652,10 +652,6 @@ video {
   top: 1.25rem;
 }
 
-.top-6 {
-  top: 1.5rem;
-}
-
 .top-\[81px\] {
   top: 81px;
 }
@@ -1104,10 +1100,6 @@ video {
 
 .w-\[595\.41px\] {
   width: 595.41px;
-}
-
-.w-\[614px\] {
-  width: 614px;
 }
 
 .w-\[774px\] {
@@ -1770,10 +1762,6 @@ video {
 
 .text-center {
   text-align: center;
-}
-
-.text-right {
-  text-align: right;
 }
 
 .font-\[\'Teachers\'\] {

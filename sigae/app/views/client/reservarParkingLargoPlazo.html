@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserva de Vehículo</title>
+    <title>Reserva de Parking de Largo Plazo | AIO</title>
     <link rel="stylesheet" href="../../../public/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
     <script>
         // Dropdown functionality
         document.addEventListener('DOMContentLoaded', (event) => {
@@ -68,8 +69,8 @@
 
             <!-- Navegación - visible solo en pantallas medianas y grandes -->
             <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
-                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar</a>
-                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar a largo plazo</a>
+                <a href="index.php?action=aioParkingBookSimple" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar</a>
+                <a href="index.php?action=aioParkingBookLongTerm" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar a largo plazo</a>
                 <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Mis Reservas</a>
                 <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">FAQ</a>
             </nav>
@@ -82,10 +83,9 @@
 
         <!-- Menú hamburguesa desplegable (oculto por defecto) -->
         <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
-            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Servicios Mecánicos</a>
-            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Parking</a>
+            <a href="index.php?action=aioParkingBookSimple" class="block text-black text-sm font-bold font-['Teachers']">Reservar</a>
+            <a href="index.php?action=aioParkingBookLongTerm" class="block text-black text-sm font-bold font-['Teachers']">Reservar a largo plazo</a>
             <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Mis Reservas</a>
-            <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Productos Destacados</a>
             <a href="#" class="block text-black text-sm font-bold font-['Teachers']">FAQ</a>
         </nav>
     </div>

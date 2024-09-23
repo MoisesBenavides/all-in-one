@@ -86,6 +86,7 @@ class Taller extends Servicio{
             
         } finally {
             $conn = null;
+
         }
     }
     
