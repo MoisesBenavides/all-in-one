@@ -1,12 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmacion de reserva de servicio de taller | AIO</title>
     <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
 </head>
+
 <body>
-    
+    <h1>Confirmación de Reserva</h1>
+    <div id="confirmationData" data-session='<?php echo htmlspecialchars($jsonSessionData, ENT_QUOTES); ?>'></div>
+
+<script>
+    // Obtener los datos de sesión desde el atributo data
+    const sessionData = JSON.parse(document.getElementById('confirmationData').getAttribute('data-session'));
+
+    // Generar salida de datos
+    let output = `<p>Email: ${sessionData.email}</p>`;
+    output += `<p>ID de usuario: ${sessionData.id}</p>`;
+    output += `<p>Nombre: ${sessionData.nombre}</p>`;
+    output += `<p>Apellido: ${sessionData.apellido}</p>`;
+    output += `<p>Teléfono: ${sessionData.telefono}</p>`;
+
+    if (sessionData.reserva) {
+        output += `<h2>Detalles de la Reserva</h2>`;
+        output += `<p>ID del servicio: ${sessionData.reserva.id}</p>`;
+        output += `<p>Matricula: ${sessionData.reserva.matricula}</p>`;
+        output += `<p>Precio: ${sessionData.reserva.precio}</p>`;
+        output += `<p>Fecha de inicio: ${sessionData.reserva.fecha_inicio}</p>`;
+        output += `<p>Fecha de finalización: ${sessionData.reserva.fecha_final}</p>`;
+        output += `<p>Estado: ${sessionData.reserva.estado}</p>`;
+        output += `<p>Tipo: ${sessionData.reserva.tipo}</p>`;
+        output += `<p>Descripción: ${sessionData.reserva.descripcion}</p>`;
+        output += `<p>Tiempo estimado: ${sessionData.reserva.tiempo_estimado} minutos</p>`;
+    } else {
+        output += `<p>No hay detalles de reserva disponibles.</p>`;
+    }
+
+    // Insertar el contenido generado en el div
+    document.getElementById('confirmationData').innerHTML += output;
+</script>
 </body>
+
 </html>
