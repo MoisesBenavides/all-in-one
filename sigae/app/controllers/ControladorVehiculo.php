@@ -6,12 +6,12 @@ require_once '../app/models/TipoVehiculo.php';
 class ControladorVehiculo{
     private $vehiculo;
 
-    public function registrarYaVehiculo($matricula, $tipoVehiculo){
+    public function registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente){
         if (Vehiculo::existeMatricula($matricula)) {
             return false; // False si la matrícula ya existe
         } else {
             $this->vehiculo = new Vehiculo($matricula, null, null, $tipoVehiculo, null);
-            return $this->vehiculo->registrarYa();
+            return $this->vehiculo->registrarYa($id_cliente);
         }
     
     }
