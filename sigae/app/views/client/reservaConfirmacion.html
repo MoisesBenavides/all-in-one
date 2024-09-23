@@ -21,7 +21,10 @@
     output += `<p>ID de usuario: ${sessionData.id}</p>`;
     output += `<p>Nombre: ${sessionData.nombre}</p>`;
     output += `<p>Apellido: ${sessionData.apellido}</p>`;
-    output += `<p>Teléfono: ${sessionData.telefono}</p>`;
+    if (sessionData.telefono){
+        output += `<p>Teléfono: ${sessionData.telefono}</p>`;
+    }
+    
 
     if (sessionData.reserva) {
         output += `<h2>Detalles de la Reserva</h2>`;

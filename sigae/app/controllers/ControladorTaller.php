@@ -115,7 +115,7 @@ class ControladorTaller{
             'id' => $_SESSION['id'],
             'nombre' => $_SESSION['nombre'],
             'apellido' => $_SESSION['apellido'],
-            'telefono' => $_SESSION['telefono'],
+            'telefono' => isset($_SESSION['telefono']),
             'reserva' => isset($_SESSION['reserva']) ? [
                 'id' => $_SESSION['reserva']->getId(),
                 'matricula' => $_SESSION['matricula'],
