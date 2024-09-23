@@ -70,22 +70,21 @@ class ControladorTaller{
                 $fecha_inicioParsed = str_replace('T', ' ', $fecha_inicio) . ':00';
                 $fecha_finalParsed = str_replace('T', ' ', $fecha_final) . ':00';
 
+                $id_cliente = $_SESSION['id'];
+
                 $this->taller = new Taller($tipoServicio, $descripcion, null, $tiempo_estimado, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
-                if (!$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo)){
+                if (!$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                     $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
                 } elseif (!$this->taller->reservarServicio($matricula)){
                     $response['errors'][] = "Error al reservar servicio.";
                 } else {
                     $response['success'] = true;
-                    //$response['message'] = "Reserva realizada con éxito.";
 
                     // TODO: Enviar correo de confirmación
 
                     // Guardar la reserva en la sesión
-                    
-
-                    // $idReserva = $this->taller->getId();
                     $_SESSION['reserva'] = $this->taller; 
+                    $_SESSION['matricula'] = $matricula;
 
                     // Redireccionar al usuario a la página de confirmación de reserva
                     header('Location: index.php?action=serviceConfirmation');
@@ -110,6 +109,30 @@ class ControladorTaller{
         session_start();
         error_log($_SESSION['email']. " reservó un servicio de taller");
         error_log(print_r($_SESSION, true));
+
+        $sessionData = [
+            'email' => $_SESSION['email'],
+            'id' => $_SESSION['id'],
+            'nombre' => $_SESSION['nombre'],
+            'apellido' => $_SESSION['apellido'],
+            'telefono' => $_SESSION['telefono'],
+            'reserva' => isset($_SESSION['reserva']) ? [
+                'id' => $_SESSION['reserva']->getId(),
+                'matricula' => $_SESSION['matricula'],
+                'precio' => $_SESSION['reserva']->getPrecio(),
+                'fecha_inicio' => $_SESSION['reserva']->getFecha_inicio(),
+                'fecha_final' => $_SESSION['reserva']->getFecha_final(),
+                'estado' => $_SESSION['reserva']->getEstado(),
+                'tipo' => $_SESSION['reserva']->getTipo(),
+                'descripcion' => $_SESSION['reserva']->getDescripcion(),
+                'tiempo_estimado' => $_SESSION['reserva']->getTiempo_estimado(),
+            ] : null,
+        ];
+    
+        // Codifica en JSON
+        $jsonSessionData = json_encode($sessionData);
+    
+        // Imprimir los datos JSON en pagina de confirmacion
         include '../app/views/client/reservaConfirmacion.html';
     }
 
