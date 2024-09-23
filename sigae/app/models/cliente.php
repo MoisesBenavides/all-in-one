@@ -145,7 +145,7 @@ class Cliente{
 
         } catch (Exception $e) {
             error_log($e->getMessage());
-            echo "Error al registrarse: " . $e->getMessage();
+            error_log("Error al registrarse: " . $e->getMessage());
             return false;
             
         } finally {
@@ -153,23 +153,21 @@ class Cliente{
         }
     }
 
-    public function existeEmail($email){
-        try{
+    public static function existeEmail($email) {
+        try {
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-
             $stmt = $conn->prepare('SELECT COUNT(*) FROM cliente WHERE email = :email');
-        
             $stmt->bindParam(':email', $email);
-            
+
             $stmt->execute();
-    
+            
             $count = $stmt->fetchColumn();
 
-            return $count != 0 ? true : false;
+            return $count != 0;
 
-        } catch (Exception $e){
-            echo $e->getMessage();
-
+        } catch (Exception $e) {
+            error_log($e->getMessage()); // Registro del error en el log
+            return false; // False si hubo un error de base de datos
         } finally {
             $conn = null;
         }
