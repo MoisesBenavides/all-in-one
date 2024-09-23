@@ -51,7 +51,7 @@ class ControladorParking{
 
             if (!$this->validarFecha($fecha_inicio)){
                 $response['errors'][] = "Por favor, ingrese una fecha de inicio válida.";
-            } elseif (!$this->validarFecha($fecha_final) && $this->obtenerMinutos($fecha_final, $fecha_inicio) < 5){
+            } elseif (!$this->validarFecha($fecha_final) && (($this->obtenerMinutos($fecha_final, $fecha_inicio)) < 5)){
                 $response['errors'][] = "Por favor, ingrese una fecha final válida. Mínimo 5 minutos después que la de inicio.";
             } elseif(!$this->controladorVehiculo->validarTipoVehiculo($tipoVehiculo)){
                 $response['errors'][] = "El tipo de vehículo seleccionado no está disponible.";
