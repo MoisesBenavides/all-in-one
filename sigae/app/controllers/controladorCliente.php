@@ -106,7 +106,7 @@ class ControladorCliente{
             } elseif ($contrasena !== $repContrasena) {
                 $response['errors'][] = "Las contraseñas no coinciden.";
 
-            } elseif($this->cliente->existeEmail($email)) {
+            } elseif(Cliente::existeEmail($email)) {
                 $response['errors'][]= "Ya existe un usuario con el correo ingresado.";
 
             } elseif(!$this->cliente->guardarCliente(null, $email, $contrasena, $nombre, $apellido, null)){
