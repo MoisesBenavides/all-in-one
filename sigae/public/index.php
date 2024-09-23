@@ -33,6 +33,9 @@ switch ($action) {
     case 'doBookService':
         $controladorTaller->doBookService();
         break;
+    case 'serviceConfirmation':
+        $controladorTaller->serviceConfirmation();
+        break;
     case 'aioParking':
         $controladorCliente->parking();
         break;
