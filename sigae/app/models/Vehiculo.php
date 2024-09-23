@@ -68,7 +68,7 @@ class Vehiculo
         $this->color = $color;
     }
 
-    public function registrarYa(){
+    public function registrarYa($id_cliente){
         $matricula = $this->getMatricula();
         $tipo = $this->getTipo();
         try {
@@ -84,7 +84,8 @@ class Vehiculo
             $stmt->bindParam(':tipo', $tipo);
                 
             $stmt->execute();
-            return true; // Registrar;
+            
+            return $this->vincularCliente($id_cliente) !== false; // Registrar vínculo con cliente;
 
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -96,6 +97,32 @@ class Vehiculo
         }
         
 
+    }
+
+    public function vincularCliente($id_cliente){
+        $matricula = $this->getMatricula();
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+    
+            $stmt = $conn->prepare('INSERT INTO tiene (id_cliente, matricula) VALUES (:id_cl, :mat)');
+            
+            $stmt->bindParam(':id_cl', $id_cliente);
+            $stmt->bindParam(':mat', $matricula);
+                
+            $stmt->execute();
+            
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            error_log("Error al registrar el vehículo: " . $e->getMessage());
+            
+        } finally {
+            $conn = null;
+        }
     }
 
     public static function existeMatricula($matricula) {
