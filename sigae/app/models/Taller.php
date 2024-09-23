@@ -9,8 +9,8 @@ class Taller extends Servicio{
     private $diagnostico;
     private $tiempo_estimado;
 
-    public function __construct($tipo, $descripcion, $diagnostico, $tiempo_estimado, $id, $precio, $fecha_inicio, $fecha_final, EstadoServicio $estado){
-        parent::__construct($id, $precio, $fecha_inicio, $fecha_final, $estado);
+    public function __construct($tipo, $descripcion, $diagnostico, $tiempo_estimado, $id, $precio, $fecha_inicio, $fecha_final){
+        parent::__construct($id, $precio, $fecha_inicio, $fecha_final);
         $this->tipo = $tipo;
         $this->descripcion = $descripcion;
         $this->diagnostico = $diagnostico;
@@ -49,7 +49,64 @@ class Taller extends Servicio{
         $this->tiempo_estimado = $tiempo_estimado;
     }
 
-    public function guardarServicio(){
+    public function reservarServicio($matricula){
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+    
+            $stmt = $conn->prepare('INSERT INTO servicio (matricula, precio, fecha_inicio, fecha_final, estado) 
+                                    VALUES (:mat, :precio, :fecha_ini, :fecha_fin, :estado)');
+            
+            $stmt->bindParam(':mat', $matricula);
+            $stmt->bindParam(':precio', $this->getPrecio());
+            $stmt->bindParam(':fecha_ini', $this->getFecha_inicio());
+            $stmt->bindParam(':fecha_fin', $this->getFecha_final());
+            $stmt->bindParam(':estado', $this->getEstado());
+                
+            $stmt->execute();
+            return true; // Reserva exitosa;
 
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            echo "Error procesar la reserva: " . $e->getMessage();
+            return false;
+            
+        } finally {
+            $conn = null;
+        }
+        
+    }
+
+    public function reservarTaller(){
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+    
+            $stmt = $conn->prepare('INSERT INTO taller (id_servicio, tipo, descripcion, tiempo_estimado) 
+                                    VALUES (:id, :tipo, :descr, :tiempo)');
+
+            $stmt->bindParam(':id', $this->get());
+            $stmt->bindParam(':tipo', $this->getTipo());
+            $stmt->bindParam(':descr', $this->getDescripcion());
+            $stmt->bindParam(':tiempo', $this->getTiempo_estimado());
+                
+            $stmt->execute();
+            return true; // Reserva exitosa;
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            echo "Error procesar la reserva: " . $e->getMessage();
+            return false;
+            
+        } finally {
+            $conn = null;
+        }
+        
     }
 }
