@@ -172,4 +172,7 @@ class Cliente{
             $conn = null;
         }
     }
+
+    public function getClientes(){
+    }
 }

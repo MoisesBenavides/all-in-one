@@ -70,5 +70,6 @@ abstract class Servicio{
 
     abstract public function cancelarServicio();
 
-    abstract public function getServicios();
+    public function getServicios(){
+    }
 }

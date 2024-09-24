@@ -144,4 +144,7 @@ class Vehiculo
         }
     }
     
+    public function getVehiculos(){
+    }
+
 }
