@@ -185,7 +185,7 @@ class ControladorCliente{
         include '../app/views/client/homeCliente.html';
     }
 
-    public function cargarVehiculosAjax($id) {
+    public function cargarMisVehiculosAjax($id) {
         // Llama a la función del modelo cliente para obtener los vehículos
         $misVehiculos = $this->cliente->cargarMisVehiculos($id);
         
