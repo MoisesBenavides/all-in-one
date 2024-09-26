@@ -143,6 +143,14 @@ class ControladorCliente{
         session_start();
         error_log($_SESSION['email']. " abrió la página de reserva de servicios");
         error_log(print_r($_SESSION, true));
+
+        $this->cargarMisVehiculosAjax($_SESSION['id']);
+        $misVehiculos=$this->cliente->cargarMisVehiculos($_SESSION['id']);
+        if ($misVehiculos)
+            error_log(print_r($misVehiculos)." son los vehículos del cliente ".$_SESSION['id']);
+        else
+            error_log("Problema al cargar los vehiculos, o no tiene vehiculos registrados");
+
         include '../app/views/client/reservarServicio.html';
     }
     
@@ -176,6 +184,18 @@ class ControladorCliente{
         error_log(print_r($_SESSION, true));
         include '../app/views/client/homeCliente.html';
     }
+
+    public function cargarVehiculosAjax($id) {
+        // Llama a la función del modelo cliente para obtener los vehículos
+        $misVehiculos = $this->cliente->cargarMisVehiculos($id);
+        
+        if ($misVehiculos) {
+            echo json_encode($misVehiculos);  // Devuelve los vehículos en formato JSON
+        } else {
+            echo json_encode(['error' => 'Problema al cargar los vehículos o no tiene vehículos registrados.']);
+        }
+    }
+
     private function validarContrasena($str, $min, $max) {
         /* Verifica si la contraseña contiene mayusculas, minusculas y numeros
         y si la extension de la cadena se ncuentra en el rango especificado por las variables $min y $max. */ 
