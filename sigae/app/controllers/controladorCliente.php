@@ -145,11 +145,6 @@ class ControladorCliente{
         error_log(print_r($_SESSION, true));
 
         $this->cargarMisVehiculosAjax($_SESSION['id']);
-        $misVehiculos=$this->cliente->cargarMisVehiculos($_SESSION['id']);
-        if ($misVehiculos)
-            error_log(print_r($misVehiculos)." son los vehículos del cliente ".$_SESSION['id']);
-        else
-            error_log("Problema al cargar los vehiculos, o no tiene vehiculos registrados");
 
         include '../app/views/client/reservarServicio.html';
     }
