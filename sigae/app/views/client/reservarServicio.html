@@ -5,6 +5,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Reserva de Servicio | AIO</title>
       <link rel="stylesheet" href="../../../public/css/styles.css">
+
       <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
    </head>
@@ -273,11 +274,11 @@
       </script>
       <!--ESTE SCRIPT DE DEBAJO FUNCIONA, LO PROBE CON UN ARCHIVO DE PRUEBA DE PHP EN MI CARPETA www-->
       <script>
-         function cargarVehiculos() {
+         function cargarMisVehiculos() {
             $.ajax({
-               url: 'ruta/al/controladorDeCliente.php', // Ajusta la ruta correcta a tu controlador
+               url: '../../controllers/controladorCliente.php', // Ajusta la ruta correcta a tu controlador
                type: 'POST',
-               data: { action: 'cargarVehiculosAjax' }, // Enviar parámetro de acción
+               data: { action: 'cargarMisVehiculosAjax' }, // Enviar parámetro de acción
                dataType: 'json',  // Indicamos que esperamos un objeto JSON como respuesta
                success: function(response) {
                      var vehiculosDropdown = $('#vehiculosDropdown');
@@ -309,7 +310,7 @@
 
          // Llamar la función cuando se carga la página
          $(document).ready(function() {
-            cargarVehiculos();
+            cargarMisVehiculos();
          });
 
       </script>
