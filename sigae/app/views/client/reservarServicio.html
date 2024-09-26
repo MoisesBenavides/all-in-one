@@ -268,44 +268,44 @@
       <!--ESTE SCRIPT DE DEBAJO FUNCIONA, LO PROBE CON UN ARCHIVO DE PRUEBA DE PHP EN MI CARPETA www-->
       <script>
          function cargarVehiculos() {
-             $.ajax({
-                 url: 'archivo_para_matricula', // Asegúrate de que la ruta sea correcta
-                 type: 'GET',
-                 dataType: 'text', // Esperamos que la respuesta sea texto plano
-                 success: function(data) {
+            $.ajax({
+               url: 'ruta/al/controladorDeCliente.php', // Ajusta la ruta correcta a tu controlador
+               type: 'POST',
+               data: { action: 'cargarVehiculosAjax' }, // Enviar parámetro de acción
+               dataType: 'json',  // Indicamos que esperamos un objeto JSON como respuesta
+               success: function(response) {
                      var vehiculosDropdown = $('#vehiculosDropdown');
                      
                      // Limpiar las opciones previas
                      vehiculosDropdown.find('option:not(:first)').remove();
                      
-                     // Separar la respuesta en líneas
-                     var lines = data.trim().split('\n');
-                     
-                     // Procesar cada línea
-                     lines.forEach(function(line) {
-                         var parts = line.split(' - Tipo: ');
-                         if (parts.length === 2) {
-                             var matricula = parts[0].replace('Matrícula: ', '');
-                             var tipo = parts[1];
-                             
-                             // Agregar la opción al dropdown
-                             vehiculosDropdown.append($('<option>', {
+                     if (response.error) {
+                        console.error(response.error);
+                     } else {
+                        // Procesar cada vehículo en la respuesta JSON
+                        response.forEach(function(vehiculo) {
+                           var matricula = vehiculo.matricula;
+                           var tipo = vehiculo.tipo;  // Asegúrate de que el campo 'tipo' exista en tu respuesta JSON
+                           
+                           // Agregar la opción al dropdown
+                           vehiculosDropdown.append($('<option>', {
                                  value: matricula,
                                  text: matricula + ' - ' + tipo
-                             }));
-                         }
-                     });
-                 },
-                 error: function(xhr, status, error) {
+                           }));
+                        });
+                     }
+               },
+               error: function(xhr, status, error) {
                      console.error('Error al cargar las matrículas:', error);
-                 }
-             });
+               }
+            });
          }
-         
+
          // Llamar la función cuando se carga la página
          $(document).ready(function() {
-             cargarVehiculos();
+            cargarVehiculos();
          });
+
       </script>
       <script>
          document.getElementById('signup-form').addEventListener('submit', function(e) {
