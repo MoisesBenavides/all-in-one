@@ -165,7 +165,8 @@ class Cliente{
 
             $stmt->execute();
             
-            $misVehiculos = $stmt->fetchAll();
+            $misVehiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log(print_r($misVehiculos, true));
 
             return $misVehiculos;
 
