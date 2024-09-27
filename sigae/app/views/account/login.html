@@ -2,62 +2,55 @@
 <html lang="en">
 
 <head>
-  <!--IMPORTANTEEEE SI se edita el diseno, escribir en la terminal de el visual "npm run dev" (en ../app/config/) hay que tener node.js instalado-->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesion | AIO</title>
-  <link href="../../../public/css/styles.css" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Teachers';
+      src: url('sigae/public/font/Teachers-VariableFont_wght.ttf');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      font-family: 'Teachers', sans-serif;
+    }
+  </style>
 </head>
-<style>
-  @font-face {
-    font-family: 'Teachers';
-    src: ('sigae/public/font/Teachers-VariableFont_wght.ttf');
-    font-weight: normal;
-    font-style: normal;
-  }
 
-  /* Apply the 'Teachers' font to all text elements */
-  body,
-  input,
-  select,
-  button,
-  option {
-    font-family: 'Teachers', sans-serif;
-  }
-</style>
+<body class="bg-gray-100">
+  <div class="flex justify-center items-center min-h-screen">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+      <div class="text-center mb-8">
+        <img src="../../../public/img/AIO Positivo.png" alt="AIO Logo" class="mx-auto max-w-[200px]">
+      </div>
+      <form id="login-form" action="index.php?action=doLogin" method="POST">
+        <div class="mb-6">
+          <input id="email" name="email" type="email" placeholder="Correo" 
+                 class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <p id="email-error" class="mt-1 text-red-500 text-sm hidden"></p>
+        </div>
+        <div class="mb-6">
+          <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" 
+                 class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <p id="password-error" class="mt-1 text-red-500 text-sm hidden"></p>
+        </div>
+        <button type="submit" class="w-full bg-[#950d03] text-white py-2 rounded-md hover:bg-[#7a0b02] transition">
+          Ingresar
+        </button>
+      </form>
+      <div class="mt-6 text-center space-y-2">
+        <a href="index.php?action=forgotPassword" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
+        <p>
+          <a href="index.php?action=signup" class="text-sm text-gray-600 hover:underline">¿No tienes una cuenta? Regístrate aquí</a>
+        </p>
+      </div>
+    </div>
+  </div>
 
-<body>
-  <div class="flex justify-center items-center h-screen ">
-    <div name="Contenedor" class="  w-[830px] h-[707px]  bg-white rounded-3xl border borders-black flex-col justify-center items-center  flex absolute mx-auto">
-      <div name="LOGO" class=" w-[310px] h-36 justify-center items-center inline-flex">
-        <img class="w-[310px] h-36" src="../../../public/img/AIO Positivo.png" />
-      </div>
-      <div name="Contenedor Campos" class="flex-col top-5 gap-[22px] relative flex">
-        <div class=" flex-col top-5 gap-[22px] flex relative">
-          <form class="CorreoContra" action="index.php?action=doLogin" class="flex items-center justify-around " method="POST">
-            <div class="h-[52px] relative  ">
-              <!--INPUT PARA MAIL-->
-              <input id="email" name="email" type="mail" placeholder="Correo" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
-            </div>
-            <div class="h-[52px] relative ">
-              <!--INPUT PARA CONTRASENA-->
-              <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="space-x-6  p-2 w-[595.41px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
-            </div>
-            <div name="contenedor submit" class="space-y-4">
-              <!--Enviar-->
-              <input type="submit" value="Ingresar" class=" w-[595.41px] h-12 px-2.5 py-1.5 bg-[#950d03] rounded-md  items-center gap-1.5 inline-flex text-neutral-50 text-2xl font-medium  leading-[28.80px]">
-            </div>
-          </form>
-        </div>
-        <div name="contenedor2" class="flex w-[595.41px] origin-left float-left bottom-5">
-          <div class=" ">
-            <a name="olvidaste tu contra" href="index.php?action=forgotPassword" class="text-left  text-[#545f71] text-base font-normal underline">¿Olvidaste tu contraseña?</a>
-          </div>
-          <a name="Registrarse" href="index.php?action=signup" class="pb-8 pt-8 justify-self-center text-[#545f71] text-base font-normal  underline">¿No tienes una cuenta? Registrate aquî</a>
-        </div>
-      </div>
-      <script>
+  <script>
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -90,8 +83,64 @@
                     console.error('Error:', error);
                 });
         });
-        </script>
-    </div>
-  </div>
+
+
+
+
+
+
+
+    const form = document.getElementById('login-form');
+    const email = document.getElementById('email');
+    const password = document.getElementById('contrasena');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      validateInputs();
+    });
+
+    const setSuccess = (element) => {
+      element.classList.remove('border-red-500');
+      element.nextElementSibling.classList.add('hidden');
+    };
+
+    const setError = (element, message) => {
+      element.classList.add('border-red-500');
+      const errorDisplay = element.nextElementSibling;
+      errorDisplay.textContent = message;
+      errorDisplay.classList.remove('hidden');
+    };
+
+    const isValidEmail = (email) => {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    };
+
+    const validateInputs = () => {
+      const emailValue = email.value.trim();
+      const passwordValue = password.value.trim();
+
+      if (emailValue === '') {
+        setError(email, 'Por favor ingrese su correo electrónico');
+      } else if (!isValidEmail(emailValue)) {
+        setError(email, 'Correo electrónico inválido');
+      } else {
+        setSuccess(email);
+      }
+
+      if (passwordValue === '') {
+        setError(password, 'Por favor ingrese una contraseña');
+      } else if (passwordValue.length < 8) {
+        setError(password, 'La contraseña debe tener al menos 8 caracteres');
+      } else {
+        setSuccess(password);
+      }
+
+      if (!document.querySelector('.border-red-500')) {
+        form.submit();
+      }
+    };
+  </script>
+</body>
 
 </html>
