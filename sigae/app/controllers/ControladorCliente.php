@@ -67,7 +67,7 @@ class ControladorCliente{
         exit;
     }
     function signup(){
-        include '../app/views/account/signup.html';
+        include '../app/views/account/signUp.html';
     }
     function doSignup(){
         $response=['success' => false, 'errors' => [], 'debug' => []];
