@@ -274,10 +274,10 @@
       <script>
          function cargarMisVehiculos() {
             $.ajax({
-               url: '../../controllers/controladorCliente.php', // Ajusta la ruta correcta a tu controlador
+               url: '../../controllers/ControladorCliente.php',
                type: 'POST',
                data: { action: 'cargarMisVehiculosAjax' }, // Enviar parámetro de acción
-               dataType: 'json',  // Indicamos que esperamos un objeto JSON como respuesta
+               dataType: 'json',  // Indicar que se espera un objeto JSON como respuesta
                success: function(response) {
                      var vehiculosDropdown = $('#vehiculosDropdown');
                      
@@ -290,7 +290,7 @@
                         // Procesar cada vehículo en la respuesta JSON
                         response.forEach(function(vehiculo) {
                            var matricula = vehiculo.matricula;
-                           var tipo = vehiculo.tipo;  // Asegúrate de que el campo 'tipo' exista en tu respuesta JSON
+                           var tipo = vehiculo.tipo;
                            
                            // Agregar la opción al dropdown
                            vehiculosDropdown.append($('<option>', {
