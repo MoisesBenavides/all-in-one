@@ -289,7 +289,7 @@
                      // Si no hay vehículos, deshabilitar el dropdown y mostrar el input de matrícula
                      if (response.length === 0) {
                          vehiculosDropdown.prop('disabled', true);
-                         tiposDropdown.prop('disabled', false).show(); // Mostrar y habilitar el dropdown de tipo
+                         tiposDropdown.prop('disabled', false); // Mostrar y habilitar el dropdown de tipo
                          inputMatricula.prop('disabled', false).show(); // Mostrar y habilitar el input de matrícula
                          tipoVehiculoSection.show(); // Mostrar la sección si no hay vehículos
                      } else {

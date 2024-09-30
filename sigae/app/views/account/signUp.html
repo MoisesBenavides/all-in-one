@@ -105,7 +105,9 @@ const repContrasena = document.getElementById('repContrasena');
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  validateInputs();
+  if (validateInputs()) {
+    form.submit();
+  }
 });
 
 const setSuccess = (element) => {
