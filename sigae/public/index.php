@@ -35,6 +35,9 @@ switch ($action) {
     case 'doBookService':
         $controladorTaller->doBookService();
         break;
+    case 'uploadMyVehicles':
+        $controladorCliente->cargarMisVehiculosAjax();
+        break;
     case 'serviceConfirmation':
         $controladorTaller->serviceConfirmation();
         break;

@@ -274,7 +274,7 @@
       <script>
          function cargarMisVehiculos() {
             $.ajax({
-               url: '../app/controllers/ControladorCliente.php',
+               url: 'index.php?action=uploadMyVehicles',
                type: 'POST',
                data: { action: 'cargarMisVehiculosAjax' }, // Enviar parámetro de acción
                dataType: 'json',  // Indicar que se espera un objeto JSON como respuesta
