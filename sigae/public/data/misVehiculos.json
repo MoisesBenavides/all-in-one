@@ -1,0 +1,100 @@
+[
+    {
+        "matricula": "A6327AA",
+        "marca": null,
+        "modelo": null,
+        "tipo": "utilitario",
+        "color": null
+    },
+    {
+        "matricula": "AYR76420",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camioneta",
+        "color": null
+    },
+    {
+        "matricula": "AYR76421",
+        "marca": null,
+        "modelo": null,
+        "tipo": "moto",
+        "color": null
+    },
+    {
+        "matricula": "AYR76422",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camioneta",
+        "color": null
+    },
+    {
+        "matricula": "AYR76434",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camioneta",
+        "color": null
+    },
+    {
+        "matricula": "AYR96423",
+        "marca": null,
+        "modelo": null,
+        "tipo": "moto",
+        "color": null
+    },
+    {
+        "matricula": "CSD28762",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camion",
+        "color": null
+    },
+    {
+        "matricula": "SCA54661",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camioneta",
+        "color": null
+    },
+    {
+        "matricula": "SCU54643",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camion",
+        "color": null
+    },
+    {
+        "matricula": "SCU54681",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camioneta",
+        "color": null
+    },
+    {
+        "matricula": "SCU54686",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camioneta",
+        "color": null
+    },
+    {
+        "matricula": "SCU54691",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camioneta",
+        "color": null
+    },
+    {
+        "matricula": "VYR76421",
+        "marca": null,
+        "modelo": null,
+        "tipo": "moto",
+        "color": null
+    },
+    {
+        "matricula": "VYR76423",
+        "marca": null,
+        "modelo": null,
+        "tipo": "camioneta",
+        "color": null
+    }
+]
