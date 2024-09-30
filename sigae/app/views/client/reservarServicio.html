@@ -206,6 +206,26 @@
          </div>
       </main>
       <script>
+        // Código para validar el envío del formulario
+        const form = document.getElementById('servicioForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Verificar si el usuario seleccionó un vehículo o ingresó uno manualmente
+            const vehiculoDropdown = document.getElementById('vehiculosDropdown');
+            const matriculaYa = document.getElementById('matriculaYa');
+        
+            if (vehiculoDropdown.value === "" && matriculaYa.value === "") {
+                alert("Debe seleccionar un vehículo o ingresar una matrícula.");
+            } else {
+                if (vehiculoDropdown.value !== "") {
+                    matriculaYa.value = "";  // Si seleccionó un vehículo, limpiar el campo de matrícula manual
+                }
+                form.submit();  // Enviar el formulario si todo es válido
+            }
+        });
+        </script>
+      <script>
          // Dropdown functionality for service selection
          const dropdownButton1 = document.getElementById('dropdownButton1');
          const dropdownMenu1 = document.getElementById('dropdownMenu1');
