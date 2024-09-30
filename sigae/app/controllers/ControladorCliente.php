@@ -188,7 +188,10 @@ class ControladorCliente{
     }
 
     public function cargarMisVehiculosAjax() {
+        if (session_status() == PHP_SESSION_NONE) {
         session_start();
+        }
+        
         $id=$_SESSION['id'];
         // Llama a la función del modelo cliente para obtener los vehículos
         $misVehiculos = $this->cliente->cargarMisVehiculos($id);
@@ -196,7 +199,7 @@ class ControladorCliente{
         if ($misVehiculos) {
             echo json_encode($misVehiculos);  // Devuelve los vehículos en formato JSON
         } else {
-            echo json_encode(['error' => 'Problema al cargar los vehículos o no tiene vehículos registrados.']);
+            echo json_encode(['error' => 'No tiene vehículos registrados.']);
         }
     }
 
