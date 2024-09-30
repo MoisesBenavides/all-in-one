@@ -207,10 +207,12 @@
         </script>
     <script>
         function cargarMisVehiculos() {
+            console.log("Cargando vehículos...");
             $.ajax({
                 url: 'data/misVehiculos.json',  // Ruta del archivo JSON
                 dataType: 'json',  // El tipo de datos que se espera es JSON
                 success: function(response) {
+                    console.log(response);
                     var vehiculosDropdown = $('#vehiculosDropdown');
                     var tiposDropdown = $('#dropTipoVehiculo');
                     vehiculosDropdown.find('option:not(:first)').remove();  // Limpiar las opciones previas
@@ -279,7 +281,7 @@
         });
     </script>         
     <script>
-       document.getElementById('signup-form').addEventListener('submit', function(e) {
+       document.getElementById('servicioForm').addEventListener('submit', function(e) {
            e.preventDefault();
            
            fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
