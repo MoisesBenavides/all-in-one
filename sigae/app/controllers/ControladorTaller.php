@@ -6,6 +6,7 @@ class ControladorTaller{
     private $taller;
     private $serviciosDisp;
     private $controladorVehiculo;
+    private $registrarYa;
 
     public function __construct(){
         $serviciosJson = '../app/data/serviciosTaller.json';
@@ -33,7 +34,7 @@ class ControladorTaller{
     
         // Validación de campos vacíos
         if (isset($_POST["fecha_inicio"], $_POST["categoriaServicio"], $_POST["tipoServicio"], $_POST["tipoVehiculo"]) 
-            && (!empty($_POST["matricula"]) || !empty($_POST["vehiculoMat"])) // Cambiado a !empty
+            && (!empty($_POST["matriculaYa"]) || !empty($_POST["matricula"]))
             && !empty($_POST["fecha_inicio"]) && !empty($_POST["categoriaServicio"]) && !empty($_POST["tipoServicio"]) && !empty($_POST["tipoVehiculo"])) {
     
             $fecha_inicio = $_POST["fecha_inicio"];
@@ -42,8 +43,8 @@ class ControladorTaller{
             $tipoVehiculo = strtolower($_POST["tipoVehiculo"]);
     
             try {
-                // Valida solo una matrícula ingresada
-                $matricula = validarUnaSolaMatricula($_POST["matricula"], $_POST["vehiculoMat"]);
+                // Validar solo una matrícula ingresada
+                $matricula = $this->obtenerTipoRegistroMat($_POST["matriculaYa"], $_POST["matricula"]);
             } catch (InvalidArgumentException $e) {
                 $response['errors'][] = $e->getMessage();
             }
@@ -84,7 +85,7 @@ class ControladorTaller{
                     $id_cliente = $_SESSION['id'];
     
                     $this->taller = new Taller($tipoServicio, $descripcion, null, $tiempo_estimado, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
-                    if (!$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)) {
+                    if ($registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)) {
                         $response['errors'][] = "Ya existe un vehículo con la matrícula ingresada.";
                     } elseif (!$this->taller->reservarServicio($matricula)) {
                         $response['errors'][] = "Error al reservar servicio.";
@@ -179,14 +180,16 @@ class ControladorTaller{
         return isset($this->serviciosDisp[$tipoServicio]);
     }
 
-    private function validarUnaSolaMatricula($mat1, $mat2){
-        if (isset($mat1) && !isset($mat2)) {
-            return $mat1;  // Retorna mat1 si solo está seteado
-        } elseif (!isset($mat1) && isset($mat2)) {
-            return $mat2;  // Retorna mat2 si solo está seteado
+    private function obtenerTipoRegistroMat($matRegistrarYa, $matVehiculoSelect){
+        if (isset($matRegistrarYa) && !isset($matVehiculoSelect)) {
+            $registrarYa=true;
+            return $matRegistrarYa;  // Retorna la matricula a registrar, si es la unica esta seteada
+        } elseif (!isset($matRegistrarYa) && isset($matVehiculoSelect)) {
+            $registrarYa=false;
+            return $matVehiculoSelect;  // Retorna la matricula del vehículo seleccionado por el cliente, si es la unica seteada
         } else {
-            // Si ambos están seteados o ninguno está seteado, puedes lanzar un error o manejarlo como prefieras
-            throw new InvalidArgumentException("Debe ingresar solo una matricula.");
+            // Si ambos están seteados o ninguno está seteado, lanza un error
+            throw new InvalidArgumentException("Debe ingresar una matricula.");
         }
     }
 

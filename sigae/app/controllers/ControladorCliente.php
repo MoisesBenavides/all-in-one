@@ -144,6 +144,7 @@ class ControladorCliente{
         error_log($_SESSION['email']. " abrió la página de reserva de servicios");
         error_log(print_r($_SESSION, true));
 
+        $this->cargarMisVehiculosAjax($_SESSION['id']);
         include '../app/views/client/reservarServicio.html';
     }
     
@@ -158,6 +159,11 @@ class ControladorCliente{
         session_start();
         error_log($_SESSION['email']. " abrió la página de reserva de parking simple");
         error_log(print_r($_SESSION, true));
+
+        /*
+        Implementar dropdown de vehiculos
+        $this->cargarMisVehiculosAjax($_SESSION['id']);
+        */
         include '../app/views/client/reservarParkingSimple.html';
     }
 
@@ -165,6 +171,12 @@ class ControladorCliente{
         session_start();
         error_log($_SESSION['email']. " abrió la página de reserva de parking de largo plazo");
         error_log(print_r($_SESSION, true));
+
+        /*
+        Implementar dropdown de vehiculos
+        $this->cargarMisVehiculosAjax($_SESSION['id']);
+        */
+        
         include '../app/views/client/reservarParkingLargoPlazo.html';
     }
 
@@ -185,12 +197,7 @@ class ControladorCliente{
         include '../app/views/client/homeCliente.html';
     }
 
-    public function cargarMisVehiculosAjax() {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        $id = $_SESSION['id'];
+    public function cargarMisVehiculosAjax($id) {
         $misVehiculos = $this->cliente->cargarMisVehiculos($id);
         
         // Ruta del archivo JSON donde se guardarán los vehículos
@@ -212,7 +219,7 @@ class ControladorCliente{
         
             if (json_last_error() !== JSON_ERROR_NONE) {
                 error_log("Error al cargar los vehículos del cliente con ID: $id. Error: " . json_last_error_msg());
-                
+
             } elseif (isset($data['error'])) {
                 error_log("Error al cargar los vehículos del cliente con ID: $id. Error: " . $data['error']);
             }

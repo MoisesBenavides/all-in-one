@@ -144,7 +144,7 @@
                   </div>
                   <input type="hidden" id="selectedServiceSubtype" name="tipoServicio" value="">
                </section>
-               <section>
+               <section id="tipoVehiculoSection">
                   <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese el tipo de vehículo</h2>
                   <div class="relative mb-2">
                      <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
@@ -163,14 +163,14 @@
                         </div>
                      </div>
                   </div>
-                  <input type="hidden" id="vehiculoElegido" name="tipoVehiculo" value="">
+                  <input type="hidden" id="tipoVehiculo" name="tipoVehiculo" value="">
                </section>
                <script>
                   // Dropdown functionality for vehicle type selection
                   const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
                   const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
                   const selectedOptionAuto = document.getElementById('selectedOptionAuto');
-                  const selectedVehicleType = document.getElementById('vehiculoElegido');
+                  const selectedVehicleType = document.getElementById('tipoVehiculo');
                   
                   dropdownButtonAuto.addEventListener('click', () => {
                       dropdownMenuAuto.classList.toggle('hidden');
@@ -188,7 +188,7 @@
                <section>
                   <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
                   <div class="relative w-full max-w-[340px] mx-auto">
-                     <select id="vehiculosDropdown" name="vehiculoMat" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                     <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
                         <option value="">Selecciona un vehículo</option>
                         <!-- Vehicle options will be inserted here -->
                      </select>
@@ -196,7 +196,7 @@
                </section>
                <div class="h-[52px] relative  ">
                   <!--INPUT PARA MATRICULA-->
-                  <input id="matricula" name="matricula" type="text" placeholder="O registra ya con Matrícula" class="space-x-6  p-2 w-[340px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
+                  <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="space-x-6  p-2 w-[340px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
                </div>
                <section class="text-center"></section>
                <!--Continuar-->
@@ -270,53 +270,79 @@
          
          
       </script>
-      <!--ESTE SCRIPT DE DEBAJO FUNCIONA, LO PROBE CON UN ARCHIVO DE PRUEBA DE PHP EN MI CARPETA www-->
       <script>
          function cargarMisVehiculos() {
-            $.ajax({
-               url: 'data/misVehiculos.json',  // Ruta del archivo JSON
-               dataType: 'json',  // El tipo de datos que se espera es JSON
-               success: function(response) {
-                  var vehiculosDropdown = $('#vehiculosDropdown');
-                  vehiculosDropdown.find('option:not(:first)').remove();  // Limpiar las opciones previas
-      
-                  var inputMatricula = $('#matricula');
-
-                  // Si no hay vehículos, deshabilitar el dropdown y mostrar el input de matrícula
-                  if (response.length === 0) {
-                     vehiculosDropdown.prop('disabled', true);
-                     inputMatricula.prop('disabled', false).show(); // Mostrar y habilitar el input de matrícula
-                  } else {
-                     // Llenar el dropdown con los vehículos
-                     response.forEach(function(vehiculo) {
-                        var matricula = vehiculo.matricula;
-                        var tipo = vehiculo.tipo;
-
-                        // Agregar cada vehículo al dropdown
-                        vehiculosDropdown.append($('<option>', {
-                           value: matricula,
-                           text: matricula + ' - ' + tipo
-                        }));
-                     });
-
-                     // Habilitar el dropdown si hay vehículos y ocultar el input de matrícula
-                     vehiculosDropdown.prop('disabled', false);
-                     inputMatricula.prop('disabled', true).hide(); // Ocultar el input de matrícula
-}
-
-               },
-               error: function(xhr, status, error) {
-                  console.error('Error al cargar los vehículos desde el archivo JSON:', error);
-               }
-            });
+             $.ajax({
+                 url: 'data/misVehiculos.json',  // Ruta del archivo JSON
+                 dataType: 'json',  // El tipo de datos que se espera es JSON
+                 success: function(response) {
+                     var vehiculosDropdown = $('#vehiculosDropdown');
+                     var tiposDropdown = $('#dropTipoVehiculo');
+                     vehiculosDropdown.find('option:not(:first)').remove();  // Limpiar las opciones previas
+     
+                     var inputMatricula = $('#matriculaYa');
+                     var tipoVehiculoSection = $('#tipoVehiculoSection'); // Seleccionar la sección del tipo de vehículo
+     
+                     // Ocultar la sección del tipo de vehículo al cargar
+                     tipoVehiculoSection.hide();
+     
+                     // Si no hay vehículos, deshabilitar el dropdown y mostrar el input de matrícula
+                     if (response.length === 0) {
+                         vehiculosDropdown.prop('disabled', true);
+                         tiposDropdown.prop('disabled', false).show(); // Mostrar y habilitar el dropdown de tipo
+                         inputMatricula.prop('disabled', false).show(); // Mostrar y habilitar el input de matrícula
+                         tipoVehiculoSection.show(); // Mostrar la sección si no hay vehículos
+                     } else {
+                         // Llenar el dropdown con los vehículos
+                         response.forEach(function(vehiculo) {
+                             var matricula = vehiculo.matricula;
+                             var tipo = vehiculo.tipo;
+     
+                             // Agregar cada vehículo al dropdown
+                             vehiculosDropdown.append($('<option>', {
+                                 value: matricula,
+                                 text: matricula + ' - ' + tipo
+                             }));
+                         });
+     
+                         // Habilitar el dropdown si hay vehículos y ocultar el input de matrícula
+                         vehiculosDropdown.prop('disabled', false);
+                         inputMatricula.prop('disabled', true).hide(); // Ocultar el input de matrícula
+     
+                         // Agregar un evento change para establecer el tipo en el input oculto
+                         vehiculosDropdown.on('change', function() {
+                             var selectedMatricula = $(this).val();
+                             var selectedVehiculo = response.find(v => v.matricula === selectedMatricula);
+                             if (selectedVehiculo) {
+                                 // Setear el tipo en el input oculto
+                                 $('#tipoVehiculo').val(selectedVehiculo.tipo); // Establecer el valor en el input oculto
+     
+                                 // También puedes mostrar el tipo en el dropdown de tipos si es necesario
+                                 tiposDropdown.find('.option').each(function() {
+                                     if ($(this).data('value') === selectedVehiculo.tipo) {
+                                         $(this).addClass('selected'); // Agregar una clase para indicar la selección
+                                         tiposDropdown.show(); // Mostrar el dropdown si es necesario
+                                     } else {
+                                         $(this).removeClass('selected'); // Limpiar la selección anterior
+                                     }
+                                 });
+     
+                                 tiposDropdown.prop('disabled', true).hide(); // Deshabilitar y ocultar el dropdown de tipo
+                             }
+                         });
+                     }
+                 },
+                 error: function(xhr, status, error) {
+                     console.error('Error al cargar los vehículos desde el archivo JSON:', error);
+                 }
+             });
          }
-      
+     
          // Ejecutar la función cuando se cargue la página
          $(document).ready(function() {
-            cargarMisVehiculos();
+             cargarMisVehiculos();
          });
-      </script>
-      
+     </script>         
       <script>
          document.getElementById('signup-form').addEventListener('submit', function(e) {
              e.preventDefault();
