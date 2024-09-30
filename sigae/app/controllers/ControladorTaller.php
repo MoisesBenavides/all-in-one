@@ -85,7 +85,7 @@ class ControladorTaller{
                     $id_cliente = $_SESSION['id'];
     
                     $this->taller = new Taller($tipoServicio, $descripcion, null, $tiempo_estimado, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
-                    if ($registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)) {
+                    if ($this->$registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)) {
                         $response['errors'][] = "Ya existe un vehículo con la matrícula ingresada.";
                     } elseif (!$this->taller->reservarServicio($matricula)) {
                         $response['errors'][] = "Error al reservar servicio.";
@@ -182,10 +182,10 @@ class ControladorTaller{
 
     private function obtenerTipoRegistroMat($matRegistrarYa, $matVehiculoSelect){
         if (isset($matRegistrarYa) && !isset($matVehiculoSelect)) {
-            $registrarYa=true;
+            $this->registrarYa=true;
             return $matRegistrarYa;  // Retorna la matricula a registrar, si es la unica esta seteada
         } elseif (!isset($matRegistrarYa) && isset($matVehiculoSelect)) {
-            $registrarYa=false;
+            $this->registrarYa=false;
             return $matVehiculoSelect;  // Retorna la matricula del vehículo seleccionado por el cliente, si es la unica seteada
         } else {
             // Si ambos están seteados o ninguno está seteado, lanza un error
