@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../../public/css/styles.css">
-    <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
+    <link rel="stylesheet" href="../../../css/styles.css">
+    <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
     <style>
         @font-face {
             font-family: 'Teachers';
-            src: ('sigae/public/font/Teachers-VariableFont_wght.ttf') ;
+            src: url('../../../font/Teachers-VariableFont_wght.ttf');
             font-weight: normal;
             font-style: normal;
         }
@@ -28,7 +28,7 @@
     </style>
 </head>
 <header class=" w-screen">
-    <link rel="stylesheet" href="../../../public/css/styles.css">
+    <link rel="stylesheet" href="../../../css/styles.css">
     <div class="container mx-auto px-4 py-4">
         <div class="relative flex flex-col md:flex-row justify-between items-center">
             
@@ -44,7 +44,7 @@
             <!-- Logo -->
             <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
                 <!-- Presionar logo para volver al home del cliente (href) -->
-                <img href="../../../public/index.php?action=home" class="w-full h-auto" src="../../../public/img/AIO Positivo.png" alt="AIO Logo" />
+                <img href="../../../index.php?action=home" class="w-full h-auto" src="../../../img/AIO Positivo.png" alt="AIO Logo" />
             </div>
 
             <!-- Navegación - visible solo en pantallas medianas y grandes -->
@@ -57,7 +57,7 @@
 
             <!-- User icon - Alineado a la derecha en móviles -->
             <div class="absolute top-2 right-4 md:static">
-                <img class="w-10 h-10" src="../../../public/img/user.png" alt="User">
+                <img class="w-10 h-10" src="../../../img/user.png" alt="User">
             </div>
         </div>
 
@@ -129,7 +129,7 @@
                     <div class="rounded-md border border-black w-[500px] h-[60px] flex items-center relative">
                         <input type="text" id="buscar" placeholder="Buscar" class="rounded-md w-full h-full pr-[40px] pl-[10px]">
                         <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-full flex items-center pr-[10px]">
-                            <img id="searchIcon" class="w-[24px] h-[24px]" src="../../../public/svg/search.svg">
+                            <img id="searchIcon" class="w-[24px] h-[24px]" src="../../../svg/search.svg">
                         </div>
                     </div>
                 </div>
@@ -137,19 +137,19 @@
         </div>
         <div id="productosContainer" class="self-stretch justify-center items-center gap-7 inline-flex flex-wrap">
             <div class="product w-[300px] h-[548px] pb-[42.38px] flex-col justify-start items-center inline-flex">
-                <img class="w-[300px] h-[391.43px]" src="../../../public/img/Cubierta Pirelli1.webp" />
+                <img class="w-[300px] h-[391.43px]" src="../../../img/Cubierta Pirelli1.webp" />
                 <div class="w-[220px] h-[114.33px] text-center text-[#161212] text-2xl font-bold leading-[28.80px]">Cubierta Pirelli 175/70 <br/>R14 Scorpion Atr<br/></div>
             </div>
             <div class="product w-[300px] h-[548px] pb-[50px] flex-col justify-start items-start gap-[0.35px] inline-flex">
-                <img class="w-[300px] h-[417.65px]" src="../../../public/img/Neumático Bridgestone1.webp" />
+                <img class="w-[300px] h-[417.65px]" src="../../../img/Neumático Bridgestone1.webp" />
                 <div class="w-[300px] h-20 text-center text-[#161212] text-2xl font-bold leading-[28.80px]">Neumático Bridgestone Ecopia EP150 P 185/55R16 83 V<br/></div>
             </div>
             <div class="product w-[300px] h-[548px] pb-[17px] flex-col justify-start items-start inline-flex">
-                <img class="w-[300px] h-[424.46px]" src="../../../public/img/Cubierta Pirelli1.webp" />
+                <img class="w-[300px] h-[424.46px]" src="../../../img/Cubierta Pirelli1.webp" />
                 <div class="w-[300px] h-[107px] text-center text-[#161212] text-2xl font-bold leading-[28.80px]">Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato<br/></div>
             </div>
             <div class="product w-[300px] h-[548px] pb-[58.15px] flex-col justify-start items-start gap-[0.36px] inline-flex">
-                <img class="w-[300px] h-[430.35px]" src="../../../public/img/Aceite1.webp" />
+                <img class="w-[300px] h-[430.35px]" src="../../../img/Aceite1.webp" />
                 <div class="w-[300px] h-[59.14px] text-center text-[#161212] text-2xl font-bold leading-[28.80px]">Aceite para motor Motul sintético 5W-40 </div>
             </div>
         </div>
