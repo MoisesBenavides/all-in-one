@@ -15,7 +15,6 @@
       font-style: normal;
   }
 
-  /* Apply the 'Teachers' font to all text elements */
   body, input, select, button, option {
       font-family: 'Teachers', sans-serif;
   }
@@ -25,7 +24,7 @@
   <div class="container bg-alternativo mx-auto px-4 py-4">
       <div class="relative flex flex-col md:flex-row justify-between items-center">
           
-          <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
+          <!-- Hamburguesa -->
           <div class="absolute top-2 left-4 md:hidden">
               <button id="hamburger" class="text-black focus:outline-none">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -39,12 +38,12 @@
               <img class="w-full h-auto" src="../../../img/AIO Parking positivo.png" alt="AIO Logo" />
           </div>
 
-          <!-- Navegación - visible solo en pantallas medianas y grandes -->
+          <!-- Navegación  -->
           <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
-              <a href="index.php?action=aioParkingBookSimple" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar</a>
-              <a href="index.php?action=aioParkingBookLongTerm" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Reservar a largo plazo</a>
-              <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">Mis Reservas</a>
-              <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold font-['Teachers']">FAQ</a>
+              <a href="index.php?action=aioParkingBookSimple" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Reservar</a>
+              <a href="index.php?action=aioParkingBookLongTerm" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Reservar a largo plazo</a>
+              <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Mis Reservas</a>
+              <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold  ">FAQ</a>
           </nav>
 
           <!-- User icon - Alineado a la derecha en móviles -->
@@ -55,10 +54,10 @@
 
       <!-- Menú hamburguesa desplegable (oculto por defecto) -->
       <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
-          <a href="index.php?action=aioParkingBookSimple" class="block text-black text-sm font-bold font-['Teachers']">Reservar</a>
-          <a href="index.php?action=aioParkingBookLongTerm" class="block text-black text-sm font-bold font-['Teachers']">Reservar a largo plazo</a>
-          <a href="#" class="block text-black text-sm font-bold font-['Teachers']">Mis Reservas</a>
-          <a href="#" class="block text-black text-sm font-bold font-['Teachers']">FAQ</a>
+          <a href="index.php?action=aioParkingBookSimple" class="block text-black text-sm font-bold  ">Reservar</a>
+          <a href="index.php?action=aioParkingBookLongTerm" class="block text-black text-sm font-bold  ">Reservar a largo plazo</a>
+          <a href="#" class="block text-black text-sm font-bold  ">Mis Reservas</a>
+          <a href="#" class="block text-black text-sm font-bold  ">FAQ</a>
       </nav>
   </div>
 

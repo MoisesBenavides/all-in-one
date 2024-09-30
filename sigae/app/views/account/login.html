@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar Sesion | AIO</title>
+  <title>Iniciar Sesión | AIO</title>
   <link rel="stylesheet" href="../../../css/styles.css">
   <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
   <style>
@@ -14,17 +14,19 @@
       font-weight: normal;
       font-style: normal;
     }
-    body {
+
+    
+    body, input, select, button, option {
       font-family: 'Teachers', sans-serif;
     }
   </style>
 </head>
 
 <body class="bg-gray-100">
-  <div class="flex justify-center items-center min-h-screen">
+  <div class="flex justify-center items-center min-h-screen px-4 sm:px-0">
     <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
       <div class="text-center mb-8">
-        <img src="../../../img/AIO Positivo.png" alt="AIO Logo" class="mx-auto max-w-[200px]">
+        <img src="../../../img/AIO Positivo.png" alt="AIO Logo" class="mx-auto max-w-[200px] sm:max-w-[150px]">
       </div>
       <form id="login-form" action="index.php?action=doLogin" method="POST">
         <div class="mb-6">
@@ -51,52 +53,48 @@
   </div>
 
   <script>
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
-                .then(response => response.json())
-                .then(data => {
-                    const errorContainer = document.getElementById('error-container');
-                    const errorList = document.getElementById('error-list');
-                    
-                    errorList.innerHTML = '';
-                    
-                    if (data.success) {
-                        window.location.href = 'index.php?action=home';
-                    } else {
-                        errorContainer.classList.remove('hidden');
-                        data.errors.forEach(error => {
-                            const li = document.createElement('li');
-                            li.textContent = error;
-                            errorList.appendChild(li);
-                        });
-        
-                        // Debug information
-                        console.log('Debug info:', data.debug);
-                        const debugInfo = document.createElement('pre');
-                        debugInfo.textContent = JSON.stringify(data.debug, null, 2);
-                        errorList.appendChild(debugInfo);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
+        .then(response => response.json())
+        .then(data => {
+          const errorContainer = document.getElementById('error-container');
+          const errorList = document.getElementById('error-list');
+          
+          errorList.innerHTML = '';
+          
+          if (data.success) {
+            window.location.href = 'index.php?action=home';
+          } else {
+            errorContainer.classList.remove('hidden');
+            data.errors.forEach(error => {
+              const li = document.createElement('li');
+              li.textContent = error;
+              errorList.appendChild(li);
+            });
+  
+            // Debug information
+            console.log('Debug info:', data.debug);
+            const debugInfo = document.createElement('pre');
+            debugInfo.textContent = JSON.stringify(data.debug, null, 2);
+            errorList.appendChild(debugInfo);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
         });
-
-
-
-
-
-
+    });
 
     const form = document.getElementById('login-form');
     const email = document.getElementById('email');
-    const password = document.getElementById('contrasena');
+    const contrasena = document.getElementById('contrasena');
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      validateInputs();
+      if (validateInputs()) {
+        form.submit();
+      }
     });
 
     const setSuccess = (element) => {
@@ -117,29 +115,39 @@
     };
 
     const validateInputs = () => {
+      let isValid = true;
       const emailValue = email.value.trim();
-      const passwordValue = password.value.trim();
+      const contrasenaValue = contrasena.value.trim();
 
       if (emailValue === '') {
         setError(email, 'Por favor ingrese su correo electrónico');
+        isValid = false;
       } else if (!isValidEmail(emailValue)) {
         setError(email, 'Correo electrónico inválido');
+        isValid = false;
       } else {
         setSuccess(email);
       }
 
-      if (passwordValue === '') {
-        setError(password, 'Por favor ingrese una contraseña');
-      } else if (passwordValue.length < 8) {
-        setError(password, 'La contraseña debe tener al menos 8 caracteres');
+      if (contrasenaValue === '') {
+        setError(contrasena, 'Por favor ingrese su contraseña');
+        isValid = false;
       } else {
-        setSuccess(password);
+        setSuccess(contrasena);
       }
 
-      if (!document.querySelector('.border-red-500')) {
-        form.submit();
-      }
+      return isValid;
     };
+
+    // Validar los campos en tiempo real
+    [email, contrasena].forEach(input => {
+      input.addEventListener('input', () => {
+        validateInputs();
+      });
+    });
+
+    // Validar todos los campos al cargar la página
+    document.addEventListener('DOMContentLoaded', validateInputs);
   </script>
 </body>
 
