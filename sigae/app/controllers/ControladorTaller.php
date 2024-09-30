@@ -85,7 +85,7 @@ class ControladorTaller{
                     $id_cliente = $_SESSION['id'];
     
                     $this->taller = new Taller($tipoServicio, $descripcion, null, $tiempo_estimado, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
-                    if ($this->$registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)) {
+                    if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)) {
                         $response['errors'][] = "Ya existe un vehículo con la matrícula ingresada.";
                     } elseif (!$this->taller->reservarServicio($matricula)) {
                         $response['errors'][] = "Error al reservar servicio.";
