@@ -198,10 +198,14 @@ class ControladorCliente{
     }
 
     public function cargarMisVehiculosAjax($id) {
-        $misVehiculos = $this->cliente->cargarMisVehiculos($id);
         
         // Ruta del archivo JSON donde se guardarán los vehículos
         $filePath = 'data/misVehiculos.json';
+
+        // Limpiar archivo json
+        file_put_contents($filePath, json_encode([]));
+
+        $misVehiculos = $this->cliente->cargarMisVehiculos($id);
         
         if ($misVehiculos) {
             // Guardar los vehículos en formato JSON
