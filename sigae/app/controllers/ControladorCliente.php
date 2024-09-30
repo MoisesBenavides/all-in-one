@@ -144,8 +144,6 @@ class ControladorCliente{
         error_log($_SESSION['email']. " abrió la página de reserva de servicios");
         error_log(print_r($_SESSION, true));
 
-        $this->cargarMisVehiculosAjax($_SESSION['id']);
-
         include '../app/views/client/reservarServicio.html';
     }
     
@@ -189,19 +187,40 @@ class ControladorCliente{
 
     public function cargarMisVehiculosAjax() {
         if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+            session_start();
         }
         
-        $id=$_SESSION['id'];
-        // Llama a la función del modelo cliente para obtener los vehículos
+        $id = $_SESSION['id'];
         $misVehiculos = $this->cliente->cargarMisVehiculos($id);
         
+        // Ruta del archivo JSON donde se guardarán los vehículos
+        $filePath = 'data/misVehiculos.json';
+        
         if ($misVehiculos) {
-            echo json_encode($misVehiculos);  // Devuelve los vehículos en formato JSON
+            // Guardar los vehículos en formato JSON
+            $jsonData = json_encode($misVehiculos, JSON_PRETTY_PRINT);
+            file_put_contents($filePath, $jsonData);
         } else {
-            echo json_encode(['error' => 'No tiene vehículos registrados.']);
+            // Si no hay vehículos, guardar el archivo vacío
+            file_put_contents($filePath, json_encode([]));
+        }
+        
+        // Validar errores y registrar en error_log
+        if (file_exists($filePath)) {
+            $fileContent = file_get_contents($filePath);
+            $data = json_decode($fileContent, true);
+        
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                error_log("Error al cargar los vehículos del cliente con ID: $id. Error: " . json_last_error_msg());
+                
+            } elseif (isset($data['error'])) {
+                error_log("Error al cargar los vehículos del cliente con ID: $id. Error: " . $data['error']);
+            }
+        } else {
+            error_log("Error al cargar los vehículos del cliente con ID: $id. Archivo no encontrado: $filePath");
         }
     }
+    
 
     private function validarContrasena($str, $min, $max) {
         /* Verifica si la contraseña contiene mayusculas, minusculas y numeros
