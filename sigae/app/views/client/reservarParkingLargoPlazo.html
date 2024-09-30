@@ -206,32 +206,45 @@
                     </select>
                 </div>
                 <script>
-                    // Función para obtener los vehículos desde PHP
-                    async function cargarVehiculos() {
-                        try {
-                            const response = await fetch('ARCHIVO DE MATRICULAS');
-                            const data = await response.json();
-                
-                            const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-                            
-                            // Limpiar cualquier opción previa (excepto la primera opción)
-                            vehiculosDropdown.innerHTML = '<option value="">Selecciona un vehículo</option>';
-                            
-                            // Añadir las matrículas como opciones
-                            data.forEach(vehiculo => {
-                                const option = document.createElement('option');
-                                option.value = vehiculo.matricula;
-                                option.textContent = vehiculo.matricula;
-                                vehiculosDropdown.appendChild(option);
-                            });
-                        } catch (error) {
-                            console.error('Error al cargar las matrículas:', error);
-                        }
+                    function cargarMisVehiculos() {
+                       $.ajax({
+                          url: 'data/misVehiculos.json',  // Ruta del archivo JSON
+                          dataType: 'json',  // El tipo de datos que se espera es JSON
+                          success: function(response) {
+                             var vehiculosDropdown = $('#vehiculosDropdown');
+                             vehiculosDropdown.find('option:not(:first)').remove();  // Limpiar las opciones previas
+                 
+                             if (response.length === 0) {
+                                // Si no hay vehículos, deshabilitar el dropdown
+                                vehiculosDropdown.prop('disabled', true);
+                             } else {
+                                // Llenar el dropdown con los vehículos
+                                response.forEach(function(vehiculo) {
+                                   var matricula = vehiculo.matricula;
+                                   var tipo = vehiculo.tipo;
+                 
+                                   // Agregar cada vehículo al dropdown
+                                   vehiculosDropdown.append($('<option>', {
+                                      value: matricula,
+                                      text: matricula + ' - ' + tipo
+                                   }));
+                                });
+                 
+                                // Habilitar el dropdown si hay vehículos
+                                vehiculosDropdown.prop('disabled', false);
+                             }
+                          },
+                          error: function(xhr, status, error) {
+                             console.error('Error al cargar los vehículos desde el archivo JSON:', error);
+                          }
+                       });
                     }
-                
-                    // Llamar a la función cuando la página cargue
-                    window.onload = cargarVehiculos;
-                </script>
+                 
+                    // Ejecutar la función cuando se cargue la página
+                    $(document).ready(function() {
+                       cargarMisVehiculos();
+                    });
+                 </script>
             </section>
         </div>
     </main>

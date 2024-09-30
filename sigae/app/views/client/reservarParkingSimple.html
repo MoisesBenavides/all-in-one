@@ -187,46 +187,45 @@
     </main>
     <!--ESTE SCRIPT DE DEBAJO FUNCIONA, LO PROBE CON UN ARCHIVO DE PRUEBA DE PHP EN MI CARPETA www-->
     <script>
-       function cargarVehiculos() {
+        function cargarMisVehiculos() {
            $.ajax({
-               url: 'archivo_para_matricula', // Asegúrate de que la ruta sea correcta
-               type: 'GET',
-               dataType: 'text', // Esperamos que la respuesta sea texto plano
-               success: function(data) {
-                   var vehiculosDropdown = $('#vehiculosDropdown');
-                   
-                   // Limpiar las opciones previas
-                   vehiculosDropdown.find('option:not(:first)').remove();
-                   
-                   // Separar la respuesta en líneas
-                   var lines = data.trim().split('\n');
-                   
-                   // Procesar cada línea
-                   lines.forEach(function(line) {
-                       var parts = line.split(' - Tipo: ');
-                       if (parts.length === 2) {
-                           var matricula = parts[0].replace('Matrícula: ', '');
-                           var tipo = parts[1];
-                           
-                           // Agregar la opción al dropdown
-                           vehiculosDropdown.append($('<option>', {
-                               value: matricula,
-                               text: matricula + ' - ' + tipo
-                           }));
-                       }
-                   });
-               },
-               error: function(xhr, status, error) {
-                   console.error('Error al cargar las matrículas:', error);
-               }
+              url: 'data/misVehiculos.json',  // Ruta del archivo JSON
+              dataType: 'json',  // El tipo de datos que se espera es JSON
+              success: function(response) {
+                 var vehiculosDropdown = $('#vehiculosDropdown');
+                 vehiculosDropdown.find('option:not(:first)').remove();  // Limpiar las opciones previas
+     
+                 if (response.length === 0) {
+                    // Si no hay vehículos, deshabilitar el dropdown
+                    vehiculosDropdown.prop('disabled', true);
+                 } else {
+                    // Llenar el dropdown con los vehículos
+                    response.forEach(function(vehiculo) {
+                       var matricula = vehiculo.matricula;
+                       var tipo = vehiculo.tipo;
+     
+                       // Agregar cada vehículo al dropdown
+                       vehiculosDropdown.append($('<option>', {
+                          value: matricula,
+                          text: matricula + ' - ' + tipo
+                       }));
+                    });
+     
+                    // Habilitar el dropdown si hay vehículos
+                    vehiculosDropdown.prop('disabled', false);
+                 }
+              },
+              error: function(xhr, status, error) {
+                 console.error('Error al cargar los vehículos desde el archivo JSON:', error);
+              }
            });
-       }
-       
-       // Llamar la función cuando se carga la página
-       $(document).ready(function() {
-           cargarVehiculos();
-       });
-    </script>
+        }
+     
+        // Ejecutar la función cuando se cargue la página
+        $(document).ready(function() {
+           cargarMisVehiculos();
+        });
+     </script>
     <script>
        document.getElementById('signup-form').addEventListener('submit', function(e) {
            e.preventDefault();

@@ -24,75 +24,86 @@ class ControladorTaller{
             die("El archivo JSON de servicios no existe.");
         }
     }
-    function doBookService(){
+    function doBookService() {
         session_start();
-        $response=['success' => false, 'errors' => [], 'debug' => []];
-
+        $response = ['success' => false, 'errors' => [], 'debug' => []];
+    
         // Debug: Log all received data
-        $response['debug']['received_data']=$_POST;
-
-        // Validacion de campos vacios
-        if (isset($_POST["fecha_inicio"], $_POST["categoriaServicio"], $_POST["tipoServicio"], $_POST["tipoVehiculo"], $_POST["matricula"]) && 
-            !empty($_POST["fecha_inicio"]) && !empty($_POST["categoriaServicio"]) && !empty($_POST["tipoServicio"]) 
-            && !empty($_POST["tipoVehiculo"]) && !empty($_POST["matricula"]) ) {
-                
+        $response['debug']['received_data'] = $_POST;
+    
+        // Validación de campos vacíos
+        if (isset($_POST["fecha_inicio"], $_POST["categoriaServicio"], $_POST["tipoServicio"], $_POST["tipoVehiculo"]) 
+            && (!empty($_POST["matricula"]) || !empty($_POST["vehiculoMat"])) // Cambiado a !empty
+            && !empty($_POST["fecha_inicio"]) && !empty($_POST["categoriaServicio"]) && !empty($_POST["tipoServicio"]) && !empty($_POST["tipoVehiculo"])) {
+    
             $fecha_inicio = $_POST["fecha_inicio"];
             $categoriaServicio = $_POST["categoriaServicio"];
             $tipoServicio = $_POST["tipoServicio"];
             $tipoVehiculo = strtolower($_POST["tipoVehiculo"]);
-            $matricula = strtoupper($_POST["matricula"]);
-            // Debug: Log processed data
-            $response['debug']['processed_data'] = [
-                'fecha_inicio' => $fecha_inicio,
-                'categoriaServicio' => $categoriaServicio,
-                'tipoServicio' => $tipoServicio,
-                'tipoVehiculo' => $tipoVehiculo,
-                'matricula' => $matricula
-            ];
-
-            if (!$this->validarFecha($fecha_inicio)){
-                $response['errors'][] = "Por favor, ingrese una fecha válida.";
-            } elseif(!$this->validarTipoServicio($tipoServicio)){
-                $response['errors'][] = "El servicio seleccionado no está disponible.";
-            } elseif(!$this->controladorVehiculo->validarTipoVehiculo($tipoVehiculo)){
-                $response['errors'][] = "El tipo de vehículo seleccionado no está disponible.";
-            } elseif(!$this->controladorVehiculo->validarMatricula($matricula)){
-                $response['errors'][] = "Por favor, ingrese una matrícula válida.";
-            } else {
-                // Obtener datos del tipo de servicio ingresado
-                $descripcion = $this->serviciosDisp[$tipoServicio]['descripcion'];
-                $tiempo_estimado = $this->serviciosDisp[$tipoServicio]['tiempo_estimado'];
-                $precio = $this->serviciosDisp[$tipoServicio]['precio'];
-
-                $fecha_final=$this->estimarFechaFinal($fecha_inicio, $tiempo_estimado);
-                
-                // Parsear fechas
-                $fecha_inicioParsed = str_replace('T', ' ', $fecha_inicio) . ':00';
-                $fecha_finalParsed = str_replace('T', ' ', $fecha_final) . ':00';
-
-                $id_cliente = $_SESSION['id'];
-
-                $this->taller = new Taller($tipoServicio, $descripcion, null, $tiempo_estimado, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
-                if (!$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
-                    $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
-                } elseif (!$this->taller->reservarServicio($matricula)){
-                    $response['errors'][] = "Error al reservar servicio.";
-                } else {
-                    $response['success'] = true;
-
-                    // TODO: Enviar correo de confirmación
-
-                    // Guardar la reserva en la sesión
-                    $_SESSION['reserva'] = $this->taller;
-                    $_SESSION['servicio'] = 'taller'; 
-                    $_SESSION['matricula'] = $matricula;
-
-                    // Redireccionar al usuario a la página de confirmación de reserva
-                    header('Location: index.php?action=serviceConfirmation');
-                }
-                    
+    
+            try {
+                // Valida solo una matrícula ingresada
+                $matricula = validarUnaSolaMatricula($_POST["matricula"], $_POST["vehiculoMat"]);
+            } catch (InvalidArgumentException $e) {
+                $response['errors'][] = $e->getMessage();
             }
-
+    
+            if (isset($matricula)) { // Verifica que la matrícula se haya definido correctamente
+                $matricula = strtoupper($matricula);
+    
+                // Debug: Log processed data
+                $response['debug']['processed_data'] = [
+                    'fecha_inicio' => $fecha_inicio,
+                    'categoriaServicio' => $categoriaServicio,
+                    'tipoServicio' => $tipoServicio,
+                    'tipoVehiculo' => $tipoVehiculo,
+                    'matricula' => $matricula
+                ];
+    
+                // Validaciones
+                if (!$this->validarFecha($fecha_inicio)) {
+                    $response['errors'][] = "Por favor, ingrese una fecha válida.";
+                } elseif (!$this->validarTipoServicio($tipoServicio)) {
+                    $response['errors'][] = "El servicio seleccionado no está disponible.";
+                } elseif (!$this->controladorVehiculo->validarTipoVehiculo($tipoVehiculo)) {
+                    $response['errors'][] = "El tipo de vehículo seleccionado no está disponible.";
+                } elseif (!$this->controladorVehiculo->validarMatricula($matricula)) {
+                    $response['errors'][] = "Por favor, ingrese una matrícula válida.";
+                } else {
+                    // Obtener datos del tipo de servicio ingresado
+                    $descripcion = $this->serviciosDisp[$tipoServicio]['descripcion'];
+                    $tiempo_estimado = $this->serviciosDisp[$tipoServicio]['tiempo_estimado'];
+                    $precio = $this->serviciosDisp[$tipoServicio]['precio'];
+    
+                    $fecha_final = $this->estimarFechaFinal($fecha_inicio, $tiempo_estimado);
+    
+                    // Parsear fechas
+                    $fecha_inicioParsed = str_replace('T', ' ', $fecha_inicio) . ':00';
+                    $fecha_finalParsed = str_replace('T', ' ', $fecha_final) . ':00';
+    
+                    $id_cliente = $_SESSION['id'];
+    
+                    $this->taller = new Taller($tipoServicio, $descripcion, null, $tiempo_estimado, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
+                    if (!$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)) {
+                        $response['errors'][] = "Ya existe un vehículo con la matrícula ingresada.";
+                    } elseif (!$this->taller->reservarServicio($matricula)) {
+                        $response['errors'][] = "Error al reservar servicio.";
+                    } else {
+                        $response['success'] = true;
+    
+                        // TODO: Enviar correo de confirmación
+    
+                        // Guardar la reserva en la sesión
+                        $_SESSION['reserva'] = $this->taller;
+                        $_SESSION['servicio'] = 'taller';
+                        $_SESSION['matricula'] = $matricula;
+    
+                        // Redireccionar al usuario a la página de confirmación de reserva
+                        header('Location: index.php?action=serviceConfirmation');
+                        exit; // Añadir exit después de redireccionar
+                    }
+                }
+            }
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
             // Debug: Log which fields are missing
@@ -101,6 +112,7 @@ class ControladorTaller{
                 array_keys($_POST)
             );
         }
+    
         header('Content-Type: application/json');
         echo json_encode($response);
         exit;
@@ -165,6 +177,17 @@ class ControladorTaller{
     private function validarTipoServicio($tipoServicio){
         // Validar si el código seleccionado existe en la lista de servicios disponibles
         return isset($this->serviciosDisp[$tipoServicio]);
+    }
+
+    private function validarUnaSolaMatricula($mat1, $mat2){
+        if (isset($mat1) && !isset($mat2)) {
+            return $mat1;  // Retorna mat1 si solo está seteado
+        } elseif (!isset($mat1) && isset($mat2)) {
+            return $mat2;  // Retorna mat2 si solo está seteado
+        } else {
+            // Si ambos están seteados o ninguno está seteado, puedes lanzar un error o manejarlo como prefieras
+            throw new InvalidArgumentException("Debe ingresar solo una matricula.");
+        }
     }
 
 }
