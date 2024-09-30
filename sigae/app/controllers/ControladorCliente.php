@@ -153,7 +153,7 @@ class ControladorCliente{
         session_start();
         error_log($_SESSION['email']. " abrió la página de AIO Parking");
         error_log(print_r($_SESSION, true));
-        include '../app/views/client/parking.html';
+        include '../app/views/client/aioParking.html';
     }
 
     function parkingSimple(){
