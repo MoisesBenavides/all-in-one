@@ -170,6 +170,13 @@ class ControladorCliente{
         include '../app/views/client/reservarParkingLargoPlazo.html';
     }
 
+    function products(){
+        session_start();
+        error_log($_SESSION['email']. " abrió la página del catálogo de productos");
+        error_log(print_r($_SESSION, true));
+        include '../app/views/client/catalogo.html';
+    }
+
     function myUser(){
         include '../app/views/client/miUsuario.html';
     }

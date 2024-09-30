@@ -56,6 +56,9 @@ switch ($action) {
     case 'parkingConfirmation':
         $controladorParking->parkingConfirmation();
         break;
+    case 'products':
+        $controladorCliente->products();
+        break;
     case 'myUser':
         $controladorCliente->myUser();
         break;
