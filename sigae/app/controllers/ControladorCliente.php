@@ -152,6 +152,7 @@ class ControladorCliente{
         session_start();
         error_log($_SESSION['email']. " abrió la página de AIO Parking");
         error_log(print_r($_SESSION, true));
+        
         include '../app/views/client/aioParking.html';
     }
 
@@ -160,10 +161,7 @@ class ControladorCliente{
         error_log($_SESSION['email']. " abrió la página de reserva de parking simple");
         error_log(print_r($_SESSION, true));
 
-        /*
-        Implementar dropdown de vehiculos
         $this->cargarMisVehiculosAjax($_SESSION['id']);
-        */
         include '../app/views/client/reservarParkingSimple.html';
     }
 
