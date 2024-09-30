@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIO - Taller, neumaticos, reservas y más</title>
-    <link rel="stylesheet" href="../../../public/css/styles.css">
-    <link rel="icon" type="image/x-icon" href="../../../public/ico/logo-positivo.ico">
+    <link rel="stylesheet" href="../../../css/styles.css">
+    <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
     <style>
         @font-face {
             font-family: 'Teachers';
-            src: ('sigae/public/font/Teachers-VariableFont_wght.ttf') ;
+            src: url('../../../font/Teachers-VariableFont_wght.ttf');
             font-weight: normal;
             font-style: normal;
         }
@@ -20,7 +20,7 @@
     </style>
 </head>
 <header class=" w-screen">
-    <link rel="stylesheet" href="../../../public/css/styles.css">
+    <link rel="stylesheet" href="../../../css/styles.css">
     <div class="container mx-auto px-4 py-4">
         <div class="relative flex flex-col md:flex-row justify-between items-center">
             
@@ -36,7 +36,7 @@
             <!-- Logo -->
             <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
                 <!-- Presionar logo para volver al home del cliente (href) -->
-                <img href="../../../public/index.php?action=home" class="w-full h-auto" src="../../../public/img/AIO Positivo.png" alt="AIO Logo" />
+                <img href="../../../index.php?action=home" class="w-full h-auto" src="../../../img/AIO Positivo.png" alt="AIO Logo" />
             </div>
 
             <!-- Navegación - visible solo en pantallas medianas y grandes -->
@@ -49,7 +49,7 @@
 
             <!-- User icon - Alineado a la derecha en móviles -->
             <div class="absolute top-2 right-4 md:static">
-                <img class="w-10 h-10" src="../../../public/img/user.png" alt="User">
+                <img class="w-10 h-10" src="../../../img/user.png" alt="User">
             </div>
         </div>
 
@@ -116,13 +116,13 @@
             <div class="overflow-hidden rounded-lg">
                 <div id="slide-container" class="relative w-full h-64 md:h-96 lg:h-[700px] overflow-hidden">
                     <div class="slide absolute w-full h-full">
-                        <img src="../../../public/img/ImagenNuevaSlider3.jpg" class="w-full h-full object-cover" alt="Slide 1">
+                        <img src="../../../img/ImagenNuevaSlider3.jpg" class="w-full h-full object-cover" alt="Slide 1">
                     </div>
                     <div class="slide absolute w-full h-full">
-                        <img src="../../../public/img/ImagenNuevaSlider2.jpg" class="w-full h-full object-cover" alt="Slide 2">
+                        <img src="../../../img/ImagenNuevaSlider2.jpg" class="w-full h-full object-cover" alt="Slide 2">
                     </div>
                     <div class="slide absolute w-full h-full">
-                        <img src="../../../public/img/ImagenNuevaSlider4.jpg" class="w-full h-full object-cover" alt="Slide 3">
+                        <img src="../../../img/ImagenNuevaSlider4.jpg" class="w-full h-full object-cover" alt="Slide 3">
                     </div>
                 </div>
             </div>
@@ -141,7 +141,7 @@
 
         <section id="parking" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
             <div class="flex flex-col items-center text-center">
-                <img class="w-48 md:w-64 lg:w-80 mb-6" src="../../../public/img/AIO Parking positivo.png" alt="AIO Parking" />
+                <img class="w-48 md:w-64 lg:w-80 mb-6" src="../../../img/AIO Parking positivo.png" alt="AIO Parking" />
                 <p class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold  mb-6">AIO PARKING es nuestro servicio de parking inteligente.<br/>Clickea debajo para reservar una plaza</p>
                 <button class="bg-[#1f3de0] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold  py-3 px-6 rounded-[10px]">AIO PARKING</button>
             </div>
@@ -159,19 +159,19 @@
             <h2 class="text-center text-[#161212] text-3xl md:text-4xl lg:text-5xl font-semibold  mb-8">Productos destacados</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="flex flex-col items-center">
-                    <img class="w-full h-auto mb-4" src="../../../public/img/Cubierta Pirelli1.webp" alt="Cubierta Pirelli" />
+                    <img class="w-full h-auto mb-4" src="../../../img/Cubierta Pirelli1.webp" alt="Cubierta Pirelli" />
                     <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Cubierta Pirelli 175/70 R14 Scorpion Atr</p>
                 </div>
                 <div class="flex flex-col items-center">
-                    <img class="w-full h-auto mb-4" src="../../../public/img/Neumático Bridgestone1.webp" alt="Neumático Bridgestone" />
+                    <img class="w-full h-auto mb-4" src="../../../img/Neumático Bridgestone1.webp" alt="Neumático Bridgestone" />
                     <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Neumático Bridgestone Ecopia EP150 P 185/55R16 83 V</p>
                 </div>
                 <div class="flex flex-col items-center">
-                    <img class="w-full h-auto mb-4" src="../../../public/img/Cubierta Pirelli cinturato.webp" alt="Cubierta Pirelli Cinturato" />
+                    <img class="w-full h-auto mb-4" src="../../../img/Cubierta Pirelli cinturato.webp" alt="Cubierta Pirelli Cinturato" />
                     <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato</p>
                 </div>
                 <div class="flex flex-col items-center">
-                    <img class="w-full h-auto mb-4" src="../../../public/img/Aceite1.webp" alt="Aceite Motul" />
+                    <img class="w-full h-auto mb-4" src="../../../img/Aceite1.webp" alt="Aceite Motul" />
                     <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Aceite para motor Motul sintético 5W-40</p>
                 </div>
             </div>
@@ -184,18 +184,18 @@
     <div class="  text-white py-12 container mx-auto px-4">
         <div class="flex flex-col md:flex-row justify-between items-center">
             <div class="mb-8 md:mb-0">
-                <img class="w-48 h-auto mb-6" src="../../../public/img/AIO Negativo (1).png" alt="AIO Logo" />
+                <img class="w-48 h-auto mb-6" src="../../../img/AIO Negativo (1).png" alt="AIO Logo" />
                 <div class="space-y-4">
                     <div class="flex items-center">
-                        <img class="w-8 h-8 mr-4" src="../../../public/img/InstagramLogo.png" alt="Instagram" />
+                        <img class="w-8 h-8 mr-4" src="../../../img/InstagramLogo.png" alt="Instagram" />
                         <span class="text-lg font-bold font-['Teachers']">@Aiotalleres</span>
                     </div>
                     <div class="flex items-center">
-                        <img class="w-8 h-8 mr-4" src="../../../public/img/XLogo.png" alt="Twitter" />
+                        <img class="w-8 h-8 mr-4" src="../../../img/XLogo.png" alt="Twitter" />
                         <span class="text-lg font-bold font-['Teachers']">@Aiotalleres</span>
                     </div>
                     <div class="flex items-center">
-                        <img class="w-8 h-8 mr-4" src="../../../public/img/TelefonoLogo.png" alt="Teléfono" />
+                        <img class="w-8 h-8 mr-4" src="../../../img/TelefonoLogo.png" alt="Teléfono" />
                         <span class="text-lg font-bold font-['Teachers']">+598 99 123 456</span>
                     </div>
                 </div>
