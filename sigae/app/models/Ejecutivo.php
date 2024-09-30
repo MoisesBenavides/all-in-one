@@ -1,7 +1,7 @@
 <?php
 
 class Ejecutivo{
-    private $id_empleado,
+    private $id_empleado;
     
     public function getId_empleado(){
         return $this->id_empleado;
