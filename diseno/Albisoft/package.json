@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "autoprefixer": "^10.4.20",
+    "nodemailer": "^6.9.15",
     "postcss-cli": "^11.0.0",
     "tailwindcss": "^3.4.13"
   },
