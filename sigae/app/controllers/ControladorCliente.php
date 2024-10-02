@@ -66,6 +66,8 @@ class ControladorCliente{
         echo json_encode($response);
         exit;
     }
+    function doLoginOAuth(){
+    }
     function signup(){
         include '../app/views/account/signUp.html';
     }
