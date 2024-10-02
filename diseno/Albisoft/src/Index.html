@@ -133,33 +133,37 @@
           </div>
         </div>
       </section>
-      <section class="flex overflow-hidden relative gap-10 justify-center items-center px-44 py-20 w-full font-semibold max-md:px-5 max-md:max-w-full">
+      <section class="relative z-10 flex overflow-hidden gap-10 justify-center items-center px-44 py-20 w-full font-semibold max-md:px-5 max-md:max-w-full">
         <div class="flex flex-col flex-1 shrink self-stretch my-auto text-white basis-0 min-w-[240px] max-md:max-w-full">
-          <h2 class="text-4xl leading-10 max-md:max-w-full">¿Listo para comenzar tu proyecto?</h2>
-          <p class="mt-6 text-base max-md:max-w-full">Completa el formulario y te contactaremos</p>
+            <h2 class="text-4xl leading-10 max-md:max-w-full">¿Listo para comenzar tu proyecto?</h2>
+            <p class="mt-6 text-base max-md:max-w-full">Completa el formulario y te contactaremos</p>
         </div>
-        <div class="flex flex-col flex-1 shrink justify-center self-stretch my-auto text-sm basis-0 min-w-[240px] max-md:max-w-full">
-          <form class="flex flex-col gap-10 w-full leading-none max-md:max-w-full">
-            <div class="flex overflow-hidden flex-col justify-center min-w-[240px] w-[520px]">
-              <label for="name" class="text-white max-md:max-w-full">Nombre</label>
-              <input id="name" type="text" placeholder="Ingresa tu nombre" class="flex-1 shrink gap-1 self-stretch px-3 py-2 mt-1 w-full bg-white rounded-md border border-solid border-black border-opacity-10 text-black text-opacity-50 max-md:max-w-full" />
-            </div>
-            <div class="flex overflow-hidden flex-col justify-center min-w-[240px] w-[520px]">
-              <label for="email" class="text-white max-md:max-w-full">Correo Electrónico</label>
-              <input id="email" type="email" placeholder="Ingresa tu correo electrónico" class="flex-1 shrink gap-1 self-stretch px-3 py-2 mt-1 w-full bg-white rounded-md border border-solid border-black border-opacity-10 text-black text-opacity-50 max-md:max-w-full" />
-            </div>
-            <button type="submit" class="flex-1 shrink p-3 w-full bg-black rounded-lg text-base text-white min-w-[240px] max-md:max-w-full">
-              Enviar
-            </button>
-          </form>
+        <div id="formulario" action="../public/enviarMail.js" class="flex flex-col flex-1 shrink justify-center self-stretch my-auto text-sm basis-0 min-w-[240px] max-md:max-w-full">
+            <form class="flex flex-col gap-10 w-full leading-none max-md:max-w-full">
+                <div class="flex overflow-hidden flex-col justify-center min-w-[240px] w-[520px]">
+                    <label for="name" class="text-white max-md:max-w-full">Nombre</label>
+                    <input id="name" type="text" placeholder="Ingresa tu nombre" class="flex-1 shrink gap-1 self-stretch px-3 py-2 mt-1 w-full bg-white rounded-md border border-solid border-black border-opacity-10 text-black text-opacity-50 max-md:max-w-full" />
+                </div>
+                <div class="flex overflow-hidden flex-col justify-center min-w-[240px] w-[520px]">
+                    <label for="email" class="text-white max-md:max-w-full">Correo Electrónico</label>
+                    <input id="email" type="email" placeholder="Ingresa tu correo electrónico" class="flex-1 shrink gap-1 self-stretch px-3 py-2 mt-1 w-full bg-white rounded-md border border-solid border-black border-opacity-10 text-black text-opacity-50 max-md:max-w-full" />
+                </div>
+                <p id="my-form-status"></p>
+                <button id="enviar" type="button" class="flex-1 shrink p-3 w-full bg-black rounded-lg text-base text-white min-w-[240px] max-md:max-w-full">
+                    Enviar
+                </button>
+            </form>
         </div>
-       
-      </section>
-      <div class="flex justify-center items-center w-full overflow-hidden">
-        <div class="absolute  flex justify-center items-center">
-            <img src="../Assets/Albisoft Positivo 1.png" alt="Albisoft logo" class="w-[900px] h-auto">
-        </div>
-    </div>
+        <script src="../public/enviarMail.js"></script>
+
+
+
+    </section>
+    <div class="relative flex justify-center items-center w-full overflow-hidden py-20">
+      <div class="flex justify-center items-center">
+          <img src="../Assets/Albisoft Positivo 1.png" alt="Albisoft logo" class="w-[900px] h-auto">
+      </div>
+  </div>
         <!-- Footer content -->
         <footer class="relative z-10 bg-black pt-24 pb-16 px-4 md:px-16 w-full justify-center">
           <div class="flex flex-wrap justify-between items-center max-w-screen-xl mx-auto">
