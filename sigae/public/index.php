@@ -17,6 +17,9 @@ switch ($action) {
     case 'doLogin':
         $controladorCliente->doLogin();
         break;
+    case 'doLoginOAuth':
+        $controladorCliente->doLoginOAuth();
+        break;
     case 'signup':
         $controladorCliente->signup();
         break;

@@ -34,17 +34,26 @@
                  class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
           <p id="email-error" class="mt-1 text-red-500 text-sm hidden"></p>
         </div>
-        <div class="mb-6">
+        <div class="mb-4">
           <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" 
                  class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
           <p id="password-error" class="mt-1 text-red-500 text-sm hidden"></p>
+        </div>
+        <div class="mb-2">
+          <p>
+            <a href="index.php?action=forgotPassword" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
+          </p>
         </div>
         <button type="submit" class="w-full bg-[#950d03] text-white py-2 rounded-md hover:bg-[#7a0b02] transition">
           Ingresar
         </button>
       </form>
+      <!-- NOTA: Agregar separador entre boton ingresar y continuar con Google (O ) -->
+      <button class="w-full mt-4 flex justify-center items-center bg-[#ffffff] px-4 py-2 border rounded-md hover:bg-[#e5e5e5] transition">
+        <img class="w-6 h-6 mr-4" src="../../../svg/google-icon-logo.svg" alt="Google"/>
+        <a href="index.php?action=doLoginOAuth" class="text-gray-600">Continuar con Google</a>
+      </button>
       <div class="mt-6 text-center space-y-2">
-        <a href="index.php?action=forgotPassword" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
         <p>
           <a href="index.php?action=signup" class="text-sm text-gray-600 hover:underline">¿No tienes una cuenta? Regístrate aquí</a>
         </p>
