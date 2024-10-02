@@ -81,7 +81,7 @@
             /* Responsive  */
             @media (max-width: 768px) {
                 .contenedores1-20, .contenedores31-50, .contenedores21-30  {
-                    overflow-x: auto; /* Activar el desplazamiento horizontal en pantallas más pequeñas */
+                    overflow-x: auto; /* Activar el desplazamiento horizontal en mobile */
                 }
             }
         </style>
@@ -233,7 +233,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             generateParkingSpots(1, 20, 'contenedores1-20');
             generateParkingSpots(21, 30, 'contenedores21-30');
             generateParkingSpots(31, 50, 'contenedores31-50');
