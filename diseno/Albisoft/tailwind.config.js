@@ -5,7 +5,13 @@ module.exports = {
     './src/**/*.css',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        azulAlbisoft: '#4666FF ',
+        verdeAlbisoft: '#AEF78E',
+
+      },
+    },
   },
   plugins: [],
 }
