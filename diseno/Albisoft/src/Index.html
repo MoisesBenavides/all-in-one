@@ -3,204 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../dist/output.css" rel="stylesheet">
-    <title>Document</title>
-</head>
-<body class="bg bg-gradient-to-r from-azulAlbisoft to-verdeAlbisoft">
-      <header class="flex flex-col pb-40 w-full min-h-[823px] max-md:pb-24 max-md:max-w-full">
-        <nav class="flex overflow-hidden flex-wrap gap-10 justify-between items-center px-12 py-6 w-full text-2xl font-semibold tracking-wide leading-none text-black bg-white bg-opacity-80 min-h-[143px] max-md:px-5 max-md:max-w-full">
-          <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/fb247800c767e65fbb5e5ad7f5df294340c6c00e095f400d01e3b1f1b78ce58e?placeholderIfAbsent=true&apiKey=66e9bf449eb247f0b447e6da0e3638f2" alt="" class="object-contain shrink-0 self-stretch my-auto aspect-square w-[100px]" />
-          <div class="flex flex-wrap gap-10 justify-between items-center self-stretch my-auto min-w-[240px] w-[1214px] max-md:max-w-full">
-            <a href="queSomos" class="self-stretch my-auto text-center">¿Qué somos?</a>
-            <a href="servicios" class="self-stretch my-auto text-center">Nuestros servicios</a>
-            <a href="proyectos" class="self-stretch my-auto text-center">Proyectos destacados</a>
-            <a href="quienesSomos" class="self-stretch my-auto text-center">¿Quienes somos?</a>
-            <a href="contactanos" class="overflow-hidden gap-2.5 self-stretch px-5 py-3 my-auto text-white whitespace-nowrap bg-black border border-solid border-slate-600 rounded-[50px]">
-              Contactanos
-            </a>
-          </div>
-        </nav>
-        <main class="flex flex-wrap gap-10 justify-between items-center self-center mt-72 max-w-full min-h-[138px] w-[1216px] max-md:mt-10">
-          <section class="flex gap-8 justify-center items-center self-stretch my-auto min-h-[86px] min-w-[240px] w-[513px] max-md:max-w-full">
-            <div class="flex justify-center items-center self-stretch my-auto h-[76px] min-w-[240px] w-[513px]">
-              <img loading="lazy" src="../Assets/Albisoft Alternativo 1.png" alt="Creative technology logo" class="object-contain flex-1 shrink self-stretch my-auto w-full aspect-[3.38] basis-0 min-w-[240px] max-md:max-w-full" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Albisoft - Creative Technology</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+      .carousel-inner {
+          position: relative;
+          overflow: hidden;
+      }
+  
+      .carousel-item {
+          display: none;
+          animation: fadeIn 1s ease;
+      }
+  
+      .carousel-item.active {
+          display: block;
+      }
+  
+      @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+  </style>
+  </head>
+<body class="bg-gradient-to-r from-blue-500 to-green-500">
+    <header class="flex flex-col w-full min-h-screen">
+        <nav class="flex flex-wrap gap-4 justify-between items-center px-4 md:px-12 py-6 w-full text-lg md:text-2xl font-semibold tracking-wide leading-none text-black bg-white bg-opacity-80">
+            <img loading="lazy" src="../Assets/Albisoft Positivo 1.png" alt="Albisoft logo" class="w-20 md:w-24 object-contain" />
+            <div class="flex flex-wrap gap-4 md:gap-10 justify-between items-center">
+                <a href="#queSomos" class="text-center">¿Qué somos?</a>
+                <a href="#servicios" class="text-center">Nuestros servicios</a>
+                <a href="#proyectos" class="text-center">Proyectos destacados</a>
+                <a href="#quienesSomos" class="text-center">¿Quienes somos?</a>
+                <a href="#contactanos" class="px-4 py-2 text-white whitespace-nowrap bg-black rounded-full">Contactanos</a>
             </div>
-          </section>
-          <h1 class="flex gap-4 justify-center items-center self-stretch my-auto text-6xl font-semibold tracking-wide leading-none text-center text-white min-h-[76px] min-w-[240px] w-[550px] max-md:max-w-full max-md:text-4xl">
-            <span class="gap-2 self-stretch my-auto min-w-[240px] w-[642px] max-md:max-w-full max-md:text-4xl">
-              Creative technology
-            </span>
-          </h1>
+        </nav>
+        <main class="flex flex-col md:flex-row gap-10 justify-between items-center px-4 md:px-12 mt-20 md:mt-40">
+            <section class="w-full md:w-1/2">
+                <img loading="lazy" src="../Assets/Albisoft Alternativo 1.png" alt="Creative technology logo" class="w-full max-w-md mx-auto" />
+            </section>
+            <h1 class="text-4xl md:text-6xl font-semibold tracking-wide text-center text-white w-full md:w-1/2">
+                Creative technology
+            </h1>
         </main>
-      </header>
-      <section class="flex overflow-hidden relative flex-col justify-center px-44 w-full font-semibold text-white min-h-[461px] max-md:px-5 max-md:max-w-full">
-        <h2 class="w-full text-5xl leading-none text-center max-md:max-w-full max-md:text-4xl">¿Qué somos?</h2>
-        <div class="flex z-0 flex-col justify-center py-5 mt-16 w-full max-md:mt-10 max-md:max-w-full">
-          <div class="flex flex-wrap gap-10 items-center w-full max-md:max-w-full">
-            <article class="flex flex-1 shrink gap-4 justify-center items-start self-stretch p-4 my-auto rounded-md border-white border-solid basis-0 border-[3px] min-w-[240px]">
-              <img loading="lazy" src="../Assets/mission 1.png" alt="Misión icon" class="object-contain shrink-0 aspect-square min-h-[100px] w-[100px]" />
-              <div class="flex flex-col flex-1 shrink basis-0">
-                <h3 class="text-2xl leading-none">Misión</h3>
-                <p class="mt-2 text-xl leading-6">Transformar ideas en realidades digitales</p>
-              </div>
+
+    </header>
+
+    <section id="queSomos" class="px-4 md:px-36 py-16 w-full font-semibold text-white">
+        <h2 class="text-4xl md:text-4xl text-center mb-16">¿Qué somos?</h2>
+        <div class="flex flex-wrap gap-10 justify-center">
+            <article class="flex flex-col md:flex-row gap-4 items-start p-4 rounded-md border-white border-solid border-2 w-full md:w-auto">
+                <img loading="lazy" src="../Assets/mission 1.png" alt="Misión icon" class="w-20 h-20 object-contain" />
+                <div>
+                    <h3 class="text-2xl">Misión</h3>
+                    <div class="max-w-xs">
+                    <p class="mt-2 text-l">Transformar ideas en realidades digitales</p>
+                    </div>
+                </div>
             </article>
-            <article class="flex flex-1 shrink gap-4 justify-center items-start self-stretch p-4 my-auto rounded-md border-white border-solid basis-0 border-[3px] min-w-[240px]">
-              <img loading="lazy" src="../Assets/shared-vision 1.png" alt="Visión icon" class="object-contain shrink-0 aspect-square min-h-[100px] w-[100px]" />
-              <div class="flex flex-col flex-1 shrink basis-0">
-                <h3 class="text-2xl leading-none">Visión</h3>
-                <p class="mt-2 text-xl leading-6">Ser líder en el desarrollo de software</p>
-              </div>
+            <article class="flex flex-col md:flex-row gap-4 items-start p-4 rounded-md border-white border-solid border-2 w-full md:w-auto">
+                <img loading="lazy" src="../Assets/shared-vision 1.png" alt="Visión icon" class="w-20 h-20 object-contain" />
+                <div>
+                    <h3 class="text-2xl">Visión</h3>
+                    <div class="max-w-xs">
+                    <p class="mt-2 text-l">Ser líder en el desarrollo de software</p>
+                    </div>
+                </div>
             </article>
-            <article class="flex flex-1 shrink gap-4 justify-center items-start self-stretch p-4 my-auto rounded-md border-white border-solid basis-0 border-[3px] min-w-[240px]">
-              <img loading="lazy" src="../Assets/values 1.png" alt="Valores icon" class="object-contain shrink-0 aspect-square min-h-[100px] w-[100px]" />
-              <div class="flex flex-col flex-1 shrink basis-0">
-                <h3 class="text-2xl leading-none">Valores</h3>
-                <p class="mt-2 text-xl leading-6">Innovación, Vanguardia, Compromiso, Excelencia</p>
-              </div>
+            <article class="flex flex-col md:flex-row gap-4 items-start p-4 rounded-md border-white border-solid border-2 w-full md:w-auto">
+                <img loading="lazy" src="../Assets/values 1.png" alt="Valores icon" class="w-20 h-20 object-contain" />
+                <div>
+                    <h3 class="text-2xl ">Valores</h3>
+                    <div class="max-w-xs">
+                    <p class="mt-2 text-l">Innovación, Vanguardia, Compromiso, Excelencia</p>
+                    </div>
+                </div>
             </article>
-          </div>
         </div>
-      </section>
-      <section class="flex overflow-hidden relative flex-col justify-center px-44 py-16 w-full max-md:px-5 max-md:max-w-full">
-        <header class="flex z-0 flex-col justify-center items-center w-full font-semibold text-white max-md:max-w-full">
-          <h2 class="text-5xl leading-none max-md:text-4xl">Nuestros Servicios</h2>
-          <p class="mt-6 text-2xl leading-none">Descubre nuestros servicios especializados</p>
+    </section>
+
+    <section id="servicios" class="px-4 md:px-44 py-16 w-full">
+        <header class="text-center text-white mb-16">
+            <h2 class="text-4xl md:text-5xl font-semibold">Nuestros Servicios</h2>
+            <p class="mt-6 text-xl md:text-2xl">Descubre nuestros servicios especializados</p>
         </header>
-        <main class="flex z-0 flex-col justify-center mt-16 w-full max-md:mt-10 max-md:max-w-full">
-          <div class="flex flex-wrap gap-10 items-start w-full max-md:max-w-full">
-            <article class="flex overflow-hidden flex-col flex-1 shrink rounded-md border-white border-solid basis-0 border-[3px] min-w-[240px]">
-              <div class="flex overflow-hidden flex-col justify-center w-full min-h-[300px]">
-                <div class="flex flex-col px-10 pt-2.5 w-full max-md:px-5">
-                  <img loading="lazy" src="../Assets/data 1.png" alt="Desarrollo de Software" class="object-contain z-10 w-full aspect-square" />
+        <main class="flex flex-wrap gap-10 justify-center">
+            <article class="flex flex-col rounded-md border-white border-solid border-2 overflow-hidden w-full md:w-64">
+                <div class="h-64 flex items-center justify-center ">
+                    <img loading="lazy" src="../Assets/data 1.png" alt="Desarrollo de Software" class="w-3/4 h-3/4 object-contain" />
                 </div>
-              </div>
-              <div class="flex flex-col p-3 w-full font-semibold text-white">
-                <h3 class="text-xl leading-tight">Desarrollo de Software</h3>
-                <p class="mt-1 text-2xl leading-7">Desarrollo de aplicaciones web</p>
-              </div>
-            </article>
-            <article class="flex overflow-hidden flex-col flex-1 shrink rounded-md border-white border-solid basis-0 border-[3px] min-w-[240px]">
-              <div class="flex overflow-hidden flex-col justify-center w-full min-h-[300px]">
-                <div class="flex flex-1 w-full min-h-[20px]"></div>
-                <img loading="lazy" src="../Assets/branding 1.png" alt="Identidad de Marca y Diseño" class="object-contain self-center max-w-full aspect-square w-[280px]" />
-              </div>
-              <div class="flex flex-col p-3 w-full font-semibold text-white">
-                <h3 class="text-xl leading-tight">Identidad de Marca y Diseño</h3>
-                <p class="mt-1 text-2xl leading-7">Servicios de diseño y branding</p>
-              </div>
-            </article>
-            <article class="flex overflow-hidden flex-col flex-1 shrink rounded-md border-white border-solid basis-0 border-[3px] min-w-[240px]">
-              <div class="flex overflow-hidden flex-col justify-center w-full min-h-[300px]">
-                <div class="flex flex-1 gap-2.5 justify-center items-center px-2.5 py-2 size-full">
-                  <img loading="lazy" src="../Assets/corporate 1.png" alt="Identidad de Marca y Diseño" class="object-contain self-stretch my-auto aspect-square min-w-[240px] w-[280px]" />
+                <div class="p-4 text-white">
+                    <h3 class="text-xl font-semibold">Desarrollo de Software</h3>
+                    <p class="mt-2 text-lg">Desarrollo de aplicaciones web</p>
                 </div>
-              </div>
-              <div class="flex flex-col p-3 w-full font-semibold text-white">
-                <h3 class="text-xl leading-tight">Identidad de Marca y Diseño</h3>
-                <p class="mt-1 text-2xl leading-7">Servicios de creación de marca y tramites</p>
-              </div>
             </article>
-          </div>
+            <article class="flex flex-col rounded-md border-white border-solid border-2 overflow-hidden w-full md:w-64">
+                <div class="h-64 flex items-center justify-center ">
+                    <img loading="lazy" src="../Assets/branding 1.png" alt="Identidad de Marca y Diseño" class="w-3/4 h-3/4 object-contain" />
+                </div>
+                <div class="p-4 text-white">
+                    <h3 class="text-xl font-semibold">Identidad de Marca y Diseño</h3>
+                    <p class="mt-2 text-lg">Servicios de diseño y branding</p>
+                </div>
+            </article>
+            <article class="flex flex-col rounded-md border-white border-solid border-2 overflow-hidden w-full md:w-64">
+                <div class="h-64 flex items-center justify-center ">
+                    <img loading="lazy" src="../Assets/corporate 1.png" alt="Servicios Corporativos" class="w-3/4 h-3/4 object-contain" />
+                </div>
+                <div class="p-4 text-white">
+                    <h3 class="text-xl font-semibold">Servicios Corporativos</h3>
+                    <p class="mt-2 text-lg">Creación de marca y trámites</p>
+                </div>
+            </article>
         </main>
-        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/15fa6bc4c8ede24c6382d5fa9e45b42008a766ad2e0ec8a8698bedb93fefd836?placeholderIfAbsent=true&apiKey=66e9bf449eb247f0b447e6da0e3638f2" alt="" class="object-contain absolute inset-x-0 bottom-0 z-0 w-full h-0 max-md:max-w-full" />
-      </section>
-      <section class="flex overflow-hidden relative gap-10 justify-center items-center px-44 py-16 w-full font-semibold text-white max-md:px-5 max-md:max-w-full">
-        <h2 class="flex-1 shrink self-stretch my-auto text-4xl leading-tight min-w-[240px] max-md:max-w-full">
-          Proyectos Destacados
-        </h2>
-        <div class="flex z-0 items-center self-stretch my-auto text-2xl leading-7 text-center min-w-[240px] w-[609px] max-md:max-w-full">
-          <div class="flex flex-1 shrink gap-10 items-center self-stretch my-auto w-full basis-0 min-w-[240px] max-md:max-w-full">
-            <article class="flex flex-wrap flex-1 shrink gap-3.5 justify-center items-center self-stretch py-5 my-auto w-full border border-solid basis-0 border-white border-opacity-0 min-w-[240px] max-md:max-w-full">
-              <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/34114f1fa8a583fbf77912552e8ce8d87d6d7fd5455ad4e0113ef037bed8898c?placeholderIfAbsent=true&apiKey=66e9bf449eb247f0b447e6da0e3638f2" alt="Proyecto destacado" class="object-contain self-stretch my-auto aspect-[2.15] w-[226px]" />
-              <p class="self-stretch my-auto w-[309px]">
-                Construccion de aplicacion web y desarrollo de la marca
-              </p>
-            </article>
-          </div>
-        </div>
-        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/15fa6bc4c8ede24c6382d5fa9e45b42008a766ad2e0ec8a8698bedb93fefd836?placeholderIfAbsent=true&apiKey=66e9bf449eb247f0b447e6da0e3638f2" alt="" class="object-contain absolute inset-x-0 bottom-0 z-0 self-start h-0 w-[1498px] max-md:max-w-full" />
-      </section>
-      <section class="flex overflow-hidden relative gap-10 justify-between px-44 py-16 w-full min-h-[521px] max-md:px-5 max-md:max-w-full">
-        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/15fa6bc4c8ede24c6382d5fa9e45b42008a766ad2e0ec8a8698bedb93fefd836?placeholderIfAbsent=true&apiKey=66e9bf449eb247f0b447e6da0e3638f2" alt="" class="object-contain absolute inset-x-0 bottom-0 z-0 self-start h-0 w-[1498px] max-md:max-w-full" />
-        <h2 class="z-0 my-auto text-4xl font-semibold tracking-tighter text-white w-[311px]">¿Quienes somos?</h2>
-        <div class="flex z-0 flex-wrap gap-10 items-center h-full min-w-[240px] w-[557px] max-md:max-w-full">
-          <figure class="flex overflow-hidden flex-col justify-center self-stretch p-6 my-auto min-w-[240px] rounded-[50px] w-[300px] max-md:px-5">
-            <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/7a7b944b36f7b94f3db6d9c39a82cd604c0cf6e28a0968f8c700920278cb8f51?placeholderIfAbsent=true&apiKey=66e9bf449eb247f0b447e6da0e3638f2" alt="Mateo Easton" class="object-contain w-full aspect-square" />
-          </figure>
-          <div class="flex flex-col flex-1 shrink justify-center self-stretch my-auto font-semibold basis-[50px] min-h-[88px]">
-            <h3 class="text-3xl leading-none text-white">Mateo Easton</h3>
-            <p class="mt-1.5 text-2xl leading-none text-black">Diseñador web</p>
-          </div>
-        </div>
-      </section>
-      <section class="relative z-10 flex overflow-hidden gap-10 justify-center items-center px-44 py-20 w-full font-semibold max-md:px-5 max-md:max-w-full">
-        <div class="flex flex-col flex-1 shrink self-stretch my-auto text-white basis-0 min-w-[240px] max-md:max-w-full">
-            <h2 class="text-4xl leading-10 max-md:max-w-full">¿Listo para comenzar tu proyecto?</h2>
-            <p class="mt-6 text-base max-md:max-w-full">Completa el formulario y te contactaremos</p>
-        </div>
-        <div id="formulario" action="../public/enviarMail.js" class="flex flex-col flex-1 shrink justify-center self-stretch my-auto text-sm basis-0 min-w-[240px] max-md:max-w-full">
-            <form class="flex flex-col gap-10 w-full leading-none max-md:max-w-full">
-                <div class="flex overflow-hidden flex-col justify-center min-w-[240px] w-[520px]">
-                    <label for="name" class="text-white max-md:max-w-full">Nombre</label>
-                    <input id="name" type="text" placeholder="Ingresa tu nombre" class="flex-1 shrink gap-1 self-stretch px-3 py-2 mt-1 w-full bg-white rounded-md border border-solid border-black border-opacity-10 text-black text-opacity-50 max-md:max-w-full" />
+    </section>
+
+    <section id="proyectos" class="px-4 md:px-44 py-16 w-full text-white">
+        <h2 class="text-4xl font-semibold mb-10">Proyectos Destacados</h2>
+        <article class="flex flex-col md:flex-row gap-10 items-center justify-center bg-white bg-opacity-10 p-8 rounded-lg">
+            <img loading="lazy" src="" alt="Proyecto destacado" class="w-full md:w-1/3 object-contain" />
+            <p class="text-xl md:text-2xl text-center md:text-left">
+                Construcción de aplicación web y desarrollo de la marca
+            </p>
+        </article>
+    </section>
+
+    <section id="quienesSomos" class="px-4 md:px-44 py-16 w-full text-white">
+      <h2 class="text-4xl text-center font-semibold mb-10">¿Quienes somos?</h2>
+      <div class="flex flex-col md:flex-row gap-10 items-center justify-center">
+          <div class="carousel w-full md:w-1/2">
+              <div class="carousel-inner">
+                  <div class="carousel-item active">
+                      <figure class="w-64 h-64 rounded-full overflow-hidden bg-white p-4 mx-auto">
+                          <img loading="lazy" src="../Assets/persona.png" alt="Moises Benavides" class="w-full h-full object-cover" />
+                      </figure>
+                      <div class="text-center">
+                          <h3 class="text-3xl font-semibold">Moises Benavides</h3>
+                          <p class="mt-2 text-lg">Programador y Gestor de Base de Datos</p>
+                          <p class="mt-4">Moises se encarga del desarrollo de aplicaciones y la gestión eficiente de bases de datos.</p>
+                      </div>
+                  </div>
+                  <div class="carousel-item">
+                    <figure class="w-64 h-64 rounded-full overflow-hidden bg-white p-4 mx-auto">
+                        <img loading="lazy" src="../Assets/persona.png" alt="Mateo Miguelez" class="w-full h-full object-cover" />
+                    </figure>
+                    <div class="text-center">
+                        <h3 class="text-3xl font-semibold">Mateo Easton</h3>
+                        <p class="mt-2 text-lg">Diseñador Web</p>
+                        <p class="mt-4">Mateo se encarga de el diseño de el sistema, realizando diseños accesibles y modernos para enriquezer la aplicacion web.</p>
+                    </div>
                 </div>
-                <div class="flex overflow-hidden flex-col justify-center min-w-[240px] w-[520px]">
-                    <label for="email" class="text-white max-md:max-w-full">Correo Electrónico</label>
-                    <input id="email" type="email" placeholder="Ingresa tu correo electrónico" class="flex-1 shrink gap-1 self-stretch px-3 py-2 mt-1 w-full bg-white rounded-md border border-solid border-black border-opacity-10 text-black text-opacity-50 max-md:max-w-full" />
+                  <div class="carousel-item">
+                      <figure class="w-64 h-64 rounded-full overflow-hidden bg-white p-4 mx-auto">
+                          <img loading="lazy" src="../Assets/persona.png" alt="Mateo Miguelez" class="w-full h-full object-cover" />
+                      </figure>
+                      <div class="text-center">
+                          <h3 class="text-3xl font-semibold">Mateo Miguelez</h3>
+                          <p class="mt-2 text-lg">Formador Empresarial</p>
+                          <p class="mt-4">Mateo brinda capacitación y formación a empresas, mejorando sus procesos y rendimiento.</p>
+                      </div>
+                  </div>
+                  <div class="carousel-item">
+                      <figure class="w-64 h-64 rounded-full overflow-hidden bg-white p-4 mx-auto">
+                          <img loading="lazy" src="../Assets/persona.png" alt="Lucas Charlo" class="w-full h-full object-cover" />
+                      </figure>
+                      <div class="text-center">
+                          <h3 class="text-3xl font-semibold">Lucas Charlo</h3>
+                          <p class="mt-2 text-lg">Analista de Sistemas</p>
+                          <p class="mt-4">Lucas se encarga del análisis y mejora de sistemas, asegurando la funcionalidad y eficiencia.</p>
+                      </div>
+                  </div>
+                  <div class="carousel-item">
+                      <figure class="w-64 h-64 rounded-full overflow-hidden bg-white p-4 mx-auto">
+                          <img loading="lazy" src="../Assets/persona.png" alt="Gianni Carsillo" class="w-full h-full object-cover" />
+                      </figure>
+                      <div class="text-center">
+                          <h3 class="text-3xl font-semibold">Gianni Carsillo</h3>
+                          <p class="mt-2 text-lg">Encargado de Sala de Cómputos</p>
+                          <p class="mt-4">Gianni es responsable de la administración y mantenimiento de la sala de cómputos, asegurando un entorno óptimo para el trabajo.</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+
+    <section id="contactanos" class="px-4 md:px-44 py-20 w-full">
+        <div class="flex flex-col md:flex-row gap-10 justify-between items-start">
+            <div class="w-full md:w-1/2 text-white">
+                <h2 class="text-4xl font-semibold mb-6">¿Listo para comenzar tu proyecto?</h2>
+                <p class="text-xl">Completa el formulario y te contactaremos</p>
+            </div>
+            <form id="contactForm" class="w-full md:w-1/2 flex flex-col gap-6">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-1">
+                        <label for="name" class="text-white block mb-2">Nombre</label>
+                        <input id="name" name="name" type="text" placeholder="Ingresa tu nombre" class="w-full px-4 py-2 rounded-md" required />
+                    </div>
+                    <div class="flex-1">
+                        <label for="lastName" class="text-white block mb-2">Apellido</label>
+                        <input id="lastName" name="lastName" type="text" placeholder="Ingresa tu apellido" class="w-full px-4 py-2 rounded-md" required />
+                    </div>
                 </div>
-                <p id="my-form-status"></p>
-                <button id="enviar" type="button" class="flex-1 shrink p-3 w-full bg-black rounded-lg text-base text-white min-w-[240px] max-md:max-w-full">
+                <div>
+                    <label for="email" class="text-white block mb-2">Correo Electrónico</label>
+                    <input id="email" name="email" type="email" placeholder="Ingresa tu correo electrónico" class="w-full px-4 py-2 rounded-md" required />
+                </div>
+                <div>
+                    <label for="message" class="text-white block mb-2">Mensaje</label>
+                    <textarea id="message" name="message" placeholder="Escribe tu mensaje" class="w-full px-4 py-2 rounded-md h-32" required></textarea>
+                </div>
+                <p id="my-form-status" class="text-white"></p>
+                <button type="submit" class="bg-black text-white font-semibold py-3 px-6 rounded-lg">
                     Enviar
                 </button>
             </form>
         </div>
-        <script src="../public/enviarMail.js"></script>
-
-
-
     </section>
-    <div class="relative flex justify-center items-center w-full overflow-hidden py-20">
-      <div class="flex justify-center items-center">
-          <img src="../Assets/Albisoft Positivo 1.png" alt="Albisoft logo" class="w-[900px] h-auto">
-      </div>
-  </div>
-        <!-- Footer content -->
-        <footer class="relative z-10 bg-black pt-24 pb-16 px-4 md:px-16 w-full justify-center">
-          <div class="flex flex-wrap justify-between items-center max-w-screen-xl mx-auto">
-            <!-- Company logo -->
-           <!-- Company logo -->
-           <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/4d67d2648d456503add75a6b5441f148d052d424df9153e360f84e642c10415d" 
-           alt="Company logo" 
-           class="w-60 h-auto object-contain my-4">
-      
-      <!-- Contact information -->
-      <div class="flex flex-wrap justify-center items-center gap-8 my-4">
-        <!-- Website -->
-        <div class="flex items-center gap-2 text-white">
-          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f62034aec583fbc36f652b056057eea8e11e4ac9f0308dd79baa6acb49c356a3"
-                     alt="Website icon" 
-                     class="w-10 h-10">
-                <a href="https://albisoft.uy" class="text-2xl font-bold">AlbisoftUY</a>
-              </div>
-              
-              <!-- Twitter -->
-              <div class="flex items-center gap-2 text-white">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/80b319c6999f9658a4637f3298356afe74f8dad56d53efaab61130ba3a2e7ed7" 
-                     alt="Twitter icon" 
-                     class="w-10 h-10">
-                <a href="https://twitter.com/AlbisoftUY" class="text-2xl font-bold">@AlbisoftUY</a>
-              </div>
-              
-              <!-- Phone -->
-              <div class="flex items-center gap-2 text-white">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/039d39a27b867801a531e823ce845f81f33ed451cc310c15efe4d5ba55d91225" 
-                     alt="Phone icon" 
-                     class="w-10 h-10">
-                <a href="tel:+59898123456" class="text-2xl font-bold">+598 98 123 456</a>
-              </div>
+
+    <footer class="bg-black py-16 px-4 md:px-16">
+        <div class="flex flex-wrap justify-between items-center max-w-6xl mx-auto">
+            <img src="../Assets/Albisoft Alternativo 1.png" 
+                 alt="Company logo" 
+                 class="w-40 md:w-60 h-auto object-contain my-4">
+            
+            <div class="flex flex-wrap justify-center items-center gap-8 my-4">
+                <div class="flex items-center gap-2 text-white">
+                    <img src=""
+                         alt="Website icon" 
+                         class="w-8 h-8">
+                    <a href="../Assets/Instagram.png" class="text-xl font-bold">AlbisoftUY</a>
+                </div>
+                
+                <div class="flex items-center gap-2 text-white">
+                    <img src="../Assets/image 1.png" 
+                         alt="Twitter icon" 
+                         class="w-8 h-8">
+                    <a href="" class="text-xl font-bold">@AlbisoftUY</a>
+                </div>
+                
+                <div class="flex items-center gap-2 text-white">
+                    <img src="../Assets/Phone.png" 
+                         alt="Phone icon" 
+                         class="w-8 h-8">
+                    <a href="tel:+59898123456" class="text-xl font-bold">+598 98 123 456</a>
+                </div>
             </div>
-          </div>
-        </footer>
-      </div>
+        </div>
+    </footer>    
+    <script>
+      //script para carrousel
+        const items = document.querySelectorAll('.carousel-item');
+        let currentIndex = 0;
+    
+        function showNextItem() {
+            items[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + 1) % items.length;
+            items[currentIndex].classList.add('active');
+        }
+    
+        setInterval(showNextItem, 5000); // Cambia cada 5 segundos
+    </script>
+    <script type="text/javascript">
+// Initialize EmailJS
+(function() {
+    emailjs.init('by1XUw6pUUSEFNqxt');  // Ensure this is your correct public key
+})();
+
+document.getElementById('contactForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Show loading message
+    const statusElement = document.getElementById('my-form-status');
+    statusElement.textContent = 'Enviando...';
+
+    // Prepare template parameters
+    const templateParams = {
+    from_name: document.getElementById('name').value + ' ' + document.getElementById('lastName').value,
+    reply_to: document.getElementById('email').value,
+    message: document.getElementById('message').value
+};
+
+    // Send email
+    emailjs.send('service_4ctqcg5', 'template_32iz1qb', templateParams)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            statusElement.textContent = 'Mensaje enviado con éxito!';
+            document.getElementById('contactForm').reset();
+        })
+        .catch(function(error) {
+            console.error('FAILED...', error);
+            statusElement.textContent = 'Error al enviar el mensaje: ' + JSON.stringify(error);
+        });
+});
+  </script>
+
+    <script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Responsive navigation menu
+    const navToggle = document.createElement('button');
+    navToggle.innerHTML = '☰';
+    navToggle.className = 'md:hidden px-3 py-2 border rounded text-white border-white';
+    navToggle.addEventListener('click', () => {
+        const nav = document.querySelector('nav > div');
+        nav.classList.toggle('hidden');
+    });
+
+    document.querySelector('nav').prepend(navToggle);
+
+    // Add 'hidden' class to nav items on small screens
+    const navItems = document.querySelector('nav > div');
+    navItems.classList.add('hidden', 'md:flex', 'flex-col', 'md:flex-row', 'w-full', 'md:w-auto', 'mt-4', 'md:mt-0');
+
+    // Intersection Observer for fade-in animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+    </script>
+
+    <style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+        animation: fadeIn 1s ease-out forwards;
+    }
+
+    section {
+        opacity: 0;
+    }
+
+    @media (max-width: 768px) {
+        .nav-items {
+            display: none;
+        }
+        .nav-items.active {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    </style>
 </body>
 </html>

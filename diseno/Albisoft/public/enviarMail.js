@@ -1,35 +1,31 @@
 const nodemailer = require('nodemailer');
 const correo = document.getElementById('email');
-const nombre = document.getElementById('nombre');
-document.addEventListener('click', enviarCorreo);
 
-// Crear un transportador reutilizable usando SMTP
+// Configurar el transporte SMTP
 let transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",  // Ejemplo con Gmail
-  port: 587,
-  secure: false, // true para 465, false para otros puertos
-  auth: {
-    user: "Albisofttech@gmail.com", // tu dirección de correo
-    pass: "albisoft1234" // tu contraseña
-  }
+    host: 'smtp-relay.brevo.com',  // Servidor SMTP de Brevo
+    port: 587,  // Puerto SMTP de Brevo
+    secure: false,  // true para puerto 465, false para otros puertos
+    auth: {
+        user: '7d34b2001@smtp-brevo.com',  // Aquí va tu API Key de Brevo
+        pass: 'p7SgRFachNk8K5nD',  // Usar la misma API Key como contraseña
+    },
 });
 
-// Función para enviar correo
-async function enviarCorreo() {
-  try {
-    // Enviar correo con el objeto de transporte definido
-    let info = await transporter.sendMail({
-      from: '"Albisoft" <>', // dirección del remitente
-      to: correo, // lista de destinatarios
-      subject: "Gracias por elegirnos! ¿Como estas" + nombre , // Asunto
-      text: "Cuentanos sobre que es tu proyecto", // cuerpo en texto plano
-      html: "<b>Contenido del correo en HTML</b>" // cuerpo en html
-    });
+// Opciones del correo
+let mailOptions = {
+    from: '"Albisoft" <albisofttech@gmail.com>',  // Remitente del correo
+    to: correo,  // Destinatarios del correo
+    subject: 'Asunto del correo',  // Asunto del correo
+    text: 'Este es un mensaje de prueba enviado usando SMTP con Brevo.',  // Texto plano
+    html: '<b>Este es un mensaje de prueba enviado usando SMTP con Brevo.</b>',  // HTML del correo
+};
 
-    console.log("Mensaje enviado: %s", info.messageId);
-  } catch (error) {
-    console.error("Error al enviar el correo:", error);
-  }
-}
-
-// Llamar a la función
+// Enviar el correo
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        return console.log('Error al enviar el correo: ', error);
+    }
+    console.log('Correo enviado: %s', info.messageId);
+    console.log('URL de vista previa: %s', nodemailer.getTestMessageUrl(info));
+});
