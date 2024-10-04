@@ -1,6 +1,8 @@
 <?php
 require_once '../app/models/Cliente.php';
 
+use Google_Client;
+
 class ControladorCliente{
     private $cliente;
 
@@ -67,6 +69,51 @@ class ControladorCliente{
         exit;
     }
     function doLoginOAuth(){
+        session_start();
+
+        // Configurar cliente Google
+        $client= new GoogleClient();
+        $client->setAuthConfig('/var/www/html/private/credentials.json');
+        $client->setRedirectUri('http://yourdomain.com/index.php?action=doLoginOAuth')
+        $client->addScope('email');
+        $client->addScope('profile')
+        $client->addScope('nombre')
+
+        if (!isset($_GET['code'])) {
+            $auth_url = $client->createAuthUrl();
+            header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
+            exit();
+        } else {
+            // Procesa la respuesta de Google
+            $client->authenticate($_GET['code']);
+            $_SESSION['access_token'] = $client->getAccessToken();
+
+            // Obtén la información del perfil del usuario
+            $oauth2 = new \Google_Service_Oauth2($client);
+            $userInfo = $oauth2->userinfo->get();
+
+            $perfil = $userInfo->profile;
+
+            if ($this->cliente->iniciarCliente($email, null)) {
+                $response['success'] = true;
+                
+                // Iniciar sesión del cliente
+                session_start();
+                $_SESSION['logged']= true;
+                $_SESSION['id']=$this->cliente->getId();
+                $_SESSION['ci']=$this->cliente->getCi();
+                $_SESSION['email']=$this->cliente->getEmail();
+                $_SESSION['nombre']=$this->cliente->getNombre();
+                $_SESSION['apellido']=$this->cliente->getApellido();
+                $_SESSION['telefono']=$this->cliente->getTelefono();
+                $_SESSION['perfil']=$perfil;
+
+                // Redirigir a la home page
+                header('Location: index.php?action=home');
+            } else {
+                $response['errors'][] = "Error al iniciar sesión.";
+            }
+        }
     }
     function signup(){
         include '../app/views/account/signUp.html';
