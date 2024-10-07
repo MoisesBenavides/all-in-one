@@ -1,7 +1,7 @@
 <?php
 
-require_once '../app/models/Vehiculo.php';
-require_once '../app/models/TipoVehiculo.php';
+require_once '../src/models/Vehiculo.php';
+require_once '../src/models/TipoVehiculo.php';
 
 class ControladorVehiculo{
     private $vehiculo;

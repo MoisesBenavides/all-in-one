@@ -1,34 +1,52 @@
 <?php
 
-require_once '../app/db_config/db_conn.php';
-require_once 'TipoPlazaParking.php';
+require_once '../../config/db_conn.php';
 require_once 'Servicio.php';
 
-class Parking extends Servicio {
-    private $largo_plazo;
-    private TipoPlazaParking $tipo_plaza;
+class Taller extends Servicio{
+    private $tipo;
+    private $descripcion;
+    private $diagnostico;
+    private $tiempo_estimado;
 
-    public function __construct($largo_plazo, TipoPlazaParking $tipo_plaza, $id, $precio, $fecha_inicio, $fecha_final){
+    public function __construct($tipo, $descripcion, $diagnostico, $tiempo_estimado, $id, $precio, $fecha_inicio, $fecha_final){
         parent::__construct($id, $precio, $fecha_inicio, $fecha_final);
-        $this->largo_plazo = $largo_plazo;
-        $this->tipo_plaza = $tipo_plaza;
+        $this->tipo = $tipo;
+        $this->descripcion = $descripcion;
+        $this->diagnostico = $diagnostico;
+        $this->tiempo_estimado = $tiempo_estimado;
     }
 
-    public function getTipo_pLaza(): string{
-        return $this->tipo_plaza->value;
+    public function getTipo(){
+        return $this->tipo;
     }
 
-    public function setTipo_plaza(TipoPlazaParking $tipo_plaza){
-        $this->tipo_plaza = $tipo_plaza;
-    }
-    public function getLargo_plazo(){
-        return $this->largo_plazo;
+    public function setTipo($tipo){
+        $this->tipo = $tipo;
     }
 
-    public function setLargo_plazo($largo_plazo){
-        $this->largo_plazo = $largo_plazo;
+    public function getDescripcion(){
+        return $this->descripcion;
+    }
 
-        return $this;
+    public function setDescripcion($descripcion){
+        $this->descripcion = $descripcion;
+    }
+
+    public function getDiagnostico(){
+        return $this->diagnostico;
+    }
+
+    public function setDiagnostico($diagnostico){
+        $this->diagnostico = $diagnostico;
+    }
+
+    public function getTiempo_estimado(){
+        return $this->tiempo_estimado;
+    }
+
+    public function setTiempo_estimado($tiempo_estimado){
+        $this->tiempo_estimado = $tiempo_estimado;
     }
 
     public function reservarServicio($matricula) {
@@ -59,7 +77,7 @@ class Parking extends Servicio {
             $stmt->execute();
             $this->setId($conn->lastInsertId());
     
-            return $this->reservarParking() !== false;
+            return $this->reservarTaller() !== false;
     
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -71,11 +89,13 @@ class Parking extends Servicio {
 
         }
     }
+    
 
-    private function reservarParking(){
+    private function reservarTaller(){
         $id=$this->getId();
-        $largo_plazo=$this->getLargo_plazo();
-        $tipo_plaza=$this->getTipo_plaza();
+        $tipo=$this->getTipo();
+        $descripcion=$this->getDescripcion();
+        $tiempo_estimado=$this->getTiempo_estimado();
 
         try {
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");
@@ -85,14 +105,15 @@ class Parking extends Servicio {
             }
 
             // Log de datos a insertar
-            error_log("Datos a insertar en parking: " . json_encode(compact('id', 'largo_plazo', 'tipo_plaza')));
+            error_log("Datos a insertar en taller: " . json_encode(compact('id', 'tipo', 'descripcion', 'tiempo_estimado')));
     
-            $stmt = $conn->prepare('INSERT INTO parking (id_servicio, largo_plazo, tipo_plaza) 
-                                    VALUES (:id, :lrg_plazo, :tip_plaza)');
+            $stmt = $conn->prepare('INSERT INTO taller (id_servicio, tipo, descripcion, tiempo_estimado) 
+                                    VALUES (:id, :tipo, :descr, :tiempo)');
 
             $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':lrg_plazo', $largo_plazo);
-            $stmt->bindParam(':tip_plaza', $tipo_plaza);
+            $stmt->bindParam(':tipo', $tipo);
+            $stmt->bindParam(':descr', $descripcion);
+            $stmt->bindParam(':tiempo', $tiempo_estimado);
                 
             $stmt->execute();
 
@@ -111,7 +132,6 @@ class Parking extends Servicio {
     public function cancelarServicio(){
     }
 
-    public function getServiciosParking(){
+    public function getServiciosTaller(){
     }
-
 }

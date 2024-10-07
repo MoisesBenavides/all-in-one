@@ -1,6 +1,6 @@
 <?php
-require_once '../app/models/Parking.php';
-require_once '../app/controllers/ControladorVehiculo.php';
+require_once '../src/models/Parking.php';
+require_once '../src/controllers/ControladorVehiculo.php';
 
 class ControladorParking{
     private $parking;
@@ -8,7 +8,7 @@ class ControladorParking{
     private $controladorVehiculo;
 
     public function __construct(){
-        $preciosJson = '../app/data/preciosHoraParking.json';
+        $preciosJson = '../src/data/preciosHoraParking.json';
         $this->controladorVehiculo = new ControladorVehiculo();
 
         // Verificar si el archivo existe
@@ -136,7 +136,7 @@ class ControladorParking{
         $jsonSessionData = json_encode($sessionData);
     
         // Imprimir los datos JSON en pagina de confirmacion
-        include '../app/views/client/reservaConfirmacion.html';
+        include '../src/views/client/reservaConfirmacion.html';
     }
 
 

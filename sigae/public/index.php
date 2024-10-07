@@ -1,8 +1,8 @@
 <?php
 
-require_once '../app/controllers/ControladorCliente.php';
-require_once '../app/controllers/ControladorTaller.php';
-require_once '../app/controllers/ControladorParking.php';
+require_once '../src/controllers/ControladorCliente.php';
+require_once '../src/controllers/ControladorTaller.php';
+require_once '../src/controllers/ControladorParking.php';
 
 $controladorCliente = new ControladorCliente();
 $controladorTaller = new ControladorTaller();

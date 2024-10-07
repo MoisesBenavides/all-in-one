@@ -1,6 +1,6 @@
 <?php
-require_once '../app/models/Taller.php';
-require_once '../app/controllers/ControladorVehiculo.php';
+require_once '../src/models/Taller.php';
+require_once '../src/controllers/ControladorVehiculo.php';
 
 class ControladorTaller{
     private $taller;
@@ -9,7 +9,7 @@ class ControladorTaller{
     private $registrarYa;
 
     public function __construct(){
-        $serviciosJson = '../app/data/serviciosTaller.json';
+        $serviciosJson = '../src/data/serviciosTaller.json';
         $this->controladorVehiculo = new ControladorVehiculo();
 
         // Verificar si el archivo existe
@@ -148,7 +148,7 @@ class ControladorTaller{
         $jsonSessionData = json_encode($sessionData);
     
         // Imprimir los datos JSON en pagina de confirmacion
-        include '../app/views/client/reservaConfirmacion.html';
+        include '../src/views/client/reservaConfirmacion.html';
     }
 
     function estimarFechaFinal($fecha, $minutos) {

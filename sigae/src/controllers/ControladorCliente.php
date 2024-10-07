@@ -1,5 +1,5 @@
 <?php
-require_once '../app/models/Cliente.php';
+require_once '../src/models/Cliente.php';
 
 use Google_Client;
 
@@ -10,7 +10,7 @@ class ControladorCliente{
         $this->cliente=new Cliente();
     }
     function login(){
-        include '../app/views/account/login.html';
+        include '../src/views/account/login.html';
     }
     function doLogin(){
         $response=['success' => false, 'errors' => [], 'debug' => []];
@@ -116,7 +116,7 @@ class ControladorCliente{
         }
     }
     function signup(){
-        include '../app/views/account/signUp.html';
+        include '../src/views/account/signUp.html';
     }
     function doSignup(){
         $response=['success' => false, 'errors' => [], 'debug' => []];
@@ -183,13 +183,13 @@ class ControladorCliente{
         // TODO: Implementar log out de la sesion
     }
     function forgotPassword(){
-        include '../app/views/account/forgotPassword.html';
+        include '../src/views/account/forgotPassword.html';
     }
     function services(){
         session_start();
         error_log($_SESSION['email']. " abrió la página de servicios");
         error_log(print_r($_SESSION, true));
-        include '../app/views/client/serviciosMecanicos.html';
+        include '../src/views/client/serviciosMecanicos.html';
     }
     function bookService(){
         session_start();
@@ -197,7 +197,7 @@ class ControladorCliente{
         error_log(print_r($_SESSION, true));
 
         $this->cargarMisVehiculosAjax($_SESSION['id']);
-        include '../app/views/client/reservarServicio.html';
+        include '../src/views/client/reservarServicio.html';
     }
     
     function parking(){
@@ -205,7 +205,7 @@ class ControladorCliente{
         error_log($_SESSION['email']. " abrió la página de AIO Parking");
         error_log(print_r($_SESSION, true));
         
-        include '../app/views/client/aioParking.html';
+        include '../src/views/client/aioParking.html';
     }
 
     function parkingSimple(){
@@ -214,7 +214,7 @@ class ControladorCliente{
         error_log(print_r($_SESSION, true));
 
         $this->cargarMisVehiculosAjax($_SESSION['id']);
-        include '../app/views/client/reservarParkingSimple.html';
+        include '../src/views/client/reservarParkingSimple.html';
     }
 
     function parkingLongTerm(){
@@ -227,24 +227,24 @@ class ControladorCliente{
         $this->cargarMisVehiculosAjax($_SESSION['id']);
         */
         
-        include '../app/views/client/reservarParkingLargoPlazo.html';
+        include '../src/views/client/reservarParkingLargoPlazo.html';
     }
 
     function products(){
         session_start();
         error_log($_SESSION['email']. " abrió la página del catálogo de productos");
         error_log(print_r($_SESSION, true));
-        include '../app/views/client/catalogo.html';
+        include '../src/views/client/catalogo.html';
     }
 
     function myUser(){
-        include '../app/views/client/miUsuario.html';
+        include '../src/views/client/miUsuario.html';
     }
     function home(){
         session_start();
         error_log($_SESSION['email']. " abrió la página home");
         error_log(print_r($_SESSION, true));
-        include '../app/views/client/homeCliente.html';
+        include '../src/views/client/homeCliente.html';
     }
 
     public function cargarMisVehiculosAjax($id) {
