@@ -179,6 +179,9 @@ class ControladorCliente{
         echo json_encode($response);
         exit;
     }
+    function doLogout(){
+        // TODO: Implementar log out de la sesion
+    }
     function forgotPassword(){
         include '../app/views/account/forgotPassword.html';
     }
