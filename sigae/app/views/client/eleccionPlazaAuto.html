@@ -1,243 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link rel="stylesheet" href="../../../css/styles.css">
-        <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
-        <style>
-            @font-face {
-                font-family: 'Teachers';
-                src: url('../../../font/Teachers-VariableFont_wght.ttf');
-                font-weight: normal;
-                font-style: normal;
-            }
-        
-            body, input, select, button, option {
-                font-family: 'Teachers', sans-serif;
-            }
-    
-            .contenedorCampos {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                height: 100%;
-                width: 100%;
-            }
-    
-            .contenedores1-20, .contenedores31-50, .contenedores21-30 {
-                display: flex;
-                padding-left: 20px;
-                justify-content: flex-start; /* Para alinear el contenido al inicio */
-                width: 100%;
-                flex-wrap: nowrap; 
-                overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
-            }
-    
-            .contenedores21-30 {
-                display: flex;
-                justify-content: flex-end;
-                width: 100%;
-                float: left;
-            }
-    
-            .parking-spot {
-                flex: 0 0 auto;
-                width: 40px;
-                height: 60px;
-                border: 1px solid black;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 1px 4px;
-                margin: 1px;
-                cursor: pointer;
-                transition: background-color 0.3s, width 0.3s, height 0.3s;
-                background-color: white;
-            }
-    
-            .parking-spot:hover {
-                background-color: #f0f0f0;
-            }
-    
-            .parking-spot.selected {
-                background-color: #5381c6;
-                color: #f0f0f0;
-            }
-    
-            .parking-number {
-                text-align: center;
-                color: #161212;
-                font-size: 12px;
-                font-weight: 900;
-            }
-    
-            .scroll-container {
-                width: 100%;
-                overflow-x: auto; /* Permitir scroll horizontal */
-            }
-    
-            /* Responsive  */
-            @media (max-width: 768px) {
-                .contenedores1-20, .contenedores31-50, .contenedores21-30  {
-                    overflow-x: auto; /* Activar el desplazamiento horizontal en mobile */
-                }
-            }
-        </style>
-    </head>
-    <header class=" w-screen  ">
-        <link rel="stylesheet" href="../../../css/styles.css">
-        <div class="container bg-alternativo mx-auto px-4 py-4">
-            <div class="relative flex flex-col md:flex-row justify-between items-center">
-                
-                <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
-                <div class="absolute top-2 left-4 md:hidden">
-                    <button id="hamburger" class="text-black focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                    </button>
-                </div>
-    
-                <!-- Logo -->
-                <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
-                    <img class="w-full h-auto" src="../../../img/AIO Parking positivo.png" alt="AIO Logo" />
-                </div>
-    
-                <!-- Navegación - visible solo en pantallas medianas y grandes -->
-                <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
-                    <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Reservar</a>
-                    <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Reservar a largo plazo</a>
-                    <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Mis Reservas</a>
-                    <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">FAQ</a>
-                </nav>
-    
-                <!-- User icon - Alineado a la derecha en móviles -->
-                <div class="absolute top-2 right-4 md:static">
-                    <img class="w-10 h-10" src="../../../img/user.png" alt="User">
-                </div>
-            </div>
-    
-            <!-- Menú hamburguesa desplegable (oculto por defecto) -->
-            <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
-                <a href="#" class="block text-black text-sm font-bold   ">Servicios Mecánicos</a>
-                <a href="#" class="block text-black text-sm font-bold   ">Parking</a>
-                <a href="#" class="block text-black text-sm font-bold   ">Mis Reservas</a>
-                <a href="#" class="block text-black text-sm font-bold   ">Productos Destacados</a>
-                <a href="#" class="block text-black text-sm font-bold   ">FAQ</a>
-            </nav>
-        </div>
-    
-        <script>
-            // Lógica del menú hamburguesa
-            const hamburger = document.getElementById('hamburger');
-            const mobileMenu = document.getElementById('mobileMenu');
-    
-            hamburger.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        </script>
-           <script>
-            const dropdownButton = document.getElementById('dropdownButton');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            const selectedOption = document.getElementById('selectedOption');
-            const options = document.querySelectorAll('.option');
-            const hiddenInput = document.getElementById('selectedVehicleType');
-            const arrow = dropdownButton.querySelector('svg');
-            const priceInfo = document.getElementById('priceInfo');
-    
-            dropdownButton.addEventListener('click', () => {
-                dropdownMenu.classList.toggle('hidden');
-                arrow.classList.toggle('rotate-180');
-            });
-    
-            options.forEach(option => {
-                option.addEventListener('click', () => {
-                    selectedOption.textContent = option.textContent;
-                    hiddenInput.value = option.getAttribute('data-value');
-                    dropdownMenu.classList.add('hidden');
-                    arrow.classList.remove('rotate-180');
-    
-                    // Mostrar el precio por hora
-                    const price = option.getAttribute('data-price');
-                    priceInfo.textContent = `Precio por hora: ${price} pesos`;
-                    priceInfo.classList.remove('hidden');
-                });
-            });
-    
-            // Cerrar el menú si se hace clic fuera de él
-            window.addEventListener('click', (e) => {
-                if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                    dropdownMenu.classList.add('hidden');
-                    arrow.classList.remove('rotate-180');
-                }
-            });
-        </script>
-    </header>
 
-<body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Layout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url('../../../font/Teachers-VariableFont_wght.ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
 
-    <div class="w-full max-w-[1440px] px-4 py-8 bg-white flex-col justify-start items-center gap-8 inline-flex">
-        <div class="w-full max-w-[896px] h-[46px] px-4 py-2 bg-[#d9d9d9] rounded-[10px] border border-[#c5b8b8] justify-center items-center gap-2.5 inline-flex">
-            <img class="w-[30px] h-[100px]" src="https://via.placeholder.com/30x100" />
-            <div class="text-center text-black text-base font-medium   ">Piso 1</div>
-            <img class="w-[30px] h-[100px]" src="https://via.placeholder.com/30x100" />
+        body,
+        input,
+        select,
+        button,
+        option {
+            font-family: 'Teachers', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <div class="w-full max-w-[1440px] px-4 py-8 mx-auto flex flex-col items-center gap-8">
+        <div
+            class="w-full max-w-[896px] h-[46px] px-4 py-2 bg-[#d9d9d9] rounded-[10px] border border-[#c5b8b8] flex justify-center items-center gap-2.5">
+            <img class="w-[30px] h-[30px]" src="https://via.placeholder.com/30x30" alt="Left arrow" />
+            <div class="text-center text-black text-base font-medium">Piso 1</div>
+            <img class="w-[30px] h-[30px]" src="https://via.placeholder.com/30x30" alt="Right arrow" />
         </div>
-        <div class="contenedorCampos w-full max-w-[896px] h-auto min-h-[359px] p-4 bg-white border border-black">
-            <div class="scroll-container">
-                <div id="contenedores1-20" class="contenedores1-20"></div>
-            </div>
-            <div class="contenedores21-30">
-                <div id="contenedores21-30" class="flex"></div>
-                <div class="w-[108px] h-[85px] relative border-l border-r border-t border-black"></div>
-            </div>
-            <div class="scroll-container">
-                <div id="contenedores31-50" class="contenedores31-50"></div>
-            </div>
+
+        <div id="parkingContainer"
+            class="w-full max-w-[896px] h-auto min-h-[359px] p-4 pt-8 bg-white border border-black relative">
+            <!-- Parking spots will be generated here -->
         </div>
-        <div class="w-full max-w-[388px] h-[79px] justify-between items-center inline-flex">
-            <div class="w-full max-w-[340px] h-[62px] px-4 py-2 justify-start items-center gap-2.5 flex">
-                <div class="w-full h-[62px] justify-center items-center flex">
-                    <section class="text-center">
-                        <button class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold  leading-[51.78px]">
-                            Continuar
-                        </button>
-                    </section>
-                </div>
-            </div>
+
+        <div class="w-full max-w-[388px] flex justify-center">
+            <button
+                class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">
+                Continuar
+            </button>
         </div>
     </div>
 
     <script>
         let selectedSpot = null;
+        let vehicleType = "moto";
 
-        function generateParkingSpots(start, end, containerId) {
-            const container = document.getElementById(containerId);
-            for (let i = start; i <= end; i++) {
-                const spot = document.createElement('button');
-                spot.className = 'parking-spot';
-                spot.innerHTML = `<div class="parking-number">A${i}</div>`;
-                spot.addEventListener('click', function() {
-                    if (selectedSpot) {
-                        selectedSpot.classList.remove('selected');
-                    }
-                    if (selectedSpot !== this) {
-                        this.classList.add('selected');
-                        selectedSpot = this;
-                    } else {
-                        selectedSpot = null;
-                    }
-                });
-                container.appendChild(spot);
+        function generateParkingLayout() {
+            const container = document.getElementById('parkingContainer');
+            container.innerHTML = ''; // Clear existing content
+
+            if (vehicleType === "auto") {
+                generateAutoLayout(container);
+            } else if (vehicleType === "moto") {
+                generateMotoLayout(container);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            generateParkingSpots(1, 20, 'contenedores1-20');
-            generateParkingSpots(21, 30, 'contenedores21-30');
-            generateParkingSpots(31, 50, 'contenedores31-50');
-        });
+        function generateAutoLayout(container) {
+            const leftColumn = createParkingColumn(1, 20, 'A');
+            const middleColumn = createParkingColumn(21, 30, 'A');
+            const rightColumn = createParkingColumn(31, 50, 'A');
+
+            container.appendChild(createDiv('flex justify-center gap-[200px] h-full', [
+                createDiv('flex flex-col justify-start overflow-y-auto', [leftColumn]),
+                createDiv('flex flex-col justify-end', [
+                    middleColumn,
+                    createDiv('w-[85px] h-[108px] border-t border-b border-l border-black')
+                ]),
+                createDiv('flex flex-col justify-start overflow-y-auto', [rightColumn])
+            ]));
+        }
+
+        function generateMotoLayout(container) {
+            const motoSpots = createParkingColumn(1, 20, 'B');
+            container.appendChild(createDiv('flex', [
+                createDiv('w-1/4', [motoSpots]),
+                createDiv('w-3/4 border-l border-black')
+            ]));
+        }
+
+        function createParkingColumn(start, end, prefix) {
+            const column = document.createElement('div');
+            column.className = 'flex flex-col';
+            for (let i = start; i <= end; i++) {
+                column.appendChild(createParkingSpot(i, prefix, true));
+            }
+            return column;
+        }
+
+        function createParkingSpot(number, prefix, isVertical = true) {
+            const spot = document.createElement('button');
+            spot.className = `flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors ${isVertical ? 'w-14 h-10' : 'w-10 h-14'
+                } hover:bg-gray-100`;
+            spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${prefix}${number}</div>`;//prefix puede ser A o B o C
+            spot.addEventListener('click', function () {
+                if (selectedSpot) {
+                    selectedSpot.classList.remove('bg-[#5381c6]', 'text-white');
+                }
+                if (selectedSpot !== this) {
+                    this.classList.add('bg-[#5381c6]', 'text-white');
+                    selectedSpot = this;
+                } else {
+                    selectedSpot = null;
+                }
+            });
+            return spot;
+        }
+
+        function createDiv(className, children = []) {
+            const div = document.createElement('div');
+            div.className = className;
+            if (Array.isArray(children)) {
+                children.forEach(child => {
+                    if (child instanceof Node) {
+                        div.appendChild(child);
+                    }
+                });
+            } else if (children instanceof Node) {
+                div.appendChild(children);
+            }
+            return div;
+        }
+
+        document.addEventListener('DOMContentLoaded', generateParkingLayout);
     </script>
 </body>
+
 </html>

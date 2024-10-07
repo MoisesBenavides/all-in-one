@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!--Es responsivo!!-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../../css/styles.css">
+   <link rel="stylesheet" href="../../../css/styles.css">
     <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
     <style>
         @font-face {
@@ -110,77 +111,116 @@
       });
   </script>
 </header>
-<body>
-    <section class="flex overflow-hidden relative flex-col items-center px-24 pt-11 pb-24 bg-white max-md:px-5">
-        <h1 class="z-0 text-2xl font-bold leading-tight text-neutral-900">NOMBRE USUARIO Aquí</h1>
-        <form class="flex z-0 flex-col mt-9 max-w-full whitespace-nowrap w-[400px]">
-          <label for="email" class="w-full text-lg leading-tight text-neutral-900">Correo</label>
-          <div class="flex flex-col mt-2.5 w-full text-sm tracking-wide leading-none text-slate-600">
-            <div class="flex flex-col w-full">
-              <input type="email" id="email" class="px-1.5 py-4 bg-white rounded-md border border-solid border-slate-600 max-md:pr-5" value="A****E@gmail.com" readonly aria-label="Email address" />
-            </div>
-          </div>
-        </form>
-        <form class="flex z-0 flex-col mt-9 max-w-full whitespace-nowrap text-neutral-900 w-[400px]">
-          <label for="name" class="w-full text-lg leading-tight">Nombre</label>
-          <div class="flex flex-col mt-2.5 w-full text-sm font-medium tracking-wide leading-none">
-            <div class="flex flex-col w-full">
-              <input type="text" id="name" class="px-1.5 py-4 bg-white rounded-md border border-solid border-slate-600 max-md:pr-5" value="NOMBRE" aria-label="First name" />
-            </div>
-          </div>
-        </form>
-        <form class="flex z-0 flex-col mt-9 max-w-full whitespace-nowrap text-neutral-900 w-[400px]">
-          <label for="lastname" class="w-full text-lg leading-tight">Apellido</label>
-          <div class="flex flex-col mt-2.5 w-full text-sm font-medium tracking-wide leading-none">
-            <div class="flex flex-col w-full">
-              <input type="text" id="lastname" class="px-1.5 py-4 bg-white rounded-md border border-solid border-slate-600 max-md:pr-5" value="APELLIDO" aria-label="Last name" />
-            </div>
-          </div>
-        </form>
-        <form class="flex z-0 flex-col mt-9 max-w-full whitespace-nowrap text-neutral-900 w-[400px]">
-          <label for="phone" class="w-full text-lg leading-tight">Telefono</label>
-          <div class="flex flex-col mt-2.5 w-full text-sm font-medium tracking-wide leading-none">
-            <div class="flex flex-col w-full">
-              <input type="tel" id="phone" class="px-1.5 py-4 bg-white rounded-md border border-solid border-slate-600 max-md:pr-5" value="TELEFONO" aria-label="Phone number" />
-            </div>
-          </div>
-        </form>
-        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/c58f33c8901cbfbb89ad0fb8ba7a0b95562dc7c0f4999466f316784998c7ad2f?placeholderIfAbsent=true&apiKey=66e9bf449eb247f0b447e6da0e3638f2" class="object-contain absolute z-0 self-start aspect-square h-[27px] left-[407px] top-[81px] w-[27px]" alt="" />
-        <button class="flex z-0 gap-2.5 justify-center items-center mt-9 max-w-full text-2xl font-bold leading-tight whitespace-nowrap min-h-[48px] text-neutral-50 w-[300px] bg-red-800 rounded-lg px-7 py-2.5 max-md:px-5">
-          Modificar
-        </button>
-        <section class="flex z-0 flex-col justify-center items-center mt-9 max-w-full text-xl font-semibold text-white w-[572px]">
-          <div class="flex flex-col self-stretch w-full leading-tight h-[229px] text-neutral-900 max-md:max-w-full">
-            <h2 class="text-3xl font-bold text-center max-md:max-w-full">TUS Vehículos</h2>
-            <div class="flex flex-wrap gap-10 justify-between items-center mt-10 w-full max-md:max-w-full">
-              <p class="self-stretch my-auto">MARCA MODELO</p>
-              <p class="self-stretch my-auto">MATRICULA</p>
-            </div>
-            <div class="flex mt-10 w-full rounded-sm bg-zinc-500 min-h-[6px] max-md:max-w-full"></div>
-            <div class="flex flex-wrap gap-10 justify-between items-center mt-10 w-full max-md:max-w-full">
-              <p class="self-stretch my-auto">MARCA MODELO</p>
-              <p class="self-stretch my-auto">MATRICULA</p>
-            </div>
-            <div class="flex mt-10 w-full rounded-sm bg-zinc-500 min-h-[6px] max-md:max-w-full"></div>
-          </div>
-          <button class="flex flex-wrap gap-2 justify-center items-center mt-9 w-full text-center bg-red-800 rounded-md min-h-[41px]">
-            <span class="self-stretch my-auto w-[310px]">Ingrese vehiculo</span>
-            <img src="../../../svg/iconDropDown.svg" >
-          </button>
-          <button class="flex flex-wrap gap-2 justify-center items-center mt-9 w-full text-center bg-red-800 rounded-md min-h-[41px]">
-            <span class="self-stretch my-auto w-[310px]">Modificar vehiculo</span>
-            <img src="../../../svg/iconDropDown.svg" >
-          </button>
-          <button class="flex flex-wrap gap-2 justify-center items-center mt-9 w-full text-center bg-red-800 rounded-md min-h-[41px]">
-            <span class="self-stretch my-auto w-[310px]">Eliminar vehiculo</span>
-            <img src="../../../svg/iconDropDown.svg" >
-          </button>
-<!--BOTON DE CERRAR SESION AQUI :) -->
-            <button name="CerrarSesion" class=" self-stretch p-2.5 mt-9  text-lg font-bold leading-tight bg-rose-400 rounded-md border-solid border-[3px] border-neutral-900 text-neutral-900 ">
-            Cerrar sesión
-          </button>
-        </section>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white">
+    <section class="container mx-auto px-4 py-8 max-w-2xl">
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-8">NOMBRE USUARIO Aquí</h1>
         
-      </section>
+        <form class="mb-6">
+            <label for="email" class="block text-lg font-medium text-neutral-900 mb-2">Correo</label>
+            <input type="email" id="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="A****E@gmail.com" readonly aria-label="Email address" />
+        </form>
+
+        <form class="mb-6">
+            <label for="name" class="block text-lg font-medium text-neutral-900 mb-2">Nombre</label>
+            <input type="text" id="name" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="NOMBRE" aria-label="First name" />
+        </form>
+
+        <form class="mb-6">
+            <label for="lastname" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
+            <input type="text" id="lastname" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="APELLIDO" aria-label="Last name" />
+        </form>
+
+        <form class="mb-8">
+            <label for="phone" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
+            <input type="tel" id="phone" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="TELEFONO" aria-label="Phone number" />
+        </form>
+
+        <button class="w-full md:w-auto px-6 py-3 bg-red-800 text-white text-xl font-bold rounded-lg hover:bg-red-700 transition-colors mb-8">
+            Modificar
+        </button>
+
+        <section class="mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-6">TUS Vehículos</h2>
+            
+            <div class="space-y-6">
+                <div class="flex justify-between items-center text-lg font-semibold">
+                    <p>MARCA MODELO</p>
+                    <p>MATRICULA</p>
+                </div>
+                <div class="h-px bg-zinc-300"></div>
+                <div class="flex justify-between items-center text-lg font-semibold">
+                    <p>MARCA MODELO</p>
+                    <p>MATRICULA</p>
+                </div>
+                <div class="h-px bg-zinc-300"></div>
+            </div>
+
+            <div class="space-y-4 mt-8">
+                <button class="w-full flex justify-between items-center px-4 py-3 bg-red-800 text-white text-xl font-semibold rounded-md hover:bg-red-700 transition-colors">
+                    <span>Ingrese vehículo</span>
+                    <img src="../../../svg/iconDropDown.svg" alt="Dropdown icon" class="w-5 h-5">
+                </button>
+                <button class="w-full flex justify-between items-center px-4 py-3 bg-red-800 text-white text-xl font-semibold rounded-md hover:bg-red-700 transition-colors">
+                    <span>Modificar vehículo</span>
+                    <img src="../../../svg/iconDropDown.svg" alt="Dropdown icon" class="w-5 h-5">
+                </button>
+                <button class="w-full flex justify-between items-center px-4 py-3 bg-red-800 text-white text-xl font-semibold rounded-md hover:bg-red-700 transition-colors">
+                    <span>Eliminar vehículo</span>
+                    <img src="../../../svg/iconDropDown.svg" alt="Dropdown icon" class="w-5 h-5">
+                </button>
+            </div>
+        </section>
+
+        <button name="CerrarSesion" class="w-full px-4 py-3 bg-rose-400 text-neutral-900 text-lg font-bold rounded-md border-2 border-neutral-900 hover:bg-rose-500 transition-colors">
+            Cerrar sesión
+        </button>
+    </section>
+
+      <footer class="w-screen bg-[#514e4e] ">      
+        <div class="  text-white py-12 container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-8 md:mb-0">
+                    <img class="w-48 h-auto mb-6" src="../../../img/AIO Negativo (1).png" alt="AIO Logo" />
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <img class="w-8 h-8 mr-4" src="../../../img/InstagramLogo.png" alt="Instagram" />
+                            <span class="text-lg font-bold   ">@Aiotalleres</span>
+                        </div>
+                        <div class="flex items-center">
+                            <img class="w-8 h-8 mr-4" src="../../../img/XLogo.png" alt="Twitter" />
+                            <span class="text-lg font-bold   ">@Aiotalleres</span>
+                        </div>
+                        <div class="flex items-center">
+                            <img class="w-8 h-8 mr-4" src="../../../img/TelefonoLogo.png" alt="Teléfono" />
+                            <span class="text-lg font-bold   ">+598 99 123 456</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 h-64 md:h-72">
+                    <div id="map" class="w-full h-full rounded-lg"></div>
+                </div>
+            </div>
+        </div>
+          <script>
+            function initMap() {
+              const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: -34.8730391, lng: -56.1719804 },
+                zoom: 20,
+              });
+            }
+          </script>
+          <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDaeWicvigtP9xPv919E-RNoxfvC-Hqik&callback=initMap"
+            async
+          ></script>
+        </footer>
 </body>
 </html>
