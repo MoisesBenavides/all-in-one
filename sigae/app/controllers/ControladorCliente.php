@@ -76,8 +76,8 @@ class ControladorCliente{
         $client->setAuthConfig('/var/www/html/private/credentials.json');
         $client->setRedirectUri('http://yourdomain.com/index.php?action=doLoginOAuth')
         $client->addScope('email');
-        $client->addScope('profile')
-        $client->addScope('nombre')
+        $client->addScope('profile');
+        $client->addScope('nombre');
 
         if (!isset($_GET['code'])) {
             $auth_url = $client->createAuthUrl();
