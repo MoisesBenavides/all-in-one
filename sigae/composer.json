@@ -1,0 +1,12 @@
+{
+    "name": "aio/sigae",
+    "require": {
+        "google/apiclient": "^2.17"
+    },
+    "license": "LGPL-2.1-only",
+    "autoload": {
+        "psr-4": {
+            "Aio\\Sigae\\": "src/"
+        }
+    }
+}
