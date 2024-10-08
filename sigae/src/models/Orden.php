@@ -1,5 +1,7 @@
 <?php
 
+namespace Sigae\Models;
+
 class Orden{
     private $id;
     private $total;

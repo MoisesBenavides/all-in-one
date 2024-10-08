@@ -1,6 +1,8 @@
 <?php
-require_once '../src/models/Parking.php';
-require_once '../src/controllers/ControladorVehiculo.php';
+
+namespace Sigae\Controllers;
+use Sigae\Models\Parking;
+use Sigae\Controllers\ControladorVehiculo;
 
 class ControladorParking{
     private $parking;

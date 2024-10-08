@@ -1,8 +1,7 @@
 <?php
 
-require_once '../../config/db_conn.php';
-require_once 'TipoPlazaParking.php';
-require_once 'Servicio.php';
+namespace Sigae\Models;
+use Sigae\Config\db_conn;
 
 class Parking extends Servicio {
     private $largo_plazo;
