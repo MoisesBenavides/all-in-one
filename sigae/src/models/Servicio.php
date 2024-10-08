@@ -1,6 +1,6 @@
 <?php
 
-require_once 'EstadoServicio.php';
+namespace Sigae\Models;
 
 abstract class Servicio{
     protected $id;

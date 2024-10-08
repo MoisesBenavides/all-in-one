@@ -6,7 +6,8 @@
     "license": "LGPL-2.1-only",
     "autoload": {
         "psr-4": {
-            "Aio\\Sigae\\": "src/"
+            "Sigae\\": "src/",
+            "Sigae\\Config\\": "config/"
         }
     }
 }

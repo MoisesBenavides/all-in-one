@@ -1,6 +1,7 @@
 <?php
 
-require_once '../../config/db_conn.php';
+namespace Sigae\Models;
+use Sigae\Config\db_conn;
 
 class Cliente{
     private $id;

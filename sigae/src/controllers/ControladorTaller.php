@@ -1,6 +1,8 @@
 <?php
-require_once '../src/models/Taller.php';
-require_once '../src/controllers/ControladorVehiculo.php';
+
+namespace Sigae\Controllers;
+use Sigae\Models\Taller;
+use Sigae\Controllers\ControladorVehiculo;
 
 class ControladorTaller{
     private $taller;

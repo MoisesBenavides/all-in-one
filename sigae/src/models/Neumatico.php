@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Producto.php';
+namespace Sigae\Models;
 
 class Neumatico extends Producto{
     private $tamano;

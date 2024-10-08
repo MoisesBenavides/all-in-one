@@ -1,7 +1,8 @@
 <?php
 
-require_once '../src/models/Vehiculo.php';
-require_once '../src/models/TipoVehiculo.php';
+namespace Sigae\Controllers;
+use Sigae\Models\Vehiculo;
+use Sigae\Models\TipoVehiculo;
 
 class ControladorVehiculo{
     private $vehiculo;

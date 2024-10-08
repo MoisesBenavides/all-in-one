@@ -17,7 +17,7 @@ $context=new RequestContext();
 $context->fromRequest($request);
 
 // Carga las rutas desde el archivo routes.yaml
-$fileLocator=new FileLocator([__DIR__ . '/../config']);
+$fileLocator=new FileLocator([__DIR__ . '/../config/routes/']);
 $loader=new YamlFileLoader($fileLocator);
 $routes= $loader->load('routes.yaml');
 

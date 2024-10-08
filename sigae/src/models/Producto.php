@@ -1,5 +1,7 @@
 <?php
 
+namespace Sigae\Models;
+
 abstract class Producto{
     protected $id;
     protected $upc;

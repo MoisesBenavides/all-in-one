@@ -1,7 +1,7 @@
 <?php
 
-require_once '../../config/db_conn.php';
-require_once 'Servicio.php';
+namespace Sigae\Models;
+use Sigae\Config\db_conn;
 
 class Taller extends Servicio{
     private $tipo;
