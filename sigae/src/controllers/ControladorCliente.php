@@ -237,8 +237,8 @@ class ControladorCliente{
         include '../src/views/client/catalogo.html';
     }
 
-    function myUser(){
-        include '../src/views/client/miUsuario.html';
+    function myAccount(){
+        include '../src/views/client/miCuenta.html';
     }
     function home(){
         session_start();
