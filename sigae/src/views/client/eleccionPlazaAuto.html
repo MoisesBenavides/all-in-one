@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
@@ -32,106 +31,211 @@
     <div class="w-full max-w-[1440px] px-4 py-8 mx-auto flex flex-col items-center gap-8">
         <div
             class="w-full max-w-[896px] h-[46px] px-4 py-2 bg-[#d9d9d9] rounded-[10px] border border-[#c5b8b8] flex justify-center items-center gap-2.5">
-            <img class="w-[30px] h-[30px]" src="https://via.placeholder.com/30x30" alt="Left arrow" />
-            <div class="text-center text-black text-base font-medium">Piso 1</div>
-            <img class="w-[30px] h-[30px]" src="https://via.placeholder.com/30x30" alt="Right arrow" />
+            <button id="decrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center">&lt;</button>
+            <div id="floorDisplay" class="text-center text-black text-base font-medium">Piso 1</div>
+            <button id="incrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center">&gt;</button>
         </div>
-
-        <div id="parkingContainer"
-            class="w-full max-w-[896px] h-auto min-h-[359px] p-4 pt-8 bg-white border border-black relative">
+        <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
+            <p><strong>B1-20:</strong> Motos (solo primer piso)</p> 
+            <p><strong>A1-50:</strong> Autos, camionetas y pequeños camiones (primer piso)</p> 
+            <p><strong>C1-50:</strong> Autos, camionetas y pequeños camiones (segundo piso)</p>
+        </div>
+          
+        <form id="parkingForm" action="respuesta.php" method="POST">
+            <div id="parkingContainer"
+                class="w-full max-w-[600px] h-auto min-h-[359px] p-4 pt-8 bg-white border border-black relative">
             <!-- Parking spots will be generated here -->
-        </div>
+            </div>
 
-        <div class="w-full max-w-[388px] flex justify-center">
-            <button
-                class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">
-                Continuar
-            </button>
-        </div>
+            <input type="hidden" name="selectedSpots" id="selectedSpotsInput">
+            <div class="w-full max-w-[388px] flex justify-center mt-4">
+                <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">
+                    Continuar
+                </button>
+            </div>
+        </form>
     </div>
-
     <script>
-        let selectedSpot = null;
-        let vehicleType = "moto";
+let puestosOcupados = [];
+let selectedSpots = [];
+let vehicleType = "pequenoCamion"; // "auto", "moto", o "pequenoCamion"
+let currentFloor = 1;
 
-        function generateParkingLayout() {
-            const container = document.getElementById('parkingContainer');
-            container.innerHTML = ''; // Clear existing content
+// Fetch para traer los puestos ocupados desde el archivo PHP
+fetch('ARCHIVO QUE TRAE OUESTOS OCUPADOS')
+    .then(response => response.json())
+    .then(data => {
+        puestosOcupados = data;
+        generateParkingLayout();
+    })
+    .catch(error => console.error('Error:', error));
 
-            if (vehicleType === "auto") {
-                generateAutoLayout(container);
-            } else if (vehicleType === "moto") {
-                generateMotoLayout(container);
+function generateParkingLayout() {
+    const container = document.getElementById('parkingContainer');
+    container.innerHTML = ''; // borra el contendio existente
+
+    if (vehicleType === "moto" && currentFloor === 2) {
+        container.innerHTML = '<p class="text-center text-red-500">Las motos solo pueden estacionar en el primer piso.</p>';
+        return;
+    }
+
+    if (vehicleType === "auto" || vehicleType === "pequenoCamion") {
+        generateAutoTruckLayout(container);
+    } else if (vehicleType === "moto" && currentFloor === 1) {
+        generateMotoLayout(container);
+    }
+}
+
+function generateAutoTruckLayout(container) {
+    const prefix = currentFloor === 1 ? 'A' : 'C';
+    const leftColumn = createParkingColumn(1, 20, prefix);
+    const middleColumn = createParkingColumn(21, 30, prefix);
+    const rightColumn = createParkingColumn(31, 50, prefix);
+
+    container.appendChild(createDiv('flex justify-center gap-[150px] h-full', [
+        createDiv('flex flex-col justify-start overflow-y-auto', [leftColumn]),
+        createDiv('flex flex-col justify-end', [
+            middleColumn,
+            createDiv('w-[45px] h-[108px] border-t border-b border-l border-black')
+        ]),
+        createDiv('flex flex-col justify-start overflow-y-auto', [rightColumn])
+    ]));
+}
+
+function generateMotoLayout(container) {
+    const motoSpots = createParkingColumn(1, 20, 'B');
+    container.appendChild(createDiv('flex', [
+        createDiv('w-1/4', [motoSpots]),
+        createDiv('w-3/4')
+    ]));
+}
+
+function createParkingColumn(start, end, prefix) {
+    const column = document.createElement('div');
+    column.className = 'flex flex-col';
+    for (let i = start; i <= end; i++) {
+        column.appendChild(createParkingSpot(i, prefix));
+    }
+    return column;
+}
+
+function createParkingSpot(number, prefix) {
+    const spotId = `${prefix}${number}`;
+    const spot = document.createElement('button');
+    spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
+    spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
+    spot.dataset.spot = spotId;
+    spot.type = 'button';
+
+    if (puestosOcupados.includes(spotId)) {
+        spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
+        spot.disabled = true;
+    } else {
+        spot.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (vehicleType === "pequenoCamion") {
+                handlePequenoCamionSpotSelection(this);
+            } else {
+                handleRegularSpotSelection(this);
             }
+        });
+    }
+
+    return spot;
+}
+
+function handleRegularSpotSelection(spot) {
+    selectedSpots.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
+    selectedSpots = [spot];
+    spot.classList.add('bg-[#5381c6]', 'text-white');
+}
+
+function handlePequenoCamionSpotSelection(spot) {
+    if (selectedSpots.length === 0) {
+        // Primer spot seleccionado
+        selectedSpots.push(spot);
+        spot.classList.add('bg-[#5381c6]', 'text-white');
+    } else if (selectedSpots.length === 1) {
+        // Verificar si el nuevo spot es adyacente al spot ya seleccionado
+        if (isAdjacentSpot(selectedSpots[0], spot)) {
+            selectedSpots.push(spot);
+            spot.classList.add('bg-[#5381c6]', 'text-white');
+        } else {
+            // Si no es adyacente, deseleccionar el spot anterior y seleccionar el nuevo
+            selectedSpots[0].classList.remove('bg-[#5381c6]', 'text-white');
+            selectedSpots = [spot];
+            spot.classList.add('bg-[#5381c6]', 'text-white');
         }
+    } else if (selectedSpots.length === 2) {
+        // Si ya hay dos spots seleccionados, deseleccionar ambos y seleccionar el nuevo
+        selectedSpots.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
+        selectedSpots = [spot];
+        spot.classList.add('bg-[#5381c6]', 'text-white');
+    }
+}
 
-        function generateAutoLayout(container) {
-            const leftColumn = createParkingColumn(1, 20, 'A');
-            const middleColumn = createParkingColumn(21, 30, 'A');
-            const rightColumn = createParkingColumn(31, 50, 'A');
+function isAdjacentSpot(spot1, spot2) {
+    const id1 = spot1.dataset.spot;
+    const id2 = spot2.dataset.spot;
+    
+    // Extraer el prefijo osea letra y el número de cada spot
+    const prefix1 = id1.charAt(0);
+    const prefix2 = id2.charAt(0);
+    const num1 = parseInt(id1.slice(1));
+    const num2 = parseInt(id2.slice(1));
+    
+    // Verificar si los spots están en la misma columna y son números consecutivos
+    return prefix1 === prefix2 && Math.abs(num1 - num2) === 1;
+}
 
-            container.appendChild(createDiv('flex justify-center gap-[200px] h-full', [
-                createDiv('flex flex-col justify-start overflow-y-auto', [leftColumn]),
-                createDiv('flex flex-col justify-end', [
-                    middleColumn,
-                    createDiv('w-[85px] h-[108px] border-t border-b border-l border-black')
-                ]),
-                createDiv('flex flex-col justify-start overflow-y-auto', [rightColumn])
-            ]));
+function createDiv(className, children = []) {
+    const div = document.createElement('div');
+    div.className = className;
+    children.forEach(child => {
+        if (child instanceof Node) {
+            div.appendChild(child);
         }
+    });
+    return div;
+}
 
-        function generateMotoLayout(container) {
-            const motoSpots = createParkingColumn(1, 20, 'B');
-            container.appendChild(createDiv('flex', [
-                createDiv('w-1/4', [motoSpots]),
-                createDiv('w-3/4 border-l border-black')
-            ]));
-        }
+document.getElementById('parkingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let output;
+    if (vehicleType === "pequenoCamion") {
+        output = selectedSpots.map(spot => spot.dataset.spot);
+    } else {
+        output = [selectedSpots.length > 0 ? selectedSpots[0].dataset.spot : null, null];
+    }
+    document.getElementById('selectedSpotsInput').value = JSON.stringify(output);
+    this.submit();
+});
 
-        function createParkingColumn(start, end, prefix) {
-            const column = document.createElement('div');
-            column.className = 'flex flex-col';
-            for (let i = start; i <= end; i++) {
-                column.appendChild(createParkingSpot(i, prefix, true));
-            }
-            return column;
-        }
+function updateFloorDisplay() {
+    document.getElementById('floorDisplay').textContent = `Piso ${currentFloor}`;
+}
 
-        function createParkingSpot(number, prefix, isVertical = true) {
-            const spot = document.createElement('button');
-            spot.className = `flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors ${isVertical ? 'w-14 h-10' : 'w-10 h-14'
-                } hover:bg-gray-100`;
-            spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${prefix}${number}</div>`;//prefix puede ser A o B o C
-            spot.addEventListener('click', function () {
-                if (selectedSpot) {
-                    selectedSpot.classList.remove('bg-[#5381c6]', 'text-white');
-                }
-                if (selectedSpot !== this) {
-                    this.classList.add('bg-[#5381c6]', 'text-white');
-                    selectedSpot = this;
-                } else {
-                    selectedSpot = null;
-                }
-            });
-            return spot;
-        }
+document.getElementById('decrementFloor').addEventListener('click', function() {
+    if (currentFloor > 1) {
+        currentFloor--;
+        updateFloorDisplay();
+        generateParkingLayout();
+    }
+});
 
-        function createDiv(className, children = []) {
-            const div = document.createElement('div');
-            div.className = className;
-            if (Array.isArray(children)) {
-                children.forEach(child => {
-                    if (child instanceof Node) {
-                        div.appendChild(child);
-                    }
-                });
-            } else if (children instanceof Node) {
-                div.appendChild(children);
-            }
-            return div;
-        }
+document.getElementById('incrementFloor').addEventListener('click', function() {
+    if (currentFloor < 2 && vehicleType !== "moto") {
+        currentFloor++;
+        updateFloorDisplay();
+        generateParkingLayout();
+    }
+});
 
-        document.addEventListener('DOMContentLoaded', generateParkingLayout);
+// inicia cuando cargan los elementos del DOM
+document.addEventListener('DOMContentLoaded', function() {
+    updateFloorDisplay();
+    generateParkingLayout();
+});
     </script>
 </body>
 
