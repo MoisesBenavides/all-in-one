@@ -1,6 +1,7 @@
 <?php
-require_once '../src/models/Cliente.php';
 
+namespace Sigae\Controllers;
+use Sigae\Models\Cliente;
 use Google_Client;
 
 class ControladorCliente{
@@ -282,7 +283,6 @@ class ControladorCliente{
         }
     }
     
-
     private function validarContrasena($str, $min, $max) {
         /* Verifica si la contraseña contiene mayusculas, minusculas y numeros
         y si la extension de la cadena se ncuentra en el rango especificado por las variables $min y $max. */ 
@@ -300,6 +300,21 @@ class ControladorCliente{
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene letras, espacios, tildes, apostrofes o guiones)
         y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */
         return (preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $max);
+    }
+
+    private function validarCi($ci){
+        $digitosDeCedula = str_split($ci);  // Convierte la cédula en un array de caracteres
+
+        $numerosParaMultiplicar = array(2, 9, 8, 7, 6, 3, 4);
+
+        $acum = 0;
+        for ($i = 0; $i < count($digitosDeCedula) - 1; $i++) {
+            $acum += $digitosDeCedula[$i] * $numerosParaMultiplicar[$i];
+        }
+        $aux = $acum % 10;
+        $verif = 10 - $aux;
+
+        return $verif == $digitosDeCedula[count($digitosDeCedula) - 1];
     }
 
 }
