@@ -1,77 +1,43 @@
 <?php
 
-require_once '../src/controllers/ControladorCliente.php';
-require_once '../src/controllers/ControladorTaller.php';
-require_once '../src/controllers/ControladorParking.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-$controladorCliente = new ControladorCliente();
-$controladorTaller = new ControladorTaller();
-$controladorParking = new ControladorParking();
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouteCollector;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\Louder\YamlFileLoader;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Config\FileLocator;
 
-$action = isset($_GET['action']) ? $_GET['action'] : 'login';
+// Configura el contexto de solicitud HTTP
+$request=Request::createFromGlobals();
+$context=new RequestContext();
+$context->fromRequest($request);
 
-switch ($action) {
-    case 'login':
-        $controladorCliente->login();
-        break;
-    case 'doLogin':
-        $controladorCliente->doLogin();
-        break;
-    case 'doLoginOAuth':
-        $controladorCliente->doLoginOAuth();
-        break;
-    case 'signup':
-        $controladorCliente->signup();
-        break;
-    case 'doSignup':
-        $controladorCliente->doSignup();
-        break;
-    case 'forgotPassword':
-        $controladorCliente->forgotPassword();
-        break;
-    case 'services':
-        $controladorCliente->services();
-        break;
-    case 'bookService':
-        $controladorCliente->bookService();
-        break;
-    case 'doBookService':
-        $controladorTaller->doBookService();
-        break;
-    case 'uploadMyVehicles':
-        $controladorCliente->cargarMisVehiculosAjax();
-        break;
-    case 'serviceConfirmation':
-        $controladorTaller->serviceConfirmation();
-        break;
-    case 'aioParking':
-        $controladorCliente->parking();
-        break;
-    case 'aioParkingBookSimple':
-        $controladorCliente->parkingSimple();
-        break;
-    case 'bookParkingSimple':
-        $controladorParking->bookParkingSimple();
-        break;
-    case 'aioParkingBookLongTerm':
-        $controladorCliente->parkingLongTerm();
-        break;
-    case 'bookParkingLongTerm':
-        $controladorParking->bookParkingLongTerm();
-        break;
-    case 'parkingConfirmation':
-        $controladorParking->parkingConfirmation();
-        break;
-    case 'products':
-        $controladorCliente->products();
-        break;
-    case 'myUser':
-        $controladorCliente->myUser();
-        break;
-    case 'home':
-        $controladorCliente->home();
-        break;
-    default:
-        $controladorCliente->login();
-        break;
+// Carga las rutas desde el archivo routes.yaml
+$fileLocator=new FileLocator([__DIR__ . '/../config']);
+$loader=new YamlFileLoader($fileLocator);
+$routes= $loader->load('routes.yaml');
+
+$matcher = new UrlMatcher($routes, $context);
+
+try{
+    // Intenta hacer coincidir la URL con una ruta definida
+    $parameters= $matcher->match($request->getPathInfo());
+
+    // Extraer el controlador y la acción de la ruta
+    list($controller, $method) = explode('::', $parameters['_controller']);
+
+    // Llamar a la función del controlador correspondiente
+    $controllerInstance = new $controller();
+    $response call_user_func([$controllerInstance, $method], $request);
+} catch (ResourceNotFoundException $e){
+    $response = new Response('Página no encontrada', 404);
+} catch (Exception $e){
+    $response= new Response('Error del servidor', 500);
 }
+
+// Enviar la respuesta HTTP al cliente
+$response->send();

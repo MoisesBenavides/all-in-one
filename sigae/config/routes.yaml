@@ -14,69 +14,74 @@ signup:
   path: /signup
   controller: ControladorCliente::signup
 
-# $action = isset($_GET['action']) ? $_GET['action'] : 'login';
+doSignup:
+  path: /doSignup
+  controller: ControladorCliente::doSignup
 
-# switch ($action) {
-#    case 'login':
-#        $controladorCliente->login();
-#        break;
-#    case 'doLogin':
-#        $controladorCliente->doLogin();
-#        break;
-#    case 'doLoginOAuth':
-#        $controladorCliente->doLoginOAuth();
-#        break;
-#    case 'signup':
-#        $controladorCliente->signup();
-#        break;
-#    case 'doSignup':
-#        $controladorCliente->doSignup();
-#        break;
-#    case 'forgotPassword':
-#        $controladorCliente->forgotPassword();
-#        break;
-#    case 'services':
-#        $controladorCliente->services();
-#        break;
-#    case 'bookService':
-#        $controladorCliente->bookService();
-#        break;
-#    case 'doBookService':
-#        $controladorTaller->doBookService();
-#        break;
-#    case 'uploadMyVehicles':
-#        $controladorCliente->cargarMisVehiculosAjax();
-#        break;
-#    case 'serviceConfirmation':
-#        $controladorTaller->serviceConfirmation();
-#        break;
-#    case 'aioParking':
-#        $controladorCliente->parking();
-#        break;
-#    case 'aioParkingBookSimple':
-#        $controladorCliente->parkingSimple();
-#        break;
-#    case 'bookParkingSimple':
-#        $controladorParking->bookParkingSimple();
-#        break;
-#    case 'aioParkingBookLongTerm':
-#        $controladorCliente->parkingLongTerm();
-#        break;
-#    case 'bookParkingLongTerm':
-#        $controladorParking->bookParkingLongTerm();
-#        break;
-#    case 'parkingConfirmation':
-#        $controladorParking->parkingConfirmation();
-#        break;
-#    case 'products':
-#        $controladorCliente->products();
-#        break;
-#    case 'myUser':
-#        $controladorCliente->myUser();
-#        break;
-#    case 'home':
-#        $controladorCliente->home();
-#        break;
+doSignupOAuth:
+  path: /doSignup
+  controller: ControladorCliente::doSignupOAuth
+
+forgotPassword:
+  path: /forgotPassword
+  controller: ControladorCliente::forgotPassword
+
+services:
+  path: /services
+  controller: ControladorCliente::services
+
+bookService:
+  path: /bookService
+  controller: ControladorCliente::bookService
+
+doBookService:
+  path: /doBookService
+  controller: ControladorTaller::doBookService
+
+uploadMyVehicles:
+  path: /uploadMyVehicles
+  controller: ControladorCliente::cargarMisVehiculosAjax
+
+serviceConfirmation:
+  path: /serviceConfirmation
+  controller: ControladorTaller::serviceConfirmation
+
+aioParking:
+  path: /aioParking
+  controller: ControladorCliente::parking
+
+aioParkingBookSimple:
+  path: /aioParkingBookSimple
+  controller: ControladorCliente::parkingSimple
+
+aioParkingBookLongTerm:
+  path: /aioParkingBookLongTerm
+  controller: ControladorCliente::parkingLongTerm
+
+bookParkingSimple:
+  path: /bookParkingSimple
+  controller: ControladorParking::bookParkingSimple
+
+bookParkingLongTerm:
+  path: /bookParkingLongTerm
+  controller: ControladorCliente::bookParkingLongTerm
+
+parkingConfirmation:
+  path: /parkingConfirmation
+  controller: ControladorParking::parkingConfirmation
+
+products:
+  path: /products
+  controller: ControladorCliente::products
+
+myAccount:
+  path: /myAccount
+  controller: ControladorCliente::myAccount
+
+home:
+  path: /home
+  controller: ControladorCliente::home
+
 #    default:
 #        $controladorCliente->login();
 #        break;
