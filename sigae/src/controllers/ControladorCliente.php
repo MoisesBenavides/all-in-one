@@ -10,6 +10,9 @@ class ControladorCliente{
     public function __construct(){
         $this->cliente=new Cliente();
     }
+    function showLandingPage(){
+        include '../src/views/landingPage.html';
+    }
     function login(){
         include '../src/views/account/login.html';
     }
