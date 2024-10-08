@@ -1,3 +1,7 @@
+showLandingPage:
+  path: /
+  controller: ControladorCliente::showLandingPage
+
 login:
   path: /login
   controller: ControladorCliente::login
@@ -81,7 +85,3 @@ myAccount:
 home:
   path: /home
   controller: ControladorCliente::home
-
-#    default:
-#        $controladorCliente->login();
-#        break;
