@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <!--Es responsivo!!-->
+    <!--Es responsivo!!-->
     <meta charset="UTF-8">
     <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
-    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="keywords"
+        content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-   <link rel="stylesheet" href="../../../css/styles.css">
+    <title>AIO - Taller, neumaticos, reservas y más</title>
+    <link rel="stylesheet" href="../../../css/styles.css">
     <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
     <style>
         @font-face {
@@ -18,142 +20,160 @@
             font-weight: normal;
             font-style: normal;
         }
-    
-        body, input, select, button, option {
+
+        body,
+        input,
+        select,
+        button,
+        option {
             font-family: 'Teachers', sans-serif;
         }
     </style>
 </head>
 <header class=" w-screen">
-  <link rel="stylesheet" href="../../../css/styles.css">
-  <div class="container mx-auto px-4 py-4">
-      <div class="relative flex flex-col md:flex-row justify-between items-center">
-          
-          <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
-          <div class="absolute top-2 left-4 md:hidden">
-              <button id="hamburger" class="text-black focus:outline-none">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                  </svg>
-              </button>
-          </div>
+    <link rel="stylesheet" href="../../../css/styles.css">
+    <div class="container mx-auto px-4 py-4">
+        <div class="relative flex flex-col md:flex-row justify-between items-center">
 
-          <!-- Logo -->
-          <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
-              <!-- Presionar logo para volver al home del cliente (href) -->
-              <img href="../../../index.php?action=home" class="w-full h-auto" src="../../../img/AIO Positivo.png" alt="AIO Logo" />
-          </div>
+            <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
+            <div class="absolute top-2 left-4 md:hidden">
+                <button id="hamburger" class="text-black focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
 
-          <!-- Navegación - visible solo en pantallas medianas y grandes -->
-          <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
-              <a href="../client/serviciosMecanicos.html" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
-              <a href="index.php?action=aioParking" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
-              <a href="#" class="block text-black text-sm font-bold ">Mis reservas</a>
-              <a href="index.php?action=products" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
-              <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">FAQ</a>
-          </nav>
+            <!-- Logo -->
+            <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
+                <!-- Presionar logo para volver al home del cliente (href) -->
+                <img href="../../../index.php?action=home" class="w-full h-auto" src="../../../img/AIO Positivo.png"
+                    alt="AIO Logo" />
+            </div>
 
-          <!-- User icon - Alineado a la derecha en móviles -->
-          <div class="absolute top-2 right-4 md:static">
-              <img class="w-10 h-10" src="../../../img/user.png" alt="User">
-          </div>
-      </div>
+            <!-- Navegación - visible solo en pantallas medianas y grandes -->
+            <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
+                <a href="../client/serviciosMecanicos.html"
+                    class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
+                <a href="index.php?action=aioParking"
+                    class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
+                <a href="#" class="block text-black text-sm font-bold ">Mis reservas</a>
+                <a href="index.php?action=products"
+                    class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
+                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">FAQ</a>
+            </nav>
 
-      <!-- Menú hamburguesa desplegable (oculto por defecto) -->
-      <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
-          <a href="../client/serviciosMecanicos.html" class="block text-black text-sm font-bold ">Servicios</a>
-          <a href="index.php?action=aioParking" class="block text-black text-sm font-bold ">AIO Parking</a>
-          <a href="#" class="block text-black text-sm font-bold ">Mis reservas</a>
-          <a href="index.php?action=products" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
-          <a href="#" class="block text-black text-sm font-bold ">FAQ</a>
-      </nav>
-  </div>
+            <!-- User icon - Alineado a la derecha en móviles -->
+            <div class="absolute top-2 right-4 md:static">
+                <img class="w-10 h-10" src="../../../img/user.png" alt="User">
+            </div>
+        </div>
 
-  <script>
-      // Lógica del menú hamburguesa
-      const hamburger = document.getElementById('hamburger');
-      const mobileMenu = document.getElementById('mobileMenu');
+        <!-- Menú hamburguesa desplegable (oculto por defecto) -->
+        <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+            <a href="../client/serviciosMecanicos.html" class="block text-black text-sm font-bold ">Servicios</a>
+            <a href="index.php?action=aioParking" class="block text-black text-sm font-bold ">AIO Parking</a>
+            <a href="#" class="block text-black text-sm font-bold ">Mis reservas</a>
+            <a href="index.php?action=products" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
+            <a href="#" class="block text-black text-sm font-bold ">FAQ</a>
+        </nav>
+    </div>
 
-      hamburger.addEventListener('click', () => {
-          mobileMenu.classList.toggle('hidden');
-      });
-  </script>
-     <script>
-      const dropdownButton = document.getElementById('dropdownButton');
-      const dropdownMenu = document.getElementById('dropdownMenu');
-      const selectedOption = document.getElementById('selectedOption');
-      const options = document.querySelectorAll('.option');
-      const hiddenInput = document.getElementById('selectedVehicleType');
-      const arrow = dropdownButton.querySelector('svg');
-      const priceInfo = document.getElementById('priceInfo');
+    <script>
+        // Lógica del menú hamburguesa
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
 
-      dropdownButton.addEventListener('click', () => {
-          dropdownMenu.classList.toggle('hidden');
-          arrow.classList.toggle('rotate-180');
-      });
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+    <script>
+        const dropdownButton = document.getElementById('dropdownButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const selectedOption = document.getElementById('selectedOption');
+        const options = document.querySelectorAll('.option');
+        const hiddenInput = document.getElementById('selectedVehicleType');
+        const arrow = dropdownButton.querySelector('svg');
+        const priceInfo = document.getElementById('priceInfo');
 
-      options.forEach(option => {
-          option.addEventListener('click', () => {
-              selectedOption.textContent = option.textContent;
-              hiddenInput.value = option.getAttribute('data-value');
-              dropdownMenu.classList.add('hidden');
-              arrow.classList.remove('rotate-180');
+        dropdownButton.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        });
 
-              // Mostrar el precio por hora
-              const price = option.getAttribute('data-price');
-              priceInfo.textContent = `Precio por hora: ${price} pesos`;
-              priceInfo.classList.remove('hidden');
-          });
-      });
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                selectedOption.textContent = option.textContent;
+                hiddenInput.value = option.getAttribute('data-value');
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
 
-      // Cerrar el menú si se hace clic fuera de él
-      window.addEventListener('click', (e) => {
-          if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
-              dropdownMenu.classList.add('hidden');
-              arrow.classList.remove('rotate-180');
-          }
-      });
-  </script>
+                // Mostrar el precio por hora
+                const price = option.getAttribute('data-price');
+                priceInfo.textContent = `Precio por hora: ${price} pesos`;
+                priceInfo.classList.remove('hidden');
+            });
+        });
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.addEventListener('click', (e) => {
+            if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        });
+    </script>
 </header>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-white">
     <section class="container mx-auto px-4 py-8 max-w-2xl">
         <h1 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-8">NOMBRE USUARIO Aquí</h1>
-        
+
         <form class="mb-6">
             <label for="email" class="block text-lg font-medium text-neutral-900 mb-2">Correo</label>
-            <input type="email" id="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="A****E@gmail.com" readonly aria-label="Email address" />
+            <input type="email" id="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                value="A****E@gmail.com" readonly aria-label="Email address" />
         </form>
 
         <form class="mb-6">
             <label for="name" class="block text-lg font-medium text-neutral-900 mb-2">Nombre</label>
-            <input type="text" id="name" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="NOMBRE" aria-label="First name" />
+            <input type="text" id="name" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                value="NOMBRE" aria-label="First name" />
         </form>
 
         <form class="mb-6">
             <label for="lastname" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
-            <input type="text" id="lastname" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="APELLIDO" aria-label="Last name" />
+            <input type="text" id="lastname"
+                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="APELLIDO"
+                aria-label="Last name" />
         </form>
 
         <form class="mb-8">
             <label for="phone" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
-            <input type="tel" id="phone" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="TELEFONO" aria-label="Phone number" />
+            <input type="tel" id="phone" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                value="TELEFONO" aria-label="Phone number" />
         </form>
 
-        <button class="w-full md:w-auto px-6 py-3 bg-red-800 text-white text-xl font-bold rounded-lg hover:bg-red-700 transition-colors mb-8">
+        <button
+            class="w-full md:w-auto px-6 py-3 bg-red-800 text-white text-xl font-bold rounded-lg hover:bg-red-700 transition-colors mb-8">
             Modificar
         </button>
 
         <section class="mb-8">
             <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-6">TUS Vehículos</h2>
-            
+
             <div class="space-y-6">
                 <div class="flex justify-between items-center text-lg font-semibold">
                     <p>MARCA MODELO</p>
@@ -168,27 +188,31 @@
             </div>
 
             <div class="space-y-4 mt-8">
-                <button class="w-full flex justify-between items-center px-4 py-3 bg-red-800 text-white text-xl font-semibold rounded-md hover:bg-red-700 transition-colors">
+                <button
+                    class="w-full flex justify-between items-center px-4 py-3 bg-red-800 text-white text-xl font-semibold rounded-md hover:bg-red-700 transition-colors">
                     <span>Ingrese vehículo</span>
                     <img src="../../../svg/iconDropDown.svg" alt="Dropdown icon" class="w-5 h-5">
                 </button>
-                <button class="w-full flex justify-between items-center px-4 py-3 bg-red-800 text-white text-xl font-semibold rounded-md hover:bg-red-700 transition-colors">
+                <button
+                    class="w-full flex justify-between items-center px-4 py-3 bg-red-800 text-white text-xl font-semibold rounded-md hover:bg-red-700 transition-colors">
                     <span>Modificar vehículo</span>
                     <img src="../../../svg/iconDropDown.svg" alt="Dropdown icon" class="w-5 h-5">
                 </button>
-                <button class="w-full flex justify-between items-center px-4 py-3 bg-red-800 text-white text-xl font-semibold rounded-md hover:bg-red-700 transition-colors">
+                <button
+                    class="w-full flex justify-between items-center px-4 py-3 bg-red-800 text-white text-xl font-semibold rounded-md hover:bg-red-700 transition-colors">
                     <span>Eliminar vehículo</span>
                     <img src="../../../svg/iconDropDown.svg" alt="Dropdown icon" class="w-5 h-5">
                 </button>
             </div>
         </section>
 
-        <button name="CerrarSesion" class="w-full px-4 py-3 bg-rose-400 text-neutral-900 text-lg font-bold rounded-md border-2 border-neutral-900 hover:bg-rose-500 transition-colors">
+        <button name="CerrarSesion"
+            class="w-full px-4 py-3 bg-rose-400 text-neutral-900 text-lg font-bold rounded-md border-2 border-neutral-900 hover:bg-rose-500 transition-colors">
             Cerrar sesión
         </button>
     </section>
 
-      <footer class="w-screen bg-[#514e4e] ">      
+    <footer class="w-screen bg-[#514e4e] ">
         <div class="  text-white py-12 container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-8 md:mb-0">
@@ -213,18 +237,17 @@
                 </div>
             </div>
         </div>
-          <script>
+        <script>
             function initMap() {
-              const map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: -34.8730391, lng: -56.1719804 },
-                zoom: 20,
-              });
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    center: { lat: -34.8730391, lng: -56.1719804 },
+                    zoom: 20,
+                });
             }
-          </script>
-          <script
+        </script>
+        <script
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDaeWicvigtP9xPv919E-RNoxfvC-Hqik&callback=initMap"
-            async
-          ></script>
-        </footer>
+            async></script>
+    </footer>
 </body>
 </html>
