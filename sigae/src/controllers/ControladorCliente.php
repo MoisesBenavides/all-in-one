@@ -3,6 +3,7 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Cliente;
 use Google_Client;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ControladorCliente{
     private $cliente;
@@ -55,7 +56,7 @@ class ControladorCliente{
                     $_SESSION['telefono']=$this->cliente->getTelefono();
 
                     // Redirigir a la home page
-                    header('Location: index.php?action=home');
+                    return new RedirectResponse('/home');
                 } else {
                     $response['errors'][] = "Error al iniciar sesión.";
                 }
@@ -68,9 +69,7 @@ class ControladorCliente{
                 array_keys($_POST)
             );
         }
-        header('Content-Type: application/json');
-        echo json_encode($response);
-        exit;
+        return new JsonResponse($response);
     }
     function doLoginOAuth(){
         session_start();

@@ -1,46 +1,57 @@
 showLandingPage:
   path: /
   controller: ControladorCliente::showLandingPage
+  method: GET
 
 login:
   path: /login
   controller: ControladorCliente::login
+  method: GET
 
 doLogin:
   path: /doLogin
   controller: ControladorCliente::doLogin
+  method: POST
 
 doLoginOAuth:
   path: /doLoginOAuth
   controller: ControladorCliente::doLoginOAuth
+  method: GET
 
 signup:
   path: /signup
   controller: ControladorCliente::signup
+  method: GET
 
 doSignup:
   path: /doSignup
   controller: ControladorCliente::doSignup
+  method: POST
 
 doSignupOAuth:
   path: /doSignup
   controller: ControladorCliente::doSignupOAuth
+  method: POST
 
 forgotPassword:
   path: /forgotPassword
   controller: ControladorCliente::forgotPassword
+  method: GET
 
 services:
   path: /services
   controller: ControladorCliente::services
+  method: GET
 
 bookService:
   path: /bookService
   controller: ControladorCliente::bookService
+  method: GET
 
 doBookService:
   path: /doBookService
   controller: ControladorTaller::doBookService
+  method: POST
 
 uploadMyVehicles:
   path: /uploadMyVehicles
@@ -49,39 +60,49 @@ uploadMyVehicles:
 serviceConfirmation:
   path: /serviceConfirmation
   controller: ControladorTaller::serviceConfirmation
+  method: GET
 
 aioParking:
   path: /aioParking
   controller: ControladorCliente::parking
+  method: GET
 
 aioParkingBookSimple:
   path: /aioParkingBookSimple
   controller: ControladorCliente::parkingSimple
+  method: GET
 
 aioParkingBookLongTerm:
   path: /aioParkingBookLongTerm
   controller: ControladorCliente::parkingLongTerm
+  method: GET
 
 bookParkingSimple:
   path: /bookParkingSimple
   controller: ControladorParking::bookParkingSimple
+  method: POST
 
 bookParkingLongTerm:
   path: /bookParkingLongTerm
   controller: ControladorCliente::bookParkingLongTerm
+  method: POST
 
 parkingConfirmation:
   path: /parkingConfirmation
   controller: ControladorParking::parkingConfirmation
+  method: GET
 
 products:
   path: /products
   controller: ControladorCliente::products
+  method: GET
 
 myAccount:
   path: /myAccount
   controller: ControladorCliente::myAccount
+  method: GET
 
 home:
   path: /home
   controller: ControladorCliente::home
+  method: GET
