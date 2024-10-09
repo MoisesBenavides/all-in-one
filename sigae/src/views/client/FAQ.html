@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--SEO-->
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <!--Es responsivo-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIO - Taller, neumaticos, reservas y más</title>
+   <!-- <link rel="stylesheet" href="../../../css/styles.css"> -->
+    <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url('../../../font/Teachers-VariableFont_wght.ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex flex-col min-h-screen">
+    <header class="w-full">
+        <link rel="stylesheet" href="../../../css/styles.css">
+        <div class="container mx-auto px-4 py-4">
+            <div class="relative flex flex-col md:flex-row justify-between items-center">
+                
+                <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
+                <div class="absolute top-2 left-4 md:hidden">
+                    <button id="hamburger" class="text-black focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+    
+                <!-- Logo -->
+                <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
+                    <!-- Presionar logo para volver al home del cliente (href) -->
+                    <img href="../../../index.php?action=home" class="w-full h-auto" src="../../../img/AIO Positivo.png" alt="AIO Logo" />
+                </div>
+    
+                <!-- Navegación - visible solo en pantallas medianas y grandes -->
+                <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
+                    <a href="index.php?action=services" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
+                    <a href="index.php?action=aioParking" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
+                    <a href="index.php?action=products" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
+                    <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">FAQ</a>
+                </nav>
+    
+                <!-- User icon - Alineado a la derecha en móviles -->
+                <div class="absolute top-2 right-4 md:static">
+                    <img class="w-10 h-10" src="../../../img/user.png" alt="User">
+                </div>
+            </div>
+    
+            <!-- Menú hamburguesa desplegable (oculto por defecto) -->
+            <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+                <a href="index.php?action=services" class="block text-black text-sm font-bold ">Servicios</a>
+                <a href="index.php?action=aioParking" class="block text-black text-sm font-bold ">AIO Parking</a>
+                <a href="index.php?action=products" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
+                <a href="#" class="block text-black text-sm font-bold ">FAQ</a>
+            </nav>
+        </div>
+    
+        <script>
+            // Lógica del menú hamburguesa
+            const hamburger = document.getElementById('hamburger');
+            const mobileMenu = document.getElementById('mobileMenu');
+    
+            hamburger.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        </script>
+           <script>
+            const dropdownButton = document.getElementById('dropdownButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const selectedOption = document.getElementById('selectedOption');
+            const options = document.querySelectorAll('.option');
+            const hiddenInput = document.getElementById('selectedVehicleType');
+            const arrow = dropdownButton.querySelector('svg');
+            const priceInfo = document.getElementById('priceInfo');
+    
+            dropdownButton.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('hidden');
+                arrow.classList.toggle('rotate-180');
+            });
+    
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedOption.textContent = option.textContent;
+                    hiddenInput.value = option.getAttribute('data-value');
+                    dropdownMenu.classList.add('hidden');
+                    arrow.classList.remove('rotate-180');
+    
+                    // Mostrar el precio por hora
+                    const price = option.getAttribute('data-price');
+                    priceInfo.textContent = `Precio por hora: ${price} pesos`;
+                    priceInfo.classList.remove('hidden');
+                });
+            });
+    
+            // Cerrar el menú si se hace clic fuera de él
+            window.addEventListener('click', (e) => {
+                if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.add('hidden');
+                    arrow.classList.remove('rotate-180');
+                }
+            });
+        </script>
+    </header>
+    <main class="flex-grow justify-center items-center min-h-[600px] flex flex-col">
+        <section class="flex flex-wrap justify-center text-center w-full max-w-7xl mx-auto py-8">        
+            <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 lg:p-16">
+                <h1 class="text-5xl lg:text-8xl font-bold mb-4">FAQ</h1>
+                <p class="text-xl lg:text-2xl font-medium max-w-lg">
+                    Bienvenido a la sección de preguntas frecuentes de All In One, aquí intentaremos resolver todas tus dudas
+                </p>
+            </div>
+            <div class="w-full lg:w-1/2 p-8 lg:p-16">
+                <div class="max-w-2xl mx-auto">
+    
+                <div class="mb-4 border-b border-stone-400 pb-4">
+                    <button class="w-full text-left focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center text-xl font-bold cursor-pointer">
+                            <span>¿Se puede realizar un servicio mecánico sin reservar previamente?</span>
+                            <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <div class="mt-2 text-left hidden">
+                        <p>Para poder realizar un servicio mecánico en All In One se debe realizar una reserva para tener un puesto asegurado en el que nuestro equipo podrá asistirte en el servicio que desees</p>
+                    </div>
+                </div>
+                <div class="mb-4 border-b border-stone-400 pb-4">
+                    <button class="w-full text-left focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center text-xl font-bold cursor-pointer">
+                            <span>¿Puedo realizar una reserva a largo plazo en AIO Parking?</span>
+                            <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <div class="mt-2 text-left hidden">
+                        <p> ¡Claro! en All In One Parking ofrecemos el servicio de reserva a largo plazo, ya sea para dejarlo semanalmente, quincenalmente, mensualmente o anualmente.</p>
+                    </div>
+                </div>
+                <div class="mb-4 border-b border-stone-400 pb-4">
+                    <button class="w-full text-left focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center text-xl font-bold cursor-pointer">
+                            <span>¿Con que marcas de neumaticos trabajan?</span>
+                            <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <div class="mt-2 text-left hidden">
+                        <p> En AIO trabajamos con Bridgeston, Michelin y Pirelli, puedes encontrar todos los modelos que ofrecemos en nuestra sección de catalogo.</p>
+                    </div>
+                </div>
+                <div class="mb-4 border-b border-stone-400 pb-4">
+                    <button class="w-full text-left focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center text-xl font-bold cursor-pointer">
+                            <span>¿Trabajan con todas las marcas de vehículos?</span>
+                            <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <div class="mt-2 text-left hidden">
+                        <p>Sí, nuestro equipo de mecánicos está capacitado para trabajar con una amplia gama de marcas y modelos de vehículos, tanto nacionales como importados. Sin embargo, para algunos modelos muy específicos o de lujo, es posible que necesitemos más tiempo para obtener piezas especializadas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </main>
+
+     <footer class="w-full bg-[#514e4e] text-white py-12">
+        <div class="container mx-auto px-4">
+
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-8 md:mb-0">
+                    <img class="w-48 h-auto mb-6" src="../../../img/AIO Negativo (1).png" alt="AIO Logo" />
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <img class="w-8 h-8 mr-4" src="../../../img/InstagramLogo.png" alt="Instagram" />
+                            <span class="text-lg font-bold   ">@Aiotalleres</span>
+                        </div>
+                        <div class="flex items-center">
+                            <img class="w-8 h-8 mr-4" src="../../../img/XLogo.png" alt="Twitter" />
+                            <span class="text-lg font-bold   ">@Aiotalleres</span>
+                        </div>
+                        <div class="flex items-center">
+                            <img class="w-8 h-8 mr-4" src="../../../img/TelefonoLogo.png" alt="Teléfono" />
+                            <span class="text-lg font-bold   ">+598 99 123 456</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 h-64 md:h-72">
+                    <div id="map" class="w-full h-full rounded-lg"></div>
+                </div>
+            </div>
+        </div>
+          <script>
+            function initMap() {
+              const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: -34.8730391, lng: -56.1719804 },
+                zoom: 20,
+              });
+            }
+          </script>
+          <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDaeWicvigtP9xPv919E-RNoxfvC-Hqik&callback=initMap"
+            async
+          ></script>
+        </footer>
+    <script>
+        function toggleFAQ(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('svg');
+            content.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
+</body>
+
+
+</html>
