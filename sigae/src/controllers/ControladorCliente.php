@@ -3,21 +3,22 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Cliente;
 use Google_Client;
+use Symfony\Bundle\FramworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class ControladorCliente{
+class ControladorCliente extends AbstractController {
     private $cliente;
 
     public function __construct(){
         $this->cliente=new Cliente();
     }
-    function showLandingPage(){
-        include '../src/views/landingPage.html';
+    function showLandingPage(): Response{
+        return $this->render('landingPage.html');
     }
-    function login(){
-        include '../src/views/account/login.html';
+    function login(): Response{
+        return $this->render('account/login.html');
     }
-    function doLogin(){
+    function doLogin(): JsonResponse|RedirectResponse{
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
         // Debug: Log all received data
@@ -56,7 +57,7 @@ class ControladorCliente{
                     $_SESSION['telefono']=$this->cliente->getTelefono();
 
                     // Redirigir a la home page
-                    return new RedirectResponse('/home');
+                    return $this->redirectToRoute('home');
                 } else {
                     $response['errors'][] = "Error al iniciar sesión.";
                 }
@@ -69,9 +70,9 @@ class ControladorCliente{
                 array_keys($_POST)
             );
         }
-        return new JsonResponse($response);
+        return new JsonResponse($response); // Devuelve un JSON en caso de error
     }
-    function doLoginOAuth(){
+    function doLoginOAuth(): JsonResponse|RedirectResponse{
         session_start();
 
         // Configurar cliente Google
@@ -112,14 +113,15 @@ class ControladorCliente{
                 $_SESSION['perfil']=$perfil;
 
                 // Redirigir a la home page
-                header('Location: index.php?action=home');
+                return $this->redirectToRoute('home');
             } else {
                 $response['errors'][] = "Error al iniciar sesión.";
             }
         }
+        return new JsonResponse($response); // Devuelve un JSON en caso de error
     }
-    function signup(){
-        include '../src/views/account/signUp.html';
+    function signup(): Response{
+        return $this->render('account/signup.html');
     }
     function doSignup(){
         $response=['success' => false, 'errors' => [], 'debug' => []];
@@ -185,42 +187,43 @@ class ControladorCliente{
     function doLogout(){
         // TODO: Implementar log out de la sesion
     }
-    function forgotPassword(){
-        include '../src/views/account/forgotPassword.html';
+    function forgotPassword(): Response{
+        return $this->render('account/forgotPassword.html');
     }
-    function services(){
+    function services(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página de servicios");
         error_log(print_r($_SESSION, true));
-        include '../src/views/client/serviciosMecanicos.html';
+        return $this->render('client/serviciosMecanicos.html');
     }
-    function bookService(){
+    function bookService(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página de reserva de servicios");
         error_log(print_r($_SESSION, true));
 
         $this->cargarMisVehiculosAjax($_SESSION['id']);
-        include '../src/views/client/reservarServicio.html';
+        return $this->render('client/reservarServicio.html');
     }
     
-    function parking(){
+    function parking(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página de AIO Parking");
         error_log(print_r($_SESSION, true));
         
-        include '../src/views/client/aioParking.html';
+        return $this->render('client/aioParking.html');
     }
 
-    function parkingSimple(){
+    function parkingSimple(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página de reserva de parking simple");
         error_log(print_r($_SESSION, true));
 
         $this->cargarMisVehiculosAjax($_SESSION['id']);
-        include '../src/views/client/reservarParkingSimple.html';
+        
+        return $this->render('client/reservarParkingSimple.html');
     }
 
-    function parkingLongTerm(){
+    function parkingLongTerm(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página de reserva de parking de largo plazo");
         error_log(print_r($_SESSION, true));
@@ -230,24 +233,26 @@ class ControladorCliente{
         $this->cargarMisVehiculosAjax($_SESSION['id']);
         */
         
-        include '../src/views/client/reservarParkingLargoPlazo.html';
+        return $this->render('client/reservarParkingLargoPlazo.html');
     }
 
-    function products(){
+    function products(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página del catálogo de productos");
         error_log(print_r($_SESSION, true));
-        include '../src/views/client/catalogo.html';
+        
+        return $this->render('client/catalogo.html');
     }
 
-    function myAccount(){
-        include '../src/views/client/miCuenta.html';
+    function myAccount(): Response{
+        return $this->render('client/miCuenta.html');
     }
-    function home(){
+    function home(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página home");
         error_log(print_r($_SESSION, true));
-        include '../src/views/client/homeCliente.html';
+        
+        return $this->render('client/homeCliente.html');
     }
 
     public function cargarMisVehiculosAjax($id) {
@@ -292,6 +297,7 @@ class ControladorCliente{
                 && strlen($str) <= $max && strlen($str) >= $min));
 
     }
+    
     private function validarEmail($str, $max) {
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres y contiene un dominio de correo valido
         y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */ 
