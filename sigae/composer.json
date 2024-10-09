@@ -1,7 +1,9 @@
 {
     "name": "aio/sigae",
     "require": {
-        "google/apiclient": "^2.17"
+        "google/apiclient": "^2.17",
+        "symfony/routing": "^7.1",
+        "symfony/yaml": "^7.1"
     },
     "license": "LGPL-2.1-only",
     "autoload": {

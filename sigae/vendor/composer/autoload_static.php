@@ -12,6 +12,7 @@ class ComposerStaticInitce63d5106c4d9504f9dedead0658aa35
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '1f87db08236948d07391152dccb70f04' => __DIR__ . '/..' . '/google/apiclient-services/autoload.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'a8d3953fd9959404dd22d3dfcd0a79f0' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
     );
 
@@ -19,6 +20,14 @@ class ComposerStaticInitce63d5106c4d9504f9dedead0658aa35
         'p' => 
         array (
             'phpseclib3\\' => 11,
+        ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Symfony\\Component\\Yaml\\' => 23,
+            'Symfony\\Component\\Routing\\' => 26,
+            'Sigae\\Config\\' => 13,
+            'Sigae\\' => 6,
         ),
         'P' => 
         array (
@@ -45,10 +54,6 @@ class ComposerStaticInitce63d5106c4d9504f9dedead0658aa35
         array (
             'Firebase\\JWT\\' => 13,
         ),
-        'A' => 
-        array (
-            'Aio\\Sigae\\' => 10,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -56,14 +61,34 @@ class ComposerStaticInitce63d5106c4d9504f9dedead0658aa35
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Symfony\\Component\\Yaml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/yaml',
+        ),
+        'Symfony\\Component\\Routing\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/routing',
+        ),
+        'Sigae\\Config\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/config',
+        ),
+        'Sigae\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -108,10 +133,6 @@ class ComposerStaticInitce63d5106c4d9504f9dedead0658aa35
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
-        ),
-        'Aio\\Sigae\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
