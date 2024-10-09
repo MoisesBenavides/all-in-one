@@ -1,0 +1,6 @@
+{
+    "require": {
+        "symfony/routing": "^7.1",
+        "symfony/yaml": "^7.1"
+    }
+}
