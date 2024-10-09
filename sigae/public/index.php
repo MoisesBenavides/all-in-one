@@ -32,7 +32,8 @@ try{
 
     // Llamar a la función del controlador correspondiente
     $controllerInstance = new $controller();
-    $response call_user_func([$controllerInstance, $method], $request);
+    $response = call_user_func([$controllerInstance, $method], $request);
+    
 } catch (ResourceNotFoundException $e){
     $response = new Response('Página no encontrada', 404);
 } catch (Exception $e){
