@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Config\FileLocator;
-use Sigae\Controllers\ControladorCliente;
+use Sigae\controllers\ControladorCliente;
 
 // Configura el contexto de solicitud HTTP
 $request=Request::createFromGlobals();

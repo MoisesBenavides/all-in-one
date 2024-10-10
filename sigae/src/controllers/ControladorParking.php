@@ -1,8 +1,8 @@
 <?php
 
-namespace Sigae\Controllers;
-use Sigae\Models\Parking;
-use Sigae\Controllers\ControladorVehiculo;
+namespace Sigae\controllers;
+use Sigae\models\Parking;
+use Sigae\controllers\ControladorVehiculo;
 
 class ControladorParking{
     private $parking;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sigae\Models;
+namespace Sigae\models;
 
 enum TipoVehiculo: String{
     case Moto = 'moto';

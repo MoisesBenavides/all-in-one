@@ -1,6 +1,6 @@
 <?php
 
-namespace Sigae\Models;
+namespace Sigae\models;
 
 class Orden{
     private $id;

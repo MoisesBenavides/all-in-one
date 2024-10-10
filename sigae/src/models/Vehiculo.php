@@ -1,7 +1,7 @@
 <?php
 
-namespace Sigae\Models;
-use Sigae\Config\db_conn;
+namespace Sigae\models;
+use Sigae\config\db_conn;
 
 class Vehiculo
 {

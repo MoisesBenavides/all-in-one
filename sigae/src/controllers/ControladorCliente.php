@@ -1,7 +1,7 @@
 <?php
 
-namespace Sigae\Controllers;
-use Sigae\Models\Cliente;
+namespace Sigae\controllers;
+use Sigae\models\Cliente;
 use Google_Client;
 use Symfony\Bundle\FramworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;

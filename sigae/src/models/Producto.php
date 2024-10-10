@@ -1,6 +1,6 @@
 <?php
 
-namespace Sigae\Models;
+namespace Sigae\models;
 
 abstract class Producto{
     protected $id;
