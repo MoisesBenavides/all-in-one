@@ -1,57 +1,57 @@
 showLandingPage:
   path: /
   controller: ControladorCliente::showLandingPage
-  method: GET
+  methods: GET
 
 login:
   path: /login
   controller: ControladorCliente::login
-  method: GET
+  methods: GET
 
 doLogin:
   path: /doLogin
   controller: ControladorCliente::doLogin
-  method: POST
+  methods: POST
 
 doLoginOAuth:
   path: /doLoginOAuth
   controller: ControladorCliente::doLoginOAuth
-  method: GET
+  methods: GET
 
 signup:
   path: /signup
   controller: ControladorCliente::signup
-  method: GET
+  methods: GET
 
 doSignup:
   path: /doSignup
   controller: ControladorCliente::doSignup
-  method: POST
+  methods: POST
 
 doSignupOAuth:
   path: /doSignup
   controller: ControladorCliente::doSignupOAuth
-  method: POST
+  methods: POST
 
 forgotPassword:
   path: /forgotPassword
   controller: ControladorCliente::forgotPassword
-  method: GET
+  methods: GET
 
 services:
   path: /services
   controller: ControladorCliente::services
-  method: GET
+  methods: GET
 
 bookService:
   path: /bookService
   controller: ControladorCliente::bookService
-  method: GET
+  methods: GET
 
 doBookService:
   path: /doBookService
   controller: ControladorTaller::doBookService
-  method: POST
+  methods: POST
 
 uploadMyVehicles:
   path: /uploadMyVehicles
@@ -60,49 +60,49 @@ uploadMyVehicles:
 serviceConfirmation:
   path: /serviceConfirmation
   controller: ControladorTaller::serviceConfirmation
-  method: GET
+  methods: GET
 
 aioParking:
   path: /aioParking
   controller: ControladorCliente::parking
-  method: GET
+  methods: GET
 
 aioParkingBookSimple:
   path: /aioParkingBookSimple
   controller: ControladorCliente::parkingSimple
-  method: GET
+  methods: GET
 
 aioParkingBookLongTerm:
   path: /aioParkingBookLongTerm
   controller: ControladorCliente::parkingLongTerm
-  method: GET
+  methods: GET
 
 bookParkingSimple:
   path: /bookParkingSimple
   controller: ControladorParking::bookParkingSimple
-  method: POST
+  methods: POST
 
 bookParkingLongTerm:
   path: /bookParkingLongTerm
   controller: ControladorCliente::bookParkingLongTerm
-  method: POST
+  methods: POST
 
 parkingConfirmation:
   path: /parkingConfirmation
   controller: ControladorParking::parkingConfirmation
-  method: GET
+  methods: GET
 
 products:
   path: /products
   controller: ControladorCliente::products
-  method: GET
+  methods: GET
 
 myAccount:
   path: /myAccount
   controller: ControladorCliente::myAccount
-  method: GET
+  methods: GET
 
 home:
   path: /home
   controller: ControladorCliente::home
-  method: GET
+  methods: GET
