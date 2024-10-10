@@ -78,7 +78,7 @@ class ControladorCliente extends AbstractController {
         // Configurar cliente Google
         $client= new GoogleClient();
         $client->setAuthConfig('/var/www/html/private/credentials.json');
-        $client->setRedirectUri('http://yourdomain.com/index.php?action=doLoginOAuth')
+        $client->setRedirectUri('http://yourdomain.com/index.php?action=doLoginOAuth');
         $client->addScope('email');
         $client->addScope('profile');
         $client->addScope('nombre');
