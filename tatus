@@ -1,0 +1,1600 @@
+[33mcommit 49dcf513b4f4d0fa1d9792c7b0f32045491ed5ef[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 26 11:56:25 2024 -0300
+
+    Moddify button links
+
+[33mcommit 5fc8c1df466d5fbcba6f6e07c8f771385674cffb[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 26 11:50:18 2024 -0300
+
+    Remove duplicated function
+
+[33mcommit 89750d0e93bbb987318a3f5cf6315ed2a96f946e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 26 11:49:41 2024 -0300
+
+    Moddify fetch format and add error message
+
+[33mcommit 65a748fb787a7acd312db9edfd8bbd566401a537[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 26 11:48:40 2024 -0300
+
+    Moddify redirection link
+
+[33mcommit a01e3d01be4b4ac8a7cd1d08cb9158d11a1b9f2a[m
+Merge: c718b6e abf1de0
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 26 11:02:41 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit c718b6e6fc5aee8f345d2ec22108461dbbb32efc[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 26 11:02:39 2024 -0300
+
+    Moddify function name
+
+[33mcommit abf1de026be97f9fa5cbf6d029f9e49d27d509ae[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 26 11:02:26 2024 -0300
+
+    changed route for controladorCliente on function cargarVehiculos
+
+[33mcommit c42eb3a2f1b36efbdb231f7e08252e77d7579195[m
+Merge: 28612c6 86509cc
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 26 10:58:04 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 28612c6fdc2e065cca1af936bed1d4ab0d33ad3d[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 26 10:58:01 2024 -0300
+
+    Add function for displaying clients vehicles
+
+[33mcommit f51bee82bb7be4fc06bff806d7ceffec80e85ee9[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 26 10:57:23 2024 -0300
+
+    Update js function in view for displaying clients vehicles
+
+[33mcommit 86509ccc58292ecd4ea674eb24534be923c59e89[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 26 10:32:55 2024 -0300
+
+    changed headers and button to link serviciosMEcanicos with reservarServicio
+
+[33mcommit 93827215992e40292f31e9dfb289232520a3c3b4[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 24 12:05:45 2024 -0300
+
+    Add class functions and attributes stated in uml diagram for reference
+
+[33mcommit 791137ec528aae399026ab35ec0d8ceedf9adc51[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 24 11:41:56 2024 -0300
+
+    Add documentation
+
+[33mcommit 19ad10db4b03e0eaa741c37894658fa8e3f4ea7c[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 10:55:24 2024 -0300
+
+    Fix date validation
+
+[33mcommit 9aca7ad830063e5e8c52512471892503b3a5c0f2[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 10:53:56 2024 -0300
+
+    Add changes to book parking simples
+
+[33mcommit 25372f402ab7d23b52bcb7830d2d9c2a448f0f23[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 06:52:50 2024 -0300
+
+    Include abstract function
+
+[33mcommit 861b0b36576d763bb55ea4589c932157b175b104[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 06:52:12 2024 -0300
+
+    Add abstract function
+
+[33mcommit 7849f37ffd46df4d37e9edcda67a6d14822424a7[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 06:51:54 2024 -0300
+
+    Add model class Parking
+
+[33mcommit 5b6b438d76928109f7f5e35c70cac5324ad87d45[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 06:51:38 2024 -0300
+
+    Add enum for parking tipo plaza
+
+[33mcommit d088d65ea94e07863e95968f12ff78556726a6d8[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 06:51:07 2024 -0300
+
+    Add parking pages
+
+[33mcommit 32e30b1530ab3f2e988bd39545cb2bcea90e53c7[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 03:48:39 2024 -0300
+
+    Remove login with Google button
+
+[33mcommit 864e5999788652020aa379e6980a4477ea8fe072[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 03:47:32 2024 -0300
+
+    Remove login with Google button
+
+[33mcommit 1acfa1f4b7f5e5d7d33f6d3b5a781293b3f4302c[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 03:44:05 2024 -0300
+
+    Add link button to services page
+
+[33mcommit e52e808c9b71a82e66ab4e3c2b2787e71aad2dba[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 03:37:50 2024 -0300
+
+    Hide null data in view
+
+[33mcommit b5ff3551366d5981825f2b0e4eedc4058441646e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 03:35:02 2024 -0300
+
+    Add view for service reservation confirmation
+
+[33mcommit 78fa69579bc8d7a52f59b6b7b2ad3b9ac409cc55[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 03:34:21 2024 -0300
+
+    Add parameter for cliente id for vinculation with vehiculo
+
+[33mcommit 673ace4a8624309496ddba864b6c17aea1244561[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 03:34:05 2024 -0300
+
+    Add parameter for cliente id for vinculation with vehiculo
+
+[33mcommit eba79874bf99d17a26b1ed96081054a20d5b3dbc[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 03:33:31 2024 -0300
+
+    Add session data for output
+
+[33mcommit 1715de640d57f42fed3aca4bc1ae190568c5c734[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 02:29:02 2024 -0300
+
+    Change title and icon
+
+[33mcommit d683fb1286fd04fd49f73910de1d877d00dd94e5[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 02:28:39 2024 -0300
+
+    Add register now functions for service reservation
+
+[33mcommit dd873ea116d835bbae9ac1d3ad069f07b5d2d3e0[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 02:28:17 2024 -0300
+
+    Implement reservas de servicio de taller
+
+[33mcommit 3fb67d5703b799a276eb889d4609467cabd916bb[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 02:27:24 2024 -0300
+
+    Moddify class attribute to enum
+
+[33mcommit 4a0f816ebc7f209fb7ddd94de3146d26c507da2b[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 02:27:03 2024 -0300
+
+    Change access for email validation function and moddify error log messages
+
+[33mcommit 9cb121736b5a6d87c9dc72a7ec6e6f8555b561c8[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 02:25:30 2024 -0300
+
+    Add Vehiculo controller
+
+[33mcommit 69469462ce09b5562f0197d8c6938d05f974810e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 02:25:19 2024 -0300
+
+    Implement do book service function and redirection to confirmation page
+
+[33mcommit 49ab2fa89751c0c838159881cf108b01abb9ef35[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 02:24:15 2024 -0300
+
+    Update reference to static function
+
+[33mcommit 607c07b3689546ea1dd5106756def2c344dd1121[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Sep 23 02:23:34 2024 -0300
+
+    Change data values for drop down menus
+
+[33mcommit 5ed18fa66a93afa8e8a120a49fbb8a8ec738da5e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 21:21:17 2024 -0300
+
+    Add page for service reservation confirmation
+
+[33mcommit 505fd2360609c021e89d3ccfe33373695bb6df54[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 21:20:53 2024 -0300
+
+    Add constructor, attributes, getters and setters
+
+[33mcommit 19882a9516885cd6454f9a1d0f0b5dc8eced08c8[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 21:20:22 2024 -0300
+
+    Add functions for reservations
+
+[33mcommit 023a176a1fe2e5b87604858e4d6d7fc286e4d7fd[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 21:19:12 2024 -0300
+
+    Add abstract functions and set estado as default
+
+[33mcommit 234e93688a5cb7b08651fabb4f0aa913eb6a7511[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 21:18:41 2024 -0300
+
+    Add servicio taller controller functions
+
+[33mcommit 7bf874c4c2a9b34befb402b2dffa89c3744eed60[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 18:29:05 2024 -0300
+
+    Update styles
+
+[33mcommit 7ffdf47903a4f0996eb0a81f0ea49c975f973d17[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 18:28:53 2024 -0300
+
+    Moddify service type selector
+
+[33mcommit 326d1dac35e4b0d0a780f850e7922622c53759f8[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 18:28:26 2024 -0300
+
+    Add enum for tipo de vehiculo
+
+[33mcommit c7548a428340be3d55cc7804a3d7a560656c2893[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 18:28:05 2024 -0300
+
+    Add new service
+
+[33mcommit 58d0b8703fd85c07f3cdc7f8e710358b74c5bf44[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 16:20:33 2024 -0300
+
+    Update type of services value
+
+[33mcommit 79e9bdee183b53fda30440c4cd05c04045c39529[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 15:03:44 2024 -0300
+
+    Add function guardar servicio
+
+[33mcommit 3252033df4feaa87bf129dbef2efcff102b51390[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 02:59:35 2024 -0300
+
+    Add error messages management
+
+[33mcommit 876144e9c96e506ad5e26464283702d4c3638488[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 02:59:17 2024 -0300
+
+    Implement error variables and begin validation
+
+[33mcommit d0f4634fd45735aaf8c554806031fa18b9da8b8a[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 02:58:50 2024 -0300
+
+    Include Servicio link and db config classes
+
+[33mcommit 784d120fe53099109116098c314eb518e4c222c0[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 02:09:12 2024 -0300
+
+    Add getters and setters for class Taller
+
+[33mcommit f652a2526d68b3052a87490936c9cfc44d26db6a[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 02:03:57 2024 -0300
+
+    Add ControladorTaller
+
+[33mcommit a53b5a8de483ffb9ba8c63b2589c37ac29ba13e6[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 02:03:31 2024 -0300
+
+    Add Taller controller class
+
+[33mcommit b1da442d28ede7a24ee48984a7068279aa64247e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 02:03:18 2024 -0300
+
+    Add Taller model class
+
+[33mcommit de50bff3e19616a089b05ff06fa0fd8e9808b6f5[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 02:02:56 2024 -0300
+
+    Remove unrelated service function
+
+[33mcommit ca529291ecaf67cc45de14ba67d6b77e8fe98a2d[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 01:51:22 2024 -0300
+
+    Add enum for estado de servicio
+
+[33mcommit ebdc4c7813020fc48b64ac77d84628971ca07125[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 01:51:02 2024 -0300
+
+    Add abstract parent class Servicio
+
+[33mcommit 8060b5fe998b9f6f76d355fb7d7ab680ff57397f[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 22 01:50:41 2024 -0300
+
+    Define mechanical services data
+
+[33mcommit e3c50a4cf3ec75c80baedf1d080b2ff9b41e005b[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 22:15:19 2024 -0300
+
+    Update styles
+
+[33mcommit f75283fd4f7d7df3625cc4841193be78abad3161[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 22:14:58 2024 -0300
+
+    Format document, add input for car plate number, change unput titles and moddify input names
+
+[33mcommit ed51907cac2fb5ddec820bdc8b0bbc426abfd520[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 16:42:11 2024 -0300
+
+    Moddify admin access and remove temporary comments
+
+[33mcommit 887e6e9cf3593ec580ad310b75b1f4db2907f620[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 14:38:08 2024 -0300
+
+    Moddify sql scripts version
+
+[33mcommit fc0fb225046f8af7c085b5f2c10042e40c106731[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 13:21:04 2024 -0300
+
+    Implement sessions
+
+[33mcommit a3d82ef2694d189bf1691cda1c5bfe459f660be1[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 13:20:44 2024 -0300
+
+    Add book service action
+
+[33mcommit 4b1c6c5a853e0597a7b8b41003cef6b8efc97779[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 01:50:52 2024 -0300
+
+    Update styles
+
+[33mcommit 73aa60f5563cd08c6e8249a90c8f72eaf81eefe7[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 01:50:41 2024 -0300
+
+    Moddify title and links
+
+[33mcommit 5fec277de51df32b45a8be9660cff51e8d71e9e5[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 01:50:20 2024 -0300
+
+    Moddify links
+
+[33mcommit 16279ca43590fdcf93380a0d6e4aaed7a8464278[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 01:50:03 2024 -0300
+
+    Moddify links
+
+[33mcommit 2eda16495b920b81787d6712da8fa291f8c17155[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 01:49:42 2024 -0300
+
+    Moddify title and icon
+
+[33mcommit a53010d99a565f2ed356af477211a36387439fd5[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 01:48:41 2024 -0300
+
+    Add getters and setters, login and save Cliente functions logic
+
+[33mcommit f1b9015e1215712199ae07e3e812354c9e31396a[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 01:47:16 2024 -0300
+
+    Add session variables, moddify login function logic and include book service and parking pages
+
+[33mcommit fbfb340073535894c5ef75c76db6640937d36f98[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 21 01:45:31 2024 -0300
+
+    Add book service and parking page
+
+[33mcommit 0ad9a46750b3db2fa6d7a1b0b608d55960f34155[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 23:13:10 2024 -0300
+
+    Fix services link option
+
+[33mcommit 3b81d78f37beb506fb8ed99c705dc869dda51bb1[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 23:12:50 2024 -0300
+
+    Moddify link from home to login page after sign up
+
+[33mcommit c839423bbd3a7b9e471960d3c5b9f384e3bc3153[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 23:11:35 2024 -0300
+
+    Add my user page
+
+[33mcommit 1136a32b024a6de39bbe2e63691d9b2c1bc9a3f6[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 23:00:25 2024 -0300
+
+    attempt to fix link to home
+
+[33mcommit d8c138ba32c109673b65f13cc993d63794ad0561[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 22:56:09 2024 -0300
+
+    Update styles
+
+[33mcommit ce695467bcb2be7394dd2e868879c31bfd8a82ad[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 22:55:54 2024 -0300
+
+    Fix link
+
+[33mcommit 021125c1fb9569250f61ba67f68e36cc062dc8ee[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 22:55:42 2024 -0300
+
+    Fix link
+
+[33mcommit 2c45aca38de277f4da7eeeb36e342971ccd0a29a[m
+Merge: acfed47 32d6ae8
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 20 22:38:25 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit acfed4791576d20864a51349617f1205051c4c19[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 20 22:38:15 2024 -0300
+
+    changed a few things of headers
+
+[33mcommit 8d6924ef50471d9139a869b483447ad63a0ee31e[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 20 22:38:04 2024 -0300
+
+    made mi Usuario view
+
+[33mcommit 32d6ae8de689a7aea15e1d8628fc6954f153fda8[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 21:31:40 2024 -0300
+
+    Update styles
+
+[33mcommit db1d59b753026b4c7f202ae048adee4e3cbbefd8[m
+Merge: 562c044 4650163
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 21:28:32 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 562c044b1d5e3b7b56e0645d34cca277fd36a5ad[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 21:28:28 2024 -0300
+
+    Moddify page title
+
+[33mcommit 62c502048a7d67392c3a897e8f8f58e74a17bad8[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 20 21:27:38 2024 -0300
+
+    corrected header for every file
+
+[33mcommit 465016371663df1ad85ada07f732d9d19bb96ad8[m
+Merge: 18912bf 49e4013
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 20 21:24:41 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 18912bf23bfea79e52b0da737f95e204b833a8ca[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 20 21:24:35 2024 -0300
+
+    made interactive layout for parking spot selection
+
+[33mcommit 49e401392fb1afa0b916340786531c475e359319[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 21:12:36 2024 -0300
+
+    Implement login in model
+
+[33mcommit 6cf59cd14a75fed84529b055a6a6abeb87f98492[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 21:12:19 2024 -0300
+
+    Fix password validation and moddify error message
+
+[33mcommit 596d2cdef06abcd3d75801c5f2941ac51e144477[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 21:08:51 2024 -0300
+
+    Change button submit value
+
+[33mcommit a9ddff2c22e83d59be4800132c01c88c69b1353a[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 15:21:05 2024 -0300
+
+    Add function for login
+
+[33mcommit bfc04fb97848585b72682832684f14d8743530bf[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 15:20:28 2024 -0300
+
+    Implement login function
+
+[33mcommit 16d1b6889a9668106dd9f26501359eddbff02af1[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 15:14:59 2024 -0300
+
+    Add JS script for debugging or manage error messages
+
+[33mcommit 33130b8510776191aa7d1eef32c091f1d8781450[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 15:13:02 2024 -0300
+
+    Format document
+
+[33mcommit d634690221fb9b9c43b10064b24b9817f25e206d[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 15:12:25 2024 -0300
+
+    Moddify logic of email validation
+
+[33mcommit b937cd74fc122af0b08be2ce9b31165ddc4116a8[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 15:00:00 2024 -0300
+
+    Add password validation and reduce indentation
+
+[33mcommit aa207128c15c54f3b406f799cbb0ea794697f4d0[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 14:58:58 2024 -0300
+
+    Add message wth requirements for password
+
+[33mcommit ede63a6ab60db851125e8b5019f6f304462cf049[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 12:54:14 2024 -0300
+
+    Change page title
+
+[33mcommit 5bfdc2bf7028af09d64fc5a260ac96de6f430637[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 10:19:39 2024 -0300
+
+    Add inputs name
+
+[33mcommit ffabe96b0ce378ea5c59b73dd61e1c7dc03a3e4f[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 10:17:34 2024 -0300
+
+    Update styles
+
+[33mcommit 3ca80c86db6b0dd43399eb5a11132fb1f01f4e65[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 10:16:34 2024 -0300
+
+    Remove forgot password div
+
+[33mcommit f1d88c4e3ef9579b69f9a38d33d603be248e46e6[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 02:27:37 2024 -0300
+
+    Moddify nav option text and try add link to client home page
+
+[33mcommit cb684f184c0c59721e8041fdad0841ceb6ffb987[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 02:26:33 2024 -0300
+
+    Add redirect to home when signup is valid
+
+[33mcommit c8337eafb6c7d979fa835ff265a5df9d68b5529b[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 02:02:42 2024 -0300
+
+    Rename view
+
+[33mcommit 9d40d5f500718ca32065ef256db9833e1f63ba81[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 02:00:03 2024 -0300
+
+    Ad comment
+
+[33mcommit 96b74efc92715fbca6b6dbd01484b5a7e731b6f9[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 01:57:50 2024 -0300
+
+    Moddify default page to login
+
+[33mcommit 2ced7e9588e7c47c01906b6a8f10dc040dc2ce50[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 01:56:07 2024 -0300
+
+    Moddify default page to signup
+
+[33mcommit 8913b727985313c8df940e331ee64e0944b1374a[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 01:55:26 2024 -0300
+
+    Update styles
+
+[33mcommit 95ec949dbe2d9447531ff5c89868b10d803f5412[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 01:55:15 2024 -0300
+
+    Add JS script for debugging info and add input names
+
+[33mcommit e854f8a50e686f90a345702f51f5b581bc55c7f6[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 01:44:39 2024 -0300
+
+    Add throw exception when connecting to db
+
+[33mcommit fbff7b1a481fa2decac4079bc87493ac3bed6f1f[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 01:43:20 2024 -0300
+
+    Add throw exceptions for db conection
+
+[33mcommit e00688152d406b9fe1b973343b93d9988cb3fa8a[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 01:42:41 2024 -0300
+
+    Manage error messages and fix form handling
+
+[33mcommit 56e3aeb338e592f67266c01ff57628233d14c969[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 01:40:53 2024 -0300
+
+    Moddify user creation and roles and fix sintax
+
+[33mcommit e13a7a74a26b8ff2d84dbac477444f7d4e17a86e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 01:40:12 2024 -0300
+
+    Set id columns as auto incremental
+
+[33mcommit f9febc111eb00e306db1c312d0ad76848a96416f[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 20 00:02:10 2024 -0300
+
+    Remove setters and getters temporarily and change add Cliente functionality
+
+[33mcommit 317016926d1af2220c8a8f14176dae7c3be34dbe[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 21:08:00 2024 -0300
+
+    Unify sql scripts for roles and users in database
+
+[33mcommit 50066cc93d03ebf95804b3a0750cac7d0dad3a53[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 21:07:18 2024 -0300
+
+    Try fix link to services view in menu
+
+[33mcommit 0f24766403495a215989a32705ed6a413f49816d[m
+Merge: 67573e6 cfdeb61
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 19:23:16 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 67573e695ef27caf397c92a1d194534e5e0f9762[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 19:23:08 2024 -0300
+
+    Add link to services view
+
+[33mcommit c4d3b48978fabe44b7611c7af8280edfc1791395[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 19:21:50 2024 -0300
+
+    Add services function to index
+
+[33mcommit c8fa94b400348b00a9231c2b2055fba058ddbf53[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 19:21:32 2024 -0300
+
+    Fix link to header view
+
+[33mcommit 62efd589fd61208db6fc5d7e387a19bb36899c58[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 19:20:37 2024 -0300
+
+    Add link to services view
+
+[33mcommit cfdeb61c2a9ce6f82738c575270788ae43c34374[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 19 18:50:32 2024 -0300
+
+    changed a font that was incorrect
+
+[33mcommit ec3f52219ee0f6cf5e7c15b1188cc593aebe6283[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 18:46:25 2024 -0300
+
+    Moddify link to view
+
+[33mcommit d526f5d4d23af42a2fb5046c3513b6ee02b64914[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 18:46:13 2024 -0300
+
+    Implement add new Cliente
+
+[33mcommit bb4f341f3ff8224e82e2745591bc5fe56d7bee60[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 18:45:46 2024 -0300
+
+    Add fields validation
+
+[33mcommit faf7079b75990eab9bc41043262eea818cf2c5c5[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 14:04:16 2024 -0300
+
+    Moddofy function for forgotPassword action
+
+[33mcommit e27765d286f9e679c51395c15e06fcadca6cd114[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 14:03:36 2024 -0300
+
+    Format document and moddify action links
+
+[33mcommit c3998d033722482bea778da1921785ec96c4ae39[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 14:03:06 2024 -0300
+
+    Moiddify action links for views
+
+[33mcommit 4a4047ce973bf9d1b6de1ddba9c59f14016803a1[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 13:40:22 2024 -0300
+
+    Format document and moddify input fields
+
+[33mcommit 18d53c00a1c08307ef615f58ffe9399b594f390d[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 13:38:33 2024 -0300
+
+    Moddify sintax in nav options
+
+[33mcommit 44700b2f28d5d0b8d6790c80899552c89e42b8ae[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 13:37:53 2024 -0300
+
+    Implement cliente account functions with views
+
+[33mcommit 79d7ebf8b70e4980a899aed7263ad96738d52b42[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 13:37:14 2024 -0300
+
+    Format document
+
+[33mcommit 624a9a22cf4627004616acf6a49d44ec458ccce3[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 13:36:01 2024 -0300
+
+    Rename view format document and moddify input fields
+
+[33mcommit f9d04d70d02b716d93e23efb634378d5f17201b4[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 13:35:16 2024 -0300
+
+    Format document and add title and icon
+
+[33mcommit abacef65876d75d9eadd1596bcb6b6c0d703a3dc[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 13:34:44 2024 -0300
+
+    Implement functions for client account functions
+
+[33mcommit 52c668a9f6fe1925b302c8fa6065bc09769e1964[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 13:34:17 2024 -0300
+
+    Remove unnecesary file
+
+[33mcommit 91f289676a0bb093f2846c5cbdff7950fd2364d7[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 19 11:20:37 2024 -0300
+
+    Remove reference file for styles css
+
+[33mcommit bc0185e95befda2d8de9403c5328a0f0c17a41bc[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Wed Sep 18 20:37:17 2024 -0300
+
+    made eleccionPlazaAuto file
+
+[33mcommit 26a3b96f25a4ca0977b06817492801a586817b68[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 17 21:53:50 2024 -0300
+
+    Add new atribute with setters and getters for class cliente
+
+[33mcommit 6f775fd30aa68553fe43edd502a90d3b40d9902b[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 17 21:53:02 2024 -0300
+
+    Moddify column length in table cliente
+
+[33mcommit 41335ca0a56c7ce0e2d97ee71ba229f59d809604[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 17 21:29:34 2024 -0300
+
+    Update file version
+
+[33mcommit 2686d5e6007e950946b05b9f169e0ef24f9d6106[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 17 21:28:29 2024 -0300
+
+    Add admin role and access permissions for roles
+
+[33mcommit abf25135de25420e01c56532842aecb325d5d69f[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 17 21:27:15 2024 -0300
+
+    Change admin default password and correct comment
+
+[33mcommit a6835e62d5dcc785115d3a720ebbc38a5afa54a9[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 17 20:30:50 2024 -0300
+
+    Add admin user to sql scripts
+
+[33mcommit 602295af9bde8e88dfc3923572ccb22155959f1b[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 17 19:13:19 2024 -0300
+
+    Update sql inserts for table cliente
+
+[33mcommit d3e87df1a50d715e8e6eb94545d46457d9961cab[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 17 19:12:18 2024 -0300
+
+    Moddify restrictions in table columns
+
+[33mcommit e883124a3d83df435cb6a89b89d9d4de0d10a106[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Mon Sep 16 16:31:56 2024 -0300
+
+    made catalogo.html
+
+[33mcommit b043c510dcec299a948eb27f02d35712dee2dc56[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 14 14:44:07 2024 -0300
+
+    Delete file references
+
+[33mcommit 44b4706895ee9292dcb3908737c755ac1c0a28c2[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 14 14:43:53 2024 -0300
+
+    Moddify index file extension from html to php
+
+[33mcommit 70af1bf9f77ec92f9383c6eb058dd3567d150239[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 14 14:43:16 2024 -0300
+
+    Rename home view for cliente
+
+[33mcommit 7f354a0cd5326fea1dc16ee655998fdb1d7ca0fa[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sat Sep 14 14:42:47 2024 -0300
+
+    Add controller for Cliente
+
+[33mcommit 5e869f8ca738793e1b3e0f194751fec6d8b677c2[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 13 12:48:28 2024 -0300
+
+    made script for tus vehiculos
+
+[33mcommit c4cd3309936583a3f1c9b78442184fdf89cec5e7[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 13 12:43:16 2024 -0300
+
+    Add db config method for conection
+
+[33mcommit 2eb001857ba517d767324fed064cc59cd1eab981[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 13 12:42:49 2024 -0300
+
+    Delete reference file
+
+[33mcommit e7692c0565a2ebe5548a64c92c522264671e2afc[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 13 12:42:37 2024 -0300
+
+    Add getters and setters
+
+[33mcommit 0e7aebb476e8f97610aef7b3afdde15f18d6d3e9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Merge: 444a8ba 14cc1f9
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 13 14:36:01 2024 +0000
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 14cc1f9e87ff8765c6d737e865d21c457974b86d[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 13 11:33:59 2024 -0300
+
+    Delete path reference line
+
+[33mcommit 3dfa265a0df3b25f305cd71d6e2813d40efbbda7[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 13 09:16:40 2024 -0300
+
+    made reservarservicio
+
+[33mcommit 444a8ba68b6c685faee7f652525944b4012cfaf9[m
+Merge: 93bb99f a3e41a2
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 13 12:16:12 2024 +0000
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit a3e41a215d65708eec245a619cf068641fdd4265[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 13 09:14:24 2024 -0300
+
+    Rename views
+
+[33mcommit f7e701484260901f476b7bfea5981f705dbf7ff2[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 13 09:14:12 2024 -0300
+
+    Fix sql inserts non existing id references
+
+[33mcommit 93bb99fbd6b42a04160c51a1bbf5723520991453[m
+Merge: 6e93958 ac40b27
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 18:30:30 2024 +0000
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit ac40b275e0e1bac749e8f8a4510d0c1ecb178b7b[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 15:27:53 2024 -0300
+
+    Fix wrong name for column in parking table
+
+[33mcommit 6e93958770c1dd5f82c1a2823ce8182c1f36e273[m
+Merge: 3b4ff84 165fa6f
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 18:20:10 2024 +0000
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 165fa6f678be437ff90670c88be867486a89645e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 15:19:54 2024 -0300
+
+    Undo temporary change
+
+[33mcommit 3b4ff8435e5d6ce6da1202ce549ffe3547a4a1d2[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 18:13:54 2024 +0000
+
+    Fix sintax
+
+[33mcommit 19572375efcf263d7dddeaa98ec9a9fccfbf2689[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 15:02:54 2024 -0300
+
+    Temporary change for inserts
+
+[33mcommit 00271e8a0a1e986bdc06a76a6cf0900196c2c9d1[m
+Merge: c5ab392 4047131
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 12:21:54 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit c5ab39260f946ae8205a54c704bd8f3b44225f94[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 12:21:51 2024 -0300
+
+    Moddify column length for table otro_producto
+
+[33mcommit 40471317a8b1aadec59b6ed3e52f9f5196ae14c7[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 12:21:12 2024 -0300
+
+    change views
+
+[33mcommit 3f0ea82474e16aa68423d12f7dd7d6419f01b15e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 12:19:55 2024 -0300
+
+    Fix sintax
+
+[33mcommit d24d6cc75ec909b22140831c726c2cd3f2dc14a2[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 12:15:27 2024 -0300
+
+    Moddify column length for table neumatico
+
+[33mcommit e4ca239fdf819459070c81d3c1189ec4d6f06877[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 12:09:24 2024 -0300
+
+    Fix data length for color column
+
+[33mcommit 0f98e6b482d2bd5063744a8aed46a42410548621[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 11:55:29 2024 -0300
+
+    Rename folders
+
+[33mcommit f389496e466df6ab27b4587fbca54095f8d033e8[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 10:37:02 2024 -0300
+
+    Update sql scripts for data in table numero_plaza
+
+[33mcommit 01c3ef3befef32b024793a4873c184d11ccba7e8[m
+Merge: c70b9c8 0483a2c
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 10:33:29 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit c70b9c8395b2e47815d80eee0c81daf95f73fe18[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 10:33:26 2024 -0300
+
+    Add sql scripts with data for tables
+
+[33mcommit 0483a2c45dfed13058293401502ca292efcb982a[m
+Merge: 13e8a5b edd9d1e
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 10:00:29 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 13e8a5b0fbc01b6c23782a729213d56495240613[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 09:59:43 2024 -0300
+
+    made go back button
+
+[33mcommit edd9d1e10af43dae5df04b61db5c541eb006187c[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 09:29:19 2024 -0300
+
+    Add sql inserts for table detalle_order_servicio
+
+[33mcommit 841249283842f6e03e330e9887f031d18094173d[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 09:28:59 2024 -0300
+
+    Moddify insert reference
+
+[33mcommit 866441a94c6e4ed507c6f678c72769df6adc0f8c[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 09:20:49 2024 -0300
+
+    Add sql inserts for table servicio
+
+[33mcommit dedeac5fa377b26a0115f1a6f483003c9f63cbda[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 09:05:34 2024 -0300
+
+    Moddify inserts for column total in orden table
+
+[33mcommit b78daea1aa6bb01583520cf68c9eee2ef4947a32[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 09:04:22 2024 -0300
+
+    Moddify title in home view
+
+[33mcommit d46e3f61152a4056dede88b6baf851830fcbcd16[m
+Merge: d6b424e add104b
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 09:01:05 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit d6b424e5a673093c36cb33d3c2b7e99b93a528d9[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Thu Sep 12 09:01:02 2024 -0300
+
+    Add icon
+
+[33mcommit add104b045fb85fb9f418a427b9d32e7583e113a[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 08:59:33 2024 -0300
+
+    changes on views corrected some things
+
+[33mcommit 4438b2f7ba585fe4ab5073ea791543162bb9ce85[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 08:54:26 2024 -0300
+
+    changes on views for font
+
+[33mcommit 7a9392638e893ef03c8a590445fbc9de08654e79[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 08:50:35 2024 -0300
+
+    change on links
+
+[33mcommit b88b2ba26c26889f9592af379806b78d466f7ef1[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 08:46:01 2024 -0300
+
+    small change on file
+
+[33mcommit 2caffd81443a6b90a33d2383970a13232b6982c4[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 08:44:27 2024 -0300
+
+    put teachrs font on repository
+
+[33mcommit 8dcd2161415dd4935fcea9c12ae6f84c2012ab2d[m
+Merge: 93e0213 095efba
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 08:18:42 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 93e021355f6ebdcaf36899134d49e21e27b6f62d[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 12 08:18:24 2024 -0300
+
+    made header a file
+
+[33mcommit 095efba91718ca776380de09eb9479277f597bef[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Wed Sep 11 15:33:47 2024 -0300
+
+    Add sql scripts to create users in db
+
+[33mcommit b60befa4df9cabeb4a9784887b89915c8de061e7[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Wed Sep 11 15:21:10 2024 -0300
+
+    Add privilegies for ejecutivo
+
+[33mcommit 11bc38ff0ca50adbf6ffd02e0f2509f2a077df9e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Wed Sep 11 14:43:31 2024 -0300
+
+    Moddify data value to null
+
+[33mcommit 861220344e00f9d13c9ae72976363f8e4cf3887b[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Wed Sep 11 14:43:10 2024 -0300
+
+    Add privilegies for cliente and ejecutivo roles
+
+[33mcommit 443e4f2f4f91f4fd1f50338657cb3e1a3af0c1eb[m
+Merge: a1f327d aae28b0
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Wed Sep 11 13:42:49 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit a1f327dfa2e7775e2f7e8911f547c46bec11c005[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Wed Sep 11 13:42:45 2024 -0300
+
+    Add privilegies for client
+
+[33mcommit aae28b076d610bdbe2b44de7c04e1809040b05b1[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Wed Sep 11 13:35:56 2024 -0300
+
+    changes on direcotrys
+
+[33mcommit 9dbfce4948866803efe411ae4e36b6585f7c5197[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Wed Sep 11 10:58:41 2024 -0300
+
+    Add sql script for table tiene
+
+[33mcommit 67f1d36849bbaf1784b61ea52f60e328be8ca016[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Wed Sep 11 10:42:59 2024 -0300
+
+    Delete repeated folder
+
+[33mcommit d2200a6e0d323b305f333351ca190f7855030c24[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Wed Sep 11 10:32:55 2024 -0300
+
+    Add sql scripts for tables
+
+[33mcommit ff5a61882f2705b3e9e66470abc1e0fe178f300f[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Wed Sep 11 09:53:47 2024 -0300
+
+    Made svg directory with svgs
+
+[33mcommit 76e94614760090fbaea6564a177e1075bcad7b73[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Wed Sep 11 09:43:25 2024 -0300
+
+    Change slider for better appereance
+
+[33mcommit 10dbb2ad6ce4bac1a660994391141d702e0db831[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Tue Sep 10 23:34:31 2024 -0300
+
+    Finish Home client
+
+[33mcommit 79737f8ed804f774ef5d1927199f35f35ff22d9d[m
+Merge: ada3366 ac3ce82
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Tue Sep 10 22:40:19 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit ada33666925bcce24a51dce546fdb17735f1ec42[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Tue Sep 10 22:39:56 2024 -0300
+
+    made header of home
+
+[33mcommit ac3ce82e8199c12c7f7b5b78b0a5129ef0db40b0[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 22:36:13 2024 -0300
+
+    Add models
+
+[33mcommit 0efcb7661f2c217242bfe450f7f1f4d7de797531[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 21:48:59 2024 -0300
+
+    Relocate files to Primera Entrega
+
+[33mcommit 2228a47eac157f5c193060e76faaa5ad9a357190[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 21:47:20 2024 -0300
+
+    Delete file reference for views
+
+[33mcommit 4f89447aa0176e3e9663ac5b33ba55bab4bda153[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 15:38:59 2024 -0300
+
+    Add references for inserts
+
+[33mcommit 027fd5df84fe5e53081864b70a6ab0752f5e5443[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 15:37:21 2024 -0300
+
+    Delete old version of sql ddl script
+
+[33mcommit 7cc27c0eead7d9af054145e398a43c5b19fec46b[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 15:34:44 2024 -0300
+
+    New class Cliente
+
+[33mcommit adecec9b8265345eba0374c74fe0a21201b35088[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 15:19:15 2024 -0300
+
+    Add sql scripts for producto tables and subtables
+
+[33mcommit aa9113c25d6fa0967b75f110a4cb8bba04e75ab1[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 15:18:36 2024 -0300
+
+    Change length of data type for neumatico tamano column
+
+[33mcommit 237d2ae689c44f56c0c9b897f5a98e55372f599d[m
+Merge: 52210ac 4752530
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Tue Sep 10 14:03:27 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 52210ac1e68ec1723bff69f2ac1c7ff2472868b6[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Tue Sep 10 14:03:18 2024 -0300
+
+    put images files used on figma
+
+[33mcommit 4752530d6c202a1b54f532c150a9a4a7dffeb13b[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 12:33:24 2024 -0300
+
+    Add file for roles in sql scripts
+
+[33mcommit 6ce57771e75e41a4b2c2ca342cea3d5cd82cd898[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Sep 10 12:32:28 2024 -0300
+
+    Rename and relocate sql scripts
+
+[33mcommit cc1a81aedfed0927f9531e42abd768f754c74e2a[m
+Merge: e48b1fb 1e8ee9d
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Tue Sep 10 12:21:34 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit e48b1fb4f556eb51a52d4b008e5f6611ffb0ab48[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Tue Sep 10 12:21:28 2024 -0300
+
+    install depencencies for slider
+
+[33mcommit 1e8ee9d63072a6839c0aba6107da8cd6d18eb61e[m
+Author: gcarsillo <gicayu@gmail.com>
+Date:   Tue Sep 10 10:31:16 2024 -0300
+
+    modificaciones en bd
+
+[33mcommit 0304654770491276c18a178e3b14b89b65a063cd[m
+Author: Moisés Benavides <143356798+MoisesBenavides@users.noreply.github.com>
+Date:   Mon Sep 9 19:25:37 2024 -0300
+
+    Remove unnecessary lines
+
+[33mcommit a6c225558ada76f4ff45986fc1299011af7ea5c0[m
+Author: Moisés Benavides <143356798+MoisesBenavides@users.noreply.github.com>
+Date:   Mon Sep 9 19:25:01 2024 -0300
+
+    Fix fk references in order details tables version0_11_1.sql
+
+[33mcommit a08db33765bf5c37e73041c0d9364393db0e54ff[m
+Author: Moisés Benavides <143356798+MoisesBenavides@users.noreply.github.com>
+Date:   Mon Sep 9 15:38:34 2024 -0300
+
+    Add tables producto and servicio and fix fk references
+
+[33mcommit ee58544d61a63954998396ab9caaf43b4883064b[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Mon Sep 9 08:31:39 2024 -0300
+
+    change small thigns in views
+
+[33mcommit 0ede898fa3182e98b386e4b3e76fafccf7ff7ad4[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Sep 8 23:27:12 2024 -0300
+
+    Add dll
+
+[33mcommit 31d030bb6e01f7d69edc41e6370797c0eef13987[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 6 12:57:33 2024 -0300
+
+    coment html login file for better readability
+
+[33mcommit 0b93620a561eecd7739b2c0fd912ae876dd1f49d[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 6 12:53:21 2024 -0300
+
+    Implement Tailwindcss from scratch
+
+[33mcommit b8e93f98efa8958d32b8c2df7785a976b2abcdbb[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 6 12:23:14 2024 -0300
+
+    Add reference files for later update
+
+[33mcommit a18cb8234281e4e13f6d92d2dbc85039d074babc[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 6 12:18:05 2024 -0300
+
+    Add tailwind utilities file
+
+[33mcommit 2da9d6a4ee7be9ec905b452a494e0c168d78381f[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 6 12:16:38 2024 -0300
+
+    Add index file for reference
+
+[33mcommit c51e2c3dfa1d2ac54e64ce22e887cd9e79250860[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 6 12:15:40 2024 -0300
+
+    Add id verification file
+
+[33mcommit 4ccbff85fcade63a4bc89d701a3328afa4c39565[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 6 12:15:20 2024 -0300
+
+    Add controller and model classes for client
+
+[33mcommit 49018243cc1a34c99bb237ffe457b17d04f8b1bc[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Sep 6 12:14:41 2024 -0300
+
+    Change folder for validation fields
+
+[33mcommit 95bfdebe79061f6d296eab113cace314d6ed032b[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Sep 6 11:49:23 2024 -0300
+
+    actualizacion
+
+[33mcommit 95d0919948229867f75f302ee82e34d58c72e550[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Thu Sep 5 09:00:35 2024 -0300
+
+    Archivos tailwind y el diseno de login
+    
+    aqui estan TODOS los archivos de el tailwind, hay que ordenarlos cuando se haga la estructura MVC y dentro de dist esta el archivo html, leer el c0omentario en el archivo si lo van a editar
+
+[33mcommit 349a2eabc1ae625f7811998386d2f07c7390e75e[m
+Author: MateoM1303 <168552579+MateoM1303@users.noreply.github.com>
+Date:   Mon Jul 29 12:52:46 2024 -0300
+
+    Add files via upload
+
+[33mcommit 5bd5fada80c512e858060edc0f7b7eb4c7ee59c5[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Mon Jul 29 12:17:00 2024 -0300
+
+    carpeta diseno
+
+[33mcommit 70f84d969939e7720f0a4b06bbbda5cd74d8472a[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Jul 29 08:06:19 2024 -0300
+
+    update files
+
+[33mcommit f602aabcb6b45558c1c8ecfed31bd5c0220e7e6e[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Mon Jul 29 08:02:22 2024 -0300
+
+    add sign-up page and tyres management
+
+[33mcommit 726e46490f54afa7b9a09e9409a8b92b64566041[m
+Merge: 5ee6a96 54d7102
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Jul 28 17:14:20 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit 5ee6a96c357348077cfe7769679ba501d3a596d8[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Sun Jul 28 17:14:17 2024 -0300
+
+    Remover archivos desactualizados
+
+[33mcommit 54d7102419a3c9641af95a9beab7b35dcc4b4806[m
+Merge: f8c3703 02fc330
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Sat Jul 27 04:24:30 2024 -0300
+
+    Merge branch 'main' of https://github.com/MoisesBenavides/all-in-one
+
+[33mcommit f8c370386c4a64825f50afc58d4d621fd27f5896[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Sat Jul 27 04:24:22 2024 -0300
+
+    analisis de red
+
+[33mcommit 02fc33094a3019653dbd3e72387bfa18b0abd1df[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Jul 26 23:10:34 2024 -0300
+
+    Ajustes en encabezado y carátula del documento
+
+[33mcommit d3d0d7f4c91fa3ad442f6f0ab292a449507660b9[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Fri Jul 26 20:50:51 2024 -0300
+
+    Eliminar pruebas
+
+[33mcommit 9bccddf7d93c01654f5f479a28c0725a8b7e13e6[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Jul 26 11:33:52 2024 -0300
+
+    Carpeta de Albisoft
+    
+    carpeta de albisoft
+
+[33mcommit 5906b664a4f8360cd006083904b9dc98d59b5e3f[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Jul 26 10:52:17 2024 -0300
+
+    PRIMERA ENTREGA CARPETA
+    
+    poner todos los cambios aca porfa
+
+[33mcommit ef080620bcf72cf7bbfe05ee87274e3942a890ac[m
+Author: mateo123456789 <mcva1523@gmail.com>
+Date:   Fri Jul 26 10:42:09 2024 -0300
+
+    Prueba de campos html
+    
+    prueba de campos para validacion, html con campos css y script de impresion
+
+[33mcommit 072eeb866b6a750ad9d00b7c1feae74a872e1faf[m
+Author: GCY2222 <gicayu@gmail.com>
+Date:   Mon Jul 22 17:41:15 2024 +0000
+
+    pruebas
+
+[33mcommit ea1e3620718a31971e09d018b862382005aeeaf6[m
+Author: GCY2222 <gicayu@gmail.com>
+Date:   Mon Jul 22 17:09:38 2024 +0000
+
+    scripts
+
+[33mcommit 993147dc16ee1fe0ff89fbeb52186902b7305aca[m
+Author: GCY2222 <gicayu@gmail.com>
+Date:   Mon Jul 22 17:05:08 2024 +0000
+
+    Prueba
+
+[33mcommit b6b35b7a443681980d7fa9cd737199acf987c9cf[m
+Author: Gianni <167568670+GCY2222@users.noreply.github.com>
+Date:   Sun Jul 14 16:42:22 2024 -0300
+
+    Update README.md
+
+[33mcommit 882e69b8ead09e1121e84547bd158674f3d54989[m
+Author: Gianni <167568670+GCY2222@users.noreply.github.com>
+Date:   Sun Jul 14 16:41:54 2024 -0300
+
+    Update README.md
+
+[33mcommit 5d50788c785e7e651a76346bd230bff4c76918d5[m
+Author: Moisés Benavides <143356798+MoisesBenavides@users.noreply.github.com>
+Date:   Thu Jul 11 14:23:59 2024 -0300
+
+    Update README.md
+
+[33mcommit 3619834c9eca675be6d1df96a6867ac7811d47d9[m[33m ([m[1;31morigin/aaa[m[33m)[m
+Author: MoisesBenavides <moisesbp2706@gmail.com>
+Date:   Tue Apr 30 09:57:39 2024 -0300
+
+    Create index.html
+
+[33mcommit a1d4378da6852d224ad45983f6d6b1fc414c8063[m
+Author: MoisesBenavides <143356798+MoisesBenavides@users.noreply.github.com>
+Date:   Tue Apr 30 09:52:14 2024 -0300
+
+    Initial commit

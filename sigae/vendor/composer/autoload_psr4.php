@@ -7,9 +7,14 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'phpseclib3\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'Symfony\\Polyfill\\Php83\\' => array($vendorDir . '/symfony/polyfill-php83'),
+    'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Symfony\\Component\\Routing\\' => array($vendorDir . '/symfony/routing'),
+    'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
+    'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
+    'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
     'Sigae\\Config\\' => array($baseDir . '/config'),
     'Sigae\\' => array($baseDir . '/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
