@@ -2,7 +2,15 @@
 
 // Cargar el autoloader de Composer
 require_once __DIR__ . '/../vendor/autoload.php';
+error_log(var_dump(get_included_files()));
 
+// Comprobar si Composer carga la clase 'Sigae\controllers\ControladorCliente'
+$class = 'Sigae\\controllers\\ControladorCliente';
+if (class_exists($class)) {
+    error_log("Class $class loaded successfully.");
+} else {
+    error_log("Class $class not found!");
+}
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollector;
