@@ -3,7 +3,7 @@
         'name' => 'aio/sigae',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '45216a0b1c3a84c2c1d37a492cc32210df5b91e4',
+        'reference' => '0dcbc232dc3f1e721d07a582619dede0534a2362',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'aio/sigae' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '45216a0b1c3a84c2c1d37a492cc32210df5b91e4',
+            'reference' => '0dcbc232dc3f1e721d07a582619dede0534a2362',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
