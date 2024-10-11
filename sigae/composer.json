@@ -6,7 +6,8 @@
         "symfony/yaml": "^7.1",
         "symfony/polyfill-ctype": "^1.31",
         "symfony/http-foundation": "^7.1",
-        "symfony/config": "^7.1"
+        "symfony/config": "^7.1",
+        "symfony/framework-bundle": "^7.1"
     },
     "license": "LGPL-2.1-only",
     "autoload": {
