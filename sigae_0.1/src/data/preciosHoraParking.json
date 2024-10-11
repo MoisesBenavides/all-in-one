@@ -1,0 +1,19 @@
+{
+    "moto": {
+      "precio": 55.00
+    },
+    "auto": {
+      "precio": 110.00
+    },
+    "camioneta": {
+      "precio": 130.00
+    },
+    "camion": {
+      "precio": 170.00
+    },
+    "utilitario": {
+      "precio": 170.00
+    }
+    
+}
+  

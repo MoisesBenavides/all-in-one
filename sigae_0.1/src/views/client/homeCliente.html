@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!--SEO-->
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <!--Es responsivo-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIO - Taller, neumaticos, reservas y más</title>
+    <link rel="stylesheet" href="../../../css/styles.css">
+    <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url('../../../font/Teachers-VariableFont_wght.ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+    </style>
+</head>
+<header class=" w-screen">
+    <link rel="stylesheet" href="../../../css/styles.css">
+    <div class="container mx-auto px-4 py-4">
+        <div class="relative flex flex-col md:flex-row justify-between items-center">
+            
+            <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
+            <div class="absolute top-2 left-4 md:hidden">
+                <button id="hamburger" class="text-black focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Logo -->
+            <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
+                <!-- Presionar logo para volver al home del cliente (href) -->
+                <img href="../../../index.php?action=home" class="w-full h-auto" src="../../../img/AIO Positivo.png" alt="AIO Logo" />
+            </div>
+
+            <!-- Navegación - visible solo en pantallas medianas y grandes -->
+            <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
+                <a href="index.php?action=services" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
+                <a href="index.php?action=aioParking" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
+                <a href="index.php?action=products" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
+                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">FAQ</a>
+            </nav>
+
+            <!-- User icon - Alineado a la derecha en móviles -->
+            <div class="absolute top-2 right-4 md:static">
+                <img class="w-10 h-10" src="../../../img/user.png" alt="User">
+            </div>
+        </div>
+
+        <!-- Menú hamburguesa desplegable (oculto por defecto) -->
+        <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+            <a href="index.php?action=services" class="block text-black text-sm font-bold ">Servicios</a>
+            <a href="index.php?action=aioParking" class="block text-black text-sm font-bold ">AIO Parking</a>
+            <a href="index.php?action=products" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
+            <a href="#" class="block text-black text-sm font-bold ">FAQ</a>
+        </nav>
+    </div>
+
+    <script>
+        // Lógica del menú hamburguesa
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+       <script>
+        const dropdownButton = document.getElementById('dropdownButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const selectedOption = document.getElementById('selectedOption');
+        const options = document.querySelectorAll('.option');
+        const hiddenInput = document.getElementById('selectedVehicleType');
+        const arrow = dropdownButton.querySelector('svg');
+        const priceInfo = document.getElementById('priceInfo');
+
+        dropdownButton.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        });
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                selectedOption.textContent = option.textContent;
+                hiddenInput.value = option.getAttribute('data-value');
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+
+                // Mostrar el precio por hora
+                const price = option.getAttribute('data-price');
+                priceInfo.textContent = `Precio por hora: ${price} pesos`;
+                priceInfo.classList.remove('hidden');
+            });
+        });
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.addEventListener('click', (e) => {
+            if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        });
+    </script>
+</header>
+<body class="bg-gray-100">
+
+    <main class="container mx-auto px-4 py-8">
+        <section id="carousel" class="relative mb-12">
+            <div class="overflow-hidden rounded-lg">
+                <div id="slide-container" class="relative w-full h-64 md:h-96 lg:h-[700px] overflow-hidden">
+                    <div class="slide absolute w-full h-full">
+                        <img src="../../../img/ImagenNuevaSlider3.jpg" class="w-full h-full object-cover" alt="Slide 1">
+                    </div>
+                    <div class="slide absolute w-full h-full">
+                        <img src="../../../img/ImagenNuevaSlider2.jpg" class="w-full h-full object-cover" alt="Slide 2">
+                    </div>
+                    <div class="slide absolute w-full h-full">
+                        <img src="../../../img/ImagenNuevaSlider4.jpg" class="w-full h-full object-cover" alt="Slide 3">
+                    </div>
+                </div>
+            </div>
+            <button id="prevBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-r-lg hover:bg-opacity-75 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button id="nextBtn" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-l-lg hover:bg-opacity-75 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+            <div id="indicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"></div>
+        </section>
+
+        <section id="parking" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
+            <div class="flex flex-col items-center text-center">
+                <img class="w-48 md:w-64 lg:w-80 mb-6" src="../../../img/AIO Parking positivo.png" alt="AIO Parking" />
+                <p class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold  mb-6">AIO PARKING es nuestro servicio de parking inteligente.<br/>Clickea debajo para reservar una plaza</p>
+                <button href="index.php?action=aioParking" class="bg-[#1f3de0] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold  py-3 px-6 rounded-[10px]">AIO PARKING</button>
+            </div>
+        </section>
+
+        <section id="reservas" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
+            <div class="flex flex-col items-center text-center">
+                <h2 class="text-[#161212] text-3xl md:text-4xl lg:text-5xl font-bold  mb-4">¿Ya reservaste?</h2>
+                <p class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium  mb-6">Si ya reservaste accede a nuestro apartado de "Mis reservas"</p>
+                <button href="#" class="bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold  py-3 px-6 rounded-[10px]">Mis reservas</button>
+            </div>
+        </section>
+
+        <section id="productos" class="bg-neutral-50 rounded-[21px] border border-black p-8">
+            <h2 class="text-center text-[#161212] text-3xl md:text-4xl lg:text-5xl font-semibold  mb-8">Productos destacados</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="flex flex-col items-center">
+                    <img class="w-full h-auto mb-4" src="../../../img/Cubierta Pirelli1.webp" alt="Cubierta Pirelli" />
+                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Cubierta Pirelli 175/70 R14 Scorpion Atr</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <img class="w-full h-auto mb-4" src="../../../img/Neumático Bridgestone1.webp" alt="Neumático Bridgestone" />
+                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Neumático Bridgestone Ecopia EP150 P 185/55R16 83 V</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <img class="w-full h-auto mb-4" src="../../../img/Cubierta Pirelli cinturato.webp" alt="Cubierta Pirelli Cinturato" />
+                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <img class="w-full h-auto mb-4" src="../../../img/Aceite1.webp" alt="Aceite Motul" />
+                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Aceite para motor Motul sintético 5W-40</p>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <button href="index.php?action=products" class="bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[7px] inline-block">Ver todos</button>
+            </div>
+        </section>
+    </main>
+    <footer class="w-screen bg-[#514e4e] ">      
+    <div class="  text-white py-12 container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-8 md:mb-0">
+                <img class="w-48 h-auto mb-6" src="../../../img/AIO Negativo (1).png" alt="AIO Logo" />
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <img class="w-8 h-8 mr-4" src="../../../img/InstagramLogo.png" alt="Instagram" />
+                        <span class="text-lg font-bold   ">@Aiotalleres</span>
+                    </div>
+                    <div class="flex items-center">
+                        <img class="w-8 h-8 mr-4" src="../../../img/XLogo.png" alt="Twitter" />
+                        <span class="text-lg font-bold   ">@Aiotalleres</span>
+                    </div>
+                    <div class="flex items-center">
+                        <img class="w-8 h-8 mr-4" src="../../../img/TelefonoLogo.png" alt="Teléfono" />
+                        <span class="text-lg font-bold   ">+598 99 123 456</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 h-64 md:h-72">
+                <div id="map" class="w-full h-full rounded-lg"></div>
+            </div>
+        </div>
+    </div>
+      <script>
+        function initMap() {
+          const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: -34.8730391, lng: -56.1719804 },
+            zoom: 20,
+          });
+        }
+      </script>
+      <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDaeWicvigtP9xPv919E-RNoxfvC-Hqik&callback=initMap"
+        async
+      ></script>
+    </footer>
+
+        <script>
+            const carousel = document.getElementById('carousel');
+            const slideContainer = document.getElementById('slide-container');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicators = document.getElementById('indicators');
+    
+            let currentIndex = 0;
+            const slides = slideContainer.children;
+            const totalSlides = slides.length;
+    
+            // Inicializar posiciones de las diapositivas
+            for (let i = 0; i < totalSlides; i++) {
+                slides[i].style.transform = `translateX(${100 * i}%)`;
+            }
+    
+            // Crear indicadores
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('w-3', 'h-3', 'rounded-full', 'bg-gray-400');
+                dot.addEventListener('click', () => goToSlide(i));
+                indicators.appendChild(dot);
+            }
+    
+            function updateCarousel() {
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].style.transform = `translateX(${100 * (i - currentIndex)}%)`;
+                }
+                updateIndicators();
+            }
+    
+            function updateIndicators() {
+                const dots = indicators.children;
+                for (let i = 0; i < dots.length; i++) {
+                    dots[i].classList.toggle('bg-white', i === currentIndex);
+                    dots[i].classList.toggle('bg-gray-400', i !== currentIndex);
+                }
+            }
+    
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateCarousel();
+            }
+    
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+    
+            function goToSlide(index) {
+                currentIndex = index;
+                updateCarousel();
+            }
+    
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+    
+            // Inicializar el carrusel
+            updateCarousel();
+    
+            // Opcional: Cambio automático de diapositivas
+            setInterval(nextSlide, 5000);
+        </script>
+</body>
+</html>

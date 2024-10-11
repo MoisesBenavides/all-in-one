@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--Es responsive-->
+    <meta charset="UTF-8">
+    <!--SEO-->
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIO - Taller, neumaticos, reservas y más</title>
+    <link rel="stylesheet" href="../../../css/styles.css">
+
+    <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url('../../../font/Teachers-VariableFont_wght.ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-white">
+  <header class=" w-screen">
+    <link rel="stylesheet" href="../../../css/styles.css">
+    <div class="container mx-auto px-4 py-4">
+        <div class="relative flex flex-col md:flex-row justify-between items-center">
+            
+            <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
+            <div class="absolute top-2 left-4 md:hidden">
+                <button id="hamburger" class="text-black focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Logo -->
+            <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
+                <!-- Presionar logo para volver al home del cliente (href) -->
+                <img href="../../../index.php?action=home" class="w-full h-auto" src="../../../img/AIO Positivo.png" alt="AIO Logo" />
+            </div>
+
+            <!-- Navegación - visible solo en pantallas medianas y grandes -->
+            <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
+                <a href="index.php?action=services" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
+                <a href="index.php?action=aioParking" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
+                <a href="index.php?action=products" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
+                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">FAQ</a>
+            </nav>
+
+            <!-- User icon - Alineado a la derecha en móviles -->
+            <div class="absolute top-2 right-4 md:static">
+                <img class="w-10 h-10" src="../../../img/user.png" alt="User">
+            </div>
+        </div>
+
+        <!-- Menú hamburguesa desplegable (oculto por defecto) -->
+        <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+            <a href="index.php?action=services" class="block text-black text-sm font-bold ">Servicios</a>
+            <a href="index.php?action=aioParking" class="block text-black text-sm font-bold ">AIO Parking</a>
+            <a href="index.php?action=products" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
+            <a href="#" class="block text-black text-sm font-bold ">FAQ</a>
+        </nav>
+    </div>
+
+    <script>
+        // Lógica del menú hamburguesa
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+       <script>
+        const dropdownButton = document.getElementById('dropdownButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const selectedOption = document.getElementById('selectedOption');
+        const options = document.querySelectorAll('.option');
+        const hiddenInput = document.getElementById('selectedVehicleType');
+        const arrow = dropdownButton.querySelector('svg');
+        const priceInfo = document.getElementById('priceInfo');
+
+        dropdownButton.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        });
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                selectedOption.textContent = option.textContent;
+                hiddenInput.value = option.getAttribute('data-value');
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+
+                // Mostrar el precio por hora
+                const price = option.getAttribute('data-price');
+                priceInfo.textContent = `Precio por hora: ${price} pesos`;
+                priceInfo.classList.remove('hidden');
+            });
+        });
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.addEventListener('click', (e) => {
+            if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        });
+    </script>
+</header>
+
+    <main class="w-full px-4 pt-10 bg-white flex flex-col items-center gap-10">
+        <section class="w-full max-w-[980px] p-6 bg-[#b4bef5] rounded-[14px] border border-black flex flex-col justify-center items-center gap-6">
+            <h2 class="text-black text-2xl md:text-3xl lg:text-4xl font-bold text-center">Haz tu reserva en 3 simples pasos</h2>
+            
+            <div class="w-full flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-black text-xl md:text-2xl font-bold">Ingresa fecha, hora y tu tipo de vehículo</p>
+                <img class="w-20 h-20 md:w-[90px] md:h-[90px]" src="../../../svg/Component 7.svg" alt="Step 1">
+            </div>
+            
+            <div class="w-full flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-black text-xl md:text-2xl font-bold">Elige la plaza que te resulte más adecuada</p>
+                <img class="w-20 h-20 md:w-[90px] md:h-[90px]" src="../../../svg/BuscarVector.svg" alt="Step 2">
+            </div>
+            
+            <div class="w-full flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-black text-xl md:text-2xl font-bold">Confirma el pedido y ¡listo!</p>
+                <img class="w-20 h-20 md:w-[80px] md:h-[80px]" src="../../../svg/Check.svg" alt="Step 3">
+            </div>
+            
+            <a href="index.php?action=aioParkingBookSimple" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold rounded-[10px] flex items-center justify-center">
+                Reservar
+            </a>
+        </section>
+
+        <section class="w-full max-w-[980px] p-6 bg-[#b4bef5] rounded-[14px] border border-black flex flex-col justify-center items-center gap-6">
+            <h2 class="text-[#161212] text-2xl md:text-3xl lg:text-4xl font-bold text-center">¿Te vas de viaje y no sabes donde dejar tu vehículo?</h2>
+            <p class="text-[#161212] text-xl md:text-2xl font-semibold text-center">En AIO ofrecemos servicio de parking a largo plazo, clickea debajo para reservar una plaza.</p>
+            <a href="index.php?action=aioParkingBookLongTerm" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold rounded-[10px] flex items-center justify-center">
+                Reservar
+            </a>
+        </section>
+    </main>
+      <iframe class="w-screen" href="../contents/footer.html"></iframe>
+      </div>
+</body>
+</html>
