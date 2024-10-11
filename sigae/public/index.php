@@ -4,6 +4,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 error_log(var_dump(get_included_files()));
 
+$class = 'Sigae\\controllers\\ControladorCliente';
+
+if ($file = $autoloader->findFile($class)) {
+    echo "Found class in: $file";
+} else {
+    echo "Class not found!";
+}
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollector;
@@ -13,8 +21,6 @@ use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Sigae\controllers\ControladorCliente;
-
-error_log(var_dump(get_included_files()));
 
 // Configura el contexto de solicitud HTTP
 $request=Request::createFromGlobals();
