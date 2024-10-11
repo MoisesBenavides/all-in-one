@@ -1,0 +1,12 @@
+services:
+    # Configuracion por defecto en *este* archivo
+    _defaults:
+        autowire: true      # Automaticamente inyecta dependencias
+        autoconfigure: true # Automaticamente registra los servicios como comandos, eventos, etc.
+        public: false       # Evita acceso externo a servicios privados, por defecto
+
+    # Controladores
+    Sigae\controllers\:
+        resource: '../src/controllers'
+        public: true  # Para acceder directamente a los controladores
+        tags: ['controller.service_arguments']
