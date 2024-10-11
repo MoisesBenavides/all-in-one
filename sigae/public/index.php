@@ -19,6 +19,7 @@ $context->fromRequest($request);
 
 // Carga las rutas desde el archivo routes.yaml
 $fileLocator=new FileLocator([__DIR__ . '/../config/routes/']);
+error_log($fileLocator);
 $loader=new YamlFileLoader($fileLocator);
 $routes= $loader->load('routes.yaml');
 
@@ -30,6 +31,7 @@ try{
 
     // Extraer el controlador y la acción de la ruta
     list($controller, $method) = explode('::', $parameters['_controller']);
+    error_log($controller, $method);
 
     // Llamar a la función del controlador correspondiente
     $controllerInstance = new $controller();
