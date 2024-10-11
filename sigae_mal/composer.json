@@ -1,6 +1,7 @@
 {
     "type": "project",
-    "license": "proprietary",
+    "name": "aio/sigae",
+    "license": "LGPL-2.1-only",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
@@ -26,12 +27,13 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "Sigae\\": "src/",
+            "Sigae\\Config\\": "config/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "Sigae\\Tests\\": "tests/"
         }
     },
     "replace": {
