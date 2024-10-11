@@ -1,15 +1,17 @@
 <?php
 
+// Cargar el autoloader de Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Debug para ver los archivos incluidos
 error_log(var_dump(get_included_files()));
 
+// Comprobar si Composer carga la clase 'Sigae\controllers\ControladorCliente'
 $class = 'Sigae\\controllers\\ControladorCliente';
-
-if ($file = $autoloader->findFile($class)) {
-    echo "Found class in: $file";
+if (class_exists($class)) {
+    error_log("Class $class loaded successfully.");
 } else {
-    echo "Class not found!";
+    error_log("Class $class not found!");
 }
 
 use Symfony\Component\HttpFoundation\Request;
