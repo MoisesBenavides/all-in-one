@@ -31,8 +31,6 @@ try{
     // Extraer el controlador y la acción de la ruta
     list($controller, $method) = explode('::', $parameters['_controller']);
 
-    error_log(print_r($controller, true));
-
     // Llamar a la función del controlador correspondiente
     $controllerInstance = new $controller();
     $response = call_user_func([$controllerInstance, $method], $request);
