@@ -128,7 +128,7 @@ class ControladorCliente extends AbstractController {
         return new JsonResponse($response); // Devuelve un JSON en caso de error
     }
     function signup(): Response{
-        return $this->render('account/signup.html.twig');
+        return $this->render('account/signUp.html.twig');
     }
     function doSignup(){
         $response=['success' => false, 'errors' => [], 'debug' => []];
