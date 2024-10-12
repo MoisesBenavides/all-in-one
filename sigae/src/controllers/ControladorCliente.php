@@ -5,6 +5,7 @@ use Sigae\Models\Cliente;
 use Google_Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ControladorCliente extends AbstractController {
     private $cliente;
