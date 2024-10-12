@@ -17,7 +17,10 @@ class ControladorCliente extends AbstractController {
         return $this->render('landingPage.html.twig');
     }
     function login(): Response{
-        return $this->render('account/login.html');
+        return $this->render('account/login.html.twig');
+    }
+    function loginAioEmploye(): Response{
+        return $this->render('employee/loginEmpleado.html.twig');
     }
     function doLogin(): JsonResponse|RedirectResponse{
         $response=['success' => false, 'errors' => [], 'debug' => []];
@@ -73,6 +76,9 @@ class ControladorCliente extends AbstractController {
         }
         return new JsonResponse($response); // Devuelve un JSON en caso de error
     }
+    function doLoginAioEmployee(): JsonResponse|RedirectResponse{
+        
+    }
     function doLoginOAuth(): JsonResponse|RedirectResponse{
         session_start();
 
@@ -122,7 +128,7 @@ class ControladorCliente extends AbstractController {
         return new JsonResponse($response); // Devuelve un JSON en caso de error
     }
     function signup(): Response{
-        return $this->render('account/signup.html');
+        return $this->render('account/signup.html.twig');
     }
     function doSignup(){
         $response=['success' => false, 'errors' => [], 'debug' => []];
@@ -189,13 +195,13 @@ class ControladorCliente extends AbstractController {
         // TODO: Implementar log out de la sesion
     }
     function forgotPassword(): Response{
-        return $this->render('account/forgotPassword.html');
+        return $this->render('account/forgotPassword.html.twig');
     }
     function services(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página de servicios");
         error_log(print_r($_SESSION, true));
-        return $this->render('client/serviciosMecanicos.html');
+        return $this->render('client/serviciosMecanicos.html.twig');
     }
     function bookService(): Response{
         session_start();
@@ -203,7 +209,7 @@ class ControladorCliente extends AbstractController {
         error_log(print_r($_SESSION, true));
 
         $this->cargarMisVehiculosAjax($_SESSION['id']);
-        return $this->render('client/reservarServicio.html');
+        return $this->render('client/reservarServicio.html.twig');
     }
     
     function parking(): Response{
@@ -211,7 +217,7 @@ class ControladorCliente extends AbstractController {
         error_log($_SESSION['email']. " abrió la página de AIO Parking");
         error_log(print_r($_SESSION, true));
         
-        return $this->render('client/aioParking.html');
+        return $this->render('client/aioParking.html.twig');
     }
 
     function parkingSimple(): Response{
@@ -221,7 +227,7 @@ class ControladorCliente extends AbstractController {
 
         $this->cargarMisVehiculosAjax($_SESSION['id']);
         
-        return $this->render('client/reservarParkingSimple.html');
+        return $this->render('client/reservarParkingSimple.html.twig');
     }
 
     function parkingLongTerm(): Response{
@@ -234,7 +240,7 @@ class ControladorCliente extends AbstractController {
         $this->cargarMisVehiculosAjax($_SESSION['id']);
         */
         
-        return $this->render('client/reservarParkingLargoPlazo.html');
+        return $this->render('client/reservarParkingLargoPlazo.html.twig');
     }
 
     function products(): Response{
@@ -242,23 +248,24 @@ class ControladorCliente extends AbstractController {
         error_log($_SESSION['email']. " abrió la página del catálogo de productos");
         error_log(print_r($_SESSION, true));
         
-        return $this->render('client/catalogo.html');
+        return $this->render('client/catalogo.html.twig');
     }
 
     function myAccount(): Response{
-        return $this->render('client/miCuenta.html');
+        return $this->render('client/miCuenta.html.twig');
     }
     function home(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página home");
         error_log(print_r($_SESSION, true));
         
-        return $this->render('client/homeCliente.html');
+        return $this->render('client/homeCliente.html.twig');
     }
 
     public function cargarMisVehiculosAjax($id) {
         
         // Ruta del archivo JSON donde se guardarán los vehículos
+        // TODO: carcar vehiculos en cookies
         $filePath = 'data/misVehiculos.json';
 
         // Limpiar archivo json
