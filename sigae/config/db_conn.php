@@ -2,6 +2,9 @@
 
 namespace Sigae\Config;
 
+use PDO;
+use PDOException;
+
 function conectarDB($user, $pswd, $hostname){
 
     try {
