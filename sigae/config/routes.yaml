@@ -106,3 +106,13 @@ home:
   path: /home
   controller: Sigae\Controllers\ControladorCliente::home
   methods: GET
+
+loginAioEmployee:
+  path: /loginAioEmployee
+  controller: Sigae\Controllers\ControladorCliente::loginAioEmployee
+  methods: GET
+
+doLoginAioEmployee:
+  path: /doLoginAioEmployee
+  controller: Sigae\Controllers\ControladorCliente::doLoginAioEmployee
+  methods: POST
