@@ -27,7 +27,7 @@
     "autoload": {
         "psr-4": {
             "Sigae\\": "src/",
-            "Sigae\\Controllers": "src/controllers",
+            "Sigae\\Controllers\\": "src/controllers",
             "Sigae\\Config\\": "config/"
         }
     },
