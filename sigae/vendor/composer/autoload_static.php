@@ -18,7 +18,7 @@ class ComposerStaticInit8116c249f0b4dbcd995d077b53ca826b
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
-        '9fe5e95d1ff847219623cc33eaa2d4c9' => __DIR__ . '/../..' . '/src/config/db_conn.php',
+        'b32cfab20a4ea71e0776d8a1c8c6e95f' => __DIR__ . '/../..' . '/config/db_conn.php',
     );
 
     public static $prefixLengthsPsr4 = array (
