@@ -13,7 +13,7 @@ class ControladorCliente extends AbstractController {
         $this->cliente=new Cliente();
     }
     function showLandingPage(): Response{
-        return $this->render('landingPage.html');
+        return $this->render('landingPage.html.twig');
     }
     function login(): Response{
         return $this->render('account/login.html');
