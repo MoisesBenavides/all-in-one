@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    # Redirige todas las solicitudes que no son archivos a index.php
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
