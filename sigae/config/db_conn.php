@@ -1,5 +1,7 @@
 <?php
 
+namespace Sigae\Config;
+
 function conectarDB($user, $pswd, $hostname){
 
     try {

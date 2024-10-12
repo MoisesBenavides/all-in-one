@@ -1,6 +1,6 @@
 <?php
 
-namespace Sigae\models;
+namespace Sigae\Models;
 
 enum EstadoServicio: string {
     case Pendiente = 'pendiente';

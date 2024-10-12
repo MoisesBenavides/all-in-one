@@ -1,8 +1,8 @@
 <?php
 
-namespace Sigae\controllers;
-use Sigae\models\Taller;
-use Sigae\controllers\ControladorVehiculo;
+namespace Sigae\Controllers;
+use Sigae\Models\Taller;
+use Sigae\Controllers\ControladorVehiculo;
 
 class ControladorTaller{
     private $taller;

@@ -1,108 +1,108 @@
 showLandingPage:
   path: /
-  controller: ControladorCliente::showLandingPage
+  controller: Sigae\Controllers\ControladorCliente::showLandingPage
   methods: GET
 
 login:
   path: /login
-  controller: ControladorCliente::login
+  controller: Sigae\Controllers\ControladorCliente::login
   methods: GET
 
 doLogin:
   path: /doLogin
-  controller: ControladorCliente::doLogin
+  controller: Sigae\Controllers\ControladorCliente::doLogin
   methods: POST
 
 doLoginOAuth:
   path: /doLoginOAuth
-  controller: ControladorCliente::doLoginOAuth
+  controller: Sigae\Controllers\ControladorCliente::doLoginOAuth
   methods: GET
 
 signup:
   path: /signup
-  controller: ControladorCliente::signup
+  controller: Sigae\Controllers\ControladorCliente::signup
   methods: GET
 
 doSignup:
   path: /doSignup
-  controller: ControladorCliente::doSignup
+  controller: Sigae\Controllers\ControladorCliente::doSignup
   methods: POST
 
 doSignupOAuth:
   path: /doSignup
-  controller: ControladorCliente::doSignupOAuth
+  controller: Sigae\Controllers\ControladorCliente::doSignupOAuth
   methods: POST
 
 forgotPassword:
   path: /forgotPassword
-  controller: ControladorCliente::forgotPassword
+  controller: Sigae\Controllers\ControladorCliente::forgotPassword
   methods: GET
 
 services:
   path: /services
-  controller: ControladorCliente::services
+  controller: Sigae\Controllers\ControladorCliente::services
   methods: GET
 
 bookService:
   path: /bookService
-  controller: ControladorCliente::bookService
+  controller: Sigae\Controllers\ControladorCliente::bookService
   methods: GET
 
 doBookService:
   path: /doBookService
-  controller: ControladorTaller::doBookService
+  controller: Sigae\Controllers\ControladorTaller::doBookService
   methods: POST
 
 uploadMyVehicles:
   path: /uploadMyVehicles
-  controller: ControladorCliente::cargarMisVehiculosAjax
+  controller: Sigae\Controllers\ControladorCliente::cargarMisVehiculosAjax
 
 serviceConfirmation:
   path: /serviceConfirmation
-  controller: ControladorTaller::serviceConfirmation
+  controller: Sigae\Controllers\ControladorTaller::serviceConfirmation
   methods: GET
 
 aioParking:
   path: /aioParking
-  controller: ControladorCliente::parking
+  controller: Sigae\Controllers\ControladorCliente::parking
   methods: GET
 
 aioParkingBookSimple:
   path: /aioParkingBookSimple
-  controller: ControladorCliente::parkingSimple
+  controller: Sigae\Controllers\ControladorCliente::parkingSimple
   methods: GET
 
 aioParkingBookLongTerm:
   path: /aioParkingBookLongTerm
-  controller: ControladorCliente::parkingLongTerm
+  controller: Sigae\Controllers\ControladorCliente::parkingLongTerm
   methods: GET
 
 bookParkingSimple:
   path: /bookParkingSimple
-  controller: ControladorParking::bookParkingSimple
+  controller: Sigae\Controllers\ControladorParking::bookParkingSimple
   methods: POST
 
 bookParkingLongTerm:
   path: /bookParkingLongTerm
-  controller: ControladorCliente::bookParkingLongTerm
+  controller: Sigae\Controllers\ControladorCliente::bookParkingLongTerm
   methods: POST
 
 parkingConfirmation:
   path: /parkingConfirmation
-  controller: ControladorParking::parkingConfirmation
+  controller: Sigae\Controllers\ControladorParking::parkingConfirmation
   methods: GET
 
 products:
   path: /products
-  controller: ControladorCliente::products
+  controller: Sigae\Controllers\ControladorCliente::products
   methods: GET
 
 myAccount:
   path: /myAccount
-  controller: ControladorCliente::myAccount
+  controller: Sigae\Controllers\ControladorCliente::myAccount
   methods: GET
 
 home:
   path: /home
-  controller: ControladorCliente::home
+  controller: Sigae\Controllers\ControladorCliente::home
   methods: GET

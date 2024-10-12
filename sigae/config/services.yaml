@@ -13,7 +13,7 @@ services:
         public: false       # Evita acceso externo a servicios privados, por defecto
 
     # Controladores
-    Sigae\controllers\:
+    Sigae\Controllers\:
         resource: '../src/controllers'
         public: true  # Para acceder directamente a los controladores
         tags: ['controller.service_arguments']
