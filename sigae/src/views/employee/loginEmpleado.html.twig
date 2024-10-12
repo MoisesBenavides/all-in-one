@@ -2,8 +2,6 @@
 <html lang="en">
 <head>
      <!--SEO-->
-     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
-     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
      <meta name="author" content="All In One">
      <!--Es responsivo-->
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +28,7 @@
             <div class="text-center mb-8">
               <img src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" class="mx-auto max-w-[200px] sm:max-w-[150px]">
             </div>
-            <form id="login-form" action="index.php?action=doLogin" method="POST">
+            <form id="login-form" action="{{ path('doLoginAioEmployee') }}" method="POST">
               <div class="mb-6">
                 <input id="usuario" name="usuario" type="text" placeholder="Usuario" 
                        class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
@@ -43,7 +41,7 @@
               </div>
               <div class="mb-2">
                 <p>
-                  <a href="index.php?action=forgotPassword" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
+                  <a href="{{ path('forgotPassword') }}" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
                 </p>
               </div>
               <button type="submit" class="w-full bg-[#950d03] text-white py-2 rounded-md hover:bg-[#7a0b02] transition">
@@ -53,13 +51,8 @@
             <!-- NOTA: Agregar separador entre boton ingresar y continuar con Google (O ) -->
             <button class="w-full mt-4 flex justify-center items-center bg-[#ffffff] px-4 py-2 border rounded-md hover:bg-[#e5e5e5] transition">
               <img class="w-6 h-6 mr-4" src="{{ asset('svg/google-icon-logo.svg') }}" alt="Google"/>
-              <a href="index.php?action=doLoginOAuth" class="text-gray-600">Continuar con Google</a>
+              <a href="{{ path('doLoginOAuth') }}" class="text-gray-600">Continuar con Google</a>
             </button>
-            <div class="mt-6 text-center space-y-2">
-              <p>
-                <a href="index.php?action=signup" class="text-sm text-gray-600 hover:underline">¿No tienes una cuenta? Regístrate aquí</a>
-              </p>
-            </div>
           </div>
         </div>
 </body>

@@ -29,7 +29,7 @@ doSignup:
   methods: POST
 
 doSignupOAuth:
-  path: /doSignup
+  path: /soSignupOAuth
   controller: Sigae\Controllers\ControladorCliente::doSignupOAuth
   methods: POST
 

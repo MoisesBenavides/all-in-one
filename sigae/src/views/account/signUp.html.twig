@@ -7,12 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro | AIO</title>
 
- <link rel="stylesheet" href="../../../css/styles.css">
-  <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
+ <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+  <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
   <style>
     @font-face {
       font-family: 'Teachers';
-      src: url('../../../font/Teachers-VariableFont_wght.ttf');
+      src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
       font-weight: normal;
       font-style: normal;
     }
@@ -26,9 +26,9 @@
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
   <div class="container max-w-full sm:max-w-lg bg-white rounded-lg shadow-md p-6 sm:p-8">
     <div class="text-center mb-8">
-      <img class="mx-auto max-w-[200px]" src="../../../img/AIO Positivo.png" alt="AIO Logo" />
+      <img class="mx-auto max-w-[200px]" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
     </div>
-    <form id="signup-form" action="index.php?action=doSignup" method="POST" class="space-y-4">
+    <form id="signup-form" action="{{ path('doSignup') }}" method="POST" class="space-y-4">
       <div>
         <input id="email" name="email" type="email" placeholder="Correo" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         <p id="email-error" class="mt-1 text-red-500 text-sm hidden"></p>
@@ -55,7 +55,7 @@
       </button>
       <div class="mt-6 text-center space-y-2">
         <p>
-          <a href="{{ path('signin') }}" class="text-sm text-gray-600 hover:underline">¿Ya tienes una cuenta? Inicia sesión aquí</a>
+          <a href="{{ path('login') }}" class="text-sm text-gray-600 hover:underline">¿Ya tienes una cuenta? Inicia sesión aquí</a>
         </p>
       </div>
     </form>
