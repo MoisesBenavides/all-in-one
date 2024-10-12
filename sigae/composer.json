@@ -33,7 +33,7 @@
             "Sigae\\Config\\": "config/"
         },
         "files": [
-            "src/config/db_conn.php"
+            "config/db_conn.php"
         ]
     },
     "autoload-dev": {
