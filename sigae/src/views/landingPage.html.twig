@@ -37,20 +37,19 @@
             <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-white mb-8 sm:mb-12">
                 "All In One, un punto de partida para nuevos caminos"
             </h1>
-            
-            <form class="space-y-6 mb-8" action="{{ path('login') }}">
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg sm:text-xl font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
+            <form class="space-y-6 mb-8">
+                <a href="{{ path('login') }}" target="_blank" rel="noopener noreferrer" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg sm:text-xl font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
                     Iniciar sesión
-                </button>
+                </a>
             </form>
             
             <p class="text-base sm:text-lg text-center text-stone-200">
-                ¿No tienes una cuenta? <a href="{{ path('signup') }}" class="font-semibold text-white hover:text-red-300 underline">Regístrate aquí</a>
+                ¿No tienes una cuenta? <a href="{{ path('signup') }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-white hover:text-red-300 underline">Regístrate aquí</a>
             </p>
         </div>
         
         <footer class="w-full text-center mt-8">
-            <a href="{{ path('loginAioEmployee') }}" class="text-sm text-black font-medium  hover:text-white transition duration-150 ease-in-out">
+            <a href="{{ path('loginAioEmployee') }}" target="_blank" rel="noopener noreferrer" class="text-sm text-black font-medium  hover:text-white transition duration-150 ease-in-out">
                 Entrar como funcionario
             </a>
         </footer>
