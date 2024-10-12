@@ -31,7 +31,10 @@
             "Sigae\\Controllers\\": "src/controllers",
             "Sigae\\Models\\": "src/models",
             "Sigae\\Config\\": "config/"
-        }
+        },
+        "files": [
+            "src/config/db_conn.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
