@@ -75,7 +75,7 @@
           errorList.innerHTML = '';
           
           if (data.success) {
-            window.location.href = 'index.php?action=home';
+            window.location.href = "{{ path('home') }}";
           } else {
             errorContainer.classList.remove('hidden');
             data.errors.forEach(error => {

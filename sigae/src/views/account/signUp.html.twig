@@ -53,47 +53,54 @@
       <button type="submit"  class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition cursor-pointer">
         Enviar
       </button>
-      <div class="mt-6 text-center space-y-2">
+    </form>
+    <div class="mt-6 text-center space-y-2">
         <p>
           <a href="{{ path('login') }}" class="text-sm text-gray-600 hover:underline">¿Ya tienes una cuenta? Inicia sesión aquí</a>
         </p>
       </div>
-    </form>
   </div>
 
   <script>
 document.getElementById('signup-form').addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
-              .then(response => response.json())
-              .then(data => {
-                  const errorContainer = document.getElementById('error-container');
-                  const errorList = document.getElementById('error-list');
-                  
-                  errorList.innerHTML = '';
-                  
-                  if (data.success) {
-                      window.location.href = 'index.php?action=home';
-                  } else {
-                      errorContainer.classList.remove('hidden');
-                      data.errors.forEach(error => {
-                          const li = document.createElement('li');
-                          li.textContent = error;
-                          errorList.appendChild(li);
-                      });
-      
-                      // Debug information
-                      console.log('Debug info:', data.debug);
-                      const debugInfo = document.createElement('pre');
-                      debugInfo.textContent = JSON.stringify(data.debug, null, 2);
-                      errorList.appendChild(debugInfo);
-                  }
-              })
-              .catch(error => {
-                  console.error('Error:', error);
-              });
-      });
+    e.preventDefault(); // Detener el envío del formulario por defecto
+    
+    // Realizar la solicitud POST usando fetch
+    fetch(this.action, {
+        method: 'POST', // Cambiar a POST
+        body: new FormData(this), // Enviar los datos del formulario
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const errorContainer = document.getElementById('error-container');
+        const errorList = document.getElementById('error-list');
+        
+        errorList.innerHTML = '';
+        
+        if (data.success) {
+            window.location.href = "{{ path('home') }}"; // Redireccionar si es exitoso
+        } else {
+            errorContainer.classList.remove('hidden');
+            data.errors.forEach(error => {
+                const li = document.createElement('li');
+                li.textContent = error;
+                errorList.appendChild(li);
+            });
+            
+            // Información de depuración
+            console.log('Debug info:', data.debug);
+            const debugInfo = document.createElement('pre');
+            debugInfo.textContent = JSON.stringify(data.debug, null, 2);
+            errorList.appendChild(debugInfo);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
 
 
 
