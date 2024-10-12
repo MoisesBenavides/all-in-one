@@ -38,6 +38,7 @@ return array(
     'Symfony\\Bundle\\FrameworkBundle\\' => array($vendorDir . '/symfony/framework-bundle'),
     'Symfony\\Bridge\\Twig\\' => array($vendorDir . '/symfony/twig-bridge'),
     'Sigae\\Tests\\' => array($baseDir . '/tests'),
+    'Sigae\\Models\\' => array($baseDir . '/src/models'),
     'Sigae\\Controllers\\' => array($baseDir . '/src/controllers'),
     'Sigae\\Config\\' => array($baseDir . '/config'),
     'Sigae\\' => array($baseDir . '/src'),

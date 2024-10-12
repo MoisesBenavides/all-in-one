@@ -58,6 +58,7 @@ class ComposerStaticInit8116c249f0b4dbcd995d077b53ca826b
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
             'Symfony\\Bridge\\Twig\\' => 20,
             'Sigae\\Tests\\' => 12,
+            'Sigae\\Models\\' => 13,
             'Sigae\\Controllers\\' => 18,
             'Sigae\\Config\\' => 13,
             'Sigae\\' => 6,
@@ -199,6 +200,10 @@ class ComposerStaticInit8116c249f0b4dbcd995d077b53ca826b
         'Sigae\\Tests\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests',
+        ),
+        'Sigae\\Models\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/models',
         ),
         'Sigae\\Controllers\\' => 
         array (
