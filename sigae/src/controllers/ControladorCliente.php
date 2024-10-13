@@ -130,7 +130,7 @@ class ControladorCliente extends AbstractController {
     function signup(): Response{
         return $this->render('account/signUp.html.twig');
     }
-    function doSignup(){
+    function doSignup(): JsonResponse|RedirectResponse{
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
         // Debug: Log all received data
@@ -168,6 +168,7 @@ class ControladorCliente extends AbstractController {
                 $response['errors'][] = "Las contraseñas no coinciden.";
 
             } elseif(Cliente::existeEmail($email)) {
+                error_log('Email ya existe: ' . $email);
                 $response['errors'][]= "Ya existe un usuario con el correo ingresado.";
 
             } elseif(!$this->cliente->guardarCliente(null, $email, $contrasena, $nombre, $apellido, null)){
@@ -176,7 +177,7 @@ class ControladorCliente extends AbstractController {
             } else {
                 $response['success'] = true;
                 // Redirigir al login
-                header('Location: index.php?action=login');
+                return $this->redirectToRoute('login');
             }
             
         } else {
@@ -187,9 +188,7 @@ class ControladorCliente extends AbstractController {
                 array_keys($_POST)
             );
         }
-        header('Content-Type: application/json');
-        echo json_encode($response);
-        exit;
+        return new JsonResponse($response); // Devuelve un JSON en caso de error
     }
     function doLogout(){
         // TODO: Implementar log out de la sesion

@@ -81,7 +81,7 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
         errorList.innerHTML = '';
         
         if (data.success) {
-            window.location.href = "{{ path('home') }}"; // Redireccionar si es exitoso
+            window.location.href = "{{ path('login') }}";
         } else {
             errorContainer.classList.remove('hidden');
             data.errors.forEach(error => {

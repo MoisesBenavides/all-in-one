@@ -2,6 +2,8 @@
 
 namespace Sigae\Models;
 use function Sigae\Config\conectarDB;
+use PDO;
+use PDOException;
 
 class Cliente{
     private $id;
@@ -144,10 +146,15 @@ class Cliente{
             $stmt->execute();
             return true; // Agregado exitosamente;
 
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            error_log("Error al registrarse: " . $e->getMessage());
-            return false;
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                // Error de duplicado (entrada ya existe)
+                error_log("Error: el email ya existe.");
+                return false;
+            } else {
+                error_log("Error al intentar registrar al cliente: " . $e->getMessage());
+                return false;
+            }
             
         } finally {
             $conn = null;
@@ -188,11 +195,12 @@ class Cliente{
             $stmt->execute();
             
             $count = $stmt->fetchColumn();
+            error_log('Email encontrado: ' . $email . ', Count: ' . $count);
 
             return $count != 0;
 
         } catch (Exception $e) {
-            error_log($e->getMessage()); // Registro del error en el log
+            error_log("Error al verificar existencia de email".$e->getMessage()); // Registro del error en el log
             return false; // False si hubo un error de base de datos
         } finally {
             $conn = null;
