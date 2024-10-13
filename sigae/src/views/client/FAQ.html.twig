@@ -7,13 +7,13 @@
     <meta name="author" content="All In One">
     <!--Es responsivo-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIO - Taller, neumaticos, reservas y más</title>
-    <link rel="stylesheet" href="../../../css/styles.css"> 
-    <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
+    <title>Preguntas Frecuentes | AIO</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}"> 
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <style>
         @font-face {
             font-family: 'Teachers';
-            src: url('../../../font/Teachers-VariableFont_wght.ttf');
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
             font-weight: normal;
             font-style: normal;
         }
@@ -26,7 +26,7 @@
 
 <body class="flex flex-col min-h-screen">
     <header class="w-full">
-        <link rel="stylesheet" href="../../../css/styles.css">
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
         <div class="container mx-auto px-4 py-4">
             <div class="relative flex flex-col md:flex-row justify-between items-center">
                 
@@ -42,28 +42,28 @@
                 <!-- Logo -->
                 <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
                     <!-- Presionar logo para volver al home del cliente (href) -->
-                    <img href="../../../index.php?action=home" class="w-full h-auto" src="../../../img/AIO Positivo.png" alt="AIO Logo" />
+                    <img href="{{ path('home') }}" class="w-full h-auto" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
                 </div>
     
                 <!-- Navegación - visible solo en pantallas medianas y grandes -->
                 <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
-                    <a href="index.php?action=services" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
-                    <a href="index.php?action=aioParking" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
-                    <a href="index.php?action=products" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
+                    <a href="{{ path('services') }}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
+                    <a href="{{ path('aioParking') }}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
+                    <a href="{{ path('products') }}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
                     <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">FAQ</a>
                 </nav>
     
                 <!-- User icon - Alineado a la derecha en móviles -->
                 <div class="absolute top-2 right-4 md:static">
-                    <img class="w-10 h-10" src="../../../img/user.png" alt="User">
+                    <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
                 </div>
             </div>
     
             <!-- Menú hamburguesa desplegable (oculto por defecto) -->
             <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
-                <a href="index.php?action=services" class="block text-black text-sm font-bold ">Servicios</a>
-                <a href="index.php?action=aioParking" class="block text-black text-sm font-bold ">AIO Parking</a>
-                <a href="index.php?action=products" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
+                <a href="{{ path('services') }}" class="block text-black text-sm font-bold ">Servicios</a>
+                <a href="{{ path('aioParking') }}" class="block text-black text-sm font-bold ">AIO Parking</a>
+                <a href="{{ path('products') }}" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
                 <a href="#" class="block text-black text-sm font-bold ">FAQ</a>
             </nav>
         </div>
@@ -187,18 +187,18 @@
 
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-8 md:mb-0">
-                    <img class="w-48 h-auto mb-6" src="../../../img/AIO Negativo (1).png" alt="AIO Logo" />
+                    <img class="w-48 h-auto mb-6" src="{{ asset('img/AIO Negativo (1).png') }}" alt="AIO Logo" />
                     <div class="space-y-4">
                         <div class="flex items-center">
-                            <img class="w-8 h-8 mr-4" src="../../../img/InstagramLogo.png" alt="Instagram" />
+                            <img class="w-8 h-8 mr-4" src="{{ asset('img/InstagramLogo.png') }}" alt="Instagram" />
                             <span class="text-lg font-bold   ">@Aiotalleres</span>
                         </div>
                         <div class="flex items-center">
-                            <img class="w-8 h-8 mr-4" src="../../../img/XLogo.png" alt="Twitter" />
+                            <img class="w-8 h-8 mr-4" src="{{ asset('img/XLogo.png') }}" alt="Twitter" />
                             <span class="text-lg font-bold   ">@Aiotalleres</span>
                         </div>
                         <div class="flex items-center">
-                            <img class="w-8 h-8 mr-4" src="../../../img/TelefonoLogo.png" alt="Teléfono" />
+                            <img class="w-8 h-8 mr-4" src="{{ asset('img/TelefonoLogo.png') }}" alt="Teléfono" />
                             <span class="text-lg font-bold   ">+598 99 123 456</span>
                         </div>
                     </div>

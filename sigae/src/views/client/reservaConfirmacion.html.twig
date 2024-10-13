@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmacion de reserva de servicio de taller | AIO</title>
-    <link rel="stylesheet" href="../../../css/styles.css">
-    <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
 </head>
 
 <body>
@@ -41,14 +41,14 @@
                 output += `<h3>Detalles Adicionales para Parking</h3>`;
                 output += `<p>Largo plazo: ${sessionData.reserva.largo_plazo}</p>`;
                 output += `<p>Tipo de plaza: ${sessionData.reserva.tipo_plaza}</p>`;
-                output += `<a href="index.php?action=aioParking" id="boton_volver" class="button">Volver a AIO Parking</a>`;
+                output += `<a href="{{ path('aioParking') }}" id="boton_volver" class="button">Volver a AIO Parking</a>`;
             } else
                 if (sessionData.servicio === 'taller') {
                     output += `<h3>Detalles Adicionales para Taller</h3>`;
                     output += `<p>Tipo: ${sessionData.reserva.tipo}</p>`;
                     output += `<p>Descripción: ${sessionData.reserva.descripcion}</p>`;
                     output += `<p>Tiempo estimado: ${sessionData.reserva.tiempo_estimado} minutos</p>`;
-                    output += `<a href="index.php?action=services" id="boton_volver" class="button">Volver a Servicios</a>`;
+                    output += `<a href="{{ path('services') }}" id="boton_volver" class="button">Volver a Servicios</a>`;
                 }
         } else {
             output += `<p>No hay detalles de reserva disponibles.</p>`;

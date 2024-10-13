@@ -9,13 +9,13 @@
     <meta name="author" content="All In One">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIO - Taller, neumaticos, reservas y más</title>
-    <link rel="stylesheet" href="../../../css/styles.css">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
-    <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <style>
         @font-face {
             font-family: 'Teachers';
-            src: url('../../../font/Teachers-VariableFont_wght.ttf');
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
             font-weight: normal;
             font-style: normal;
         }
@@ -27,7 +27,7 @@
 </head>
 <body class="bg-white">
   <header class=" w-screen">
-    <link rel="stylesheet" href="../../../css/styles.css">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <div class="container mx-auto px-4 py-4">
         <div class="relative flex flex-col md:flex-row justify-between items-center">
             
@@ -43,28 +43,28 @@
             <!-- Logo -->
             <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
                 <!-- Presionar logo para volver al home del cliente (href) -->
-                <img href="../../../index.php?action=home" class="w-full h-auto" src="../../../img/AIO Positivo.png" alt="AIO Logo" />
+                <img href="{{ path('home') }}" class="w-full h-auto" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
             </div>
 
             <!-- Navegación - visible solo en pantallas medianas y grandes -->
             <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
-                <a href="index.php?action=services" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
-                <a href="index.php?action=aioParking" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
-                <a href="index.php?action=products" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
+                <a href="{{ path('services') }}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
+                <a href="{{ path('aioParking') }}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
+                <a href="{{ path('products') }}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
                 <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">FAQ</a>
             </nav>
 
             <!-- User icon - Alineado a la derecha en móviles -->
             <div class="absolute top-2 right-4 md:static">
-                <img class="w-10 h-10" src="../../../img/user.png" alt="User">
+                <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
             </div>
         </div>
 
         <!-- Menú hamburguesa desplegable (oculto por defecto) -->
         <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
-            <a href="index.php?action=services" class="block text-black text-sm font-bold ">Servicios</a>
-            <a href="index.php?action=aioParking" class="block text-black text-sm font-bold ">AIO Parking</a>
-            <a href="index.php?action=products" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
+            <a href="{{ path('services') }}" class="block text-black text-sm font-bold ">Servicios</a>
+            <a href="{{ path('aioParking') }}" class="block text-black text-sm font-bold ">AIO Parking</a>
+            <a href="{{ path('products') }}" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
             <a href="#" class="block text-black text-sm font-bold ">FAQ</a>
         </nav>
     </div>
@@ -122,20 +122,20 @@
             
             <div class="w-full flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-black text-xl md:text-2xl font-bold">Ingresa fecha, hora y tu tipo de vehículo</p>
-                <img class="w-20 h-20 md:w-[90px] md:h-[90px]" src="../../../svg/Component 7.svg" alt="Step 1">
+                <img class="w-20 h-20 md:w-[90px] md:h-[90px]" src="{{ asset('svg/Component 7.svg') }}" alt="Step 1">
             </div>
             
             <div class="w-full flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-black text-xl md:text-2xl font-bold">Elige la plaza que te resulte más adecuada</p>
-                <img class="w-20 h-20 md:w-[90px] md:h-[90px]" src="../../../svg/BuscarVector.svg" alt="Step 2">
+                <img class="w-20 h-20 md:w-[90px] md:h-[90px]" src="{{ asset('svg/BuscarVector.svg') }}" alt="Step 2">
             </div>
             
             <div class="w-full flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-black text-xl md:text-2xl font-bold">Confirma el pedido y ¡listo!</p>
-                <img class="w-20 h-20 md:w-[80px] md:h-[80px]" src="../../../svg/Check.svg" alt="Step 3">
+                <img class="w-20 h-20 md:w-[80px] md:h-[80px]" src="{{ asset('svg/Check.svg') }}" alt="Step 3">
             </div>
             
-            <a href="index.php?action=aioParkingBookSimple" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold rounded-[10px] flex items-center justify-center">
+            <a href="{{ path('aioParkingBookSimple') }}" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold rounded-[10px] flex items-center justify-center">
                 Reservar
             </a>
         </section>
@@ -143,7 +143,7 @@
         <section class="w-full max-w-[980px] p-6 bg-[#b4bef5] rounded-[14px] border border-black flex flex-col justify-center items-center gap-6">
             <h2 class="text-[#161212] text-2xl md:text-3xl lg:text-4xl font-bold text-center">¿Te vas de viaje y no sabes donde dejar tu vehículo?</h2>
             <p class="text-[#161212] text-xl md:text-2xl font-semibold text-center">En AIO ofrecemos servicio de parking a largo plazo, clickea debajo para reservar una plaza.</p>
-            <a href="index.php?action=aioParkingBookLongTerm" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold rounded-[10px] flex items-center justify-center">
+            <a href="{{ path('aioParkingBookLongTerm') }}" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold rounded-[10px] flex items-center justify-center">
                 Reservar
             </a>
         </section>

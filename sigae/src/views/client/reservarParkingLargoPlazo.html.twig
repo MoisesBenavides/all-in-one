@@ -9,8 +9,8 @@
     <meta name="author" content="All In One">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserva de Parking de Largo Plazo | AIO</title>
-    <link rel="stylesheet" href="../../../css/styles.css">
-    <link rel="icon" type="image/x-icon" href="../../../ico/logo-positivo.ico">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <script>
         // Dropdown functionality
         document.addEventListener('DOMContentLoaded', (event) => {
@@ -43,7 +43,7 @@
 <style>
     @font-face {
         font-family: 'Teachers';
-        src: url('../../../font/Teachers-VariableFont_wght.ttf');
+        src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
         font-weight: normal;
         font-style: normal;
     }
@@ -54,7 +54,7 @@
     }
 </style>
 <header class=" w-screen  ">
-    <link rel="stylesheet" href="../../../css/styles.css">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <div class="container bg-alternativo mx-auto px-4 py-4">
         <div class="relative flex flex-col md:flex-row justify-between items-center">
             
@@ -69,27 +69,27 @@
 
             <!-- Logo -->
             <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
-                <img class="w-full h-auto" src="../../../img/AIO Parking positivo.png" alt="AIO Logo" />
+                <img class="w-full h-auto" src="{{ asset('img/AIO Parking positivo.png') }}" alt="AIO Logo" />
             </div>
 
             <!-- Navegación - visible solo en pantallas medianas y grandes -->
             <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
-                <a href="index.php?action=aioParkingBookSimple" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Reservar</a>
-                <a href="index.php?action=aioParkingBookLongTerm" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Reservar a largo plazo</a>
+                <a href="{{ path('aioParking') }}BookSimple" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Reservar</a>
+                <a href="{{ path('aioParking') }}BookLongTerm" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Reservar a largo plazo</a>
                 <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Mis Reservas</a>
                 <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">FAQ</a>
             </nav>
 
             <!-- User icon - Alineado a la derecha en móviles -->
             <div class="absolute top-2 right-4 md:static">
-                <img class="w-10 h-10" src="../../../img/user.png" alt="User">
+                <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
             </div>
         </div>
 
         <!-- Menú hamburguesa desplegable (oculto por defecto) -->
         <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
-            <a href="index.php?action=aioParkingBookSimple" class="block text-black text-sm font-bold   ">Reservar</a>
-            <a href="index.php?action=aioParkingBookLongTerm" class="block text-black text-sm font-bold   ">Reservar a largo plazo</a>
+            <a href="{{ path('aioParkingBookSimple') }}" class="block text-black text-sm font-bold   ">Reservar</a>
+            <a href="{{ path('aioParkingBookLongTerm') }}" class="block text-black text-sm font-bold   ">Reservar a largo plazo</a>
             <a href="#" class="block text-black text-sm font-bold   ">Mis Reservas</a>
             <a href="#" class="block text-black text-sm font-bold   ">FAQ</a>
         </nav>
@@ -216,7 +216,7 @@
                 <script>
                     function cargarMisVehiculos() {
                        $.ajax({
-                          url: 'data/misVehiculos.json',  // Ruta del archivo JSON
+                          url: '{{ asset('data/misVehiculos.json') }}'  // Ruta del archivo JSON
                           dataType: 'json',  // El tipo de datos que se espera es JSON
                           success: function(response) {
                              var vehiculosDropdown = $('#vehiculosDropdown');
