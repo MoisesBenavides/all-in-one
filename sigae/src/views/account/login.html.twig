@@ -63,8 +63,12 @@
             </div>
         </div>
     </div>
-    <p>{{ response }}</p> <!-- Muestra el mensaje -->
-    <p>Estado: {{ response }}</p> <!-- Muestra el estado -->
+
+    {% if (response) %}
+        <p>{{ response }}</p> <!-- Muestra el mensaje -->
+        <p>Estado: {{ response }}</p> <!-- Muestra el estado -->
+    {% endif %}
+    
     
     <script>
     /*
