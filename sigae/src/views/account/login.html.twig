@@ -46,7 +46,7 @@
                         <a href="{{ path('forgotPassword') }}" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
                     </p>
                 </div>    {% if response.errors is defined and response.errors is not empty %}
-                        <div id="error-container" class="bg-red-500 text-red-800 p-4 rounded-md mb-4">
+                        <div id="error-container" class="bg-red-600 text-black p-4 rounded-md mb-4">
                             <ul id="error-list">
                                 {% for error in response.errors %}
                                     <li>{{ error }}</li>
