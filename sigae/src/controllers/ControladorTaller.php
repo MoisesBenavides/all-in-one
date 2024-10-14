@@ -9,28 +9,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ControladorTaller extends AbstractController{
+    private const PATH_SERVICIOS_JSON = __DIR__ . '/../src/data/serviciosTaller.json';
     private $taller;
     private $serviciosDisp;
     private $controladorVehiculo;
     private $registrarYa;
 
     public function __construct(){
-        $serviciosJson = '../src/data/serviciosTaller.json';
+        $this->cargarServicios(self::PATH_SERVICIOS_JSON);
         $this->controladorVehiculo = new ControladorVehiculo();
-
-        // Verificar si el archivo existe
-        if (file_exists($serviciosJson)) {
-            $contenidoJson = file_get_contents($serviciosJson);
-            $this->serviciosDisp = json_decode($contenidoJson, true);
-
-            // Verificar si hubo error en la decodificación del JSON
-            if ($this->serviciosDisp === null && json_last_error() !== JSON_ERROR_NONE) {
-                die("Error al decodificar el archivo JSON: " . json_last_error_msg());
-            }
-        } else {
-            die("El archivo JSON de servicios no existe.");
-        }
     }
+    
     function doBookService(): JsonResponse|RedirectResponse{
         session_start();
         $response = ['success' => false, 'errors' => [], 'debug' => []];
@@ -190,6 +179,23 @@ class ControladorTaller extends AbstractController{
             // Si ambos están seteados o ninguno está seteado, lanza un error
             throw new InvalidArgumentException("Debe ingresar una matricula.");
         }
+    }
+
+    private function cargarServicios($pathServiciosJson){
+
+        // Verificar si el archivo existe
+        if (!file_exists($pathServiciosJson)) {
+            throw $this->createNotFoundException('El archivo de precios no existe.');
+        }
+
+        $contenidoJson = file_get_contents($pathPreciosJson);
+        $servicios = json_decode($contenidoJson, true);
+
+        // Verificar si hubo error en la decodificación del JSON
+        if ($servicios === null && json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('Error al decodificar el JSON: ' . json_last_error_msg());
+        } else
+            $this->serviciosDisp = $servicios;
     }
 
 }
