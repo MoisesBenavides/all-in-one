@@ -23,7 +23,7 @@ class ControladorCliente extends AbstractController {
     function loginAioEmployee(): Response{
         return $this->render('employee/loginEmpleado.html.twig');
     }
-    function doLogin(): JsonResponse|RedirectResponse{
+    function doLogin(): Response|RedirectResponse{
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
         // Debug: Log all received data
