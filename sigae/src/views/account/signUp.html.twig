@@ -50,6 +50,7 @@
         <p id="repContrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
       <p class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
+      <div id="error-container" style="display: none; background-color: #ffcccc; color: #ff0000; padding: 10px; margin-bottom: 10px;"></div>
       <button type="submit"  class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition cursor-pointer">
         Enviar
       </button>
@@ -61,6 +62,7 @@
       </div>
   </div>
 
+  <script src="{{ asset('js/controlErrores.js') }}"></script> 
   <script>
 document.getElementById('signup-form').addEventListener('submit', function(e) {
     e.preventDefault(); // Detener el envío del formulario por defecto
