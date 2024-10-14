@@ -196,6 +196,10 @@
                 <input type="hidden" id="sTipoReserva" name="TipoReserva" value="">
             </form>
         </section>
+    
+        <!-- DIV PARA ERRORES DE PHP -->
+            <div id="error-container" style="display: none; background-color: #ffcccc; color: #ff0000; padding: 10px; margin-bottom: 10px;"></div>
+        <!--  FINAL DE DIV PARA ERRORES DE PHP -->
 
         <section class="text-center">
             <button class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-2xl sm:text-3xl font-bold leading-tight">
@@ -212,6 +216,7 @@
                 </select>
             </div>
         </section>
+          <script src="{{ asset('js/controlErrores.js') }}"></script> 
         </div>
                 <script>
                     function cargarMisVehiculos() {
