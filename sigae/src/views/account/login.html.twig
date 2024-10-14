@@ -75,56 +75,7 @@
     {% endif %}
     
     
-    <script>
-    /*
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('login-form');
-            form.addEventListener('submit', handleFormSubmit);
-        });
-
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Redirect to home page on success
-                    window.location.href = "{{ path('home') }}";
-                } else {
-                    // Display errors
-                    displayErrors(data.errors || ['Ocurrió un error desconocido.']);
-                    if (data.debug) {
-                        console.log('Debug info:', data.debug);
-                    }
-                }
-            })
-            .catch(error => {
-              console.log(error.message);
-                console.error('Error:', error);
-                displayErrors(['Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo.']);
-            });
-        }
-
-        function displayErrors(errors) {
-            const errorContainer = document.getElementById('error-container');
-            const errorList = document.getElementById('error-list');
-            errorList.innerHTML = '';  // Clear previous errors
-            errorContainer.classList.remove('hidden');
-
-            errors.forEach(error => {
-                const li = document.createElement('li');
-                li.textContent = error;
-                errorList.appendChild(li);
-            });
-        }
-        */
-    </script>
+   
 </body>
 
 </html>
