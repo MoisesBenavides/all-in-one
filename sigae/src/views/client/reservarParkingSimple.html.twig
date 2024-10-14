@@ -184,12 +184,18 @@
                 <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="space-x-6  p-2 w-[340px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
              </div>
              <section class="text-center"></section>
+             <!-- DIV PARA ERRORES DE PHP -->
+            <div id="error-container" style="display: none; background-color: #ffcccc; color: #ff0000; padding: 10px; margin-bottom: 10px;"></div>
+             <!--  FINAL DE DIV PARA ERRORES DE PHP -->
              <!--Continuar-->
              <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
              </section>
           </form>
        </div>
     </main>
+
+  <script src="{{ asset('js/controlErrores.js') }}"></script> 
+
     <script>
         // Código para validar el envío del formulario
         const form = document.getElementById('servicioForm');
