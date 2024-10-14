@@ -1,4 +1,3 @@
-// Función para manejar el envío del formulario
 // Function to handle form submission
 function handleFormSubmit(event) {
     event.preventDefault();
@@ -37,7 +36,7 @@ function handleFormSubmit(event) {
 }
 
 
-
+/*
 function handleFormSubmit(event) {
     event.preventDefault();
     
@@ -76,6 +75,7 @@ function handleFormSubmit(event) {
         displayErrors(['Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo.']);
     });
 }
+    */
 
 // Función para mostrar errores
 function displayErrors(errors) {

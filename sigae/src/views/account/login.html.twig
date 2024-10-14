@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-  <!--es responsivo-->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesión | AIO</title>
@@ -16,7 +15,6 @@
       font-style: normal;
     }
 
-    
     body, input, select, button, option {
       font-family: 'Teachers', sans-serif;
     }
@@ -29,14 +27,16 @@
       <div class="text-center mb-8">
         <img src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" class="mx-auto max-w-[200px] sm:max-w-[150px]">
       </div>
+
+      <!-- Formulario de login -->
       <form id="login-form" action="{{ path('doLogin') }}" method="POST">
         <div class="mb-6">
-          <input id="email" name="email" type="email" placeholder="Correo" 
+          <input id="email" name="email" type="email" placeholder="Correo"
                  class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
           <p id="email-error" class="mt-1 text-red-500 text-sm hidden"></p>
         </div>
         <div class="mb-4">
-          <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" 
+          <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña"
                  class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
           <p id="password-error" class="mt-1 text-red-500 text-sm hidden"></p>
         </div>
@@ -45,15 +45,17 @@
             <a href="{{ path('forgotPassword') }}" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
           </p>
         </div>
-        <!-- DIV PARA ERRORES DE PHP -->
-            <div id="error-container" style="display: none; background-color: #ffcccc; color: #ff0000; padding: 10px; margin-bottom: 10px;"></div>
-        <!--  FINAL DE DIV PARA ERRORES DE PHP -->
+
+        <!-- Div para mostrar errores enviados por PHP -->
+        <div id="error-container" class="hidden bg-red-100 text-red-700 p-4 rounded-md mb-4">
+          <ul id="error-list"></ul>
+        </div>
 
         <button type="submit" class="w-full bg-[#950d03] text-white py-2 rounded-md hover:bg-[#7a0b02] transition">
           Ingresar
         </button>
       </form>
-      <!-- NOTA: Agregar separador entre boton ingresar y continuar con Google (O ) -->
+
       <button class="w-full mt-4 flex justify-center items-center bg-[#ffffff] px-4 py-2 border rounded-md hover:bg-[#e5e5e5] transition">
         <img class="w-6 h-6 mr-4" src="{{ asset('svg/google-icon-logo.svg') }}" alt="Google"/>
         <a href="{{ path('doLoginOAuth') }}" class="text-gray-600">Continuar con Google</a>
@@ -65,84 +67,51 @@
       </div>
     </div>
   </div>
-  <script src="{{ asset('js/controlErrores.js') }}"></script> 
-
+<script src="{{ asset('js/controlerrores2.js') }}"></script>
   <script>
-
-
-/* Function to display errors
-function displayErrors(errors) {
-    const errorContainer = document.getElementById('error-container');
-    const errorList = document.getElementById('error-list');
-    
-    if (!errorContainer || !errorList) {
-        console.error('Error: No se encontró el contenedor de errores.');
-        return;
-    }
-    
-    errorList.innerHTML = '';
-    errorContainer.classList.remove('hidden');
-
-    errors.forEach(error => {
-        const li = document.createElement('li');
-        li.textContent = error;
-        errorList.appendChild(li);
-    });
-}
-
-// Add event listener to the form
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('login-form');
-    if (form) {
-        form.addEventListener('submit', handleFormSubmit);
-    } else {
-        console.error('No se encontró el formulario con ID "login-form" en la página.');
-    }
-});
-
-
-
+/*
     document.getElementById('login-form').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
-        .then(response => response.json())
-        .then(data => {
-          const errorContainer = document.getElementById('error-container');
-          const errorList = document.getElementById('error-list');
+      fetch(this.action, {
+        method: 'POST',
+        body: new URLSearchParams(new FormData(this)),
+      })
+      .then(response => response.json())
+      .then(data => {
+        const errorContainer = document.getElementById('error-container');
+        const errorList = document.getElementById('error-list');
+        errorList.innerHTML = '';  // Limpiar lista de errores previa
+
+        if (data.success) {
+          window.location.href = "{{ path('home') }}";
+        } else {
+          errorContainer.classList.remove('hidden');  // Mostrar el contenedor de errores
           
-          errorList.innerHTML = '';
-          
-          if (data.success) {
-            window.location.href = "{{ path('home') }}";
-          } else {
-            errorContainer.classList.remove('hidden');
-            data.errors.forEach(error => {
-              const li = document.createElement('li');
-              li.textContent = error;
-              errorList.appendChild(li);
-            });
-  
-            // Debug information
-            console.log('Debug info:', data.debug);
-            const debugInfo = document.createElement('pre');
-            debugInfo.textContent = JSON.stringify(data.debug, null, 2);
-            errorList.appendChild(debugInfo);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+          // Mostrar errores
+          data.errors.forEach(error => {
+            const li = document.createElement('li');
+            li.textContent = error;
+            errorList.appendChild(li);
+          });
+
+          // Mostrar información de depuración si existe
+        
+        }
+      })
+      .catch(error => {
+        console.error('Error en la solicitud:', error);
+      });
     });
 
+    // Validación de campos de entrada
     const form = document.getElementById('login-form');
     const email = document.getElementById('email');
     const contrasena = document.getElementById('contrasena');
 
     form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (validateInputs()) {
-        form.submit();
+      if (!validateInputs()) {
+        e.preventDefault();  // Evitar el envío si los inputs son inválidos
       }
     });
 
@@ -195,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Validar todos los campos al cargar la página
+    // Validar los campos al cargar la página
     document.addEventListener('DOMContentLoaded', validateInputs);
     */
   </script>
