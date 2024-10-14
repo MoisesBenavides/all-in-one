@@ -31,9 +31,9 @@
 <body>
     <main class="container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto space-y-12">
-            <form id="servicioForm" action="index.php?action=doBookService" method="POST" class="w-full max-w-[340px] mx-auto">
                 <section>
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Seleccione el servicio</h2>
+            <form id="servicioForm" action="{{ path('doBookService')}}" method="POST" class="w-full max-w-[340px] mx-auto">
                     <div class="relative mb-2">
                         <div id="dropdownButton1" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
                             <div id="selectedOption1" class="text-center text-black text-xl font-semibold">Tipo de Servicio</div>
@@ -96,9 +96,18 @@
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
                     <div class="relative w-full max-w-[340px] mx-auto">
                         <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                            <option value="">Selecciona un vehículo</option>
-                            <!-- Vehicle options will be inserted here -->
-                        </select>
+                            {# Mensaje por defecto #}
+                            <option value="" selected disabled>Seleccione un vehículo</option>
+
+                            {# Mostrar los vehículos si tiene vinculados, o deshabilitar dropdown#}
+                            {% if vehiculos is not empty %}
+                                {% for vehiculo in vehiculos %}
+                                    <option value="{{ vehiculo.matricula }}">{{ vehiculo.tipo }} ({{ vehiculo.tipo }})</option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="" disabled>No tienes vehículos vinculados</option>
+                            {% endif %}
+                    </select>
                     </div>
                 </section>
 
@@ -114,8 +123,6 @@
             </form>
         </div>
     </main>
-
-  <script src="{{ asset('js/controlErrores.js') }}"></script> 
 
     <script>
         // Dropdown functionality for service selection
