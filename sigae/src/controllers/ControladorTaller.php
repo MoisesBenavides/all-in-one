@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Exception;
 
 class ControladorTaller extends AbstractController{
     private const PATH_SERVICIOS_JSON = __DIR__ . '/../src/data/serviciosTaller.json';
