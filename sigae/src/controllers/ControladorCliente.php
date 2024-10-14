@@ -75,7 +75,7 @@ class ControladorCliente extends AbstractController {
                 array_keys($_POST)
             );
         }
-        return $this->render('login.html.twig', [
+        return $this->render('account/login.html.twig', [
             'response' => $response  // Aquí pasas la variable a la vista
         ]);
     }
