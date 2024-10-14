@@ -45,6 +45,10 @@
             <a href="{{ path('forgotPassword') }}" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
           </p>
         </div>
+        <!-- DIV PARA ERRORES DE PHP -->
+            <div id="error-container" style="display: none; background-color: #ffcccc; color: #ff0000; padding: 10px; margin-bottom: 10px;"></div>
+        <!--  FINAL DE DIV PARA ERRORES DE PHP -->
+
         <button type="submit" class="w-full bg-[#950d03] text-white py-2 rounded-md hover:bg-[#7a0b02] transition">
           Ingresar
         </button>
@@ -61,8 +65,43 @@
       </div>
     </div>
   </div>
+  <script src="{{ asset('js/controlErrores.js') }}"></script> 
 
   <script>
+
+
+/* Function to display errors
+function displayErrors(errors) {
+    const errorContainer = document.getElementById('error-container');
+    const errorList = document.getElementById('error-list');
+    
+    if (!errorContainer || !errorList) {
+        console.error('Error: No se encontró el contenedor de errores.');
+        return;
+    }
+    
+    errorList.innerHTML = '';
+    errorContainer.classList.remove('hidden');
+
+    errors.forEach(error => {
+        const li = document.createElement('li');
+        li.textContent = error;
+        errorList.appendChild(li);
+    });
+}
+
+// Add event listener to the form
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('login-form');
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
+    } else {
+        console.error('No se encontró el formulario con ID "login-form" en la página.');
+    }
+});
+
+
+
     document.getElementById('login-form').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -158,6 +197,7 @@
 
     // Validar todos los campos al cargar la página
     document.addEventListener('DOMContentLoaded', validateInputs);
+    */
   </script>
 </body>
 
