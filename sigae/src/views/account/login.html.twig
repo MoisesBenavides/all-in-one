@@ -45,7 +45,15 @@
                     <p>
                         <a href="{{ path('forgotPassword') }}" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
                     </p>
-                </div>
+                </div>    {% if response.errors is defined and response.errors is not empty %}
+                        <div id="error-container" class="bg-red-500 text-red-800 p-4 rounded-md mb-4">
+                            <ul id="error-list">
+                                {% for error in response.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
 
                 <button type="submit" class="w-full bg-[#950d03] text-white py-2 rounded-md hover:bg-[#7a0b02] transition">
                     Ingresar
@@ -64,15 +72,7 @@
         </div>
     </div>
 
-    {% if response.errors is defined and response.errors is not empty %}
-    <div id="error-container" class="bg-red-100 text-red-700 p-4 rounded-md mb-4">
-        <ul id="error-list">
-            {% for error in response.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+
     
     
    
