@@ -75,7 +75,9 @@ class ControladorCliente extends AbstractController {
                 array_keys($_POST)
             );
         }
-        return new JsonResponse($response); // Devuelve un JSON en caso de error
+        return $this->render('login.html.twig', [
+            'response' => $response  // Aquí pasas la variable a la vista
+        ]);
     }
     function doLoginAioEmployee(): JsonResponse|RedirectResponse{
         
