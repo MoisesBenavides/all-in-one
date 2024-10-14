@@ -210,8 +210,11 @@ class ControladorCliente extends AbstractController {
         error_log($_SESSION['email']. " abrió la página de reserva de servicios");
         error_log(print_r($_SESSION, true));
 
-        $this->cargarMisVehiculosAjax($_SESSION['id']);
-        return $this->render('client/reservarServicio.html.twig');
+        $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
+
+        return $this->render('client/reservarServicio.html.twig', [
+           'misVehiculos' => $misVehiculos
+        ]);
     }
     
     function parking(): Response{
@@ -227,9 +230,11 @@ class ControladorCliente extends AbstractController {
         error_log($_SESSION['email']. " abrió la página de reserva de parking simple");
         error_log(print_r($_SESSION, true));
 
-        $this->cargarMisVehiculosAjax($_SESSION['id']);
+        $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
         
-        return $this->render('client/reservarParkingSimple.html.twig');
+        return $this->render('client/reservarParkingSimple.html.twig', [
+            'misVehiculos' => $misVehiculos
+         ]);
     }
 
     function parkingLongTerm(): Response{
@@ -237,12 +242,11 @@ class ControladorCliente extends AbstractController {
         error_log($_SESSION['email']. " abrió la página de reserva de parking de largo plazo");
         error_log(print_r($_SESSION, true));
 
-        /*
-        Implementar dropdown de vehiculos
-        $this->cargarMisVehiculosAjax($_SESSION['id']);
-        */
+        $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
         
-        return $this->render('client/reservarParkingLargoPlazo.html.twig');
+        return $this->render('client/reservarParkingLargoPlazo.html.twig', [
+            'misVehiculos' => $misVehiculos
+        ]);
     }
 
     function products(): Response{
@@ -262,42 +266,6 @@ class ControladorCliente extends AbstractController {
         error_log(print_r($_SESSION, true));
         
         return $this->render('client/homeCliente.html.twig');
-    }
-
-    public function cargarMisVehiculosAjax($id) {
-        
-        // Ruta del archivo JSON donde se guardarán los vehículos
-        // TODO: carcar vehiculos en cookies
-        $filePath = 'data/misVehiculos.json';
-
-        // Limpiar archivo json
-        file_put_contents($filePath, json_encode([]));
-
-        $misVehiculos = $this->cliente->cargarMisVehiculos($id);
-        
-        if ($misVehiculos) {
-            // Guardar los vehículos en formato JSON
-            $jsonData = json_encode($misVehiculos, JSON_PRETTY_PRINT);
-            file_put_contents($filePath, $jsonData);
-        } else {
-            // Si no hay vehículos, guardar el archivo vacío
-            file_put_contents($filePath, json_encode([]));
-        }
-        
-        // Validar errores y registrar en error_log
-        if (file_exists($filePath)) {
-            $fileContent = file_get_contents($filePath);
-            $data = json_decode($fileContent, true);
-        
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                error_log("Error al cargar los vehículos del cliente con ID: $id. Error: " . json_last_error_msg());
-
-            } elseif (isset($data['error'])) {
-                error_log("Error al cargar los vehículos del cliente con ID: $id. Error: " . $data['error']);
-            }
-        } else {
-            error_log("Error al cargar los vehículos del cliente con ID: $id. Archivo no encontrado: $filePath");
-        }
     }
     
     private function validarContrasena($str, $min, $max) {

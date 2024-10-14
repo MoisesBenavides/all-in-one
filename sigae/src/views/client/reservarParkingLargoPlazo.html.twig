@@ -210,56 +210,21 @@
         <section>
             <h2 class="text-center text-black text-xl sm:text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
             <div class="relative w-full max-w-[340px] mx-auto">
-                <select id="vehiculosDropdown" class="w-full h-[60px] px-4 py-3 bg-white rounded-[10px] border border-[#161212] text-center text-black text-lg sm:text-xl font-semibold">
-                    <option value="">Selecciona un vehículo</option>
-                    <!-- Aquí se insertarán las matrículas de los vehículos -->
+                <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                        {# Mensaje por defecto #}
+                        <option value="" selected disabled>Seleccione un vehículo</option>
+
+                        {# Mostrar los vehículos si tiene vinculados, o deshabilitar dropdown#}
+                        {% if vehiculos is not empty %}
+                            {% for vehiculo in vehiculos %}
+                                <option value="{{ vehiculo.matricula }}">{{ vehiculo.tipo }} ({{ vehiculo.tipo }})</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="" disabled>No tienes vehículos vinculados</option>
+                        {% endif %}
                 </select>
             </div>
         </section>
-          <script src="{{ asset('js/controlErrores.js') }}"></script> 
-        </div>
-                <script>
-                    function cargarMisVehiculos() {
-                       $.ajax({
-                          url: '{{ asset('data/misVehiculos.json') }}'  // Ruta del archivo JSON
-                          dataType: 'json',  // El tipo de datos que se espera es JSON
-                          success: function(response) {
-                             var vehiculosDropdown = $('#vehiculosDropdown');
-                             vehiculosDropdown.find('option:not(:first)').remove();  // Limpiar las opciones previas
-                 
-                             if (response.length === 0) {
-                                // Si no hay vehículos, deshabilitar el dropdown
-                                vehiculosDropdown.prop('disabled', true);
-                             } else {
-                                // Llenar el dropdown con los vehículos
-                                response.forEach(function(vehiculo) {
-                                   var matricula = vehiculo.matricula;
-                                   var tipo = vehiculo.tipo;
-                 
-                                   // Agregar cada vehículo al dropdown
-                                   vehiculosDropdown.append($('<option>', {
-                                      value: matricula,
-                                      text: matricula + ' - ' + tipo
-                                   }));
-                                });
-                 
-                                // Habilitar el dropdown si hay vehículos
-                                vehiculosDropdown.prop('disabled', false);
-                             }
-                          },
-                          error: function(xhr, status, error) {
-                             console.error('Error al cargar los vehículos desde el archivo JSON:', error);
-                          }
-                       });
-                    }
-                 
-                    // Ejecutar la función cuando se cargue la página
-                    $(document).ready(function() {
-                       cargarMisVehiculos();
-                    });
-                 </script>
-            </section>
-        </div>
     </main>
 
  
