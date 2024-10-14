@@ -14,37 +14,46 @@ function handleFormSubmit(event) {
         body: formData
     })
     .then(response => {
-        // Primero, intentamos parsear como JSON
-        return response.json().catch(() => {
-            // Si falla, asumimos que es una redirección
-            return response.text().then(text => {
-                // Si el texto contiene una URL, consideramos que es una redirección
-                if (text.includes('http') || text.startsWith('/')) {
-                    window.location.href = text.trim();
-                    throw new Error('Redirecting');
-                }
-                // Si no es una redirección, mostramos el texto como un error
-                throw new Error(text);
-            });
-        });
-    })
-    .then(data => {
-        if (!data.success) {
-            displayErrors(data.errors || ['Ocurrió un error desconocido.']);
-            if (data.debug) {
-                console.log('Debug info:', data.debug);
-            }
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            return response.json().then(data => ({type: 'json', data: data}));
         } else {
-            // Redirigir si la respuesta es exitosa
-            window.location.href = data.redirect || '/home';
+            return response.text().then(text => ({type: 'text', data: text}));
+        }
+    })
+    .then(result => {
+        if (result.type === 'json') {
+            handleJsonResponse(result.data);
+        } else {
+            handleTextResponse(result.data);
         }
     })
     .catch(error => {
-        if (error.message !== 'Redirecting') {
-            console.error('Error:', error);
-            displayErrors([error.message || 'Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo.']);
-        }
+        console.error('Error:', error);
+        displayErrors(['Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo.']);
     });
+}
+
+function handleJsonResponse(data) {
+    if (!data.success) {
+        displayErrors(data.errors || ['Ocurrió un error desconocido.']);
+        if (data.debug) {
+            console.log('Debug info:', data.debug);
+        }
+    } else {
+        // Redirigir si la respuesta es exitosa
+        window.location.href = data.redirect || '/home';
+    }
+}
+
+function handleTextResponse(text) {
+    // Si el texto contiene una URL, consideramos que es una redirección
+    if (text.includes('http') || text.startsWith('/')) {
+        window.location.href = text.trim();
+    } else {
+        // Si no es una redirección, mostramos el texto como un error
+        displayErrors([text]);
+    }
 }
 
 // Función para mostrar errores en el contenedor de errores
