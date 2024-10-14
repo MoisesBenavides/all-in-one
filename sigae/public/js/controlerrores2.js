@@ -33,10 +33,10 @@
                     window.location.href = data.redirect || '/home';
                 }
             })
-            .catch(error => {
+           /* .catch(error => {
                 console.error('Error:', error);
                 displayErrors(['Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo.']);
-            });
+            });*/
         }
 
         // Función para mostrar errores en el contenedor de errores
