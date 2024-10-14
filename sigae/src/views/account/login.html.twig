@@ -63,8 +63,11 @@
             </div>
         </div>
     </div>
-
+    <p>{{ response.mensaje }}</p> <!-- Muestra el mensaje -->
+    <p>Estado: {{ response.status }}</p> <!-- Muestra el estado -->
+    
     <script>
+    /*
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('login-form');
             form.addEventListener('submit', handleFormSubmit);
@@ -111,6 +114,7 @@
                 errorList.appendChild(li);
             });
         }
+        */
     </script>
 </body>
 
