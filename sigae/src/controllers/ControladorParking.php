@@ -3,31 +3,24 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Parking;
 use Sigae\Controllers\ControladorVehiculo;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Exception;
 
-class ControladorParking{
+class ControladorParking extends AbstractController{
+    private const PATH_PRECIOS_JSON = __DIR__ . '/../src/data/preciosHoraParking.json';
     private $parking;
     private $preciosHora;
     private $controladorVehiculo;
 
     public function __construct(){
-        $preciosJson = '../src/data/preciosHoraParking.json';
+        $this->cargarPreciosHora(self::PATH_PRECIOS_JSON);
         $this->controladorVehiculo = new ControladorVehiculo();
-
-        // Verificar si el archivo existe
-        if (file_exists($preciosJson)) {
-            $contenidoJson = file_get_contents($preciosJson);
-            $this->preciosHora = json_decode($contenidoJson, true);
-
-            // Verificar si hubo error en la decodificación del JSON
-            if ($this->preciosHora === null && json_last_error() !== JSON_ERROR_NONE) {
-                die("Error al decodificar el archivo JSON: " . json_last_error_msg());
-            }
-        } else {
-            die("El archivo JSON de servicios no existe.");
-        }
     }
 
-    function bookParkingSimple(){
+    function bookParkingSimple(): JsonResponse|RedirectResponse{
         session_start();
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
@@ -89,7 +82,7 @@ class ControladorParking{
                     error_log(print_r($this->parking, true)); // Esto mostrará los datos de la reserva.
 
                     // Redireccionar al usuario a la página de confirmación de reserva
-                    header('Location: index.php?action=parkingConfirmation');
+                    return $this->redirectToRoute('parkingConfirmation');
                 }
                     
             }
@@ -102,15 +95,13 @@ class ControladorParking{
                 array_keys($_POST)
             );
         }
-        header('Content-Type: application/json');
-        echo json_encode($response);
-        exit;
+        return new JsonResponse($response); // Devuelve un JSON en caso de error
     }
 
     function bookParkingLongTerm(){
     }
 
-    function parkingConfirmation(){
+    function parkingConfirmation(): Response{
         session_start();
         error_log($_SESSION['email']. " reservó un servicio de parking");
         error_log(print_r($_SESSION, true));
@@ -133,12 +124,8 @@ class ControladorParking{
                 'tipo_plaza' => $_SESSION['reserva']->getTipo_plaza()
             ] : null,
         ];
-    
-        // Codifica en JSON
-        $jsonSessionData = json_encode($sessionData);
-    
-        // Imprimir los datos JSON en pagina de confirmacion
-        include '../src/views/client/reservaConfirmacion.html';
+        // Imprimir los datos en pagina de confirmacion
+        return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
     }
 
 
@@ -193,6 +180,21 @@ class ControladorParking{
         
         // Validar si el formato es válido
         return $dt && $dt->format($formato) === $fecha;
+    }
+
+    private function cargarPreciosHora($pathPreciosJson){
+
+        if (!file_exists($pathPreciosJson)) {
+            throw $this->createNotFoundException('El archivo de precios no existe.');
+        }
+
+        $contenidoJson = file_get_contents($pathPreciosJson);
+        $precios = json_decode($contenidoJson, true);
+
+        if ($precios === null && json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('Error al decodificar el JSON: ' . json_last_error_msg());
+        } else
+            $this->preciosHora = $precios;
     }
 
 }

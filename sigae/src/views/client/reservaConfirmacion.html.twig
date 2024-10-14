@@ -8,56 +8,84 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
 </head>
+{# 
+<!--En caso de usar JavaScript!-->
 
 <body>
     <h1>Confirmación de Reserva</h1>
-    <div id="confirmationData" data-session='<?php echo htmlspecialchars($jsonSessionData, ENT_QUOTES); ?>'></div>
 
+    <!-- Otros elementos HTML -->
+
+    <!-- Inyecta directamente los datos en js -->
     <script>
-        // Obtener los datos de sesión desde el atributo data
-        const sessionData = JSON.parse(document.getElementById('confirmationData').getAttribute('data-session'));
+        // Crear el objeto de sesión desde Twig
+        const sessionData = {{ sessionData|json_encode|raw }};
+        
+        // Mostrar los datos en la consola
+        console.log(sessionData);
 
-        // Generar salida de datos
+        // Puedes manipular y mostrar los datos
         let output = `<p>Email: ${sessionData.email}</p>`;
         output += `<p>ID de usuario: ${sessionData.id}</p>`;
         output += `<p>Nombre: ${sessionData.nombre}</p>`;
         output += `<p>Apellido: ${sessionData.apellido}</p>`;
-        output += `<p>Servicio: ${sessionData.servicio}</p>`;
+
         if (sessionData.telefono) {
             output += `<p>Teléfono: ${sessionData.telefono}</p>`;
         }
 
-
         if (sessionData.reserva) {
             output += `<h2>Detalles de la Reserva</h2>`;
-            output += `<p>ID del servicio: ${sessionData.reserva.id}</p>`;
             output += `<p>Matricula: ${sessionData.reserva.matricula}</p>`;
             output += `<p>Precio: ${sessionData.reserva.precio}</p>`;
             output += `<p>Fecha de inicio: ${sessionData.reserva.fecha_inicio}</p>`;
-            output += `<p>Fecha de finalización: ${sessionData.reserva.fecha_final}</p>`;
-            output += `<p>Estado: ${sessionData.reserva.estado}</p>`;
-
-            if (sessionData.servicio === 'parking') {
-                output += `<h3>Detalles Adicionales para Parking</h3>`;
-                output += `<p>Largo plazo: ${sessionData.reserva.largo_plazo}</p>`;
-                output += `<p>Tipo de plaza: ${sessionData.reserva.tipo_plaza}</p>`;
-                output += `<a href="{{ path('aioParking') }}" id="boton_volver" class="button">Volver a AIO Parking</a>`;
-            } else
-                if (sessionData.servicio === 'taller') {
-                    output += `<h3>Detalles Adicionales para Taller</h3>`;
-                    output += `<p>Tipo: ${sessionData.reserva.tipo}</p>`;
-                    output += `<p>Descripción: ${sessionData.reserva.descripcion}</p>`;
-                    output += `<p>Tiempo estimado: ${sessionData.reserva.tiempo_estimado} minutos</p>`;
-                    output += `<a href="{{ path('services') }}" id="boton_volver" class="button">Volver a Servicios</a>`;
-                }
-        } else {
-            output += `<p>No hay detalles de reserva disponibles.</p>`;
+            output += `<p>Fecha final: ${sessionData.reserva.fecha_final}</p>`;
         }
 
-        // Insertar el contenido generado en el div
-        document.getElementById('confirmationData').innerHTML += output;
+        // Insertar el contenido generado en el DOM
+        document.getElementById('confirmationData').innerHTML = output;
     </script>
+</body>
+#}
+<body>
+    <h1>Confirmación de Reserva</h1>
     
+    {# Generar salida de datos de reserva #}
+    <p>Email: {{sessionData.email}}</p>
+    <p>ID de usuario: {{sessionData.id}}</p>
+    <p>Nombre: {{sessionData.nombre}}</p>
+    <p>Apellido: {{sessionData.apellido}}</p>
+    <p>Servicio: {{sessionData.servicio}}</p>
+
+   
+    {% if (sessionData.telefono) %}
+        <p>Teléfono: {{sessionData.telefono}}</p>;
+    {% endif %}
+
+    {% if sessionData.reserva %}
+        <h2>Detalles de la Reserva</h2>
+        <p>ID del servicio: {{ sessionData.reserva.id }}</p>
+        <p>Matricula: {{ sessionData.reserva.matricula }}</p>
+        <p>Precio: {{ sessionData.reserva.precio }}</p>
+        <p>Fecha de inicio: {{ sessionData.reserva.fecha_inicio }}</p>
+        <p>Fecha de finalización: {{ sessionData.reserva.fecha_final }}</p>
+        <p>Estado: {{ sessionData.reserva.estado }}</p>
+
+        {% if sessionData.servicio == 'parking' %}
+            <h3>Detalles Adicionales para Parking</h3>
+            <p>Largo plazo: {{ sessionData.reserva.largo_plazo }}</p>
+            <p>Tipo de plaza: {{ sessionData.reserva.tipo_plaza }}</p>
+            <a href="{{ path('aioParking') }}" class="button">Volver a AIO Parking</a>
+        {% elseif sessionData.servicio == 'taller' %}
+            <h3>Detalles Adicionales para Taller</h3>
+            <p>Tipo: {{ sessionData.reserva.tipo }}</p>
+            <p>Descripción: {{ sessionData.reserva.descripcion }}</p>
+            <p>Tiempo estimado: {{ sessionData.reserva.tiempo_estimado }} minutos</p>
+            <a href="{{ path('services') }}" class="button">Volver a Servicios</a>
+        {% endif %}
+    {% else %}
+        <p>No hay detalles de reserva disponibles.</p>
+    {% endif %}
     
 </body>
 

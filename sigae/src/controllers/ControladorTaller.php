@@ -3,8 +3,12 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Taller;
 use Sigae\Controllers\ControladorVehiculo;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ControladorTaller{
+class ControladorTaller extends AbstractController{
     private $taller;
     private $serviciosDisp;
     private $controladorVehiculo;
@@ -27,7 +31,7 @@ class ControladorTaller{
             die("El archivo JSON de servicios no existe.");
         }
     }
-    function doBookService() {
+    function doBookService(): JsonResponse|RedirectResponse{
         session_start();
         $response = ['success' => false, 'errors' => [], 'debug' => []];
     
@@ -102,8 +106,7 @@ class ControladorTaller{
                         $_SESSION['matricula'] = $matricula;
     
                         // Redireccionar al usuario a la página de confirmación de reserva
-                        header('Location: index.php?action=serviceConfirmation');
-                        exit; // Añadir exit después de redireccionar
+                        return $this->redirectToRoute('serviceConfirmation');
                     }
                 }
             }
@@ -116,12 +119,10 @@ class ControladorTaller{
             );
         }
     
-        header('Content-Type: application/json');
-        echo json_encode($response);
-        exit;
+        return new JsonResponse($response); // Devuelve un JSON en caso de error
     }
 
-    function serviceConfirmation(){
+    function serviceConfirmation(): Response{
         session_start();
         error_log($_SESSION['email']. " reservó un servicio de taller");
         error_log(print_r($_SESSION, true));
@@ -145,12 +146,8 @@ class ControladorTaller{
                 'tiempo_estimado' => $_SESSION['reserva']->getTiempo_estimado(),
             ] : null,
         ];
-    
-        // Codifica en JSON
-        $jsonSessionData = json_encode($sessionData);
-    
-        // Imprimir los datos JSON en pagina de confirmacion
-        include '../src/views/client/reservaConfirmacion.html';
+        // Imprimir los datos en pagina de confirmacion
+        return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
     }
 
     function estimarFechaFinal($fecha, $minutos) {
