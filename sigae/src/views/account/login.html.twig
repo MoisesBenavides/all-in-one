@@ -64,9 +64,14 @@
         </div>
     </div>
 
-    {% if (response) %}
-        <p>{{ response }}</p> <!-- Muestra el mensaje -->
-        <p>Estado: {{ response }}</p> <!-- Muestra el estado -->
+    {% if response.errors is defined and response.errors is not empty %}
+    <div id="error-container" class="bg-red-100 text-red-700 p-4 rounded-md mb-4">
+        <ul id="error-list">
+            {% for error in response.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
     {% endif %}
     
     
