@@ -23,6 +23,7 @@
   </style>
 </head>
 
+
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
   <div class="container max-w-full sm:max-w-lg bg-white rounded-lg shadow-md p-6 sm:p-8">
     <div class="text-center mb-8">
@@ -41,27 +42,26 @@
         <input id="apellido" name="apellido" type="text" placeholder="Apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         <p id="apellido-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
-          <div class="relative flex items-center">
+      <div class="relative">
         <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <button type="button" class="absolute right-2 p-1" onclick="togglePasswordVisibility('contrasena')">
+        <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center" onclick="togglePasswordVisibility('contrasena')">
           <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
         </button>
+        <p id="contrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
-      <p id="contrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
-
-      <div class="relative flex items-center">
+      <div class="relative">
         <input id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <button type="button" class="absolute right-2 p-1" onclick="togglePasswordVisibility('repContrasena')">
+        <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center" onclick="togglePasswordVisibility('repContrasena')">
           <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
         </button>
+        <p id="repContrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
-      <p id="repContrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
 
       <p class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
    {% if response.errors is defined and response.errors is not empty %}
@@ -130,107 +130,116 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
 
 
  
-  const form = document.getElementById('signup-form');
-  const email = document.getElementById('email');
-  const nombre = document.getElementById('nombre');
-  const apellido = document.getElementById('apellido');
-  const contrasena = document.getElementById('contrasena');
-  const repContrasena = document.getElementById('repContrasena');
+    const form = document.getElementById('signup-form');
+    const email = document.getElementById('email');
+    const nombre = document.getElementById('nombre');
+    const apellido = document.getElementById('apellido');
+    const contrasena = document.getElementById('contrasena');
+    const repContrasena = document.getElementById('repContrasena');
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (validateInputs()) {
-      form.submit();
-    }
-  });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (validateInputs()) {
+        form.submit();
+      }
+    });
 
-  const setSuccess = (element) => {
-    element.classList.remove('border-red-500');
-    element.nextElementSibling.classList.add('hidden');
-  };
+    const setSuccess = (element) => {
+      element.classList.remove('border-red-500');
+      element.nextElementSibling.classList.add('hidden');
+    };
 
-  const setError = (element, message) => {
-    element.classList.add('border-red-500');
-    const errorDisplay = element.nextElementSibling;
-    errorDisplay.textContent = message;
-    errorDisplay.classList.remove('hidden');
-  };
+    const setError = (element, message) => {
+      element.classList.add('border-red-500');
+      const errorDisplay = element.nextElementSibling;
+      errorDisplay.textContent = message;
+      errorDisplay.classList.remove('hidden');
+    };
 
-  const isValidEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
+    const isValidEmail = (email) => {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    };
 
-  const validateInputs = () => {
-    let isValid = true;
-    const emailValue = email.value.trim();
-    const nombreValue = nombre.value.trim();
-    const apellidoValue = apellido.value.trim();
-    const contrasenaValue = contrasena.value.trim();
-    const repContrasenaValue = repContrasena.value.trim();
+    const validateInput = (input) => {
+      const inputValue = input.value.trim();
 
-    // Reset los estados de error
+      switch(input.id) {
+        case 'email':
+          if (inputValue === '') {
+            setError(input, 'Por favor ingrese su correo electrónico');
+          } else if (!isValidEmail(inputValue)) {
+            setError(input, 'Correo electrónico inválido');
+          } else {
+            setSuccess(input);
+          }
+          break;
+        case 'nombre':
+        case 'apellido':
+          if (inputValue === '') {
+            setError(input, `Por favor ingrese su ${input.id}`);
+          } else {
+            setSuccess(input);
+          }
+          break;
+        case 'contrasena':
+          if (inputValue === '') {
+            setError(input, 'Por favor ingrese una contraseña');
+          } else if (inputValue.length < 6) {
+            setError(input, 'La contraseña debe tener al menos 6 caracteres');
+          } else if (!/[A-Z]/.test(inputValue) || !/[a-z]/.test(inputValue) || !/\d/.test(inputValue)) {
+            setError(input, 'La contraseña debe incluir mayúsculas, minúsculas y números');
+          } else {
+            setSuccess(input);
+          }
+          break;
+        case 'repContrasena':
+          if (inputValue === '') {
+            setError(input, 'Por favor repita la contraseña');
+          } else if (inputValue !== contrasena.value) {
+            setError(input, 'Las contraseñas no coinciden');
+          } else {
+            setSuccess(input);
+          }
+          break;
+      }
+    };
+
+    const validateInputs = () => {
+      let isValid = true;
+      [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
+        validateInput(input);
+        if (input.classList.contains('border-red-500')) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    };
+
     [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
-      setSuccess(input);
+      input.addEventListener('input', () => validateInput(input));
     });
 
-    if (emailValue === '') {
-      setError(email, 'Por favor ingrese su correo electrónico');
-      isValid = false;
-    } else if (!isValidEmail(emailValue)) {
-      setError(email, 'Correo electrónico inválido');
-      isValid = false;
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      const button = input.nextElementSibling;
+      if (input.type === 'password') {
+        input.type = 'text';
+        button.innerHTML = `
+          <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+          </svg>
+        `;
+      } else {
+        input.type = 'password';
+        button.innerHTML = `
+          <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        `;
+      }
     }
-
-    if (nombreValue === '') {
-      setError(nombre, 'Por favor ingrese su nombre');
-      isValid = false;
-    }
-
-    if (apellidoValue === '') {
-      setError(apellido, 'Por favor ingrese su apellido');
-      isValid = false;
-    }
-
-    if (contrasenaValue === '') {
-      setError(contrasena, 'Por favor ingrese una contraseña');
-      isValid = false;
-    } else if (contrasenaValue.length < 6) {
-      setError(contrasena, 'La contraseña debe tener al menos 6 caracteres');
-      isValid = false;
-    } else if (!/[A-Z]/.test(contrasenaValue) || !/[a-z]/.test(contrasenaValue) || !/\d/.test(contrasenaValue)) {
-      setError(contrasena, 'La contraseña debe incluir mayúsculas, minúsculas y números');
-      isValid = false;
-    }
-
-    if (repContrasenaValue === '') {
-      setError(repContrasena, 'Por favor repita la contraseña');
-      isValid = false;
-    } else if (repContrasenaValue !== contrasenaValue) {
-      setError(repContrasena, 'Las contraseñas no coinciden');
-      isValid = false;
-    }
-
-    return isValid;
-  };
-
-  // validar los campos a tiempo real
-  [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
-    input.addEventListener('input', () => {
-      validateInputs();
-    });
-  });
-
-  // maneja visibilidad de la contraa
-  function togglePasswordVisibility(inputId) {
-    const input = document.getElementById(inputId);
-    if (input.type === 'password') {
-      input.type = 'text';
-    } else {
-      input.type = 'password';
-    }
-  }
-
   </script>
 </body>
 </html>
