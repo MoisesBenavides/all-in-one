@@ -2,6 +2,7 @@
 
 namespace Sigae\Controllers;
 use Sigae\Models\Parking;
+use Sigae\Models\TipoPlazaParking;
 use Sigae\Controllers\ControladorVehiculo;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
