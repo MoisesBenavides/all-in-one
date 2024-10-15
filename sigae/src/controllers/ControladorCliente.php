@@ -262,7 +262,7 @@ class ControladorCliente extends AbstractController {
     function myAccount(): Response{
         return $this->render('client/miCuenta.html.twig');
     }
-    function myAccount(): Response{
+    function faq(): Response{
         return $this->render('client/FAQ.html.twig');
     }
     function home(): Response{
