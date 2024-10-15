@@ -20,9 +20,32 @@
     body, input, select, button, option {
       font-family: 'Teachers', sans-serif;
     }
+
+    /* Estilos para corregir la superposición de texto de error y posición del ícono del ojo */
+    .input-container {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .error-message {
+      position: absolute;
+      bottom: -1.5rem;
+      left: 0;
+      font-size: 0.875rem;
+      color: #ef4444;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
   </style>
 </head>
-
 
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
   <div class="container max-w-full sm:max-w-lg bg-white rounded-lg shadow-md p-6 sm:p-8">
@@ -30,37 +53,37 @@
       <img class="mx-auto max-w-[200px]" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
     </div>
     <form id="signup-form" action="{{ path('doSignup') }}" method="POST" class="space-y-4">
-      <div>
+      <div class="input-container">
         <input id="email" name="email" type="email" placeholder="Correo" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <p id="email-error" class="mt-1 text-red-500 text-sm hidden"></p>
+        <p id="email-error" class="error-message hidden"></p>
       </div>
-      <div>
+      <div class="input-container">
         <input id="nombre" name="nombre" type="text" placeholder="Nombre" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <p id="nombre-error" class="mt-1 text-red-500 text-sm hidden"></p>
+        <p id="nombre-error" class="error-message hidden"></p>
       </div>
-      <div>
+      <div class="input-container">
         <input id="apellido" name="apellido" type="text" placeholder="Apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <p id="apellido-error" class="mt-1 text-red-500 text-sm hidden"></p>
+        <p id="apellido-error" class="error-message hidden"></p>
       </div>
-      <div class="relative">
+      <div class="input-container">
         <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center" onclick="togglePasswordVisibility('contrasena')">
+        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('contrasena')">
           <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
         </button>
-        <p id="contrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
+        <p id="contrasena-error" class="error-message hidden"></p>
       </div>
-      <div class="relative">
+      <div class="input-container">
         <input id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center" onclick="togglePasswordVisibility('repContrasena')">
+        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('repContrasena')">
           <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
         </button>
-        <p id="repContrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
+        <p id="repContrasena-error" class="error-message hidden"></p>
       </div>
 
       <p class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
@@ -73,7 +96,7 @@
             </ul>
         </div>
       {% endif %}
-    
+
       <button type="submit"  class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition cursor-pointer">
         Enviar
       </button>
@@ -85,7 +108,7 @@
       </div>
   </div>
   <script>
-  
+ 
 document.getElementById('signup-form').addEventListener('submit', function(e) {
     e.preventDefault(); // Detener el envío del formulario por defecto
     
@@ -127,9 +150,7 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
 });
 
 
-
-
- 
+    // Obtener referencias a los elementos del formulario
     const form = document.getElementById('signup-form');
     const email = document.getElementById('email');
     const nombre = document.getElementById('nombre');
@@ -137,6 +158,7 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
     const contrasena = document.getElementById('contrasena');
     const repContrasena = document.getElementById('repContrasena');
 
+    // Agregar evento de envío al formulario
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       if (validateInputs()) {
@@ -144,11 +166,13 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
       }
     });
 
+    // Función para marcar un campo como válido
     const setSuccess = (element) => {
       element.classList.remove('border-red-500');
       element.nextElementSibling.classList.add('hidden');
     };
 
+    // Función para marcar un campo como inválido y mostrar un mensaje de error
     const setError = (element, message) => {
       element.classList.add('border-red-500');
       const errorDisplay = element.nextElementSibling;
@@ -156,11 +180,13 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
       errorDisplay.classList.remove('hidden');
     };
 
+    // Función para validar el formato del correo electrónico
     const isValidEmail = (email) => {
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return regex.test(email);
     };
 
+    // Función para validar un campo específico
     const validateInput = (input) => {
       const inputValue = input.value.trim();
 
@@ -205,6 +231,7 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
       }
     };
 
+    // Función para validar todos los campos del formulario
     const validateInputs = () => {
       let isValid = true;
       [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
@@ -216,10 +243,12 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
       return isValid;
     };
 
+    // Agregar eventos de validación en tiempo real a los campos
     [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
       input.addEventListener('input', () => validateInput(input));
     });
 
+    // Función para alternar la visibilidad de la contraseña
     function togglePasswordVisibility(inputId) {
       const input = document.getElementById(inputId);
       const button = input.nextElementSibling;
