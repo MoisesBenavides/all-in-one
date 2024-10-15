@@ -41,27 +41,28 @@
         <input id="apellido" name="apellido" type="text" placeholder="Apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         <p id="apellido-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
-     <div class="relative">
-        <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5" onclick="togglePasswordVisibility('contrasena')">
-          <svg class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="relative flex items-center">
+        <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        <button type="button" class="absolute right-2 p-1" onclick="togglePasswordVisibility('contrasena')">
+          <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
         </button>
-        <p id="contrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
+      <p id="contrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
 
-      <div class="relative">
-        <input id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5" onclick="togglePasswordVisibility('repContrasena')">
-          <svg class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="relative flex items-center">
+        <input id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        <button type="button" class="absolute right-2 p-1" onclick="togglePasswordVisibility('repContrasena')">
+          <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
         </button>
-        <p id="repContrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
+      <p id="repContrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
+
       <p class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
    {% if response.errors is defined and response.errors is not empty %}
           <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
