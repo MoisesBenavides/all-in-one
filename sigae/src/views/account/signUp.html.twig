@@ -2,12 +2,11 @@
 <html lang="en">
 
 <head>
-  <!--Es responsivo-->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro | AIO</title>
 
- <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
   <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
   <style>
     @font-face {
@@ -21,25 +20,25 @@
       font-family: 'Teachers', sans-serif;
     }
 
-    /* Estilos para corregir la superposición de texto de error y posición del ícono del ojo */
     .input-container {
       position: relative;
       margin-bottom: 1rem;
     }
 
-      .error-message {
-        color: #950d03;
-        font-size: 14px;
-        margin-top: 4px;
-      }
+    .error-message {
+      color: #950d03;
+      font-size: 14px;
+      margin-top: 4px;
+    }
 
-      .error-message.hidden {
-        display: none;
-      }
+    .error-message.hidden {
+      display: none;
+    }
 
     .input-wrapper {
       position: relative;
     }
+
     .password-toggle {
       position: absolute;
       right: 10px;
@@ -70,7 +69,7 @@
         <input id="apellido" name="apellido" type="text" placeholder="Apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         <p id="apellido-error" class="error-message hidden"></p>
       </div>
-    <div class="input-container">
+      <div class="input-container">
         <div class="input-wrapper">
           <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
           <button type="button" class="password-toggle" onclick="togglePasswordVisibility('contrasena')">
@@ -96,169 +95,129 @@
       </div>
 
       <p class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
-   {% if response.errors is defined and response.errors is not empty %}
-          <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
-            <ul id="error-list">
-              {% for error in response.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
+      {% if response.errors is defined and response.errors is not empty %}
+        <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
+          <ul id="error-list">
+            {% for error in response.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
         </div>
       {% endif %}
 
-      <button type="submit"  class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition cursor-pointer">
+      <button type="submit" class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition cursor-pointer">
         Enviar
       </button>
     </form>
     <div class="mt-6 text-center space-y-2">
-        <p>
-          <a href="{{ path('login') }}" class="text-sm text-gray-600 hover:underline">¿Ya tienes una cuenta? Inicia sesión aquí</a>
-        </p>
-      </div>
+      <p>
+        <a href="{{ path('login') }}" class="text-sm text-gray-600 hover:underline">¿Ya tienes una cuenta? Inicia sesión aquí</a>
+      </p>
+    </div>
   </div>
   <script>
- /*
-document.getElementById('signup-form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Detener el envío del formulario por defecto
-    
-    // Realizar la solicitud POST usando fetch
-    fetch(this.action, {
-        method: 'POST', // Cambiar a POST
-        body: new FormData(this), // Enviar los datos del formulario
-        headers: {
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        const errorContainer = document.getElementById('error-container');
-        const errorList = document.getElementById('error-list');
-        
-        errorList.innerHTML = '';
-        
-        if (data.success) {
-            window.location.href = "{{ path('login') }}";
-        } else {
-            errorContainer.classList.remove('hidden');
-            data.errors.forEach(error => {
-                const li = document.createElement('li');
-                li.textContent = error;
-                errorList.appendChild(li);
-            });
-            
-            // Información de depuración
-            console.log('Debug info:', data.debug);
-            const debugInfo = document.createElement('pre');
-            debugInfo.textContent = JSON.stringify(data.debug, null, 2);
-            errorList.appendChild(debugInfo);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-});
-*/
-z
-  // Obtener referencias a los elementos del formulario
-  const form = document.getElementById('signup-form');
-  const email = document.getElementById('email');
-  const nombre = document.getElementById('nombre');
-  const apellido = document.getElementById('apellido');
-  const contrasena = document.getElementById('contrasena');
-  const repContrasena = document.getElementById('repContrasena');
+    // Obtener referencias a los elementos del formulario
+    const form = document.getElementById('signup-form');
+    const email = document.getElementById('email');
+    const nombre = document.getElementById('nombre');
+    const apellido = document.getElementById('apellido');
+    const contrasena = document.getElementById('contrasena');
+    const repContrasena = document.getElementById('repContrasena');
 
-  // Agregar evento de envío al formulario
-  form.addEventListener('submit', (e) => {
-    e.preventDefault(); // Evitar envío por defecto
-    if (validateInputs()) {
-      form.submit(); // Enviar el formulario si es válido
-    }
-  });
-
-  // Función para marcar un campo como válido
-  const setSuccess = (element) => {
-    element.classList.remove('border-red-500');
-    element.nextElementSibling.classList.add('hidden'); // Ocultar el mensaje de error
-  };
-
-  // Función para marcar un campo como inválido y mostrar un mensaje de error
-  const setError = (element, message) => {
-    element.classList.add('border-red-500'); // Añadir borde rojo
-    const errorDisplay = element.nextElementSibling; // Obtener el mensaje de error
-    errorDisplay.textContent = message; // Asignar el mensaje de error
-    errorDisplay.classList.remove('hidden'); // Mostrar el mensaje de error
-  };
-
-  // Función para validar el formato del correo electrónico
-  const isValidEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email); // Retorna true si el correo es válido
-  };
-
-  // Función para validar un campo específico
-  const validateInput = (input) => {
-    const inputValue = input.value.trim();
-
-    switch(input.id) {
-      case 'email':
-        if (inputValue === '') {
-          setError(input, 'Por favor ingrese su correo electrónico');
-        } else if (!isValidEmail(inputValue)) {
-          setError(input, 'Correo electrónico inválido');
-        } else {
-          setSuccess(input);
-        }
-        break;
-      case 'nombre':
-      case 'apellido':
-        if (inputValue === '') {
-          setError(input, `Por favor ingrese su ${input.id}`);
-        } else {
-          setSuccess(input);
-        }
-        break;
-      case 'contrasena':
-        if (inputValue === '') {
-          setError(input, 'Por favor ingrese una contraseña');
-        } else if (inputValue.length < 6) {
-          setError(input, 'La contraseña debe tener al menos 6 caracteres');
-        } else if (!/[A-Z]/.test(inputValue) || !/[a-z]/.test(inputValue) || !/\d/.test(inputValue)) {
-          setError(input, 'La contraseña debe incluir mayúsculas, minúsculas y números');
-        } else {
-          setSuccess(input);
-        }
-        break;
-      case 'repContrasena':
-        if (inputValue === '') {
-          setError(input, 'Por favor repita la contraseña');
-        } else if (inputValue !== contrasena.value) {
-          setError(input, 'Las contraseñas no coinciden');
-        } else {
-          setSuccess(input);
-        }
-        break;
-    }
-  };
-
-  // Función para validar todos los campos del formulario
-  const validateInputs = () => {
-    let isValid = true;
-    [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
-      validateInput(input); // Validar cada campo individualmente
-      if (input.classList.contains('border-red-500')) {
-        isValid = false; // Si hay un error, marcar como no válido
+    // Agregar evento de envío al formulario
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // Evitar envío por defecto
+      if (validateInputs()) {
+        form.submit(); // Enviar el formulario si es válido
       }
     });
-    return isValid;
-  };
 
-  // Agregar eventos de validación en tiempo real a los campos
-  [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
-    input.addEventListener('input', () => validateInput(input));
-  });
+    // Función para marcar un campo como válido
+    const setSuccess = (element) => {
+      element.classList.remove('border-red-500');
+      const errorDisplay = element.parentElement.nextElementSibling;
+      errorDisplay.textContent = '';
+      errorDisplay.classList.add('hidden');
+    };
 
-  // Función para alternar la visibilidad de la contraseña
-  function togglePasswordVisibility(inputId) {
+    // Función para marcar un campo como inválido y mostrar un mensaje de error
+    const setError = (element, message) => {
+      element.classList.add('border-red-500');
+      const errorDisplay = element.parentElement.nextElementSibling;
+      errorDisplay.textContent = message;
+      errorDisplay.classList.remove('hidden');
+    };
+
+    // Función para validar el formato del correo electrónico
+    const isValidEmail = (email) => {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    };
+
+    // Función para validar un campo específico
+    const validateInput = (input) => {
+      const inputValue = input.value.trim();
+
+      switch(input.id) {
+        case 'email':
+          if (inputValue === '') {
+            setError(input, 'Por favor ingrese su correo electrónico');
+          } else if (!isValidEmail(inputValue)) {
+            setError(input, 'Correo electrónico inválido');
+          } else {
+            setSuccess(input);
+          }
+          break;
+        case 'nombre':
+        case 'apellido':
+          if (inputValue === '') {
+            setError(input, `Por favor ingrese su ${input.id}`);
+          } else {
+            setSuccess(input);
+          }
+          break;
+        case 'contrasena':
+          if (inputValue === '') {
+            setError(input, 'Por favor ingrese una contraseña');
+          } else if (inputValue.length < 6) {
+            setError(input, 'La contraseña debe tener al menos 6 caracteres');
+          } else if (!/[A-Z]/.test(inputValue) || !/[a-z]/.test(inputValue) || !/\d/.test(inputValue)) {
+            setError(input, 'La contraseña debe incluir mayúsculas, minúsculas y números');
+          } else {
+            setSuccess(input);
+          }
+          break;
+        case 'repContrasena':
+          if (inputValue === '') {
+            setError(input, 'Por favor repita la contraseña');
+          } else if (inputValue !== contrasena.value) {
+            setError(input, 'Las contraseñas no coinciden');
+          } else {
+            setSuccess(input);
+          }
+          break;
+      }
+    };
+
+    // Función para validar todos los campos del formulario
+    const validateInputs = () => {
+      let isValid = true;
+      [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
+        validateInput(input);
+        if (input.classList.contains('border-red-500')) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    };
+
+    // Agregar eventos de validación en tiempo real a los campos
+    [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
+      input.addEventListener('input', () => validateInput(input));
+    });
+
+    // Función para alternar la visibilidad de la contraseña
+    function togglePasswordVisibility(inputId) {
       const input = document.getElementById(inputId);
       const button = input.nextElementSibling;
       if (input.type === 'password') {
@@ -278,23 +237,6 @@ z
         `;
       }
     }
-
-const setError = (element, message) => {
-      element.classList.add('border-red-500');
-      const errorDisplay = element.parentElement.nextElementSibling;
-      errorDisplay.textContent = message;
-      errorDisplay.classList.remove('hidden');
-    };
-
-    // Updated setSuccess function
-    const setSuccess = (element) => {
-      element.classList.remove('border-red-500');
-      const errorDisplay = element.parentElement.nextElementSibling;
-      errorDisplay.textContent = '';
-      errorDisplay.classList.add('hidden');
-    };
-
-</script>
-
+  </script>
 </body>
 </html>
