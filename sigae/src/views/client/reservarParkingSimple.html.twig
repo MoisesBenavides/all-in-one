@@ -181,6 +181,9 @@
                         {% if misVehiculos is not empty %}
                             {% for vehiculo in misVehiculos %}
                                 <option value="{{ vehiculo.matricula }}">{{ vehiculo.tipo }} ({{ vehiculo.tipo }})</option>
+                                <script>
+                                    // tiposDropdown.prop('disabled', true).hide(); // Deshabilitar y ocultar el dropdown de tipo
+                                </script>
                             {% endfor %}
                         {% else %}
                             <option value="" disabled>No tienes vehículos vinculados</option>
@@ -213,7 +216,7 @@
             const vehiculoDropdown = document.getElementById('vehiculosDropdown');
             const matriculaYa = document.getElementById('matriculaYa');
         
-            if (vehiculoDropdown.value === "" && matriculaYa.value === "") {
+            if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
                 alert("Debe seleccionar un vehículo o ingresar una matrícula.");
             } else {
                 if (vehiculoDropdown.value !== "") {
@@ -222,116 +225,6 @@
                 form.submit();  // Enviar el formulario si todo es válido
             }
         });
-        </script>
-{#    <script>
-        function cargarMisVehiculos() {
-            console.log("Cargando vehículos...");
-            $.ajax({
-                url: '{{ asset('data/misVehiculos.json') }}'  // Ruta del archivo JSON
-                dataType: 'json',  // El tipo de datos que se espera es JSON
-                success: function(response) {
-                    console.log(response);
-                    var vehiculosDropdown = $('#vehiculosDropdown');
-                    var tiposDropdown = $('#dropTipoVehiculo');
-                    vehiculosDropdown.find('option:not(:first)').remove();  // Limpiar las opciones previas
-    
-                    var inputMatricula = $('#matriculaYa');
-                    var tipoVehiculoSection = $('#tipoVehiculoSection'); // Seleccionar la sección del tipo de vehículo
-    
-                    // Ocultar la sección del tipo de vehículo al cargar
-                    tipoVehiculoSection.hide();
-    
-                    // Si no hay vehículos, deshabilitar el dropdown y mostrar el input de matrícula
-                    if (response.length === 0) {
-                        vehiculosDropdown.prop('disabled', true);
-                        tiposDropdown.prop('disabled', false); // Mostrar y habilitar el dropdown de tipo
-                        inputMatricula.prop('disabled', false).show(); // Mostrar y habilitar el input de matrícula
-                        tipoVehiculoSection.show(); // Mostrar la sección si no hay vehículos
-                    } else {
-                        // Llenar el dropdown con los vehículos
-                        response.forEach(function(vehiculo) {
-                            var matricula = vehiculo.matricula;
-                            var tipo = vehiculo.tipo;
-    
-                            // Agregar cada vehículo al dropdown
-                            vehiculosDropdown.append($('<option>', {
-                                value: matricula,
-                                text: matricula + ' - ' + tipo
-                            }));
-                        });
-    
-                        // Habilitar el dropdown si hay vehículos y ocultar el input de matrícula
-                        vehiculosDropdown.prop('disabled', false);
-                        inputMatricula.prop('disabled', true).hide(); // Ocultar el input de matrícula
-    
-                        // Agregar un evento change para establecer el tipo en el input oculto
-                        vehiculosDropdown.on('change', function() {
-                            var selectedMatricula = $(this).val();
-                            var selectedVehiculo = response.find(v => v.matricula === selectedMatricula);
-                            if (selectedVehiculo) {
-                                // Setear el tipo en el input oculto
-                                $('#tipoVehiculo').val(selectedVehiculo.tipo); // Establecer el valor en el input oculto
-    
-                                // También puedes mostrar el tipo en el dropdown de tipos si es necesario
-                                tiposDropdown.find('.option').each(function() {
-                                    if ($(this).data('value') === selectedVehiculo.tipo) {
-                                        $(this).addClass('selected'); // Agregar una clase para indicar la selección
-                                        tiposDropdown.show(); // Mostrar el dropdown si es necesario
-                                    } else {
-                                        $(this).removeClass('selected'); // Limpiar la selección anterior
-                                    }
-                                });
-    
-                                tiposDropdown.prop('disabled', true).hide(); // Deshabilitar y ocultar el dropdown de tipo
-                            }
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error al cargar los vehículos desde el archivo JSON:', error);
-                }
-            });
-        }
-    
-        // Ejecutar la función cuando se cargue la página
-        $(document).ready(function() {
-            cargarMisVehiculos();
-        });
-    </script>
-#}         
-    <script>
-       document.getElementById('servicioForm').addEventListener('submit', function(e) {
-           e.preventDefault();
-           
-           fetch(this.action + '&' + new URLSearchParams(new FormData(this)))
-               .then(response => response.json())
-               .then(data => {
-                   const errorContainer = document.getElementById('error-container');
-                   const errorList = document.getElementById('error-list');
-                   
-                   errorList.innerHTML = '';
-                   
-                   if (data.success) {
-                       window.location.href = 'index.php?action=home';
-                   } else {
-                       errorContainer.classList.remove('hidden');
-                       data.errors.forEach(error => {
-                           const li = document.createElement('li');
-                           li.textContent = error;
-                           errorList.appendChild(li);
-                       });
-       
-                       // Debug information
-                       console.log('Debug info:', data.debug);
-                       const debugInfo = document.createElement('pre');
-                       debugInfo.textContent = JSON.stringify(data.debug, null, 2);
-                       errorList.appendChild(debugInfo);
-                   }
-               })
-               .catch(error => {
-                   console.error('Error:', error);
-               });
-       });
     </script>
  </body>
 </html>
