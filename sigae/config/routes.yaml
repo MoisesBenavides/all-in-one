@@ -102,8 +102,8 @@ myAccount:
   controller: Sigae\Controllers\ControladorCliente::myAccount
   methods: GET
 
-preguntasFrecuentes:
-  path: /preguntasFrecuentes
+faq:
+  path: /faq
   controller: Sigae\Controllers\ControladorCliente::faq
   methods: GET
 
