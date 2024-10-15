@@ -102,7 +102,7 @@
                             {# Mostrar los vehículos si tiene vinculados, o deshabilitar dropdown#}
                             {% if misVehiculos is not empty %}
                                 {% for vehiculo in misVehiculos %}
-                                    <option value="{{ vehiculo.matricula }}">{{ vehiculo.tipo }} ({{ vehiculo.tipo }})</option>
+                                    <option value="{{ vehiculo.matricula }}">{{ vehiculo.matricula }} ({{ vehiculo.tipo }})</option>
                                 {% endfor %}
                             {% else %}
                                 <option value="" disabled>No tienes vehículos vinculados</option>

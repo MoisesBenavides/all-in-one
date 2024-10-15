@@ -217,7 +217,7 @@
                         {# Mostrar los vehículos si tiene vinculados, o deshabilitar dropdown#}
                         {% if misVehiculos is not empty %}
                             {% for vehiculo in misVehiculos %}
-                                <option value="{{ vehiculo.matricula }}">{{ vehiculo.tipo }} ({{ vehiculo.tipo }})</option>
+                                <option value="{{ vehiculo.matricula }}">{{ vehiculo.matricula }} ({{ vehiculo.tipo }})</option>
                                 <script>
                                     // tiposDropdown.prop('disabled', true).hide(); // Deshabilitar y ocultar el dropdown de tipo
                                 </script>
