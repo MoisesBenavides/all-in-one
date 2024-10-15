@@ -21,22 +21,18 @@
     }
 
     .input-container {
-      position: relative;
       margin-bottom: 1rem;
+    }
+
+    .input-wrapper {
+      position: relative;
     }
 
     .error-message {
       color: #950d03;
       font-size: 14px;
       margin-top: 4px;
-    }
-
-    .error-message.hidden {
-      display: none;
-    }
-
-    .input-wrapper {
-      position: relative;
+      min-height: 20px; /* Reserve space for error message */
     }
 
     .password-toggle {
@@ -58,16 +54,22 @@
     </div>
     <form id="signup-form" action="{{ path('doSignup') }}" method="POST" class="space-y-4">
       <div class="input-container">
-        <input id="email" name="email" type="email" placeholder="Correo" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <p id="email-error" class="error-message hidden"></p>
+        <div class="input-wrapper">
+          <input id="email" name="email" type="email" placeholder="Correo" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        </div>
+        <div class="error-message" id="email-error"></div>
       </div>
       <div class="input-container">
-        <input id="nombre" name="nombre" type="text" placeholder="Nombre" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <p id="nombre-error" class="error-message hidden"></p>
+        <div class="input-wrapper">
+          <input id="nombre" name="nombre" type="text" placeholder="Nombre" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        </div>
+        <div class="error-message" id="nombre-error"></div>
       </div>
       <div class="input-container">
-        <input id="apellido" name="apellido" type="text" placeholder="Apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <p id="apellido-error" class="error-message hidden"></p>
+        <div class="input-wrapper">
+          <input id="apellido" name="apellido" type="text" placeholder="Apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        </div>
+        <div class="error-message" id="apellido-error"></div>
       </div>
       <div class="input-container">
         <div class="input-wrapper">
@@ -79,7 +81,7 @@
             </svg>
           </button>
         </div>
-        <p id="contrasena-error" class="error-message hidden"></p>
+        <div class="error-message" id="contrasena-error"></div>
       </div>
       <div class="input-container">
         <div class="input-wrapper">
@@ -91,7 +93,7 @@
             </svg>
           </button>
         </div>
-        <p id="repContrasena-error" class="error-message hidden"></p>
+        <div class="error-message" id="repContrasena-error"></div>
       </div>
 
       <p class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
@@ -137,7 +139,6 @@
       element.classList.remove('border-red-500');
       const errorDisplay = element.parentElement.nextElementSibling;
       errorDisplay.textContent = '';
-      errorDisplay.classList.add('hidden');
     };
 
     // Función para marcar un campo como inválido y mostrar un mensaje de error
@@ -145,7 +146,6 @@
       element.classList.add('border-red-500');
       const errorDisplay = element.parentElement.nextElementSibling;
       errorDisplay.textContent = message;
-      errorDisplay.classList.remove('hidden');
     };
 
     // Función para validar el formato del correo electrónico
