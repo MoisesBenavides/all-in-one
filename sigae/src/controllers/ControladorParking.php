@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Exception;
 
 class ControladorParking extends AbstractController{
-    private const PATH_PRECIOS_JSON = __DIR__ . '/../src/data/preciosHoraParking.json';
+    private const PATH_PRECIOS_JSON = __DIR__ . '/../data/preciosHoraParking.json';
     private $parking;
     private $preciosHora;
     private $controladorVehiculo;
