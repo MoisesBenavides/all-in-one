@@ -107,8 +107,7 @@ class ControladorTaller extends AbstractController{
                 ['fecha_inicio', 'categoriaServicio', 'tipoServicio', 'tipoVehiculo', 'matricula'],
                 array_keys($_POST)
             );
-        }
-    
+        }    
         return new JsonResponse($response); // Devuelve un JSON en caso de error
     }
 
