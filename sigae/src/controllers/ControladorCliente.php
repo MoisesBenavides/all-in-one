@@ -195,8 +195,22 @@ class ControladorCliente extends AbstractController {
             'response' => $response
         ]);
     }
-    function doLogout(){
-        // TODO: Implementar log out de la sesion
+    function logout(): RedirectResponse{
+        session_start();
+
+        $_SESSION=[];
+
+        session_destroy();
+
+        // Borrar cookie de sesión
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000, 
+            $params["path"], $params["domain"], 
+            $params["secure"], $params["httponly"]);
+        }
+
+        return $this->redirectToRoute('/');
     }
     function forgotPassword(): Response{
         return $this->render('account/forgotPassword.html.twig');
@@ -260,6 +274,11 @@ class ControladorCliente extends AbstractController {
     }
 
     function myAccount(): Response{
+        session_start();
+        error_log($_SESSION['email']. " abrió la página de Mi Cuenta");
+        error_log(print_r($_SESSION, true));
+
+        $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
         return $this->render('client/miCuenta.html.twig');
     }
     function faq(): Response{
