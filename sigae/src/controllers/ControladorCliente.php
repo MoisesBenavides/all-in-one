@@ -210,7 +210,7 @@ class ControladorCliente extends AbstractController {
             $params["secure"], $params["httponly"]);
         }
 
-        return $this->redirectToRoute('');
+        return $this->redirectToRoute('showLandingPage');
     }
     function forgotPassword(): Response{
         return $this->render('account/forgotPassword.html.twig');
