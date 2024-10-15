@@ -84,7 +84,7 @@ bookParkingSimple:
 
 bookParkingLongTerm:
   path: /bookParkingLongTerm
-  controller: Sigae\Controllers\ControladorCliente::bookParkingLongTerm
+  controller: Sigae\Controllers\ControladorParking::bookParkingLongTerm
   methods: POST
 
 parkingConfirmation:
