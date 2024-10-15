@@ -50,7 +50,15 @@
         <p id="repContrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
       <p class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
-      <div id="error-container" style="display: none; background-color: #ffcccc; color: #ff0000; padding: 10px; margin-bottom: 10px;"></div>
+      {% if response.errors is defined and response.errors is not empty %}
+          <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
+            <ul id="error-list">
+              {% for error in response.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+        </div>
+      {% endif %}
       <button type="submit"  class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition cursor-pointer">
         Enviar
       </button>

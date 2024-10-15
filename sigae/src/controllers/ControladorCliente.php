@@ -79,10 +79,10 @@ class ControladorCliente extends AbstractController {
             'response' => $response  // Aquí pasas la variable a la vista
         ]);
     }
-    function doLoginAioEmployee(): JsonResponse|RedirectResponse{
+    function doLoginAioEmployee(): Response|RedirectResponse{
         
     }
-    function doLoginOAuth(): JsonResponse|RedirectResponse{
+    function doLoginOAuth(): Response|RedirectResponse{
         session_start();
 
         // Configurar cliente Google
@@ -133,7 +133,7 @@ class ControladorCliente extends AbstractController {
     function signup(): Response{
         return $this->render('account/signUp.html.twig');
     }
-    function doSignup(): JsonResponse|RedirectResponse{
+    function doSignup(): Response|RedirectResponse{
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
         // Debug: Log all received data
@@ -191,7 +191,9 @@ class ControladorCliente extends AbstractController {
                 array_keys($_POST)
             );
         }
-        return new JsonResponse($response); // Devuelve un JSON en caso de error
+        return $this->render('account/signUp.html.twig', [
+            'response' => $response
+        ]);
     }
     function doLogout(){
         // TODO: Implementar log out de la sesion
