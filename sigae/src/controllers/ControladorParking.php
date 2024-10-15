@@ -38,7 +38,11 @@ class ControladorParking extends AbstractController{
 
             try {
                 // Validar solo una matrícula ingresada
-                $matricula = $this->obtenerTipoRegistroMat($_POST["matriculaYa"], $_POST["matricula"]);
+                $matricula = $this->obtenerTipoRegistroMat(
+                    // Si no definidas, entonces null
+                    $_POST["matriculaYa"] ?? null, 
+                    $_POST["matricula"] ?? null
+                );
             } catch (InvalidArgumentException $e) {
                 $response['errors'][] = $e->getMessage();
             }
@@ -192,7 +196,10 @@ class ControladorParking extends AbstractController{
     }
 
     private function obtenerTipoRegistroMat($matRegistrarYa, $matVehiculoSelect){
-        if (isset($matRegistrarYa) && !isset($matVehiculoSelect)) {
+        // Si ambos están definidos pero vacíos
+        if (empty($matRegistrarYa) && empty($matVehiculoSelect)) {
+            throw new InvalidArgumentException("Debe ingresar una matrícula.");
+        } elseif (isset($matRegistrarYa) && !isset($matVehiculoSelect)) {
             $this->registrarYa=true;
             return $matRegistrarYa;  // Retorna la matricula a registrar, si es la unica esta seteada
         } elseif (!isset($matRegistrarYa) && isset($matVehiculoSelect)) {
@@ -200,7 +207,7 @@ class ControladorParking extends AbstractController{
             return $matVehiculoSelect;  // Retorna la matricula del vehículo seleccionado por el cliente, si es la unica seteada
         } else {
             // Si ambos están seteados o ninguno está seteado, lanza un error
-            throw new InvalidArgumentException("Debe ingresar una matricula.");
+            throw new InvalidArgumentException("Debe ingresar sólo una matricula.");
         }
     }
 
