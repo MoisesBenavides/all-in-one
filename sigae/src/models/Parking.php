@@ -74,6 +74,7 @@ class Parking extends Servicio {
     private function reservarParking(){
         $id=$this->getId();
         $largo_plazo=$this->getLargo_plazo();
+        $largo_plazo = !empty($largo_plazo) ? (int)$largo_plazo : 0;
         $tipo_plaza=$this->getTipo_plaza();
 
         try {
