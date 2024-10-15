@@ -28,18 +28,113 @@
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+<header class=" w-screen  ">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <div class="container bg-alternativo mx-auto px-4 py-4">
+        <div class="relative flex flex-col md:flex-row justify-between items-center">
+            
+            <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
+            <div class="absolute top-2 left-4 md:hidden">
+                <button id="hamburger" class="text-black focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Logo -->
+            <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
+                <img class="w-full h-auto" src="{{ asset('img/AIO Parking positivo.png') }}" alt="AIO Logo" />
+            </div>
+
+            <!-- Navegación - visible solo en pantallas medianas y grandes -->
+            <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
+                <a href="{{ path('aioParking') }}BookSimple" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Reservar</a>
+                <a href="{{ path('aioParking') }}BookLongTerm" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Reservar a largo plazo</a>
+                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">Mis Reservas</a>
+                <a href="#" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold   ">FAQ</a>
+            </nav>
+
+            <!-- User icon - Alineado a la derecha en móviles -->
+            <div class="absolute top-2 right-4 md:static">
+                <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
+            </div>
+        </div>
+
+        <!-- Menú hamburguesa desplegable (oculto por defecto) -->
+        <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+            <a href="{{ path('aioParking') }}BookSimple" class="block text-black text-sm font-bold   ">Reservar</a>
+            <a href="{{ path('aioParking') }}BookLongTerm" class="block text-black text-sm font-bold   ">Reservar a largo plazo</a>
+            <a href="#" class="block text-black text-sm font-bold   ">Mis Reservas</a>
+            <a href="#" class="block text-black text-sm font-bold   ">FAQ</a>
+        </nav>
+    </div>
+
+    <script>
+        // Lógica del menú hamburguesa
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+       <script>
+        const dropdownButton = document.getElementById('dropdownButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const selectedOption = document.getElementById('selectedOption');
+        const options = document.querySelectorAll('.option');
+        const hiddenInput = document.getElementById('selectedVehicleType');
+        const arrow = dropdownButton.querySelector('svg');
+        const priceInfo = document.getElementById('priceInfo');
+
+        dropdownButton.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        });
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                selectedOption.textContent = option.textContent;
+                hiddenInput.value = option.getAttribute('data-value');
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+
+                // Mostrar el precio por hora
+                const price = option.getAttribute('data-price');
+                priceInfo.textContent = `Precio por hora: ${price} pesos`;
+                priceInfo.classList.remove('hidden');
+            });
+        });
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.addEventListener('click', (e) => {
+            if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        });
+    </script>
+</header>
 <body>
     <main class="container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto space-y-12">
-                <section>
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Seleccione el servicio</h2>
             <form id="servicioForm" action="{{ path('doBookService')}}" method="POST" class="w-full max-w-[340px] mx-auto">
-                    <div class="relative mb-2">
-                        <div id="dropdownButton1" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                            <div id="selectedOption1" class="text-center text-black text-xl font-semibold">Tipo de Servicio</div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
+                    <section>
+                        <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese la fecha de inicio</h2>
+                        <div class="w-full max-w-[340px] mx-auto">
+                        <input type="datetime-local" name= "fecha_inicio" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                        </div>
+                    </section>
+                    <section>
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Seleccione el servicio</h2>
+                        <div class="relative mb-2">
+                            <div id="dropdownButton1" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                                <div id="selectedOption1" class="text-center text-black text-xl font-semibold">Tipo de Servicio</div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                            </div>
                         </div>
                         <div id="dropdownMenu1" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
                             <div class="py-1">

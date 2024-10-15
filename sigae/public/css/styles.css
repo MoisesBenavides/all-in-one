@@ -777,10 +777,6 @@ video {
   height: 30px;
 }
 
-.h-\[400px\] {
-  height: 400px;
-}
-
 .h-\[46px\] {
   height: 46px;
 }
@@ -1551,11 +1547,6 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-\[\#eb0000\] {
-  --tw-text-opacity: 1;
-  color: rgb(235 0 0 / var(--tw-text-opacity));
 }
 
 .shadow-lg {
