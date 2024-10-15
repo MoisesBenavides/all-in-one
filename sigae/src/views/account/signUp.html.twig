@@ -27,13 +27,15 @@
       margin-bottom: 1rem;
     }
 
-    .error-message {
-      position: absolute;
-      bottom: -1.5rem;
-      left: 0;
-      font-size: 0.875rem;
-      color: #ef4444;
-    }
+      .error-message {
+        color: #950d03;
+        font-size: 14px;
+        margin-top: 4px;
+      }
+
+      .error-message.hidden {
+        display: none;
+      }
 
     .password-toggle {
       position: absolute;
@@ -66,17 +68,18 @@
         <p id="apellido-error" class="error-message hidden"></p>
       </div>
       <div class="input-container">
-        <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('contrasena')">
+  <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+  <button type="button" class="password-toggle" onclick="togglePasswordVisibility('contrasena')">
+    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
         </button>
-        <p id="contrasena-error" class="error-message hidden"></p>
+       <p id="contrasena-error" class="error-message hidden"></p>
       </div>
-      <div class="input-container">
-        <input id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+     <div class="input-container">
+      <input id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         <button type="button" class="password-toggle" onclick="togglePasswordVisibility('repContrasena')">
           <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
