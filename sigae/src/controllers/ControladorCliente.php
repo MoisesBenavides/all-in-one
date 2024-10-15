@@ -262,6 +262,9 @@ class ControladorCliente extends AbstractController {
     function myAccount(): Response{
         return $this->render('client/miCuenta.html.twig');
     }
+    function myAccount(): Response{
+        return $this->render('client/FAQ.html.twig');
+    }
     function home(): Response{
         session_start();
         error_log($_SESSION['email']. " abrió la página home");
