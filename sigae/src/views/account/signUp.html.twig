@@ -113,7 +113,7 @@
       </div>
   </div>
   <script>
- 
+ /*
 document.getElementById('signup-form').addEventListener('submit', function(e) {
     e.preventDefault(); // Detener el envío del formulario por defecto
     
@@ -153,127 +153,113 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
         console.error('Error:', error);
     });
 });
+*/
+z
+  // Obtener referencias a los elementos del formulario
+  const form = document.getElementById('signup-form');
+  const email = document.getElementById('email');
+  const nombre = document.getElementById('nombre');
+  const apellido = document.getElementById('apellido');
+  const contrasena = document.getElementById('contrasena');
+  const repContrasena = document.getElementById('repContrasena');
 
-
-    // Obtener referencias a los elementos del formulario
-    const form = document.getElementById('signup-form');
-    const email = document.getElementById('email');
-    const nombre = document.getElementById('nombre');
-    const apellido = document.getElementById('apellido');
-    const contrasena = document.getElementById('contrasena');
-    const repContrasena = document.getElementById('repContrasena');
-
-    // Agregar evento de envío al formulario
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (validateInputs()) {
-        form.submit();
-      }
-    });
-
-    // Función para marcar un campo como válido
-    const setSuccess = (element) => {
-      element.classList.remove('border-red-500');
-      element.nextElementSibling.classList.add('hidden');
-    };
-
-    // Función para marcar un campo como inválido y mostrar un mensaje de error
-    const setError = (element, message) => {
-      element.classList.add('border-red-500');
-      const errorDisplay = element.nextElementSibling;
-      errorDisplay.textContent = message;
-      errorDisplay.classList.remove('hidden');
-    };
-
-    // Función para validar el formato del correo electrónico
-    const isValidEmail = (email) => {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    };
-
-    // Función para validar un campo específico
-    const validateInput = (input) => {
-      const inputValue = input.value.trim();
-
-      switch(input.id) {
-        case 'email':
-          if (inputValue === '') {
-            setError(input, 'Por favor ingrese su correo electrónico');
-          } else if (!isValidEmail(inputValue)) {
-            setError(input, 'Correo electrónico inválido');
-          } else {
-            setSuccess(input);
-          }
-          break;
-        case 'nombre':
-        case 'apellido':
-          if (inputValue === '') {
-            setError(input, `Por favor ingrese su ${input.id}`);
-          } else {
-            setSuccess(input);
-          }
-          break;
-        case 'contrasena':
-          if (inputValue === '') {
-            setError(input, 'Por favor ingrese una contraseña');
-          } else if (inputValue.length < 6) {
-            setError(input, 'La contraseña debe tener al menos 6 caracteres');
-          } else if (!/[A-Z]/.test(inputValue) || !/[a-z]/.test(inputValue) || !/\d/.test(inputValue)) {
-            setError(input, 'La contraseña debe incluir mayúsculas, minúsculas y números');
-          } else {
-            setSuccess(input);
-          }
-          break;
-        case 'repContrasena':
-          if (inputValue === '') {
-            setError(input, 'Por favor repita la contraseña');
-          } else if (inputValue !== contrasena.value) {
-            setError(input, 'Las contraseñas no coinciden');
-          } else {
-            setSuccess(input);
-          }
-          break;
-      }
-    };
-
-    // Función para validar todos los campos del formulario
-    const validateInputs = () => {
-      let isValid = true;
-      [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
-        validateInput(input);
-        if (input.classList.contains('border-red-500')) {
-          isValid = false;
-        }
-      });
-      return isValid;
-    };
-
-    // Agregar eventos de validación en tiempo real a los campos
-    [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
-      input.addEventListener('input', () => validateInput(input));
-    });
-
-    // Función para alternar la visibilidad de la contraseña
-    function togglePasswordVisibility(inputId) {
-      const input = document.getElementById(inputId);
-      const button = input.nextElementSibling;
-      if (input.type === 'password') {
-        input.type = 'text';
-        button.innerHTML = `
-          <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-          </svg>
-        `;
-      } else {
-        input.type = 'password';
-        button.innerHTML = `
-          <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-        `;
-      }
+  // Agregar evento de envío al formulario
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); // Evitar envío por defecto
+    if (validateInputs()) {
+      form.submit(); // Enviar el formulario si es válido
     }
-  </script>
+  });
+
+  // Función para marcar un campo como válido
+  const setSuccess = (element) => {
+    element.classList.remove('border-red-500');
+    element.nextElementSibling.classList.add('hidden'); // Ocultar el mensaje de error
+  };
+
+  // Función para marcar un campo como inválido y mostrar un mensaje de error
+  const setError = (element, message) => {
+    element.classList.add('border-red-500'); // Añadir borde rojo
+    const errorDisplay = element.nextElementSibling; // Obtener el mensaje de error
+    errorDisplay.textContent = message; // Asignar el mensaje de error
+    errorDisplay.classList.remove('hidden'); // Mostrar el mensaje de error
+  };
+
+  // Función para validar el formato del correo electrónico
+  const isValidEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email); // Retorna true si el correo es válido
+  };
+
+  // Función para validar un campo específico
+  const validateInput = (input) => {
+    const inputValue = input.value.trim();
+
+    switch(input.id) {
+      case 'email':
+        if (inputValue === '') {
+          setError(input, 'Por favor ingrese su correo electrónico');
+        } else if (!isValidEmail(inputValue)) {
+          setError(input, 'Correo electrónico inválido');
+        } else {
+          setSuccess(input);
+        }
+        break;
+      case 'nombre':
+      case 'apellido':
+        if (inputValue === '') {
+          setError(input, `Por favor ingrese su ${input.id}`);
+        } else {
+          setSuccess(input);
+        }
+        break;
+      case 'contrasena':
+        if (inputValue === '') {
+          setError(input, 'Por favor ingrese una contraseña');
+        } else if (inputValue.length < 6) {
+          setError(input, 'La contraseña debe tener al menos 6 caracteres');
+        } else if (!/[A-Z]/.test(inputValue) || !/[a-z]/.test(inputValue) || !/\d/.test(inputValue)) {
+          setError(input, 'La contraseña debe incluir mayúsculas, minúsculas y números');
+        } else {
+          setSuccess(input);
+        }
+        break;
+      case 'repContrasena':
+        if (inputValue === '') {
+          setError(input, 'Por favor repita la contraseña');
+        } else if (inputValue !== contrasena.value) {
+          setError(input, 'Las contraseñas no coinciden');
+        } else {
+          setSuccess(input);
+        }
+        break;
+    }
+  };
+
+  // Función para validar todos los campos del formulario
+  const validateInputs = () => {
+    let isValid = true;
+    [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
+      validateInput(input); // Validar cada campo individualmente
+      if (input.classList.contains('border-red-500')) {
+        isValid = false; // Si hay un error, marcar como no válido
+      }
+    });
+    return isValid;
+  };
+
+  // Agregar eventos de validación en tiempo real a los campos
+  [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
+    input.addEventListener('input', () => validateInput(input));
+  });
+
+  // Función para alternar la visibilidad de la contraseña
+  function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const button = input.nextElementSibling; // Obtener el botón del ojo
+   
+  }
+</script>
+
 </body>
 </html>
