@@ -186,7 +186,7 @@ class ControladorTaller extends AbstractController{
 
         // Verificar si el archivo existe
         if (!file_exists($pathServiciosJson)) {
-            throw $this->createNotFoundException('El archivo de precios no existe.');
+            throw $this->createNotFoundException('El archivo de precios no existe.'.$pathServiciosJson);
         }
 
         $contenidoJson = file_get_contents($pathPreciosJson);
