@@ -1,7 +1,7 @@
 <?php
 
 namespace Sigae\Models;
-use Sigae\Config\db_conn;
+use function Sigae\Config\conectarDB;
 
 class Parking extends Servicio {
     private $largo_plazo;
