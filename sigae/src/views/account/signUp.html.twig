@@ -41,16 +41,29 @@
         <input id="apellido" name="apellido" type="text" placeholder="Apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         <p id="apellido-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
-      <div>
+     <div class="relative">
         <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5" onclick="togglePasswordVisibility('contrasena')">
+          <svg class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        </button>
         <p id="contrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
-      <div>
+
+      <div class="relative">
         <input id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5" onclick="togglePasswordVisibility('repContrasena')">
+          <svg class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        </button>
         <p id="repContrasena-error" class="mt-1 text-red-500 text-sm hidden"></p>
       </div>
       <p class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
-      {% if response.errors is defined and response.errors is not empty %}
+   {% if response.errors is defined and response.errors is not empty %}
           <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
             <ul id="error-list">
               {% for error in response.errors %}
@@ -59,6 +72,7 @@
             </ul>
         </div>
       {% endif %}
+    
       <button type="submit"  class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition cursor-pointer">
         Enviar
       </button>
@@ -70,6 +84,7 @@
       </div>
   </div>
   <script>
+  
 document.getElementById('signup-form').addEventListener('submit', function(e) {
     e.preventDefault(); // Detener el envío del formulario por defecto
     
@@ -113,104 +128,108 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
 
 
 
+ 
   const form = document.getElementById('signup-form');
-const email = document.getElementById('email');
-const nombre = document.getElementById('nombre');
-const apellido = document.getElementById('apellido');
-const contrasena = document.getElementById('contrasena');
-const repContrasena = document.getElementById('repContrasena');
+  const email = document.getElementById('email');
+  const nombre = document.getElementById('nombre');
+  const apellido = document.getElementById('apellido');
+  const contrasena = document.getElementById('contrasena');
+  const repContrasena = document.getElementById('repContrasena');
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  if (validateInputs()) {
-    form.submit();
-  }
-});
-
-const setSuccess = (element) => {
-  element.classList.remove('border-red-500');
-  element.nextElementSibling.classList.add('hidden');
-};
-
-const setError = (element, message) => {
-  element.classList.add('border-red-500');
-  const errorDisplay = element.nextElementSibling;
-  errorDisplay.textContent = message;
-  errorDisplay.classList.remove('hidden');
-};
-
-const isValidEmail = (email) => {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email);
-};
-
-const validateInputs = () => {
-  let isValid = true;
-  const emailValue = email.value.trim();
-  const nombreValue = nombre.value.trim();
-  const apellidoValue = apellido.value.trim();
-  const contrasenaValue = contrasena.value.trim();
-  const repContrasenaValue = repContrasena.value.trim();
-
-  if (emailValue === '') {
-    setError(email, 'Por favor ingrese su correo electrónico');
-    isValid = false;
-  } else if (!isValidEmail(emailValue)) {
-    setError(email, 'Correo electrónico inválido');
-    isValid = false;
-  } else {
-    setSuccess(email);
-  }
-
-  if (nombreValue === '') {
-    setError(nombre, 'Por favor ingrese su nombre');
-    isValid = false;
-  } else {
-    setSuccess(nombre);
-  }
-
-  if (apellidoValue === '') {
-    setError(apellido, 'Por favor ingrese su apellido');
-    isValid = false;
-  } else {
-    setSuccess(apellido);
-  }
-
-  if (contrasenaValue === '') {
-    setError(contrasena, 'Por favor ingrese una contraseña');
-    isValid = false;
-  } else if (contrasenaValue.length < 6) {
-    setError(contrasena, 'La contraseña debe tener al menos 6 caracteres');
-    isValid = false;
-  } else if (!/[A-Z]/.test(contrasenaValue) || !/[a-z]/.test(contrasenaValue) || !/\d/.test(contrasenaValue)) {
-    setError(contrasena, 'La contraseña debe incluir mayúsculas, minúsculas y números');
-    isValid = false;
-  } else {
-    setSuccess(contrasena);
-  }
-
-  if (repContrasenaValue === '') {
-    setError(repContrasena, 'Por favor repita la contraseña');
-    isValid = false;
-  } else if (repContrasenaValue !== contrasenaValue) {
-    setError(repContrasena, 'Las contraseñas no coinciden');
-    isValid = false;
-  } else {
-    setSuccess(repContrasena);
-  }
-
-  return isValid;
-};
-
-// Validar los campos en tiempo real
-[email, nombre, apellido, contrasena, repContrasena].forEach(input => {
-  input.addEventListener('input', () => {
-    validateInputs();
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (validateInputs()) {
+      form.submit();
+    }
   });
-});
 
-// Validar todos los campos al cargar la página
-document.addEventListener('DOMContentLoaded', validateInputs);
+  const setSuccess = (element) => {
+    element.classList.remove('border-red-500');
+    element.nextElementSibling.classList.add('hidden');
+  };
+
+  const setError = (element, message) => {
+    element.classList.add('border-red-500');
+    const errorDisplay = element.nextElementSibling;
+    errorDisplay.textContent = message;
+    errorDisplay.classList.remove('hidden');
+  };
+
+  const isValidEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validateInputs = () => {
+    let isValid = true;
+    const emailValue = email.value.trim();
+    const nombreValue = nombre.value.trim();
+    const apellidoValue = apellido.value.trim();
+    const contrasenaValue = contrasena.value.trim();
+    const repContrasenaValue = repContrasena.value.trim();
+
+    // Reset los estados de error
+    [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
+      setSuccess(input);
+    });
+
+    if (emailValue === '') {
+      setError(email, 'Por favor ingrese su correo electrónico');
+      isValid = false;
+    } else if (!isValidEmail(emailValue)) {
+      setError(email, 'Correo electrónico inválido');
+      isValid = false;
+    }
+
+    if (nombreValue === '') {
+      setError(nombre, 'Por favor ingrese su nombre');
+      isValid = false;
+    }
+
+    if (apellidoValue === '') {
+      setError(apellido, 'Por favor ingrese su apellido');
+      isValid = false;
+    }
+
+    if (contrasenaValue === '') {
+      setError(contrasena, 'Por favor ingrese una contraseña');
+      isValid = false;
+    } else if (contrasenaValue.length < 6) {
+      setError(contrasena, 'La contraseña debe tener al menos 6 caracteres');
+      isValid = false;
+    } else if (!/[A-Z]/.test(contrasenaValue) || !/[a-z]/.test(contrasenaValue) || !/\d/.test(contrasenaValue)) {
+      setError(contrasena, 'La contraseña debe incluir mayúsculas, minúsculas y números');
+      isValid = false;
+    }
+
+    if (repContrasenaValue === '') {
+      setError(repContrasena, 'Por favor repita la contraseña');
+      isValid = false;
+    } else if (repContrasenaValue !== contrasenaValue) {
+      setError(repContrasena, 'Las contraseñas no coinciden');
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  // validar los campos a tiempo real
+  [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
+    input.addEventListener('input', () => {
+      validateInputs();
+    });
+  });
+
+  // maneja visibilidad de la contraa
+  function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+      input.type = 'text';
+    } else {
+      input.type = 'password';
+    }
+  }
+
   </script>
 </body>
 </html>
