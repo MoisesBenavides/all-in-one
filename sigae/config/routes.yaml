@@ -8,6 +8,11 @@ login:
   controller: Sigae\Controllers\ControladorCliente::login
   methods: GET
 
+logout:
+  path: /logout
+  controller: Sigae\Controllers\ControladorCliente::logout
+  methods: GET
+
 doLogin:
   path: /doLogin
   controller: Sigae\Controllers\ControladorCliente::doLogin
