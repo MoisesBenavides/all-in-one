@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ControladorCliente extends AbstractController {
     private $cliente;
-    private const INACTIVIDAD_MAX_SESION = 60;
+    private const INACTIVIDAD_MAX_SESION = 30; // límite de 10 minutos de inactividad
 
     public function __construct(){
         $this->cliente=new Cliente();
@@ -228,8 +228,7 @@ class ControladorCliente extends AbstractController {
             '%s=; expires=%s; Max-Age=0; path=%s; domain=%s; secure; httponly; samesite=%s',
             session_name(),
             gmdate('D, d M Y H:i:s T', time() - 42000),// Formatea la fecha para que sea validada por el navegador
-            $params["path"],
-            $params["domain"],
+            $params["path"], $params["domain"],
             $params["samesite"] ?? 'Lax'// Usa 'Lax' como se especificó 'samesite'
         );
         // Envía el header con los parámetros formateados, sin reemplazar otros headers
@@ -335,7 +334,6 @@ class ControladorCliente extends AbstractController {
             // Verificación de inactividad de la sesión
             if ($inactividad <= $this::INACTIVIDAD_MAX_SESION) {
                 // Genera un nuevo ID de sesión y actualiza la ultima solicitud
-                session_regenerate_id(true);
                 $_SESSION["ultima_solicitud"] = time();
                 return null;
             } else {
