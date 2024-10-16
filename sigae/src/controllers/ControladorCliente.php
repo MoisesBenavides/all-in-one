@@ -64,6 +64,10 @@ class ControladorCliente extends AbstractController {
 
                     // Iniciar sesión del cliente
                     session_start();
+
+                    // Regenerar el ID de sesión para prevenir fijación de sesión
+                    session_regenerate_id(true);
+
                     $_SESSION['ultimo_acceso']= time();
                     $_SESSION['id']=$this->cliente->getId();
                     $_SESSION['ci']=$this->cliente->getCi();
@@ -87,7 +91,7 @@ class ControladorCliente extends AbstractController {
             );
         }
         return $this->render('account/login.html.twig', [
-            'response' => $response  // Aquí pasas la variable a la vista
+            'response' => $response  // Aquí pasa la respuesta a la vista
         ]);
     }
     function doLoginAioEmployee(){
@@ -312,8 +316,8 @@ class ControladorCliente extends AbstractController {
     }
 
     function verificarSesion(): RedirectResponse{
-        if (session_status() == PHP_SESSION_ACTIVE){
-            session_start();
+        session_start();
+        if (isset($_SESSION["ultima_solicitud"])){
             // Obtiene el tiempo desde la última solicitud
             $inactividad = time() - $_SESSION["ultima_solicitud"];
 
