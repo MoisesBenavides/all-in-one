@@ -315,7 +315,7 @@ class ControladorCliente extends AbstractController {
         return $this->render('client/homeCliente.html.twig');
     }
 
-    function verificarSesion(): RedirectResponse{
+    function verificarSesion(): ?RedirectResponse{
         session_start();
         if (isset($_SESSION["ultima_solicitud"])){
             // Obtiene el tiempo desde la última solicitud
