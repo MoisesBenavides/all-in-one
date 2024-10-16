@@ -58,9 +58,11 @@
             </nav>
 
             <!-- User icon - Alineado a la derecha en móviles -->
-            <div class="absolute top-2 right-4 md:static">
-                <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
-            </div>
+            <a href="{{ path('myAccount') }}">
+                <div class="absolute top-2 right-4 md:static">
+                    <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
+                </div>
+            </a>
         </div>
 
         <!-- Menú hamburguesa desplegable (oculto por defecto) -->
