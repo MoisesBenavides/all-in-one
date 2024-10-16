@@ -11,7 +11,7 @@ login:
 logout:
   path: /logout
   controller: Sigae\Controllers\ControladorCliente::logout
-  methods: GET
+  methods: POST
 
 doLogin:
   path: /doLogin
@@ -34,7 +34,7 @@ doSignup:
   methods: POST
 
 doSignupOAuth:
-  path: /soSignupOAuth
+  path: /doSignupOAuth
   controller: Sigae\Controllers\ControladorCliente::doSignupOAuth
   methods: POST
 
