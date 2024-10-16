@@ -211,7 +211,9 @@ class ControladorCliente extends AbstractController {
         ]);
     }
     function logout(): RedirectResponse{
-        session_start();
+        if (session_status() === PHP_SESSION_NONE){
+            session_start();
+        }
         session_unset();
         $_SESSION=[];
 
