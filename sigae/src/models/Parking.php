@@ -2,6 +2,7 @@
 
 namespace Sigae\Models;
 use function Sigae\Config\conectarDB;
+use Exception;
 
 class Parking extends Servicio {
     private $largo_plazo;
