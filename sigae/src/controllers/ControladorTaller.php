@@ -54,7 +54,7 @@ class ControladorTaller extends AbstractController{
             if (isset($matricula)) { // Verifica que la matrícula se haya definido correctamente
                 $matricula = strtoupper($matricula);
     
-                // Debug: Log processed data
+                // Debug: Datos procesados
                 $response['debug']['processed_data'] = [
                     'fecha_inicio' => $fecha_inicio,
                     'categoriaServicio' => $categoriaServicio,

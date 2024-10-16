@@ -53,7 +53,7 @@ class ControladorParking extends AbstractController{
             if (isset($matricula)) { // Verifica que la matrícula se haya definido correctamente
                 $matricula = strtoupper($matricula);
 
-                // Debug: Log processed data
+                // Debug: Datos procesados
                 $response['debug']['processed_data'] = [
                     'fecha_inicio' => $fecha_inicio,
                     'fecha_final' => $fecha_final,
@@ -144,7 +144,7 @@ class ControladorParking extends AbstractController{
             if (isset($matricula)) { // Verifica que la matrícula se haya definido correctamente
                 $matricula = strtoupper($matricula);
 
-                // Debug: Log processed data
+                // Debug: Datos procesados
                 $response['debug']['processed_data'] = [
                     'fecha_inicio' => $fecha_inicio,
                     'fecha_final' => $fecha_final,
@@ -291,10 +291,8 @@ class ControladorParking extends AbstractController{
         if (empty($matRegistrarYa) && empty($matVehiculoSelect)) {
             throw new InvalidArgumentException("Debe ingresar una matrícula.");
         } elseif (isset($matRegistrarYa) && !isset($matVehiculoSelect)) {
-            $this->registrarYa=true;
             return $matRegistrarYa;  // Retorna la matricula a registrar, si es la unica esta seteada
         } elseif (!isset($matRegistrarYa) && isset($matVehiculoSelect)) {
-            $this->registrarYa=false;
             return $matVehiculoSelect;  // Retorna la matricula del vehículo seleccionado por el cliente, si es la unica seteada
         } else {
             // Si ambos están seteados o ninguno está seteado, lanza un error

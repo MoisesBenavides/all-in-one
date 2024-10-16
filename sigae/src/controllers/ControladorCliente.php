@@ -37,7 +37,7 @@ class ControladorCliente extends AbstractController {
             $email = $_POST["email"];
             $contrasena = $_POST["contrasena"];
 
-            // Debug: Log processed data
+            // Debug: Datos procesados
             $response['debug']['processed_data'] = [
                 'email' => $email,
                 'contrasena' => 'REDACTED',
@@ -164,7 +164,7 @@ class ControladorCliente extends AbstractController {
             $contrasena = $_POST["contrasena"];
             $repContrasena = $_POST["repContrasena"];
 
-            // Debug: Log processed data
+            // Debug: Datos procesados
             $response['debug']['processed_data'] = [
                 'email' => $email,
                 'nombre' => $nombre,
@@ -214,12 +214,14 @@ class ControladorCliente extends AbstractController {
         if (session_status() === PHP_SESSION_NONE){
             session_start();
         }
+        // Limpia variables de sesión
         session_unset();
         $_SESSION=[];
 
+        // Destruye las variables en el servidor
         session_destroy();
 
-        /// Borrar cookie de sesión
+        /// Borra la cookie de sesión
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
 
