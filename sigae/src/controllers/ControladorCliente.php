@@ -325,26 +325,30 @@ class ControladorCliente extends AbstractController {
         return $this->render('client/homeCliente.html.twig');
     }
 
-    function verificarSesion(): ?RedirectResponse{
-        session_start();
-        if (isset($_SESSION["ultima_solicitud"])){
-            // Obtiene el tiempo desde la última solicitud
-            $inactividad = time() - $_SESSION["ultima_solicitud"];
-
-            // Verificación de inactividad de la sesión
-            if ($inactividad <= $this::INACTIVIDAD_MAX_SESION) {
-                // Genera un nuevo ID de sesión y actualiza la ultima solicitud
-                $_SESSION["ultima_solicitud"] = time();
-                return null;
-            } else {
-                // Cierra la sesión
-                $this->logout();
-                return null;
-            } 
-        } else {
-            // Redirige al inicio si no tiene una sesión activa
-            return $this->redirectToRoute('showLandingPage');
+    function verificarSesion(): ?RedirectResponse {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
         }
+    
+        // Verificar si la variable de tiempo de inactividad está definida
+        if (!isset($_SESSION["ultima_solicitud"])) {
+            return $this->logout(); // Si no hay un tiempo definido, se realiza el logout
+        }
+    
+        // Obtiene el tiempo desde la última solicitud
+        $inactividad = time() - $_SESSION["ultima_solicitud"];
+    
+        // Verificación de inactividad de la sesión
+        if ($inactividad > $this::INACTIVIDAD_MAX_SESION) {
+            return $this->logout(); // Si ha excedido el tiempo de inactividad, cierra la sesión
+        }
+    
+        // Actualiza el tiempo de la última solicitud y regenera la ID de sesión por seguridad
+        $_SESSION["ultima_solicitud"] = time();
+        session_regenerate_id(true);
+    
+        // Si la sesión es válida, no se realiza ninguna redirección
+        return null;
     }
     
     private function validarContrasena($str, $min, $max) {
