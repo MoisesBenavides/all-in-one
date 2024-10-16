@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ControladorCliente extends AbstractController {
     private $cliente;
-    private const INACTIVIDAD_MAX_SESION = 30; // límite de 10 minutos de inactividad
+    private const INACTIVIDAD_MAX_SESION = 600; // límite de 10 minutos de inactividad
 
     public function __construct(){
         $this->cliente=new Cliente();
