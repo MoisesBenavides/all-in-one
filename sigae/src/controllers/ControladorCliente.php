@@ -68,7 +68,7 @@ class ControladorCliente extends AbstractController {
                     // Regenerar el ID de sesión para prevenir fijación de sesión
                     session_regenerate_id(true);
 
-                    $_SESSION['ultimo_acceso']= time();
+                    $_SESSION['ultima_solicitud']= time();
                     $_SESSION['id']=$this->cliente->getId();
                     $_SESSION['ci']=$this->cliente->getCi();
                     $_SESSION['email']=$this->cliente->getEmail();
