@@ -219,13 +219,22 @@ class ControladorCliente extends AbstractController {
 
         session_destroy();
 
-        // Borrar cookie de sesión
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000, 
-            $params["lifetime"], $params["path"], 
-            $params["secure"], $params["httponly"], $params["samesite"]);
-        }
+        /// Borrar cookie de sesión
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+
+        // Fomatea el header de la cookie para eliminarla
+        $cookieHeader = sprintf(
+            '%s=; expires=%s; Max-Age=0; path=%s; domain=%s; secure; httponly; samesite=%s',
+            session_name(),
+            gmdate('D, d M Y H:i:s T', time() - 42000),// Formatea la fecha para que sea validada por el navegador
+            $params["path"],
+            $params["domain"],
+            $params["samesite"] ?? 'Lax'// Usa 'Lax' como se especificó 'samesite'
+        );
+        // Envía el header con los parámetros formateados, sin reemplazar otros headers
+        header('Set-Cookie: ' . $cookieHeader, false); 
+    }
 
         return $this->redirectToRoute('showLandingPage');
     }
