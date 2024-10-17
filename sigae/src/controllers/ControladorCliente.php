@@ -3,10 +3,10 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Cliente;
 use Google_Client;
+use Google_Service_Oauth2;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ControladorCliente extends AbstractController {
     private $cliente;
@@ -100,15 +100,13 @@ class ControladorCliente extends AbstractController {
         // Configurar cliente Google
         $client= new Google_Client();
         $client->setAuthConfig('/var/www/html/private/credentials.json');
-        $client->setRedirectUri('https://ngrok-url.com/doLoginOAuth');
+        $client->setRedirectUri('https://actualizar-link.ngrok.com/doLoginOAuth');
         $client->addScope('email');
         $client->addScope('profile');
-        $client->addScope('nombre');
 
         if (!isset($_GET['code'])) {
             $auth_url = $client->createAuthUrl();
-            header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
-            exit();
+            return $this->redirectToRoute(filter_var($auth_url, FILTER_SANITIZE_URL));
         } else {
             // Procesa la respuesta de Google
             $client->authenticate($_GET['code']);
@@ -118,7 +116,7 @@ class ControladorCliente extends AbstractController {
             $oauth2 = new Google_Service_Oauth2($client);
             $userInfo = $oauth2->userinfo->get();
 
-            $perfil = $userInfo->profile;
+            $fotoPerfil = $userInfo->profile;
             $email = $userInfo->email;
 
             if ($this->cliente->iniciarCliente($email, null)) {
@@ -133,15 +131,19 @@ class ControladorCliente extends AbstractController {
                 $_SESSION['nombre']=$this->cliente->getNombre();
                 $_SESSION['apellido']=$this->cliente->getApellido();
                 $_SESSION['telefono']=$this->cliente->getTelefono();
-                $_SESSION['perfil']=$perfil; //TODO: ¿Cookie o sesion?
+                $_SESSION['fotoPerfil']=$fotoPerfil; //TODO: ¿Cookie o sesion?
 
                 // Redirigir a la home page
-                return $this->redirectToRoute('home');
+                return $this->render('client/homeCliente.html.twig', [
+                    'fotoPerfil' => $fotoPerfil
+                ]);
             } else {
                 $response['errors'][] = "Error al iniciar sesión.";
             }
         }
-        return new JsonResponse($response); // Devuelve un JSON en caso de error
+        return $this->render('account/login.html.twig', [
+            'response' => $response  // Pasa la respuesta a la vista
+        ]);
     }
     function doSignUpOAuth(){
     }
@@ -222,20 +224,20 @@ class ControladorCliente extends AbstractController {
         session_destroy();
 
         /// Borra la cookie de sesión
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
 
-        // Fomatea el header de la cookie para eliminarla
-        $cookieHeader = sprintf(
-            '%s=; expires=%s; Max-Age=0; path=%s; domain=%s; secure; httponly; samesite=%s',
-            session_name(),
-            gmdate('D, d M Y H:i:s T', time() - 42000),// Formatea la fecha para que sea validada por el navegador
-            $params["path"], $params["domain"],
-            $params["samesite"] ?? 'Lax'// Usa 'Lax' como se especificó 'samesite'
-        );
-        // Envía el header con los parámetros formateados, sin reemplazar otros headers
-        header('Set-Cookie: ' . $cookieHeader, false); 
-    }
+            // Fomatea el header de la cookie para eliminarla
+            $cookieHeader = sprintf(
+                '%s=; expires=%s; Max-Age=0; path=%s; domain=%s; secure; httponly; samesite=%s',
+                session_name(),
+                gmdate('D, d M Y H:i:s T', time() - 42000),// Formatea la fecha para que sea validada por el navegador
+                $params["path"], $params["domain"],
+                $params["samesite"] ?? 'Lax'// Usa 'Lax' como se especificó 'samesite'
+            );
+            // Envía el header con los parámetros formateados, sin reemplazar otros headers
+            header('Set-Cookie: ' . $cookieHeader, false); 
+        }
 
         return $this->redirectToRoute('showLandingPage');
     }
