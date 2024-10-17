@@ -100,7 +100,7 @@
                         <p class="text-black text-xl"><strong>Largo plazo:</strong> {{ sessionData.reserva.largo_plazo }}</p>
                         <p class="text-black text-xl"><strong>Tipo de plaza:</strong> {{ sessionData.reserva.tipo_plaza }}</p>
                     </div>
-                    <a href="{{ path('aioParking') }}" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
+                    <a href="{{ path('aioParking') }}" class="w-full max-w-[300px] h-[60px] bg-[#dc2626] hover:bg-[#b91c1c] text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
                         Volver a AIO Parking
                     </a>
                 {% elseif sessionData.servicio == 'taller' %}
@@ -110,7 +110,7 @@
                         <p class="text-black text-xl"><strong>Descripción:</strong> {{ sessionData.reserva.descripcion }}</p>
                         <p class="text-black text-xl"><strong>Tiempo estimado:</strong> {{ sessionData.reserva.tiempo_estimado }} minutos</p>
                     </div>
-                    <a href="{{ path('services') }}" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
+                    <a href="{{ path('services') }}" class="w-full max-w-[300px] h-[60px] bg-[#dc2626] hover:bg-[#b91c1c] text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
                         Volver a Servicios
                     </a>
                 {% endif %}
