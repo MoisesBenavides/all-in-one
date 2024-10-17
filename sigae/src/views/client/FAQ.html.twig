@@ -21,6 +21,10 @@
         body, input, select, button, option {
             font-family: 'Teachers', sans-serif;
         }
+
+        .rotate-180 {
+    transform: rotate(180deg);
+}
     </style>
 </head>
 
@@ -95,36 +99,25 @@
         </div>
     </section>
     </main>
-
-     <footer class="w-screen bg-[#514e4e] ">      
-    <div class="  text-white py-12 container mx-auto px-4">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-8 md:mb-0">
-                <img class="w-48 h-auto mb-6" src="{{ asset('img/AIO Negativo (1).png') }}" alt="AIO Logo" />
-                <div class="space-y-4">
-                    <div class="flex items-center">
-                        <img class="w-8 h-8 mr-4" src="{{ asset('img/InstagramLogo.png') }}" alt="Instagram" />
-                        <span class="text-lg font-bold   ">@Aiotalleres</span>
-                    </div>
-                    <div class="flex items-center">
-                        <img class="w-8 h-8 mr-4" src="{{ asset('img/XLogo.png') }}" alt="Twitter" />
-                        <span class="text-lg font-bold   ">@Aiotalleres</span>
-                    </div>
-                    <div class="flex items-center">
-                        <img class="w-8 h-8 mr-4" src="{{ asset('img/TelefonoLogo.png') }}" alt="Teléfono" />
-                        <span class="text-lg font-bold   ">+598 99 123 456</span>
-                    </div>
-                </div>
-            </div>
-            <div class="w-full md:w-1/2 h-64 md:h-72">
-                <div id="mapContainer" class="w-full h-full rounded-lg"></div>
-            </div>
-        </div>
-    </div>
-
+    
           {% include 'partials/footer.html.twig' %}
 
 </body>
 
+<script>
+
+function toggleFAQ(button) {
+    // Obtener el contenido asociado al botón
+    const content = button.nextElementSibling;
+    
+    // Alternar la visibilidad del contenido
+    content.classList.toggle('hidden');
+    
+    // Rotar el ícono de flecha
+    const arrow = button.querySelector('svg');
+    arrow.classList.toggle('rotate-180');
+}
+
+</script>
 
 </html>
