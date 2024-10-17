@@ -6,8 +6,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        boton: '#dc2626',
-        botonHover: '#b91c1c'
+      
       },
     },
   },
