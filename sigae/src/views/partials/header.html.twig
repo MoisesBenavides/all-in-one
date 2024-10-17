@@ -42,9 +42,15 @@
 
             <!-- User icon - Alineado a la derecha en móviles -->
             <a href="{{ path('myAccount') }}">
-                <div class="absolute top-2 right-4 md:static">
-                    <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
-                </div>
+                {% if fotoPerfil %}
+                    <div class="absolute top-2 right-4 md:static">
+                        <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
+                    </div>
+                {% else %}
+                    <div class="absolute top-2 right-4 md:static">
+                        <img class="w-10 h-10" src="{{ fotoPerfil }}" alt="User">
+                    </div>
+                {% endif %}
             </a>
         </div>
 

@@ -135,7 +135,7 @@ class ControladorCliente extends AbstractController {
 
                 // Redirigir a la home page
                 return $this->render('client/homeCliente.html.twig', [
-                    'perfil' => $fotoPerfil
+                    'fotoPerfil' => $fotoPerfil
                 ]);
             } else {
                 $response['errors'][] = "Error al iniciar sesión.";
