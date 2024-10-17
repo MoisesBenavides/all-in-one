@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!--Es responsivoo-->
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
     <title>Reserva de Servicio | AIO</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
-
     <style>
         @font-face {
             font-family: 'Teachers';
@@ -20,37 +16,39 @@
             font-weight: normal;
             font-style: normal;
         }
-    
-        /* Apply the 'Teachers' font to all text elements */
         body, input, select, button, option {
             font-family: 'Teachers', sans-serif;
+        }
+        .dropdown-menu {
+            max-height: 200px;
+            overflow-y: auto;
         }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
-        {% include 'partials/header.html.twig' %}
-
 <body>
+    {% include 'partials/header.html.twig' %}
+
     <main class="container mx-auto px-4 py-8">
-        <div class="max-w-3xl mx-auto space-y-12">
+        <div class="max-w-3xl mx-auto space-y-8">
             <form id="servicioForm" action="{{ path('doBookService')}}" method="POST" class="w-full max-w-[340px] mx-auto">
-                    <section>
-                        <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese la fecha de inicio</h2>
-                        <div class="w-full max-w-[340px] mx-auto">
-                        <input type="datetime-local" name= "fecha_inicio" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                        </div>
-                    </section>
-                    <section>
+                <section class="mb-6">
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese la fecha de inicio</h2>
+                    <div class="w-full max-w-[340px] mx-auto">
+                        <input type="datetime-local" name="fecha_inicio" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                    </div>
+                </section>
+
+                <section class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Seleccione el servicio</h2>
-                        <div class="relative mb-2">
-                            <div id="dropdownButton1" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                                <div id="selectedOption1" class="text-center text-black text-xl font-semibold">Tipo de Servicio</div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                    </svg>
-                            </div>
+                    <div class="relative mb-2">
+                        <div id="dropdownButton1" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                            <div id="selectedOption1" class="text-center text-black text-xl font-semibold">Tipo de Servicio</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
                         </div>
-                        <div id="dropdownMenu1" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                        <div id="dropdownMenu1" class="dropdown-menu absolute z-10 left-0 w-full mt-1 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
                             <div class="py-1">
                                 <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="alineacion">Alineación</div>
                                 <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="balanceo">Balanceo</div>
@@ -63,7 +61,8 @@
                     <input type="hidden" id="selectedServiceType" name="categoriaServicio" value="">
                 </section>
 
-                <section>
+                <section class="mb-6">
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Subtipo de Servicio</h2>
                     <div class="relative mb-2">
                         <div id="dropdownButton2" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
                             <div id="selectedOption2" class="text-center text-black text-xl font-semibold">Subtipo de Servicio</div>
@@ -71,7 +70,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
-                        <div id="dropdownMenu2" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                        <div id="dropdownMenu2" class="dropdown-menu absolute z-10 left-0 w-full mt-1 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
                             <div id="tipoServicioOptions" class="py-1">
                                 <!-- Options will be dynamically populated based on the selected service -->
                             </div>
@@ -80,7 +79,7 @@
                     <input type="hidden" id="selectedServiceSubtype" name="tipoServicio" value="">
                 </section>
 
-                <section id="tipoVehiculoSection">
+                <section id="tipoVehiculoSection" class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese el tipo de vehículo</h2>
                     <div class="relative mb-2">
                         <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
@@ -89,7 +88,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
-                        <div id="dropTipoVehiculo" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                        <div id="dropTipoVehiculo" class="dropdown-menu absolute z-10 left-0 w-full mt-1 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
                             <div class="py-1">
                                 <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="auto">Auto</div>
                                 <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="moto">Motocicleta</div>
@@ -101,121 +100,197 @@
                     <input type="hidden" id="tipoVehiculo" name="tipoVehiculo" value="">
                 </section>
 
-                <section>
+                <section class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
                     <div class="relative w-full max-w-[340px] mx-auto">
                         <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                            {# Mensaje por defecto #}
                             <option value="" selected disabled>Seleccione un vehículo</option>
-
-                            {# Mostrar los vehículos si tiene vinculados, o deshabilitar dropdown#}
                             {% if misVehiculos is not empty %}
                                 {% for vehiculo in misVehiculos %}
-                                    <option value="{{ vehiculo.matricula }}">{{ vehiculo.matricula }} ({{ vehiculo.tipo }})</option>
+                                    <option value="{{ vehiculo.matricula }}" data-tipo="{{ vehiculo.tipo }}">{{ vehiculo.matricula }} ({{ vehiculo.tipo }})</option>
                                 {% endfor %}
                             {% else %}
                                 <option value="" disabled>No tienes vehículos vinculados</option>
                             {% endif %}
-                    </select>
+                        </select>
                     </div>
                 </section>
 
-                <div class="h-[52px] relative">
-                    <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="space-x-6 p-2 w-[340px] h-[50px] text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
+                <div id="matriculaYaContainer" class="mb-6 w-full max-w-[340px] mx-auto">
+                    <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="w-full h-[50px] px-[22px] py-3.5 text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
                 </div>
                 
-        <!-- DIV PARA ERRORES DE PHP -->
-            <div id="error-container" style="display: none; background-color: #ffcccc; color: #ff0000; padding: 10px; margin-bottom: 10px;"></div>
-        <!--  FINAL DE DIV PARA ERRORES DE PHP -->
+                <!-- DIV PARA ERRORES DE PHP -->
+                <div id="error-container" class="hidden bg-[#ffcccc] text-[#ff0000] p-4 mb-6 rounded-lg"></div>
 
-                <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
+                <div class="w-full max-w-[340px] mx-auto">
+                    <button type="submit" class="w-full h-[62px] px-7 py-2.5 bg-[#950d03] rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
+                </div>
             </form>
         </div>
     </main>
 
-            {% include 'partials/footer.html.twig' %}
+    {% include 'partials/footer.html.twig' %}
 
     <script>
-        // Dropdown functionality for service selection
-        const dropdownButton1 = document.getElementById('dropdownButton1');
-        const dropdownMenu1 = document.getElementById('dropdownMenu1');
-        const selectedOption1 = document.getElementById('selectedOption1');
-        const selectedServiceType = document.getElementById('selectedServiceType');
+     let servicios = {}; // Variable  para almacenar los servicios
 
-        dropdownButton1.addEventListener('click', () => {
-            dropdownMenu1.classList.toggle('hidden');
-        });
+    // Función para cargar los servicios desde el archivo JSON
+    async function cargarServicios() {
+        try {
+            const response = await fetch('../../data/serviciosTaller.json'); // Ajusta esta ruta según sea necesario
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            servicios = await response.json();
+            console.log('Servicios cargados:', servicios);
+            // Una vez cargados los servicios, inicializamos los dropdowns
+            inicializarFormulario();
+        } catch (error) {
+            console.error('Error al cargar los servicios:', error);
+            showError('Error al cargar los servicios. Por favor, recarga la página.');
+        }
+    }
 
-        const options1 = document.querySelectorAll('#dropdownMenu1 .option');
-        options1.forEach(option => {
+    // Función para inicializar el formulario
+    function inicializarFormulario() {
+        setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
+        setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
+        setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+
+        // Evento para actualizar subtipos cuando se selecciona un tipo de servicio
+        document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
             option.addEventListener('click', () => {
-                selectedOption1.textContent = option.textContent;
-                selectedServiceType.value = option.dataset.value;
-                dropdownMenu1.classList.add('hidden');
                 updateServiceSubtypes(option.dataset.value);
             });
         });
 
-        // Dropdown functionality for service subtype
-        const dropdownButton2 = document.getElementById('dropdownButton2');
-        const dropdownMenu2 = document.getElementById('dropdownMenu2');
-        const selectedOption2 = document.getElementById('selectedOption2');
-        const selectedServiceSubtype = document.getElementById('selectedServiceSubtype');
-        const tipoServicioOptions = document.getElementById('tipoServicioOptions');
+        // Manejar la selección de vehículos
+        const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+        const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+        const matriculaYaContainer = document.getElementById('matriculaYaContainer');
 
-        dropdownButton2.addEventListener('click', () => {
-            dropdownMenu2.classList.toggle('hidden');
+        vehiculosDropdown.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value !== "") {
+                const tipoVehiculo = selectedOption.dataset.tipo;
+                document.getElementById('selectedOptionAuto').textContent = tipoVehiculo;
+                document.getElementById('tipoVehiculo').value = tipoVehiculo;
+                tipoVehiculoSection.style.pointerEvents = 'none';
+                tipoVehiculoSection.style.opacity = '0.5';
+                matriculaYaContainer.style.display = 'none';
+            } else {
+                tipoVehiculoSection.style.pointerEvents = 'auto';
+                tipoVehiculoSection.style.opacity = '1';
+                matriculaYaContainer.style.display = 'block';
+            }
         });
 
-        function updateServiceSubtypes(serviceType) {
-            const subtypes = {
-                alineacion: ['A01', 'A02', 'A03'],
-                balanceo: ['B01', 'B02', 'B03', 'B04'],
-                neumaticos: ['N01', 'N02', 'N03', 'N04'],
-                diagnostico: ['D01'],
-                completo: ['SVC']
-            };
+        // Validación del formulario
+        document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
+    }
 
-            tipoServicioOptions.innerHTML = '';
-            subtypes[serviceType].forEach(subtype => {
-                const div = document.createElement('div');
-                div.className = 'option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100';
-                div.textContent = subtype;
-                div.addEventListener('click', () => {
-                    selectedOption2.textContent = subtype;
-                    selectedServiceSubtype.value = subtype;
-                    dropdownMenu2.classList.add('hidden');
-                });
-                tipoServicioOptions.appendChild(div);
+    // Función para manejar los dropdowns
+    function setupDropdown(buttonId, menuId, optionsSelector, selectedOptionId, hiddenInputId) {
+        const button = document.getElementById(buttonId);
+        const menu = document.getElementById(menuId);
+        const selectedOption = document.getElementById(selectedOptionId);
+        const hiddenInput = document.getElementById(hiddenInputId);
+
+        button.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll(optionsSelector).forEach(option => {
+            option.addEventListener('click', () => {
+                selectedOption.textContent = option.textContent;
+                hiddenInput.value = option.dataset.value;
+                menu.classList.add('hidden');
             });
+        });
+    }
 
-            // Reset the subtype selection
-            selectedOption2.textContent = 'Subtipo de Servicio';
-            selectedServiceSubtype.value = '';
+    // Función para actualizar los subtipos de servicio
+    function updateServiceSubtypes(serviceType) {
+        const subtypes = {
+            alineacion: ['A01', 'A02', 'A03'],
+            balanceo: ['B01', 'B02', 'B03', 'B04'],
+            neumaticos: ['N01', 'N02', 'N03', 'N04'],
+            diagnostico: ['D01'],
+            completo: ['SVC']
+        };
+
+        const tipoServicioOptions = document.getElementById('tipoServicioOptions');
+        tipoServicioOptions.innerHTML = '';
+        
+        subtypes[serviceType].forEach(subtype => {
+            const div = document.createElement('div');
+            div.className = 'option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100';
+            div.textContent = servicios[subtype].descripcion;
+            div.dataset.value = subtype;
+            div.addEventListener('click', () => {
+                document.getElementById('selectedOption2').textContent = servicios[subtype].descripcion;
+                document.getElementById('selectedServiceSubtype').value = subtype;
+                document.getElementById('dropdownMenu2').classList.add('hidden');
+            });
+            tipoServicioOptions.appendChild(div);
+        });
+
+        // Resetear la selección del subtipo
+        document.getElementById('selectedOption2').textContent = 'Subtipo de Servicio';
+        document.getElementById('selectedServiceSubtype').value = '';
+    }
+
+    // Función para mostrar errores
+    function showError(message) {
+        const errorContainer = document.getElementById('error-container');
+        errorContainer.textContent = message;
+        errorContainer.style.display = 'block';
+    }
+
+    // Función para validar el formulario
+    function validarFormulario(event) {
+        let isValid = true;
+        let errorMessage = '';
+
+        // Validar fecha
+        if (!document.querySelector('input[name="fecha_inicio"]').value) {
+            isValid = false;
+            errorMessage += 'Por favor, seleccione una fecha de inicio. ';
         }
 
-        // Dropdown functionality for vehicle type selection
-        const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
-        const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
-        const selectedOptionAuto = document.getElementById('selectedOptionAuto');
-        const selectedVehicleType = document.getElementById('tipoVehiculo');
+        // Validar tipo de servicio
+        if (!document.getElementById('selectedServiceType').value) {
+            isValid = false;
+            errorMessage += 'Por favor, seleccione un tipo de servicio. ';
+        }
 
-        dropdownButtonAuto.addEventListener('click', () => {
-            dropdownMenuAuto.classList.toggle('hidden');
-        });
+        // Validar subtipo de servicio
+        if (!document.getElementById('selectedServiceSubtype').value) {
+            isValid = false;
+            errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
+        }
 
-        const optionsAuto = document.querySelectorAll('#dropTipoVehiculo .option');
-        optionsAuto.forEach(option => {
-            option.addEventListener('click', () => {
-                selectedOptionAuto.textContent = option.textContent;
-                selectedVehicleType.value = option.dataset.value;
-                dropdownMenuAuto.classList.add('hidden');
-            });
-        });
+        // Validar tipo de vehículo o selección de vehículo existente
+        if (!document.getElementById('tipoVehiculo').value && document.getElementById('vehiculosDropdown').value === "") {
+            isValid = false;
+            errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
+        }
 
-        
-        
-           
+        // Validar matrícula
+        if (document.getElementById('vehiculosDropdown').value === "" && !document.getElementById('matriculaYa').value) {
+            isValid = false;
+            errorMessage += 'Por favor, ingrese una matrícula o seleccione un vehículo existente. ';
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+            showError(errorMessage);
+        }
+    }
+
+    // Cargar los servicios cuando se carga la página
+    document.addEventListener('DOMContentLoaded', cargarServicios);
     </script>
 </body>
 </html>
