@@ -6,11 +6,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        neutro: '#d1cfcf',
-        alternativo: '#162B9D',   // Un ejemplo de color personalizado
-        acento: '#95092D',
-        secundario: '#8B8989',
-        blancoAlt: '#f7f6f8'
+        boton: '#dc2626',
+        botonHover: '#b91c1c'
+        
       },
     },
   },
