@@ -209,53 +209,9 @@
             </div>
         </div>
     </div>
-          <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    
+          {% include '../partials/footer.html.twig' %}
 
-    <script>
-        // Inicializar el servicio de Here Maps
-        const platform = new H.service.Platform({
-            apikey: 'mPUawsT9Wo28yuY79gBvNN_j0lGCzX2uJE2WiQ0sKG0' // Asegúrate de que esta clave es válida
-        });
-
-        // Obtener las capas del mapa
-        const defaultLayers = platform.createDefaultLayers();
-
-        // Crear el mapa
-        const map = new H.Map(
-            document.getElementById('mapContainer'),
-            defaultLayers.raster.normal.map, // Usar el mapa normal (vectorial)
-            {
-                zoom: 15,  // Nivel de zoom inicial
-                center: { lat: -34.87290336184553, lng: -56.16794676768326 }  // Coordenadas
-            }
-        );
-
-        // Habilitar la interacción del usuario (zoom, desplazamiento)
-        const mapEvents = new H.mapevents.MapEvents(map);
-        const behavior = new H.mapevents.Behavior(mapEvents);
-
-        // Agregar controles de interfaz (zoom y otros)
-        const ui = H.ui.UI.createDefault(map, defaultLayers);
-
-        // Crear un marcador
-        const marker = new H.map.Marker({ lat: -34.87290336184553, lng: -56.16794676768326 });
-        map.addObject(marker); // Agregar el marcador al mapa
-
-    </script>
-      
-     
-    </footer>
-    <script>
-        function toggleFAQ(button) {
-            const content = button.nextElementSibling;
-            const icon = button.querySelector('svg');
-            content.classList.toggle('hidden');
-            icon.classList.toggle('rotate-180');
-        }
-    </script>
 </body>
 
 
