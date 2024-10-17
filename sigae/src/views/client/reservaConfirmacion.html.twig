@@ -1,13 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmacion de reserva de servicio de taller | AIO</title>
+    <title>Confirmación de reserva de servicio de taller | AIO</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+    </style>
 </head>
+<body class="bg-white">
+
+    {% include 'partials/headerParking.html.twig'%}
+
 {# 
 <!--En caso de usar JavaScript!-->
 
@@ -47,46 +63,61 @@
     </script>
 </body>
 #}
-<body>
-    <h1>Confirmación de Reserva</h1>
-    
-    {# Generar salida de datos de reserva #}
-    <p>Email: {{sessionData.email}}</p>
-    <p>ID de usuario: {{sessionData.id}}</p>
-    <p>Nombre: {{sessionData.nombre}}</p>
-    <p>Apellido: {{sessionData.apellido}}</p>
-    <p>Servicio: {{sessionData.servicio}}</p>
+    <main class="w-full px-4 pt-10 bg-white flex flex-col items-center gap-10">
+        <section class="w-full max-w-[980px] p-6 bg-[#b4bef5] rounded-[14px] border border-black flex flex-col justify-center items-center gap-6">
+            <h1 class="text-black text-3xl md:text-4xl lg:text-5xl font-bold text-center">Confirmación de Reserva</h1>
+            
+            <div class="w-full flex flex-col gap-4">
+                <p class="text-black text-xl md:text-2xl"><strong>Email:</strong> {{sessionData.email}}</p>
+                <p class="text-black text-xl md:text-2xl"><strong>ID de usuario:</strong> {{sessionData.id}}</p>
+                <p class="text-black text-xl md:text-2xl"><strong>Nombre:</strong> {{sessionData.nombre}}</p>
+                <p class="text-black text-xl md:text-2xl"><strong>Apellido:</strong> {{sessionData.apellido}}</p>
+                <p class="text-black text-xl md:text-2xl"><strong>Servicio:</strong> {{sessionData.servicio}}</p>
 
-   
-    {% if (sessionData.telefono) %}
-        <p>Teléfono: {{sessionData.telefono}}</p>;
-    {% endif %}
+                {% if (sessionData.telefono) %}
+                    <p class="text-black text-xl md:text-2xl"><strong>Teléfono:</strong> {{sessionData.telefono}}</p>
+                {% endif %}
+            </div>
 
-    {% if sessionData.reserva %}
-        <h2>Detalles de la Reserva</h2>
-        <p>ID del servicio: {{ sessionData.reserva.id }}</p>
-        <p>Matricula: {{ sessionData.reserva.matricula }}</p>
-        <p>Precio: {{ sessionData.reserva.precio }}</p>
-        <p>Fecha de inicio: {{ sessionData.reserva.fecha_inicio }}</p>
-        <p>Fecha de finalización: {{ sessionData.reserva.fecha_final }}</p>
-        <p>Estado: {{ sessionData.reserva.estado }}</p>
+            {% if sessionData.reserva %}
+                <div class="w-full mt-6">
+                    <h2 class="text-black text-2xl md:text-3xl font-bold mb-4">Detalles de la Reserva</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p class="text-black text-xl"><strong>ID del servicio:</strong> {{ sessionData.reserva.id }}</p>
+                        <p class="text-black text-xl"><strong>Matrícula:</strong> {{ sessionData.reserva.matricula }}</p>
+                        <p class="text-black text-xl"><strong>Precio:</strong> {{ sessionData.reserva.precio }}</p>
+                        <p class="text-black text-xl"><strong>Fecha de inicio:</strong> {{ sessionData.reserva.fecha_inicio }}</p>
+                        <p class="text-black text-xl"><strong>Fecha de finalización:</strong> {{ sessionData.reserva.fecha_final }}</p>
+                        <p class="text-black text-xl"><strong>Estado:</strong> {{ sessionData.reserva.estado }}</p>
+                    </div>
+                </div>
 
-        {% if sessionData.servicio == 'parking' %}
-            <h3>Detalles Adicionales para Parking</h3>
-            <p>Largo plazo: {{ sessionData.reserva.largo_plazo }}</p>
-            <p>Tipo de plaza: {{ sessionData.reserva.tipo_plaza }}</p>
-            <a href="{{ path('aioParking') }}" class="button">Volver a AIO Parking</a>
-        {% elseif sessionData.servicio == 'taller' %}
-            <h3>Detalles Adicionales para Taller</h3>
-            <p>Tipo: {{ sessionData.reserva.tipo }}</p>
-            <p>Descripción: {{ sessionData.reserva.descripcion }}</p>
-            <p>Tiempo estimado: {{ sessionData.reserva.tiempo_estimado }} minutos</p>
-            <a href="{{ path('services') }}" class="button">Volver a Servicios</a>
-        {% endif %}
-    {% else %}
-        <p>No hay detalles de reserva disponibles.</p>
-    {% endif %}
-    
+                {% if sessionData.servicio == 'parking' %}
+                    <div class="w-full mt-6">
+                        <h3 class="text-black text-xl md:text-2xl font-bold mb-4">Detalles Adicionales para Parking</h3>
+                        <p class="text-black text-xl"><strong>Largo plazo:</strong> {{ sessionData.reserva.largo_plazo }}</p>
+                        <p class="text-black text-xl"><strong>Tipo de plaza:</strong> {{ sessionData.reserva.tipo_plaza }}</p>
+                    </div>
+                    <a href="{{ path('aioParking') }}" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
+                        Volver a AIO Parking
+                    </a>
+                {% elseif sessionData.servicio == 'taller' %}
+                    <div class="w-full mt-6">
+                        <h3 class="text-black text-xl md:text-2xl font-bold mb-4">Detalles Adicionales para Taller</h3>
+                        <p class="text-black text-xl"><strong>Tipo:</strong> {{ sessionData.reserva.tipo }}</p>
+                        <p class="text-black text-xl"><strong>Descripción:</strong> {{ sessionData.reserva.descripcion }}</p>
+                        <p class="text-black text-xl"><strong>Tiempo estimado:</strong> {{ sessionData.reserva.tiempo_estimado }} minutos</p>
+                    </div>
+                    <a href="{{ path('services') }}" class="w-full max-w-[300px] h-[60px] bg-[#950d03] text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
+                        Volver a Servicios
+                    </a>
+                {% endif %}
+            {% else %}
+                <p class="text-black text-xl md:text-2xl">No hay detalles de reserva disponibles.</p>
+            {% endif %}
+        </section>
+    </main>
+
+    {% include 'partials/footer.html.twig' %}
 </body>
-
 </html>
