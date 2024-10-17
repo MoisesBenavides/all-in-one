@@ -8,20 +8,8 @@ module.exports = {
       colors: {
         boton: '#dc2626',
         botonHover: '#b91c1c'
-        
       },
     },
   },
   plugins: [],
 }
-module.exports = {
-  content: ['../src/views/*/*.html.twig'],
-  media: false,
-  theme: {
-    extend: {},
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
-};
