@@ -138,7 +138,7 @@
     // Función para cargar los servicios desde el archivo JSON
     async function cargarServicios() {
         try {
-            const response = await fetch('{{ path(data/serviciosTaller.json)}}');
+            const response = await fetch('{{ asset(diccionarioServicios.json)}}');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
