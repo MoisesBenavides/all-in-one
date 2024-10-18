@@ -119,7 +119,15 @@
         </section>
     
         <!-- DIV PARA ERRORES DE PHP -->
-            <div id="error-container" style="display: none; background-color: #ffcccc; color: #ff0000; padding: 10px; margin-bottom: 10px;"></div>
+                {% if response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" class="display-none text-red-600">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
         <!--  FINAL DE DIV PARA ERRORES DE PHP -->
 
         <section class="text-center">
