@@ -5,6 +5,7 @@ use Sigae\Models\Cliente;
 use Google_Client;
 use Google_Service_Oauth2;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -131,12 +132,10 @@ class ControladorCliente extends AbstractController {
                 $_SESSION['nombre']=$this->cliente->getNombre();
                 $_SESSION['apellido']=$this->cliente->getApellido();
                 $_SESSION['telefono']=$this->cliente->getTelefono();
-                $_SESSION['fotoPerfil']=$fotoPerfil; //TODO: ¿Cookie o sesion?
+                $_SESSION['fotoPerfil']=$fotoPerfil;
 
                 // Redirigir a la home page
-                return $this->render('client/homeCliente.html.twig', [
-                    'fotoPerfil' => $fotoPerfil
-                ]);
+                return $this->render('client/homeCliente.html.twig');
             } else {
                 $response['errors'][] = "Error al iniciar sesión.";
             }
@@ -353,6 +352,30 @@ class ControladorCliente extends AbstractController {
     
         // Si la sesión es válida, no se realiza ninguna redirección
         return null;
+    }
+
+    function getClientDataSession(): JsonResponse {
+        session_start();
+        $cl_id = $_SESSION['id'];
+        $email = $_SESSION['email'];
+        $nombre = $_SESSION['nombre'];
+        $apellido = $_SESSION['apellido'] ?? null;
+        $telefono = $_SESSION['telefono'] ?? null;
+        $fotoPerfil = $_SESSION['fotoPerfil'] ?? null;
+        return new JsonResponse([
+            'cl_id' => $cl_id,
+            'email' => $email,
+            'nombre' => $nombre,
+            'apellido' => $apellido,
+            'telefono' => $telefono,
+            'fotoPerfil' => $fotoPerfil
+        ]);
+    }
+
+    function getClientProfilePhoto(): ?JsonResponse {
+        session_start();
+        $fotoPerfil = $_SESSION['fotoPerfil'] ?? null;
+        return new JsonResponse(['fotoPerfil' => $fotoPerfil]);
     }
     
     private function validarContrasena($str, $min, $max) {
