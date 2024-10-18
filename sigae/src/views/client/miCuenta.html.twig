@@ -48,6 +48,7 @@
 <body class="bg-white">
     <section class="container mx-auto px-4 py-8 max-w-2xl">
         <!-- Placeholder para foto de perfil -->
+    {#
         <div class="w-32 h-32 mx-auto mb-8 bg-gray-200 rounded-full flex items-center justify-center">
             {% if fotoPerfil %}
                 <img src="{{ fotoPerfil }}" alt="Foto de perfil" class="w-full h-full object-cover rounded-full">
@@ -55,7 +56,7 @@
                 <span class="text-4xl text-gray-500">📷</span>
             {% endif %}
         </div>
-
+    #}
         <h1 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-8">{{ nombre }} {{ apellido }}</h1>
 
         <form id="edit-account-form" action="{{ path('editMyAccount') }}" method="POST">
