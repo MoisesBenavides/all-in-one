@@ -102,6 +102,11 @@ products:
   controller: Sigae\Controllers\ControladorCliente::products
   methods: GET
 
+getClientProfilePhoto:
+  path: /getClientProfilePhoto
+  controller: Sigae\Controllers\ControladorCliente::getClientProfilePhoto
+  methods: GET
+
 myAccount:
   path: /myAccount
   controller: Sigae\Controllers\ControladorCliente::myAccount
