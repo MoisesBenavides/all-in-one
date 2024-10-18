@@ -7,7 +7,7 @@ use Sigae\Models\TipoVehiculo;
 class ControladorVehiculo{
     private $vehiculo;
 
-    public function registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente){
+    function registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente){
         if (Vehiculo::existeMatricula($matricula)) {
             return false; // False si la matrícula ya existe
         } else {
@@ -17,12 +17,12 @@ class ControladorVehiculo{
     
     }
 
-    public function validarTipoVehiculo($tipoVehiculo){
+    function validarTipoVehiculo($tipoVehiculo){
         // Valida si el tipo de vehiculo a partir del enum TipoVehiculo.php
         return TipoVehiculo::tryFrom($tipoVehiculo) !== null;
     }
 
-    public function validarMatricula($str){
+    function validarMatricula($str){
         return preg_match("/^[a-zA-Z0-9]{4,8}$/", $str);
     }
 }
