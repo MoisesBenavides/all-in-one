@@ -2,109 +2,118 @@
 <html lang="en">
 
 <head>
-    <!--Es responsivo!!-->
     <meta charset="UTF-8">
     <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
-    <meta name="keywords"
-        content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
+    <!--Es responsivo-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIO - Taller, neumaticos, reservas y más</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <style>
-        @font-face {
+      @font-face {
             font-family: 'Teachers';
             src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
             font-weight: normal;
             font-style: normal;
         }
-
-        body,
-        input,
-        select,
-        button,
-        option {
+    
+        body, input, select, button, option {
             font-family: 'Teachers', sans-serif;
         }
-
-             .btn{
-            background-color: #dc2626
+        .editable:focus {
+            outline: 2px solid #4a90e2;
+            padding: 2px;
         }
-
-        .btn:hover{
-            background-color: #b91c1c
+        .edit-button {
+            display: none;
+            margin-left: 10px;
+            padding: 2px 5px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .editing .edit-button {
+            display: inline-block;
         }
     </style>
 </head>
-        {% include 'partials/header.html.twig' %}
+
+{% include 'partials/header.html.twig' %}
 
 <body class="bg-white">
     <section class="container mx-auto px-4 py-8 max-w-2xl">
-        <h1 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-8">NOMBRE USUARIO Aquí</h1>
+        <!-- Placeholder para foto de perfil -->
+        <div class="w-32 h-32 mx-auto mb-8 bg-gray-200 rounded-full flex items-center justify-center">
+            {% if fotoPerfil %}
+                <img src="{{ fotoPerfil }}" alt="Foto de perfil" class="w-full h-full object-cover rounded-full">
+            {% else %}
+                <span class="text-4xl text-gray-500">📷</span>
+            {% endif %}
+        </div>
 
-        <form class="mb-6">
-            <label for="email" class="block text-lg font-medium text-neutral-900 mb-2">Correo</label>
-            <input type="email" id="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
-                value="A****E@gmail.com" readonly aria-label="Email address" />
-        </form>
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-8">{{ nombre }} {{ apellido }}</h1>
 
-        <form class="mb-6">
-            <label for="name" class="block text-lg font-medium text-neutral-900 mb-2">Nombre</label>
-            <input type="text" id="name" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
-                value="NOMBRE" aria-label="First name" />
-        </form>
+        <form id="edit-account-form" action="{{ path('editMyAccount') }}" method="POST">
+            <div class="mb-6">
+                <label for="email" class="block text-lg font-medium text-neutral-900 mb-2">Correo</label>
+                <input type="email" id="email" name="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                    value="{{ email|slice(0, 1) ~ '****' ~ email|slice(-2) ~ email|split('@')[1] }}" readonly aria-label="Email address" />
+            </div>
 
-        <form class="mb-6">
-            <label for="lastname" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
-            <input type="text" id="lastname"
-                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="APELLIDO"
-                aria-label="Last name" />
-        </form>
+            <div class="mb-6 relative">
+                <label for="nombre" class="block text-lg font-medium text-neutral-900 mb-2">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                    value="{{ nombre }}" aria-label="Nombre" />
+            </div>
 
-        <form class="mb-8">
-            <label for="phone" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
-            <input type="tel" id="phone" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
-                value="TELEFONO" aria-label="Phone number" />
+            <div class="mb-6 relative">
+                <label for="apellido" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
+                <input type="text" id="apellido" name="apellido" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                    value="{{ apellido }}" aria-label="Apellido" />
+            </div>
+
+            <div class="mb-8 relative">
+                <label for="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
+                <input type="tel" id="telefono" name="telefono" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                    value="{{ telefono }}" aria-label="Número de teléfono" />
+            </div>
+
+            <button type="submit" class="w-full md:w-auto px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg transition-colors mb-8">
+                Modificar datos de cliente
+            </button>
         </form>
-        
-        <!-- <form id="edit-account-form" action="{{ path('editMyAccount') }}" method="POST"> -->
-        <button
-            class="w-full md:w-auto px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg  transition-colors mb-8">
-            Modificar
-        </button>
 
         <section class="mb-8">
             <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-6">Mis vehículos</h2>
 
             <div class="space-y-6">
-                <div class="flex justify-between items-center text-lg font-semibold">
-                    <p>MARCA MODELO</p>
-                    <p>MATRICULA</p>
-                </div>
-                <div class="h-px bg-zinc-300"></div>
-                <div class="flex justify-between items-center text-lg font-semibold">
-                    <p>MARCA MODELO</p>
-                    <p>MATRICULA</p>
-                </div>
-                <div class="h-px bg-zinc-300"></div>
+                {% for vehiculo in misVehiculos %}
+                    <form class="vehicle-form" action="{{ path('editVehicle') }}" method="POST">
+                        <input type="hidden" name="vehiculo_id" value="{{ vehiculo.id }}">
+                        <div class="flex justify-between items-center text-lg font-semibold" id="vehiculo-{{ loop.index }}">
+                            <div class="flex-grow">
+                                <input type="text" name="matricula" class="editable" value="{{ vehiculo.matricula }}" readonly>
+                                (<input type="text" name="tipo" class="editable" value="{{ vehiculo.tipo }}" readonly>)
+                            </div>
+                            <div class="flex items-center">
+                                <button type="button" class="ml-2 text-blue-500" onclick="toggleVehicleEdit({{ loop.index }})">✏️</button>
+                                <button type="button" class="ml-2 text-red-500">🗑️</button>
+                                <button type="submit" class="edit-button">Enviar</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="h-px bg-zinc-300"></div>
+                {% endfor %}
             </div>
 
             <div class="space-y-4 mt-8">
-                <button
-                    class="w-full flex justify-between items-center px-4 py-3 duration-300 bg-botonAIO hover:bg-botonAIO-hover text-white text-xl font-semibold rounded-md  transition-colors">
+                <button id="add-vehicle-btn" class="w-full flex justify-between items-center px-4 py-3 duration-300 bg-botonAIO hover:bg-botonAIO-hover text-white text-xl font-semibold rounded-md transition-colors">
                     <span>Ingrese vehículo</span>
-                    <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" class="w-5 h-5">
-                </button>
-                <button
-                    class="w-full flex justify-between items-center px-4 py-3 duration-300 btn text-white text-xl font-semibold rounded-md  transition-colors">
-                    <span>Modificar vehículo</span>
-                    <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" class="w-5 h-5">
-                </button>
-                <button
-                    class="w-full flex justify-between items-center px-4 py-3 duration-300 btn text-white text-xl font-semibold rounded-md  transition-colors">
-                    <span>Eliminar vehículo</span>
                     <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" class="w-5 h-5">
                 </button>
             </div>
@@ -117,7 +126,22 @@
         </form>
     </section>
 
-           {% include 'partials/footer.html.twig' %}
+    {% include 'partials/footer.html.twig' %}
 
+    <script>
+        function toggleVehicleEdit(index) {
+            const form = document.getElementById(`vehiculo-${index}`);
+            const inputs = form.querySelectorAll('.editable');
+            const editButton = form.querySelector('.edit-button');
+            
+            inputs.forEach(input => {
+                input.readOnly = !input.readOnly;
+                input.classList.toggle('bg-white');
+                input.classList.toggle('border-slate-300');
+            });
+            
+            editButton.style.display = editButton.style.display === 'none' ? 'inline-block' : 'none';
+        }
+    </script>
 </body>
 </html>
