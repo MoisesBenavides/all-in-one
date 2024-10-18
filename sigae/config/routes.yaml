@@ -107,6 +107,11 @@ myAccount:
   controller: Sigae\Controllers\ControladorCliente::myAccount
   methods: GET
 
+editMyAccount:
+  path: /editMyAccount
+  controller: Sigae\Controllers\ControladorCliente::editMyAccount
+  methods: POST
+
 faq:
   path: /faq
   controller: Sigae\Controllers\ControladorCliente::faq
