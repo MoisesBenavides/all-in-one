@@ -310,8 +310,19 @@ class ControladorCliente extends AbstractController {
         if ($redireccion) {
             return $redireccion;
         }
+        $cliente = [
+            'id' => $_SESSION['id'],
+            'email' => $_SESSION['email'],
+            'nombre' => $_SESSION['nombre'],
+            'apellido' => isset($_SESSION['apellido']) ? $_SESSION['apellido'] : null,
+            'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
+            'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
+        ];
         $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
-        return $this->render('client/miCuenta.html.twig');
+        return $this->render('client/miCuenta.html.twig', [
+            'cliente' => $cliente,
+            'misVehiculos' => $misVehiculos
+        ]);
     }
     function faq(): Response{
         $redireccion = $this->verificarSesion();
@@ -352,24 +363,6 @@ class ControladorCliente extends AbstractController {
     
         // Si la sesión es válida, no se realiza ninguna redirección
         return null;
-    }
-
-    function getClientDataSession(): JsonResponse {
-        session_start();
-        $cl_id = $_SESSION['id'];
-        $email = $_SESSION['email'];
-        $nombre = $_SESSION['nombre'];
-        $apellido = $_SESSION['apellido'] ?? null;
-        $telefono = $_SESSION['telefono'] ?? null;
-        $fotoPerfil = $_SESSION['fotoPerfil'] ?? null;
-        return new JsonResponse([
-            'cl_id' => $cl_id,
-            'email' => $email,
-            'nombre' => $nombre,
-            'apellido' => $apellido,
-            'telefono' => $telefono,
-            'fotoPerfil' => $fotoPerfil
-        ]);
     }
 
     function getClientProfilePhoto(): ?JsonResponse {
