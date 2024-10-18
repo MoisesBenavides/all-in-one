@@ -57,33 +57,40 @@
             {% endif %}
         </div>
     #}
-        <h1 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-8">{{ nombre }} {{ apellido }}</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-8">{{ sessionData.nombre }} {{ sessionData.apellido }}</h1>
 
         <form id="edit-account-form" action="{{ path('editMyAccount') }}" method="POST">
             <div class="mb-6">
                 <label for="email" class="block text-lg font-medium text-neutral-900 mb-2">Correo</label>
                 <input type="email" id="email" name="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
-                    value="{{ email|slice(0, 1) ~ '****' ~ email|slice(-2) ~ email|split('@')[1] }}" readonly aria-label="Email address" />
+                    value="{{ sessionData.email|slice(0, 1) ~ '****' ~ sessionData.email|slice(-2) ~ sessionData.email|split('@')[1] }}" readonly aria-label="Email address" />
             </div>
 
             <div class="mb-6 relative">
                 <label for="nombre" class="block text-lg font-medium text-neutral-900 mb-2">Nombre</label>
                 <input type="text" id="nombre" name="nombre" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
-                    value="{{ nombre }}" aria-label="Nombre" />
+                    value="{{ sessionData.nombre }}" aria-label="Nombre" />
             </div>
 
             <div class="mb-6 relative">
                 <label for="apellido" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
                 <input type="text" id="apellido" name="apellido" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
-                    value="{{ apellido }}" aria-label="Apellido" />
+                    value="{{ sessionData.apellido }}" aria-label="Apellido" />
             </div>
-
+        {% if isset sessionData.telefono %}
             <div class="mb-8 relative">
                 <label for="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
                 <input type="tel" id="telefono" name="telefono" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
-                    value="{{ telefono }}" aria-label="Número de teléfono" />
+                    value="{{sessionData.telefono}}" aria-label="Número de teléfono" />
             </div>
-
+        {% else %}
+          <div class="mb-8 relative">
+                <label for="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
+                <input type="tel" id="telefono" name="telefono" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                    value="Ingrese un telefono" aria-label="Número de teléfono" />
+            </div>
+        {% endif %}
+        
             <button type="submit" class="w-full md:w-auto px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg transition-colors mb-8">
                 Modificar datos de cliente
             </button>
