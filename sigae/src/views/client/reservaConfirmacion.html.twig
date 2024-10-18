@@ -134,6 +134,57 @@
         </section>
     </main>
 
+    <script>
+(function() {
+    emailjs.init('by1XUw6pUUSEFNqxt');  
+})();
+
+
+const TEMPLATE_ID = 'templateReserva';
+
+// Datos del email insertados por Twig
+const emailData = {
+    email: {{sessionData.email|json_encode|raw}},
+    id: {{sessionData.id|json_encode|raw}},
+    nombre: {{sessionData.nombre|json_encode|raw}},
+    apellido: {{sessionData.apellido|json_encode|raw}},
+    servicio: {{sessionData.servicio|json_encode|raw}},
+    telefono: {{sessionData.telefono|json_encode|raw}},
+    reserva: {
+        id: {{sessionData.reserva.id|json_encode|raw}},
+        matricula: {{sessionData.reserva.matricula|json_encode|raw}},
+        precio: {{sessionData.reserva.precio|json_encode|raw}},
+        fecha_inicio: {{sessionData.reserva.fecha_inicio|json_encode|raw}},
+        fecha_final: {{sessionData.reserva.fecha_final|json_encode|raw}},
+        estado: {{sessionData.reserva.estado|json_encode|raw}},
+        tipo_plaza: {{sessionData.reserva.tipo_plaza|json_encode|raw}},
+        tipo: {{sessionData.reserva.tipo|json_encode|raw}},
+        descripcion: {{sessionData.reserva.descripcion|json_encode|raw}},
+        tiempo_estimado: {{sessionData.reserva.tiempo_estimado|json_encode|raw}}
+    }
+};
+
+// Función para enviar el email
+function sendConfirmationEmail(data) {
+    emailjs.send('service_r05hm2y', TEMPLATE_ID, data)
+        .then(function(response) {
+            console.log('Email enviado exitosamente:', response);
+            window.alert('Se le ha enviado un mail con la confirmacion de la reserva a', email);
+        }, function(error) {
+            console.error('Error al enviar el email:', error);
+            // Aquí puedes agregar código para mostrar un mensaje de error al usuario
+        });
+}
+
+// Ejecutar cuando el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    if (emailData.reserva.id) {
+        sendConfirmationEmail(emailData);
+    } else {
+        console.error('Datos de reserva no disponibles');
+    }
+});
+</script>
     {% include 'partials/footer.html.twig' %}
 </body>
 </html>
