@@ -107,6 +107,11 @@ getClientProfilePhoto:
   controller: Sigae\Controllers\ControladorCliente::getClientProfilePhoto
   methods: GET
 
+getClientEmail:
+  path: /getClientEmail
+  controller: Sigae\Controllers\ControladorCliente::getClientEmail
+  methods: GET
+
 myAccount:
   path: /myAccount
   controller: Sigae\Controllers\ControladorCliente::myAccount

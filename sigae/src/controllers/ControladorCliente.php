@@ -370,6 +370,12 @@ class ControladorCliente extends AbstractController {
         $fotoPerfil = $_SESSION['fotoPerfil'] ?? null;
         return new JsonResponse(['fotoPerfil' => $fotoPerfil]);
     }
+
+    function getClientEmail(): JsonResponse {
+        session_start();
+        $email = $_SESSION['email'];
+        return new JsonResponse(['email' => $email]);
+    }
     
     private function validarContrasena($str, $min, $max) {
         /* Verifica si la contraseña contiene mayusculas, minusculas y numeros
