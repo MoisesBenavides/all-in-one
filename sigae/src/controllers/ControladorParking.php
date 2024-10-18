@@ -23,7 +23,7 @@ class ControladorParking extends AbstractController{
         $this->controladorVehiculo = new ControladorVehiculo();
     }
 
-    function bookParkingSimple(): JsonResponse|RedirectResponse{
+    function bookParkingSimple(): Response|RedirectResponse{
         session_start();
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
@@ -111,10 +111,12 @@ class ControladorParking extends AbstractController{
                 array_keys($_POST)
             );
         }
-        return new JsonResponse($response); // Devuelve un JSON en caso de error
+        return $this->render('client/reservarParkingSimple.html.twig', [
+            'response' => $response  // Aquí pasa la respuesta a la vista
+        ]);
     }
 
-    function bookParkingLongTerm(){
+    function bookParkingLongTerm(): Response|RedirectResponse{
         session_start();
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
