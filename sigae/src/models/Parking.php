@@ -14,6 +14,12 @@ class Parking extends Servicio {
         $this->tipo_plaza = $tipo_plaza;
     }
 
+    public function obtenerPlazasLibres($largo_plazo, $tipoVehiculo, $fecha_inicio, $fecha_final){
+        $libres=[];
+        
+        return $libres;
+    }
+
     public function getTipo_pLaza(): string{
         return $this->tipo_plaza->value;
     }

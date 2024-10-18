@@ -86,20 +86,18 @@ class ControladorParking extends AbstractController{
                         $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
                     } elseif (!$this->parking->reservarServicio($matricula)){
                         $response['errors'][] = "Error al reservar servicio.";
-                    } else {
-                        $response['success'] = true;
+                    } else{
+                        $plazasLibres = $this->parking->obtenerPlazasLibres(false, $tipoVehiculo, $fecha_inicioParsed, $fecha_finalParsed);
+                        if (!$plazasLibres){
+                            $response['errors'][] = "No hay plazas disponibles en este horario.";  
+                        } else {
+                            $response['success'] = true;
 
-                        // TODO: Enviar correo de confirmación
-                        error_log(print_r($this->parking, true)); // Esto mostrará los datos de la reserva.
-                        // Guardar la reserva en la sesión
-                        $_SESSION['reserva'] = $this->parking;
-                        $_SESSION['servicio'] = 'parking';
-                        $_SESSION['matricula'] = $matricula;
-
-                        error_log(print_r($this->parking, true)); // Esto mostrará los datos de la reserva.
-
-                        // Redireccionar al usuario a la página de confirmación de reserva
-                        return $this->redirectToRoute('parkingConfirmation');
+                            // Redireccionar al usuario a la página de eleccion de plaza
+                            return $this->render('client/eleccionPlazaAuto.html.twig', [
+                                'plazasLibres' => $plazasLibres
+                            ]);                        
+                        }                       
                     }      
                 }
             }
