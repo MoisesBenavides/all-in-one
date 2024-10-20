@@ -43,7 +43,7 @@
                 <section class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
                     <div class="w-full max-w-[340px] mx-auto">
-                        <input type="datetime-local" name="fecha_inicio" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                        <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
                     </div>
                 </section>
 
@@ -299,6 +299,37 @@
 
     // Cargar los servicios cuando se carga la página
     document.addEventListener('DOMContentLoaded', cargarServicios);
+
+    // Función para obtener la fecha y hora actual en el formato adecuado para el input
+    function setMinDateTime() {
+        const inputFecha = document.getElementById('fecha_inicio');
+            
+        const now = new Date();
+            
+        // Formatea la fecha y hora en el formato YYYY-MM-DDTHH:MM
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        // Combina todo para formar la cadena en formato `datetime-local`
+        const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            
+        // Estable el valor mínimo para el campo
+        inputFecha.min = currentDateTime;
+
+        // Si la fecha seleccionada es anterior al nuevo mínimo se ajusta a la nueva hora mínima
+        if (inputFecha.value && inputFecha.value < currentDateTime) {
+                inputFecha.value = currentDateTime;
+        }
+    }
+
+    // Ejecutar la función al cargar la página
+    window.onload = setMinDateTime;
+
+    // Actualizar el campo cada minuto
+    setInterval(setMinDateTime, 60000); // 60000 ms = 1 minuto
     </script>
 </body>
 </html>
