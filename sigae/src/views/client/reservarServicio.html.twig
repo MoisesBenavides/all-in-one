@@ -113,7 +113,7 @@
                     <div class="relative w-full max-w-[340px] mx-auto">
                         <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
                             <option value="" selected disabled>Seleccione un vehículo</option>
-                            {% if misVehiculos is not empty %}
+                            {% if misVehiculos %}
                                 {% for vehiculo in misVehiculos %}
                                     <option value="{{ vehiculo.matricula }}" data-tipo="{{ vehiculo.tipo }}">{{ vehiculo.matricula }} ({{ vehiculo.tipo }})</option>
                                 {% endfor %}
