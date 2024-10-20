@@ -40,45 +40,6 @@
 {% else %}
     {% include 'partials/header.html.twig' %}
 {% endif %}
-{# 
-<!--En caso de usar JavaScript!-->
-
-<body>
-    <h1>Confirmación de Reserva</h1>
-
-    <!-- Otros elementos HTML -->
-
-    <!-- Inyecta directamente los datos en js -->
-    <script>
-        // Crear el objeto de sesión desde Twig
-        const sessionData = {{ sessionData|json_encode|raw }};
-        
-        // Mostrar los datos en la consola
-        console.log(sessionData);
-
-        // Puedes manipular y mostrar los datos
-        let output = `<p>Email: ${sessionData.email}</p>`;
-        output += `<p>ID de usuario: ${sessionData.id}</p>`;
-        output += `<p>Nombre: ${sessionData.nombre}</p>`;
-        output += `<p>Apellido: ${sessionData.apellido}</p>`;
-
-        if (sessionData.telefono) {
-            output += `<p>Teléfono: ${sessionData.telefono}</p>`;
-        }
-
-        if (sessionData.reserva) {
-            output += `<h2>Detalles de la Reserva</h2>`;
-            output += `<p>Matricula: ${sessionData.reserva.matricula}</p>`;
-            output += `<p>Precio: ${sessionData.reserva.precio}</p>`;
-            output += `<p>Fecha de inicio: ${sessionData.reserva.fecha_inicio}</p>`;
-            output += `<p>Fecha final: ${sessionData.reserva.fecha_final}</p>`;
-        }
-
-        // Insertar el contenido generado en el DOM
-        document.getElementById('confirmationData').innerHTML = output;
-    </script>
-</body>
-#}
     <main class="w-full px-4 pt-10 bg-white flex flex-col items-center gap-10">
         <section class="w-full max-w-[980px] p-6 bg-[#f0edf2] rounded-[14px] border border-black flex flex-col justify-center items-center gap-6">
             <h1 class="text-black text-3xl md:text-4xl lg:text-5xl font-bold text-center">Confirmación de Reserva</h1>
