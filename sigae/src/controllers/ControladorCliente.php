@@ -48,7 +48,7 @@ class ControladorCliente extends AbstractController {
             if (!$this->validarEmail($email, 63)) {
                 $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
             } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
-                $response['errors'][] = "La contraseña debe tener entre 6 y 60 caracteres.";
+                $response['errors'][] = "Por favor, ingrese una contraseña válida.";
             } else {
                 if ($this->cliente->iniciarCliente($email, $contrasena)) {
                     // Debug: Login exitoso
