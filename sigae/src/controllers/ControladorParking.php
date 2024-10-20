@@ -202,7 +202,9 @@ class ControladorParking extends AbstractController{
                 array_keys($_POST)
             );
         }
-        return new JsonResponse($response); // Devuelve un JSON en caso de error
+        return $this->render('client/reservarParkingLargoPlazo.html.twig', [
+            'response' => $response
+        ]); // Pasa la respuesta a la vista
     }
 
     function parkingConfirmation(): Response{

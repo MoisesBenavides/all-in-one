@@ -23,7 +23,7 @@ class ControladorTaller extends AbstractController{
         $this->controladorVehiculo = new ControladorVehiculo();
     }
     
-    function doBookService(): JsonResponse|RedirectResponse{
+    function doBookService(): Response|RedirectResponse{
         session_start();
         $response = ['success' => false, 'errors' => [], 'debug' => []];
     
@@ -114,7 +114,9 @@ class ControladorTaller extends AbstractController{
                 array_keys($_POST)
             );
         }    
-        return new JsonResponse($response); // Devuelve un JSON en caso de error
+        return $this->render('client/reservarServicio.html.twig', [
+            'response' => $response
+        ]); // Pasa la respuesta a la vista
     }
 
     function serviceConfirmation(): Response{
