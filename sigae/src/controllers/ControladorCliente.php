@@ -80,7 +80,7 @@ class ControladorCliente extends AbstractController {
                     // Redirigir a la home page
                     return $this->redirectToRoute('home');
                 } else {
-                    $response['errors'][] = "Error al iniciar sesión.";
+                    $response['errors'][] = "Correo o contraseña incorrectos.";
                 }
             }
         } else {

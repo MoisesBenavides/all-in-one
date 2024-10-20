@@ -111,12 +111,10 @@ class Cliente{
                 $this->setTelefono($cliente['telefono']);
                 return true;
             } else {
-                echo "Correo o contraseña incorrectos.";
                 return false;
             }
 
         } catch(Exception $e){
-            error_log($e->getMessage());
             echo "Error al iniciar sesión: " . $e->getMessage();
             return false;
         } finally {
