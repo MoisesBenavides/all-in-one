@@ -1,5 +1,6 @@
 // Definir la variable global para almacenar las traducciones
 let traducciones;
+let idiomaActual = 'es'; // Establecer español como idioma por defecto
 
 // Función para cargar las traducciones
 function cargarTraducciones(archivo) {
@@ -16,7 +17,6 @@ function cargarTraducciones(archivo) {
         })
         .catch(error => {
             console.error('Error al cargar el archivo de traducciones:', error);
-            // Aquí podrías establecer un conjunto de traducciones por defecto o mostrar un mensaje al usuario
         });
 }
 
@@ -27,6 +27,12 @@ function cambiarIdioma(idioma) {
         return;
     }
 
+    if (!idioma || !traducciones[idioma]) {
+        console.error(`Idioma "${idioma}" no válido o no disponible`);
+        return;
+    }
+
+    idiomaActual = idioma;
     const elementos = document.querySelectorAll('[traducir]');
     elementos.forEach(elemento => {
         const clave = elemento.getAttribute('traducir');
@@ -49,7 +55,7 @@ function inicializarTraduccion(archivoTraduccion, idiomaInicial = 'es') {
                 const botonesIdioma = document.querySelectorAll('[data-idioma]');
                 botonesIdioma.forEach(boton => {
                     boton.addEventListener('click', (e) => {
-                        const idioma = e.target.getAttribute('data-idioma');
+                        const idioma = e.target.closest('[data-idioma]').getAttribute('data-idioma');
                         cambiarIdioma(idioma);
                     });
                 });
@@ -57,5 +63,6 @@ function inicializarTraduccion(archivoTraduccion, idiomaInicial = 'es') {
         });
 }
 
-// Exponer la función inicializarTraduccion globalmente
+// Exponer las funciones necesarias globalmente
 window.inicializarTraduccion = inicializarTraduccion;
+window.cambiarIdioma = cambiarIdioma;
