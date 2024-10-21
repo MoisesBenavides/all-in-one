@@ -65,8 +65,8 @@
 
  <script>
         // Generar el nombre del archivo JSON de traducción basado en el nombre de la vista
-        const vistaActual = 'landingPage';
-        const archivoTraduccion = `../traductions/${vistaActual}.json`;
+        const vistaActual = 'LandingPage';
+        const archivoTraduccion = {{asset('traductions/${vistaActual}.json')}};
 
         // Inicializar la traducción
         document.addEventListener('DOMContentLoaded', () => {
