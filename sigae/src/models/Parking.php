@@ -2,6 +2,7 @@
 
 namespace Sigae\Models;
 use function Sigae\Config\conectarDB;
+use PDO;
 use Exception;
 
 class Parking extends Servicio {
@@ -14,10 +15,41 @@ class Parking extends Servicio {
         $this->tipo_plaza = $tipo_plaza;
     }
 
-    public function obtenerPlazasLibres($largo_plazo, $tipoVehiculo, $fecha_inicio, $fecha_final){
-        $libres=[];
-        
-        return $libres;
+    public function obtenerPlazasOcupadas($largo_plazo, $tipo_plaza, $fecha_inicio, $fecha_final){
+        $ocupadas=[];
+        $largo_plazo = !empty($largo_plazo) ? (int)$largo_plazo : 0;
+
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
+
+            $stmt = $conn->prepare('SELECT numero_plaza FROM numero_plaza WHERE id_servicio IN (
+                                        SELECT s.id FROM servicio s INNER JOIN parking p ON s.id = p.id_servicio
+                                        WHERE   p.tipo_plaza = :tip_plaza AND
+                                                p.largo_plazo = :lrg_plazo AND
+                                                s.estado = "pendiente" AND (
+                                                    s.fecha_inicio < :fecha_fin AND s.fecha_final > :fecha_ini
+                                                )
+                                    )');
+            $stmt->bindParam(':tip_plaza', $tipo_plaza);
+            $stmt->bindParam(':lrg_plazo', $largo_plazo);
+            $stmt->bindParam('fecha_fin', $fecha_final);
+            $stmt->bindParam('fecha_ini', $fecha_inicio);
+
+            $stmt->execute();
+            $ocupadas=$stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return $ocupadas;
+
+        } catch(Exception $e){
+            error_log($e->getMessage()); // Registro del error en el log
+            return false; // False si hubo un error de base de datos
+        } finally {
+            $conn = null;
+        }
     }
 
     public function getTipo_pLaza(): string{

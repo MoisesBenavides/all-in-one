@@ -2,6 +2,7 @@
 
 namespace Sigae\Models;
 use function Sigae\Config\conectarDB;
+use Exception;
 
 class Taller extends Servicio{
     private $tipo;
@@ -61,7 +62,6 @@ class Taller extends Servicio{
             if ($conn === false) {
                 throw new Exception("No se pudo conectar a la base de datos.");
             }
-    
             // Log de datos a insertar
             error_log("Datos a insertar en servicio: " . json_encode(compact('matricula', 'precio', 'fecha_inicio', 'fecha_final', 'estado')));
     
