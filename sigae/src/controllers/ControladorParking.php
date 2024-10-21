@@ -14,12 +14,18 @@ use InvalidArgumentException;
 
 class ControladorParking extends AbstractController{
     private const PATH_PRECIOS_JSON = __DIR__ . '/../data/preciosHoraParking.json';
+    private const PATH_PLAZAS_JSON = __DIR__ . '/../data/plazasParking.json';
     private $parking;
     private $preciosHora;
+    private $plazasMotoSimple;
+    private $plazasMotoLargoPlazo;
+    private $plazasAutoSimple;
+    private $plazasAutoLargoPlazo;
     private $controladorVehiculo;
 
     public function __construct(){
         $this->cargarPreciosHora(self::PATH_PRECIOS_JSON);
+        $this->cargarPlazasPorTipo(self::PATH_PLAZAS_JSON);
         $this->controladorVehiculo = new ControladorVehiculo();
     }
 
@@ -81,21 +87,38 @@ class ControladorParking extends AbstractController{
                 
                     $id_cliente = $_SESSION['id'];
 
-                    $this->parking = new Parking(false, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
+                    // $this->parking = new Parking(false, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
                     if (!$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                         $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
-                    } elseif (!$this->parking->reservarServicio($matricula)){
-                        $response['errors'][] = "Error al reservar servicio.";
                     } else{
-                        $plazasLibres = $this->parking->obtenerPlazasLibres(false, $tipoVehiculo, $fecha_inicioParsed, $fecha_finalParsed);
-                        if (!$plazasLibres){
-                            $response['errors'][] = "No hay plazas disponibles en este horario.";  
+                        $plazasOcupadas = $this->parking->obtenerPlazasOcupadas(false, $tipo_plaza, $fecha_inicioParsed, $fecha_finalParsed);
+                        
+                        if ($tipoVehiculo == "moto"){
+                            // Obtiene las plazas de moto para parking simple que no están ocupadas
+                            $plazasLibres = array_diff($this->plazasMotoSimple, $plazasOcupadas);
+                            // Si hay al menos una plaza libre, hay disponibilidad
+                            $disponible = !empty($plazasLibres);
+
+                        } elseif ($tipoVehiculo == "auto") {
+                            // Obtiene las plazas de auto para parking simple que no están ocupadas
+                            $plazasLibres = array_diff($this->plazasAutoSimple, $plazasOcupadas);
+                            // Si hay al menos una plaza libre, hay disponibilidad
+                            $disponible = !empty($plazasLibres);
+                        } else {
+                            // Obtiene las plazas de auto para parking simple que no están ocupadas
+                            $plazasLibres = array_diff($this->plazasAutoSimple, $plazasOcupadas);
+                            // Si hay al menos dos plazas disponibles, hay disponibilidad
+                            $disponible = array_count_values($plazasLibres) >= 2;
+                        }
+
+                        if (!$disponible){
+                            $response['errors'][] = "No hay plazas disponibles en este horario.";
                         } else {
                             $response['success'] = true;
 
                             // Redireccionar al usuario a la página de eleccion de plaza
-                            return $this->render('client/eleccionPlazaAuto.html.twig', [
-                                'plazasLibres' => $plazasLibres
+                            return $this->render('client/eleccionPlazaParking.html.twig', [
+                                'plazasLibres' => $plazasLibres // TODO: ¿Enviar tipo de vehiculo?
                             ]);                        
                         }                       
                     }      
@@ -109,7 +132,7 @@ class ControladorParking extends AbstractController{
                 array_keys($_POST)
             );
         }
-        return $this->render('client/reservarParkingSimple.html.twig', [
+        return $this->render('client/eleccionPlazaParking.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
         ]);
     }
@@ -315,6 +338,25 @@ class ControladorParking extends AbstractController{
             throw new Exception('Error al decodificar el JSON: ' . json_last_error_msg());
         } else
             $this->preciosHora = $precios;
+    }
+
+    private function cargarPlazasPorTipo($pathPlazasJson){
+        if(!file_exists($pathPlazasJson)){
+            throw $this->createNotFoundException('El archivo de plazas por tipo no existe.');
+        }
+
+        $contenidoJson = file_get_contents($pathPlazasJson);
+        $plazas = json_decode($contenidoJson, true);
+
+        if ($plazas === null && json_last_error() !== JSON_ERROR_NONE){
+            throw new Exception('Error al decodificar el JSON: ' . json_last_error_msg());
+        } else {
+            // Si el array no es vacío, settear variable global como la extraída del JSON; si no, settear como array vacío
+            $this->plazasMotoSimple = isset($plazas['moto']['simple']) ? $plazas['moto']['simple'] : [];
+            $this->plazasMotoLargoPlazo = isset($plazas['moto']['largo_plazo']) ? $plazas['moto']['largo_plazo'] : [];
+            $this->plazasAutoSimple = isset($plazas['auto']['simple']) ? $plazas['auto']['simple'] : [];
+            $this->plazasAutoLargoPlazo = isset($plazas['auto']['largo_plazo']) ? $plazas['auto']['largo_plazo'] : [];
+        }
     }
 
 }
