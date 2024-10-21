@@ -7,7 +7,6 @@
     <meta name="author" content="All In One">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <title>AIO (All-in-One)</title>
@@ -64,13 +63,13 @@
 </body>
 
  <script>
-        // Generar el nombre del archivo JSON de traducción basado en el nombre de la vista
-        const vistaActual = 'LandingPage';
-        const archivoTraduccion = `../../../public/traductions/${vistaActual}.json`;
+       const archivoTraduccion = "{{ asset('traducciones/LandingPage.json') }}";
 
         // Inicializar la traducción
         document.addEventListener('DOMContentLoaded', () => {
             inicializarTraduccion(archivoTraduccion);
         });
+
+    
     </script>
 </html>
