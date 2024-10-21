@@ -25,6 +25,29 @@
         option {
             font-family: 'Teachers', sans-serif;
         }
+
+         .btn{
+            background-color: #dc2626
+        }
+
+        .btn:hover{
+            background-color: #b91c1c
+        }
+        
+        .language-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0 10px;
+        }
+
+        .language-button img {
+            width: 30px;
+            height: 20px;
+            object-fit: cover;
+        }
+
     </style>
     <script src="{{ asset('js/traduccion.js') }}"></script>
 </head>
@@ -51,7 +74,7 @@
             </div>
 
             <form class="space-y-6 mb-8">
-                <a traducir="iniciar_sesion" href="{{ path('login') }}" target="_blank" rel="noopener noreferrer" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg sm:text-xl font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
+                <a traducir="iniciar_sesion" href="{{ path('login') }}" target="_blank" rel="noopener noreferrer" class=" btn w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg sm:text-xl font-bold text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
                     Iniciar sesión
                 </a>
             </form>
