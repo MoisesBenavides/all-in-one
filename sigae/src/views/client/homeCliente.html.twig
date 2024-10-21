@@ -126,13 +126,13 @@
 
         {% include 'partials/footer.html.twig' %}
 
-    <script>
+
       <script>
    const archivoTraduccion = "{{ asset('traductions/home.json') }}";
 
     // Inicializar la traducción
     document.addEventListener('DOMContentLoaded', () => {
-        inicializarTraduccion("{{ asset('traductions/Header.json') }}", 'es');
+        inicializarTraduccion("{{ asset('traductions/header.json') }}", 'es');
         inicializarTraduccion(archivoTraduccion, 'es');
     });
 </script>
