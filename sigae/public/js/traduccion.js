@@ -21,6 +21,7 @@ function cargarTraducciones(archivo, tipo) {
         })
         .catch(error => {
             console.error(`Error al cargar el archivo de traducciones de ${tipo}:`, error);
+            return {}; // Retorna un objeto vacío en caso de error
         });
 }
 
@@ -32,8 +33,8 @@ function cambiarIdioma(idioma) {
 
 // Función para aplicar las traducciones
 function aplicarTraducciones(traducciones, tipo) {
-    if (!traducciones) {
-        console.error(`Traducciones no disponibles para ${tipo}`);
+    if (!traducciones || Object.keys(traducciones).length === 0) {
+        console.warn(`Traducciones no disponibles para ${tipo}`);
         return;
     }
 
@@ -48,7 +49,7 @@ function aplicarTraducciones(traducciones, tipo) {
 
 // Función para inicializar la traducción
 function inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionVista, idiomaInicial = 'es') {
-    Promise.all([ //hace que se carguen las dos traducciones al mismo tiempo y solo si las dos funcionann
+    Promise.all([ //carga las dos tradus al mismo tiempo y solo si las dos funcionan
         cargarTraducciones(archivoTraduccionHeader, 'header'),
         cargarTraducciones(archivoTraduccionVista, 'vista')
     ]).then(() => {
@@ -61,6 +62,8 @@ function inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionVista, 
                 cambiarIdioma(idioma);
             });
         });
+    }).catch(error => {
+        console.error("Error al inicializar las traducciones:", error);
     });
 }
 

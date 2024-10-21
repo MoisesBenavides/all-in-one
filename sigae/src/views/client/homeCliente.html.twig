@@ -129,14 +129,11 @@
 
       
 <script>
-    const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
-    const archivoTraduccionHome = "{{ asset('traductions/home.json') }}";
-
-    // Inicializar la traducción
     document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+        const archivoTraduccionHome = "{{ asset('traductions/home.json') }}";
         inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
     });
-
 </script>
 
     
