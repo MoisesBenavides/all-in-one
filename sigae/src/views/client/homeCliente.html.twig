@@ -75,7 +75,7 @@
         <section id="parking" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
             <div class="flex flex-col items-center text-center">
                 <img class="w-48 md:w-64 lg:w-80 mb-6" src="{{ asset('img/AIO Parking positivo.png') }}" alt="AIO Parking" />
-                <p class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold  mb-6">AIO PARKING es nuestro servicio de parking inteligente.<br/>Clickea debajo para reservar una plaza</p>
+                <p traducir="AIOParking_presentacion" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold  mb-6">AIO PARKING es nuestro servicio de parking inteligente.<br/>Clickea debajo para reservar una plaza</p>
                 <a href="{{ path('aioParking') }}" class="btnPark text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold  py-3 px-6 rounded-[10px]">AIO PARKING</a>
             </div>
         </section>
@@ -125,7 +125,16 @@
 
         {% include 'partials/footer.html.twig' %}
 
+    <script>
+       const archivoTraduccion = "{{ asset('traductions/home.json') }}";
 
+        // Inicializar la traducción
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarTraduccion(archivoTraduccion , 'es');
+        });
+
+    
+    </script>
         <script>
             const carousel = document.getElementById('carousel');
             const slideContainer = document.getElementById('slide-container');

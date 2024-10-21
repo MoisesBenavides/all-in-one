@@ -10,6 +10,29 @@
     body, input, select, button, option {
         font-family: 'Teachers', sans-serif;
     }
+
+    .language-button {
+            display: flex;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0 0px;
+        }
+
+        .language-button:hover {
+            transform: scale(1.2); /* agrandar 20% */
+        transition: transform 0.3s ease; /* transicion smooth :) */
+
+        }
+
+        .language-button img {
+            width: 30px;
+            height: 20px;
+            object-fit: cover;
+        }
+
 </style>
   <header class=" w-screen  ">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
@@ -50,7 +73,18 @@
                 </div>
             </a>
         </div>
-
+            <script src="{{ asset('js/traduccion.js') }}"></script>
+            <div class="flex justify-center mb-8">
+                <button data-idioma="es" class="language-button">
+                    <img src="{{ asset('img/es.png') }}" alt="Español" title="Español">
+                </button>
+                <button data-idioma="it" class="language-button">
+                    <img src="{{ asset('img/it.png') }}" alt="Italiano" title="Italiano">
+                </button>
+                <button data-idioma="en" class="language-button">
+                    <img src="{{ asset('img/en.png') }}" alt="English" title="English">
+                </button>
+            </div>
         <!-- Menú hamburguesa desplegable (oculto por defecto) -->
         <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
             <a href="{{ path('aioParkingBookSimple') }}" class="block text-black text-sm font-bold   ">Reservar</a>
