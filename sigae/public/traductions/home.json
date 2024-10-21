@@ -1,16 +1,16 @@
 {
     "es": {
-      "AIOParking_presentacion": "AIO PARKING es nuestro servicio de parking inteligente.",
+      "AIOParking_presentacion": "AIO PARKING, nuestro servicio de parking inteligente.",
       "AIOParking_clickAbajo": "Clickea debajo para reservar una plaza"
     },
     "it": {
-     "AIOParking_presentacion": "AIO PARKING e il nostro servizio di parking inteligente .",
+     "AIOParking_presentacion": "AIO PARKING, nostro servizio di parking inteligente .",
      "AIOParking_clickAbajo": "Fai click sotto per riservare uno spot"
 
     },
     "en": {
-        "AIOParking_presentacion": "AIO PARKING it`s our intelligent parking service.",
-        "AIOParking_clickAbajo": "click down below to reserve a spot"
+        "AIOParking_presentacion": "AIO PARKING, our intelligent parking service.",
+        "AIOParking_clickAbajo": "Click down below to reserve a spot"
 
 
     }
