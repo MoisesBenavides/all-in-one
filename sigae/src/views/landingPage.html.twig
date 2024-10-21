@@ -37,10 +37,17 @@
             <h1 traducir="slogan" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-white mb-8 sm:mb-12">
                 All In One, un punto de partida para nuevos caminos
             </h1>
-                    <div class="absolute top-4 right-4">
-            <button data-idioma="es" class="px-2 py-1 bg-red-600 text-white rounded mr-2">ES</button>
-            <button data-idioma="it" class="px-2 py-1 bg-red-600 text-white rounded mr-2">IT</button>
-            <button data-idioma="en" class="px-2 py-1 bg-red-600 text-white rounded">EN</button>
+                  <!-- Botones de idioma con banderas -->
+            <div class="flex justify-center mb-8">
+                <button data-idioma="es" class="language-button">
+                    <img src="{{ asset('img/es.png') }}" alt="Español" title="Español">
+                </button>
+                <button data-idioma="it" class="language-button">
+                    <img src="{{ asset('img/it.png') }}" alt="Italiano" title="Italiano">
+                </button>
+                <button data-idioma="en" class="language-button">
+                    <img src="{{ asset('img/en.png') }}" alt="English" title="English">
+                </button>
             </div>
 
             <form class="space-y-6 mb-8">
