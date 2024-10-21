@@ -20,7 +20,7 @@ class ControladorCliente extends AbstractController {
         return $this->render('landingPage.html.twig');
     }
     function login(): Response{
-        return $this->render('account/login.html.twig');
+        return $this->render('client/account/login.html.twig');
     }
     function loginAioEmployee(): Response{
         return $this->render('employee/loginEmpleado.html.twig');
@@ -91,7 +91,7 @@ class ControladorCliente extends AbstractController {
                 array_keys($_POST)
             );
         }
-        return $this->render('account/login.html.twig', [
+        return $this->render('client/account/login.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
         ]);
     }
@@ -140,14 +140,14 @@ class ControladorCliente extends AbstractController {
                 $response['errors'][] = "Error al iniciar sesión.";
             }
         }
-        return $this->render('account/login.html.twig', [
+        return $this->render('client/account/login.html.twig', [
             'response' => $response  // Pasa la respuesta a la vista
         ]);
     }
     function doSignUpOAuth(){
     }
     function signup(): Response{
-        return $this->render('account/signUp.html.twig');
+        return $this->render('client/account/signUp.html.twig');
     }
     function doSignup(): Response|RedirectResponse{
         $response=['success' => false, 'errors' => [], 'debug' => []];
@@ -207,7 +207,7 @@ class ControladorCliente extends AbstractController {
                 array_keys($_POST)
             );
         }
-        return $this->render('account/signUp.html.twig', [
+        return $this->render('client/account/signUp.html.twig', [
             'response' => $response
         ]);
     }
@@ -241,7 +241,7 @@ class ControladorCliente extends AbstractController {
         return $this->redirectToRoute('showLandingPage');
     }
     function forgotPassword(): Response{
-        return $this->render('account/forgotPassword.html.twig');
+        return $this->render('client/account/forgotPassword.html.twig');
     }
     function services(): Response{
         $redireccion = $this->verificarSesion();
