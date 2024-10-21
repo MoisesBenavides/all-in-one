@@ -1,0 +1,20 @@
+{
+    "es": {
+      "services": "Servicios",
+      "aioParking": "AIO Parking",
+      "products": "Repuestos y accesorios",
+      "faq": "FAQ"
+    },
+    "it": {
+      "services": "Servizi",
+      "aioParking": "AIO Parcheggio",
+      "products": "Ricambi e accessori",
+      "faq": "FAQ"
+    },
+    "en": {
+      "services": "Services",
+      "aioParking": "AIO Parking",
+      "products": "Parts and accessories",
+      "faq": "FAQ"
+    }
+  }

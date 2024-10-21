@@ -1,44 +1,40 @@
 <style>
     @font-face {
         font-family: 'Teachers';
-        src: ("{{ asset('font/Teachers-VariableFont_wght.tt') }}");
+        src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
         font-weight: normal;
         font-style: normal;
     }
 
-    /* Apply the 'Teachers' font to all text elements */
     body, input, select, button, option {
         font-family: 'Teachers', sans-serif;
     }
     
     .language-button {
-            display: flex;
-            flex-direction: column;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            margin: 0 0px;
-        }
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin: 0 5px;
+        transition: transform 0.3s ease;
+    }
 
-        .language-button:hover {
-            transform: scale(1.2); /* agrandar 20% */
-        transition: transform 0.3s ease; /* transicion smooth :) */
+    .language-button:hover {
+        transform: scale(1.2);
+    }
 
-        }
-
-        .language-button img {
-            width: 30px;
-            height: 20px;
-            object-fit: cover;
-        }
+    .language-button img {
+        width: 30px;
+        height: 20px;
+        object-fit: cover;
+    }
 </style>
-<header class=" w-screen">
+
+<header class="w-screen">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <div class="container mx-auto px-4 py-4">
         <div class="relative flex flex-col md:flex-row justify-between items-center">
-            
-            <!-- Hamburguesa (visible solo en móviles) - Posicionada en la esquina superior izquierda -->
+            <!-- Hamburguesa (visible solo en móviles) -->
             <div class="absolute top-2 left-4 md:hidden">
                 <button id="hamburger" class="text-black focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -48,48 +44,51 @@
             </div>
 
             <!-- Logo -->
-         <a href="{{ path('home') }}">
-            <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
-                <img class="w-full h-auto" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
-            </div>
-          </a>
+            <a href="{{ path('home') }}">
+                <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
+                    <img class="w-full h-auto" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
+                </div>
+            </a>
 
             <!-- Navegación - visible solo en pantallas medianas y grandes -->
             <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
-                <a href="{{ path('services')}}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Servicios</a>
-                <a href="{{ path('aioParking')}}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">AIO Parking</a>
-                <a href="{{ path('products')}}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">Repuestos y accesorios</a>
-                <a href="{{ path('faq')}}" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold ">FAQ</a>
+                <a href="{{ path('services') }}" traducir="services" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">Servicios</a>
+                <a href="{{ path('aioParking') }}" traducir="aioParking" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">AIO Parking</a>
+                <a href="{{ path('products') }}" traducir="products" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">Repuestos y accesorios</a>
+                <a href="{{ path('faq') }}" traducir="faq" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">FAQ</a>
             </nav>
 
-            <!-- User icon - Alineado a la derecha en móviles -->
-            <a href="{{ path('myAccount') }}">
-                <div class="absolute top-2 right-4 md:static">
-                        <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
+            <!-- User icon y botones de idioma -->
+            <div class="absolute top-2 right-4 md:static flex items-center">
+                <!-- Botones de idioma -->
+                <div class="flex flex-col mr-4">
+                    <button data-idioma="es" class="language-button mb-1">
+                        <img src="{{ asset('img/es.png') }}" alt="Español" title="Español">
+                    </button>
+                    <button data-idioma="it" class="language-button mb-1">
+                        <img src="{{ asset('img/it.png') }}" alt="Italiano" title="Italiano">
+                    </button>
+                    <button data-idioma="en" class="language-button">
+                        <img src="{{ asset('img/en.png') }}" alt="English" title="English">
+                    </button>
                 </div>
-            </a>
-        </div>
-        <script src="{{ asset('js/traduccion.js') }}"></script>
-            <div class="flex justify-center mb-8 flex-col ">
-                <button data-idioma="es" class="language-button">
-                    <img src="{{ asset('img/es.png') }}" alt="Español" title="Español">
-                </button>
-                <button data-idioma="it" class="language-button">
-                    <img src="{{ asset('img/it.png') }}" alt="Italiano" title="Italiano">
-                </button>
-                <button data-idioma="en" class="language-button">
-                    <img src="{{ asset('img/en.png') }}" alt="English" title="English">
-                </button>
+                <!-- User icon -->
+                <a href="{{ path('myAccount') }}">
+                    <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
+                </a>
             </div>
+        </div>
+
         <!-- Menú hamburguesa desplegable (oculto por defecto) -->
         <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
-            <a href="{{ path('services')}}" class="block text-black text-sm font-bold ">Servicios</a>
-            <a href="{{ path('aioParking')}}" class="block text-black text-sm font-bold ">AIO Parking</a>
-            <a href="{{ path('products')}}" class="block text-black text-sm font-bold ">Repuestos y accesorios</a>
-            <a href="{{ path('faq')}}" class="block text-black text-sm font-bold ">FAQ</a>
+            <a href="{{ path('services') }}" traducir="services" class="block text-black text-sm font-bold">Servicios</a>
+            <a href="{{ path('aioParking') }}" traducir="aioParking" class="block text-black text-sm font-bold">AIO Parking</a>
+            <a href="{{ path('products') }}" traducir="products" class="block text-black text-sm font-bold">Repuestos y accesorios</a>
+            <a href="{{ path('faq') }}" traducir="faq" class="block text-black text-sm font-bold">FAQ</a>
         </nav>
     </div>
 
+    <script src="{{ asset('js/traduccion.js') }}"></script>
     <script>
         // Lógica del menú hamburguesa
         const hamburger = document.getElementById('hamburger');
@@ -98,8 +97,22 @@
         hamburger.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
+
+        // Lógica de traducción
+        const archivoTraduccionHeader = "{{ asset('traductions/Header.json') }}";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarTraduccion(archivoTraduccionHeader, 'es');
+        });
+
+        document.querySelectorAll('.language-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const idioma = e.currentTarget.getAttribute('data-idioma');
+                cambiarIdioma(idioma);
+            });
+        });
     </script>
-       <script>
+    <script>
         const dropdownButton = document.getElementById('dropdownButton');
         const dropdownMenu = document.getElementById('dropdownMenu');
         const selectedOption = document.getElementById('selectedOption');
