@@ -184,14 +184,23 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedVehicleType.value = tipo.toLowerCase();
             tipoVehiculoSection.classList.add('disabled-section');
             
+            // Limpiar matrícula manual
             matriculaYa.value = '';
             matriculaManualSection.style.display = 'none';
+            
+            // Actualizar nombres de campos
+            vehiculosDropdown.name = 'matricula';
+            matriculaYa.removeAttribute('name');
         } else {
             // Si se deseleccionó el vehículo
             tipoVehiculoSection.classList.remove('disabled-section');
             matriculaManualSection.style.display = 'block';
             selectedOptionAuto.textContent = 'Tipo';
             selectedVehicleType.value = '';
+            
+            // Restaurar el nombre del campo de matrícula manual
+            matriculaYa.name = 'matricula_nueva';
+            vehiculosDropdown.removeAttribute('name');
         }
     });
 
@@ -199,7 +208,11 @@ document.addEventListener('DOMContentLoaded', function() {
     matriculaYa.addEventListener('input', function() {
         if (this.value !== "") {
             vehiculosDropdown.value = "";
+            vehiculosDropdown.removeAttribute('name');
+            matriculaYa.name = 'matricula_nueva';
             tipoVehiculoSection.classList.remove('disabled-section');
+        } else {
+            vehiculosDropdown.name = 'matricula';
         }
     });
 
@@ -228,19 +241,33 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Asegurar que solo se envíe una matrícula
-        if (matriculaYa.value) {
-            // Si hay matrícula manual, usar esa
-            matriculaYa.name = 'matricula';
-            vehiculosDropdown.name = '';
-        } else {
-            // Si hay vehículo seleccionado, usar ese
+        // Configurar los campos antes del envío
+        if (matriculaYa.value !== "") {
+            // Si está usando matrícula manual
+            vehiculosDropdown.removeAttribute('name');
+            matriculaYa.name = 'matricula_nueva';
+        } else if (vehiculosDropdown.value !== "") {
+            // Si está usando un vehículo existente
+            matriculaYa.removeAttribute('name');
             vehiculosDropdown.name = 'matricula';
-            matriculaYa.name = '';
         }
+
+        // Crear un input oculto para indicar el tipo de matrícula
+        const tipoInput = document.createElement('input');
+        tipoInput.type = 'hidden';
+        tipoInput.name = 'tipo_matricula';
+        tipoInput.value = matriculaYa.value !== '' ? 'nueva' : 'existente';
+        form.appendChild(tipoInput);
 
         // Enviar el formulario
         this.submit();
+    });
+
+    // Cerrar el dropdown de tipo al hacer click fuera
+    document.addEventListener('click', function(event) {
+        if (!dropdownButtonAuto.contains(event.target) && !dropdownMenuAuto.contains(event.target)) {
+            dropdownMenuAuto.classList.add('hidden');
+        }
     });
 });
 </script>
