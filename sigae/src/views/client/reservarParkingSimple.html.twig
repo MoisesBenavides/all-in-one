@@ -186,13 +186,11 @@ document.addEventListener('DOMContentLoaded', function() {
             tipoVehiculoSection.classList.add('disabled-section');
             
             matriculaYa.value = '';
-            matriculaYa.disabled = true;
             matriculaManualSection.style.display = 'none';
         } else {
             // Si se deseleccionó el vehículo
             tipoVehiculoSection.classList.remove('disabled-section');
             matriculaManualSection.style.display = 'block';
-            matriculaYa.disabled = false;
             selectedOptionAuto.textContent = 'Tipo';
             selectedVehicleType.value = '';
         }
@@ -202,10 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
     matriculaYa.addEventListener('input', function() {
         if (this.value !== "") {
             vehiculosDropdown.value = "";
-            vehiculosDropdown.disabled = true;
             tipoVehiculoSection.classList.remove('disabled-section');
-        } else {
-            vehiculosDropdown.disabled = false;
         }
     });
 
@@ -225,11 +220,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Preparar los datos antes del envío
-        if (matriculaYa.value) {
-            vehiculosDropdown.disabled = true;
-        } else {
-            matriculaYa.disabled = true;
+        // Limpiar el valor no utilizado en lugar de deshabilitar
+        if (matriculaYa.value !== "") {
+            vehiculosDropdown.value = "";
+        } else if (vehiculosDropdown.value !== "") {
+            matriculaYa.value = "";
         }
 
         // Enviar el formulario
