@@ -1,97 +1,102 @@
 
 function initializeStartDate(inputId = 'fecha_inicio') {
-
+    //  Obtener el elemento input del DOM osea del HTML
     const startInput = document.getElementById(inputId);
     
-    // Verificar si se encontró el elemento input
+    // Verificar si existe el input
     if (!startInput) {
         console.error(`Error: No se encontró el input con id ${inputId}`);
         return;
     }
 
-    
-     // Calcula la próxima hora válida disponible
-
-     
-    function getNextValidTime() {
-        const now = new Date();
-        const minutes = now.getMinutes();
-        // Si los minutos son menos de 30, redondear a 30, sino a la siguiente hora
-        const roundTo = minutes < 30 ? 30 : 60;
+    // Esta función redondea una fecha a la próxima media hora o hora en punto
+    function roundToNearestSlot(date) {
+        const minutes = date.getMinutes();
+        const hours = date.getHours();
         
-        // Configurar la fecha con los minutos calculados y resetear segundos y millisegundos
-        now.setMinutes(roundTo);
-        now.setSeconds(0);
-        now.setMilliseconds(0);
+        //  en el minuto 30 o menos, redondea a :30
+        // después del minuto 30, redondea a la próxima hora
+        if (minutes <= 30) {
+            date.setMinutes(30);
+        } else {
+            date.setHours(hours + 1);
+            date.setMinutes(0);
+        }
         
-        return now;
+        // Limpiamos segundos y milisegundos para tener una hora exacta
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date;
     }
 
-    /**
-     * Formatea una fecha al formato requerido por el input datetime-local
-     * Convierte una fecha a formato: YYYY-MM-DDTHH:mm el que usa date time local de html predetrminado
-   
-     */
+    // Obtiene la próxima hora válida disponible para reservar
+    function getNextValidTime() {
+        const now = new Date();
+        return roundToNearestSlot(now);
+    }
+
+    // Convierte una fecha a el formato que acepta el input datetime-local
+    // El formato es: YYYY-MM-DDTHH:mm
     function formatDateTime(date) {
-        // Obtener cada componente de la fecha y asegurar formato de dos dígitos
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // +1 porque los meses van de 0-11
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');  // Mes + 1 porque enero es 0
+        const day = String(date.getDate()).padStart(2, '0');         // Agrega 0 si es necesario
+        const hours = String(date.getHours()).padStart(2, '0');      // Agrega 0 si es necesario
+        const minutes = String(date.getMinutes()).padStart(2, '0');  // Agrega 0 si es necesario
         
-        // Retornar fecha formateada para el input datetime-local
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
-    /**
-      Actualiza las restricciones y valor del input
-      Se llama al inicializar y cada minuto
-     */
+    // Actualiza el input con las restricciones y valores correctos
     function updateStartInput() {
         // Obtener la próxima hora válida
         const minDateTime = getNextValidTime();
-        // Establecer la fecha mínima permitida en el input
+        
+        // Establecer la fecha mínima que se puede seleccionar
         startInput.min = formatDateTime(minDateTime);
         
-        // Actualizar el valor solo si no hay uno válido o es menor al mínimo permitido
+        // Si no hay fecha seleccionada o es menor que la mínima permitida, establecer la fecha mínima como valor
         if (!startInput.value || new Date(startInput.value) < minDateTime) {
             startInput.value = formatDateTime(minDateTime);
         }
-        // Configurar el step para permitir solo intervalos de 30 minutos
-        startInput.step = "1800"; // 1800 segundos = 30 minutos
+        
+        // Configurar el input para que solo permita intervalos de 30 minutos
+        startInput.step = "1800"; // 1800 segundos = 30 minutos duh
     }
 
-    // Agregar listener para cuando el usuario cambie la fecha manualmente
+    // Este evento se dispara cuando el usuario cambia la fecha manualmente
     startInput.addEventListener('change', () => {
-        // Convertir la fecha seleccionada a el objeto Date
+        // Convertir el valor seleccionado a objeto Date
         const selectedDate = new Date(startInput.value);
         const minDate = getNextValidTime();
         
-        // Si la fecha seleccionada es menor a la mínima permitida, corregirla
-        if (selectedDate < minDate) {
+        // Redondear la fecha seleccionada al intervalo de 30 minutos más cercano
+        const roundedDate = roundToNearestSlot(selectedDate);
+        
+        // Si la fecha redondeada es menor que la mínima permitida,
+        // usar la fecha mínima en su lugar
+        if (roundedDate < minDate) {
             startInput.value = formatDateTime(minDate);
+        } else {
+            startInput.value = formatDateTime(roundedDate);
         }
         
-        // Crear y disparar un evento personalizado para notificar cambios, se usa solo si es que hay una fecha final
+        // Avisar a otros componentes (osea la fecha final) que hubo un cambio
         const event = new CustomEvent('startDateSelected', {
             detail: { startDate: new Date(startInput.value) }
         });
         document.dispatchEvent(event);
     });
 
-    // Realizar la configuración inicial
+    // Configuración inicial
     updateStartInput();
     
-    // Configurar actualización automática cada minuto
-    setInterval(updateStartInput, 60000); // 60000 ms = 1 minuto, duh
+    // Actualizar cada minuto para mantener las fechas válidas
+    setInterval(updateStartInput, 60000); // 60000 ms = 1 minuto
 
-    // Retornar métodos públicos para usar externamente
+    // Funciones que otros componentes pueden usar
     return {
-        // Obtener la fecha actual seleccionada
-        getCurrentStartDate: () => new Date(startInput.value),
-        // Método para actualizar manualmente el input de fecha inicial
-        updateStartTime: updateStartInput
+        getCurrentStartDate: () => new Date(startInput.value),  // Obtener la fecha actual
+        updateStartTime: updateStartInput                       // Forzar una actualización
     };
 }
-
