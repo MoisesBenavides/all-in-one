@@ -67,7 +67,7 @@
     </div>    
     <script>
         // Convertir las plazas libres a un array de strings
-        var puestosLibres = {{ plazasLibres|map(plaza => "'" ~ plaza.getId() ~ "'")|join(', ')|raw }};
+        var plazasLibres = {{ plazasLibres|map(plaza => "'" ~ plaza.getId() ~ "'")|join(', ')|raw }};
     </script>
 
     <script>
