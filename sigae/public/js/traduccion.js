@@ -1,3 +1,25 @@
+// Funciones para manejar cookies
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 // Variables globales para almacenar las traducciones
 let traduccionesHeader = {};
 let traduccionesVista = {};
@@ -29,6 +51,8 @@ function cargarTraducciones(archivo, tipo) {
 function cambiarIdioma(idioma) {
     aplicarTraducciones(traduccionesHeader[idioma], 'header');
     aplicarTraducciones(traduccionesVista[idioma], 'vista');
+    // Guardar el idioma seleccionado en una cookie que dura 30 días
+    setCookie('selectedLanguage', idioma, 30);
 }
 
 // Función para aplicar las traducciones
@@ -49,11 +73,15 @@ function aplicarTraducciones(traducciones, tipo) {
 
 // Función para inicializar la traducción
 function inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionVista, idiomaInicial = 'es') {
-    Promise.all([ //carga las dos tradus al mismo tiempo y solo si las dos funcionan
+    // Verificar si existe una cookie con un idioma guardado
+    const idiomaGuardado = getCookie('selectedLanguage');
+    const idiomaAUsar = idiomaGuardado || idiomaInicial;
+
+    Promise.all([
         cargarTraducciones(archivoTraduccionHeader, 'header'),
         cargarTraducciones(archivoTraduccionVista, 'vista')
     ]).then(() => {
-        cambiarIdioma(idiomaInicial);
+        cambiarIdioma(idiomaAUsar);
 
         // Configurar los botones de idioma
         document.querySelectorAll('.language-button').forEach(button => {
