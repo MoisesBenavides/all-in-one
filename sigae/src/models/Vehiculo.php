@@ -70,6 +70,33 @@ class Vehiculo
         $this->color = $color;
     }
 
+    public function borrar(){
+        $matricula = $this->getMatricula();
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+    
+            $stmt = $conn->prepare('DELETE FROM tiene WHERE matricula = :mat');
+            
+            $stmt->bindParam(':mat', $matricula);
+                
+            $stmt->execute();
+            
+            return true; // Desvínculo de vehiculo con cliente exitoso
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            error_log("Error al desvincular el vehículo: " . $e->getMessage());
+            return false;
+            
+        } finally {
+            $conn = null;
+        }
+    }
+
     public function registrarYa($id_cliente){
         $matricula = $this->getMatricula();
         $tipo = $this->getTipo();
