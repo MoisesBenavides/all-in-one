@@ -51,27 +51,27 @@
                    <input type="datetime-local" name= "fecha_final" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
                 </div>
              </section>
-             <section id="tipoVehiculoSection">
+            <section id="tipoVehiculoSection">
                 <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
                 <div class="relative mb-2">
-                   <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                      <div id="selectedOptionAuto" class="text-center text-black text-xl font-semibold">Tipo</div>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
-                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                      </svg>
-                   </div>
-                   <div id="dropTipoVehiculo" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
-                      <div class="py-1">
-                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="moto" data-price="100">Moto</div>
-                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camioneta" data-price="250">Camioneta</div>
-                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="auto" data-price="200">Auto</div>
-                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camion" data-price="300">Pequeño camión</div>
-                         <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="utilitario" data-price="300">Pequeño utilitario</div>
-                      </div>
-                   </div>
+                    <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                        <div id="selectedOptionAuto" class="text-center text-black text-xl font-semibold">Tipo</div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <div id="dropTipoVehiculo" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                        <div class="py-1">
+                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="moto" data-price="55">Moto</div>
+                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="auto" data-price="110">Auto</div>
+                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camioneta" data-price="130">Camioneta</div>
+                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camion" data-price="170">Pequeño camión</div>
+                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="utilitario" data-price="170">Pequeño utilitario</div>
+                        </div>
+                    </div>
                 </div>
                 <input type="hidden" id="tipoVehiculo" name="tipoVehiculo" value="">
-             </section>
+                </section>
              <script>
                 // Dropdown functionality for vehicle type selection
                 const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
