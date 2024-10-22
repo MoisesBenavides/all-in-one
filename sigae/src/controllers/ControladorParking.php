@@ -255,7 +255,7 @@ class ControladorParking extends AbstractController{
             $_SESSION['plaza_apartada'] = $numeroPlaza;
             return new JsonResponse(['success' => true]);
         } else{
-            return new JsonResponse(['success' => false, 'message' => 'Error al reservar temporalmente la plaza']);
+            return new JsonResponse(['success' => false, 'message' => 'Error al apartar temporalmente la plaza']);
         }
     }
 
