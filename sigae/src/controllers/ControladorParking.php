@@ -96,7 +96,7 @@ class ControladorParking extends AbstractController{
                         'fecha_inicio' => $fecha_inicioParsed,
                         'fecha_final' => $fecha_finalParsed,
                         'matricula' => $matricula,
-                        'tipoVehiculo' => $tipo_vehiculo
+                        'tipoVehiculo' => $tipoVehiculo
                     ];
 
                     // Guardar variables de sesión para reservar posteriormente a la elección de plazas
