@@ -57,7 +57,7 @@
             <!-- Parking spots will be generated here -->
             </div>
 
-            <input type="hidden" name="selectedSpots" id="selectedSpotsInput">
+            <input type="hidden" name="plazasSeleccionadas" id="plazasSeleccionadasInput">
             <div class="w-full max-w-[388px] flex justify-center mt-4">
                 <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 duration-300 btnPark rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">
                     Continuar
@@ -74,7 +74,7 @@
         const tipovehiculo = "{{ vehiculoTipo }}"; 
 
 // Variables globales para manejar el estado del parking
-let selectedSpots = [];  // Almacena las plazas seleccionadas actualmente
+let plazasSeleccionadas = [];  // Almacena las plazas seleccionadas actualmente
 let currentFloor = 1;   
 // Función principal que genera el layout del estacionamiento
 
@@ -165,9 +165,9 @@ function handleSpotSelection(spot) {
 
 function handleRegularSelection(spot) {
     // Limpia selecciones anteriores
-    selectedSpots.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
+    plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
     // Actualiza la selección
-    selectedSpots = [spot];
+    plazasSeleccionadas = [spot];
     // Marca visualmente la plaza seleccionada
     spot.classList.add('bg-[#5381c6]', 'text-white');
 }
@@ -175,25 +175,25 @@ function handleRegularSelection(spot) {
 // Maneja la selección de plazas para vehículos grandes Permite seleccionar dos plazas consecutivas
 
 function handleLargeVehicleSelection(spot) {
-    if (selectedSpots.length === 0) {
+    if (plazasSeleccionadas.length === 0) {
         // Primera selección
-        selectedSpots.push(spot);
+        plazasSeleccionadas.push(spot);
         spot.classList.add('bg-[#5381c6]', 'text-white');
-    } else if (selectedSpots.length === 1) {
+    } else if (plazasSeleccionadas.length === 1) {
         // Verifica si la segunda selección es adyacente
-        if (isAdjacentSpot(selectedSpots[0], spot)) {
-            selectedSpots.push(spot);
+        if (isAdjacentSpot(plazasSeleccionadas[0], spot)) {
+            plazasSeleccionadas.push(spot);
             spot.classList.add('bg-[#5381c6]', 'text-white');
         } else {
             // Reinicia selección si no es adyacente
-            selectedSpots[0].classList.remove('bg-[#5381c6]', 'text-white');
-            selectedSpots = [spot];
+            plazasSeleccionadas[0].classList.remove('bg-[#5381c6]', 'text-white');
+            plazasSeleccionadas = [spot];
             spot.classList.add('bg-[#5381c6]', 'text-white');
         }
     } else {
         // Reinicia selección si ya había dos spots
-        selectedSpots.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
-        selectedSpots = [spot];
+        plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
+        plazasSeleccionadas = [spot];
         spot.classList.add('bg-[#5381c6]', 'text-white');
     }
 }
@@ -229,22 +229,22 @@ document.getElementById('parkingForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
     // Validaciones antes de enviar
-    if ((tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') && selectedSpots.length !== 2) {
+    if ((tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') && plazasSeleccionadas.length !== 2) {
         alert('Debe seleccionar dos espacios consecutivos para vehículos grandes');
         return;
     }
     
-    if (selectedSpots.length === 0) {
+    if (plazasSeleccionadas.length === 0) {
         alert('Debe seleccionar al menos un espacio de estacionamiento');
         return;
     }
 
     // Prepara los datos para enviar
     const output = (tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') 
-        ? selectedSpots.map(spot => spot.dataset.spot)  // Array con dos plazas para vehículos grandes
-        : [selectedSpots[0].dataset.spot, null];        // Array con una plaza para vehículos normales
+        ? plazasSeleccionadas.map(spot => spot.dataset.spot)  // Array con dos plazas para vehículos grandes
+        : [plazasSeleccionadas[0].dataset.spot, null];        // Array con una plaza para vehículos normales
 
-    document.getElementById('selectedSpotsInput').value = JSON.stringify(output);
+    document.getElementById('plazasSeleccionadasInput').value = JSON.stringify(output);
     this.submit();
 });
 
