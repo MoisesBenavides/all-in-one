@@ -94,7 +94,8 @@ class ControladorParking extends AbstractController{
                         'precio' => $precio,
                         'fecha_inicio' => $fecha_inicioParsed,
                         'fecha_final' => $fecha_finalParsed,
-                        'matricula' => $matricula
+                        'matricula' => $matricula,
+                        'tipoVehiculo' => $tipo_vehiculo
                     ];
 
                     // Guardar variables de sesión para reservar posteriormente a la elección de plazas
@@ -252,16 +253,23 @@ class ControladorParking extends AbstractController{
         $response['debug']['received_data']=$_POST;
 
         
-        if (false){
+        if (isset($_POST["fecha_inicio"], $_POST["fecha_final"], $_POST["tipoVehiculo"]) 
+        && !empty($_POST["fecha_inicio"]) && !empty($_POST["fecha_final"])){
             // Validacion de plazas
         } else {
-            $response['errors'][] = "Debe llenar todos los campos.";
+            if (isset($_SESSION["tipo_vehiculo"])){
+                ($_SESSION["tipo_vehiculo"] == moto auto) ? 
+            }
+            $response['errors'][] = "Debe seleccionar .";
             // Debug: Log which fields are missing
             $response['debug']['missing_fields'] = array_diff(
                 ['fecha_inicio', 'fecha_final', 'tipoVehiculo', 'matricula'],
                 array_keys($_POST)
             );
         }
+        return $this->render('client/eleccionPlazaParking.html.twig', [
+            'response' => $response  // Aquí pasa la respuesta a la vista
+        ]);
     }
 
     function parkingConfirmation(): Response{
