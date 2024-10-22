@@ -136,7 +136,6 @@ class Parking extends Servicio {
             $stmt->execute();
 
         } catch (Exception $e) {
-            error_log($e->getMessage());
             error_log("Error procesar la reserva: " . $e->getMessage());
         } finally {
             $conn = null;
