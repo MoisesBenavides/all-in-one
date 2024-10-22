@@ -71,7 +71,7 @@
     </script>
 
     <script>
-const vehicleType = "{{ vehiculoTipo }}"; 
+        const tipovehiculo = "{{ vehiculoTipo }}"; 
 
 // Variables globales para manejar el estado del parking
 let selectedSpots = [];  // Almacena las plazas seleccionadas actualmente
@@ -83,7 +83,7 @@ function generateParkingLayout() {
     container.innerHTML = ''; // Limpia el contenedor antes de generar nuevo layout
 
     // Switch para determinar qué tipo de layout mostrar según el vehículo
-    switch(vehicleType) {
+    switch(tipovehiculo) {
         case 'moto':
             // Las motos solo pueden estar en el primer piso
             if (currentFloor === 2) {
@@ -154,7 +154,7 @@ function generateLargeVehicleLayout(container) {
 
 function handleSpotSelection(spot) {
     // Determina qué tipo de selección usar según el vehículo
-    if (vehicleType === 'pequenoCamion' || vehicleType === 'utilitario') {
+    if (tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') {
         handleLargeVehicleSelection(spot);  // Selección de dos plazas
     } else {
         handleRegularSelection(spot);       // Selección de una plaza
@@ -229,7 +229,7 @@ document.getElementById('parkingForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
     // Validaciones antes de enviar
-    if ((vehicleType === 'pequenoCamion' || vehicleType === 'utilitario') && selectedSpots.length !== 2) {
+    if ((tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') && selectedSpots.length !== 2) {
         alert('Debe seleccionar dos espacios consecutivos para vehículos grandes');
         return;
     }
@@ -240,7 +240,7 @@ document.getElementById('parkingForm').addEventListener('submit', function(e) {
     }
 
     // Prepara los datos para enviar
-    const output = (vehicleType === 'pequenoCamion' || vehicleType === 'utilitario') 
+    const output = (tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') 
         ? selectedSpots.map(spot => spot.dataset.spot)  // Array con dos plazas para vehículos grandes
         : [selectedSpots[0].dataset.spot, null];        // Array con una plaza para vehículos normales
 
@@ -258,7 +258,7 @@ document.getElementById('decrementFloor').addEventListener('click', function() {
 });
 
 document.getElementById('incrementFloor').addEventListener('click', function() {
-    if (currentFloor < 2 && vehicleType !== 'moto') {
+    if (currentFloor < 2 && tipovehiculo !== 'moto') {
         currentFloor++;
         updateFloorDisplay();
         generateParkingLayout();
