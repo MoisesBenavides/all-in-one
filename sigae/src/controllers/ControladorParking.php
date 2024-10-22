@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Exception;
 use DateTime;
 use InvalidArgumentException;
@@ -245,8 +246,21 @@ class ControladorParking extends AbstractController{
         ]); // Pasa la respuesta a la vista
     }
 
+    function holdParkingSlot(Request $request): JsonResponse{
+
+        $datos = json_decode($request->getContent(), true);
+        $numeroPlaza = $datos['numero_plaza'];
+
+        if($this->parking->apartarPlaza($numeroPlaza)){
+            $_SESSION['plaza_apartada'] = $numeroPlaza;
+            return new JsonResponse(['success' => true]);
+        } else{
+            return new JsonResponse(['success' => false, 'message' => 'Error al reservar temporalmente la plaza']);
+        }
+    }
+
     // TODO: Implementar
-    function submitParkingSlots(): Response|RedirectResponse{
+    function submitParkingSimple(): Response|RedirectResponse{
         session_start();
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
