@@ -27,35 +27,33 @@
             </nav>
 
             <!-- User icon y selector de idioma -->
-     <div class="absolute top-2 right-4 md:static flex items-center space-x-6"> 
-    <div class="inline-block">
-        <div class="relative inline-flex items-center">
-            <button id="languageToggle" class="w-8 h-8 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
-                <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
-            </button>
-            
-            <!-- Menú desplegable de idiomas -->
-            <div id="languageMenu" class="hidden absolute -right-[calc(100%+130px)] top-0 bg-white rounded-lg shadow-lg transform scale-95 transition-all duration-200 ease-in-out">
-                <div class="flex items-center space-x-2 p-2">
-                    <button data-idioma="es" class="hover:bg-gray-100 transition-colors duration-200 rounded p-1">
+            <div class="absolute top-2 right-4 md:static flex items-center space-x-6"> 
+            <!-- Selector de idioma -->
+            <div class="relative flex items-center">
+                <!-- Menú de idiomas (columna vertical) -->
+                <div id="languageMenu" class="hidden absolute right-full top-1/2 -translate-y-1/2 -mr-2 bg-white p-2 rounded-lg shadow-lg flex flex-col space-y-2">
+                    <button data-idioma="es" class="transition-transform duration-200 hover:scale-110">
                         <img src="{{ asset('img/es.png') }}" alt="Español" class="w-8 h-5 object-cover">
                     </button>
-                    <button data-idioma="it" class="hover:bg-gray-100 transition-colors duration-200 rounded p-1">
+                    <button data-idioma="it" class="transition-transform duration-200 hover:scale-110">
                         <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-8 h-5 object-cover">
                     </button>
-                    <button data-idioma="en" class="hover:bg-gray-100 transition-colors duration-200 rounded p-1">
+                    <button data-idioma="en" class="transition-transform duration-200 hover:scale-110">
                         <img src="{{ asset('img/en.png') }}" alt="English" class="w-8 h-5 object-cover">
                     </button>
                 </div>
+                
+                <!-- Icono del mundo -->
+                <button id="languageToggle" class="w-8 h-8 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
+                    <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
+                </button>
             </div>
-        </div>
-    </div>
 
-    <!-- User icon -->
-    <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300">
-        <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
-    </a>
-</div>
+            <!-- User icon -->
+            <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300">
+                <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
+            </a>
+        </div>
 
         <!-- Menú móvil -->
         <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
@@ -76,30 +74,29 @@
             mobileMenu.classList.toggle('hidden');
         });
 
-        // Lógica del selector de idioma
-        const languageToggle = document.getElementById('languageToggle');
-        const languageMenu = document.getElementById('languageMenu');
+       const languageToggle = document.getElementById('languageToggle');
+    const languageMenu = document.getElementById('languageMenu');
 
-        languageToggle.addEventListener('click', () => {
-            languageMenu.classList.toggle('hidden');
-            // Añadir animación de escala
-            if (!languageMenu.classList.contains('hidden')) {
-                languageMenu.classList.add('scale-100');
-                languageMenu.classList.remove('scale-95');
-            } else {
-                languageMenu.classList.add('scale-95');
-                languageMenu.classList.remove('scale-100');
-            }
-        });
+    languageToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        languageMenu.classList.toggle('hidden');
+    });
 
-        // Cerrar el menú cuando se hace clic fuera
-        document.addEventListener('click', (event) => {
-            if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
-                languageMenu.classList.add('hidden');
-                languageMenu.classList.add('scale-95');
-                languageMenu.classList.remove('scale-100');
-            }
+    // Cerrar al hacer clic fuera
+    document.addEventListener('click', (event) => {
+        if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
+            languageMenu.classList.add('hidden');
+        }
+    });
+
+    // Manejar selección de idioma
+    languageMenu.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const idioma = e.currentTarget.getAttribute('data-idioma');
+            cambiarIdioma(idioma);
+            languageMenu.classList.add('hidden');
         });
+    });
 
         // Lógica de traducción
         const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
