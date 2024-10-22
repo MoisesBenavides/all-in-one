@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!--Es responsivoo-->
     <meta charset="UTF-8">
-    <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
@@ -20,161 +18,207 @@
         font-style: normal;
     }
 
-    /* Apply the 'Teachers' font to all text elements */
     body, input, select, button, option {
         font-family: 'Teachers', sans-serif;
     }
 
-     .btnPark{
-            background-color: #1f3de0
-        }
+    .btnPark{
+        background-color: #1f3de0
+    }
 
-        .btnPark:hover{
-            background-color: #233181
-        }
+    .btnPark:hover{
+        background-color: #233181
+    }
 </style>
-    <script src="{{ asset('js/fechaInicioHandler.js') }}">
-    </script>
-    <script src="{{ asset('js/fechaFinalHandler.js') }}">
-    </script>
-    <script>
+
+<script src="{{ asset('js/fechaInicioHandler.js') }}"></script>
+<script src="{{ asset('js/fechaFinalHandler.js') }}"></script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar los handler de fechas
         const startHandler = initializeStartDate('fecha_inicio');
         const endHandler = initializeEndDate('fecha_final', 'fecha_inicio');
     });
 </script>
-        {% include 'partials/headerParking.html.twig' %}
+
+{% include 'partials/headerParking.html.twig' %}
 
 <body>
     <main class="container mx-auto px-4 py-8">
-       <div class="max-w-3xl mx-auto space-y-12">
-          <form id="servicioForm" action="{{ path('bookParkingSimple') }}" method="POST" class="w-full max-w-[340px] mx-auto">
-             <section>
-                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
-                <div class="w-full max-w-[340px] mx-auto">
-                   <input type="datetime-local" id="fecha_inicio" name= "fecha_inicio" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                </div>
-                <!--fehca disclaimer-->
-                <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
-                    <p>Las fehcas van en intervalos de 30 minutos, la fecha que elija se adaptará automaticamente a estos intervalos</p> 
-                </div>
-             </section>
-             <section>
-                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha final</h2>
-                <div class="w-full max-w-[340px] mx-auto">
-                   <input type="datetime-local" id="fecha_final" name= "fecha_final" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                </div>
-                <!--fehca disclaimer-->
-                <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
-                    <p>Las fehcas van en intervalos de 30 minutos, la fecha que elija se adaptará automaticamente a estos intervalos</p> 
-                </div>
-             </section>
-            <section id="tipoVehiculoSection">
-                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
-                <div class="relative mb-2">
-                    <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                        <div id="selectedOptionAuto" class="text-center text-black text-xl font-semibold">Tipo</div>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
+        <div class="max-w-3xl mx-auto space-y-12">
+            <form id="servicioForm" action="{{ path('bookParkingSimple') }}" method="POST" class="w-full max-w-[340px] mx-auto">
+                <!-- Sección Fecha de inicio -->
+                <section>
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
+                    <div class="w-full max-w-[340px] mx-auto">
+                        <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
                     </div>
-                    <div id="dropTipoVehiculo" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
-                        <div class="py-1">
-                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="moto" data-price="55">Moto</div>
-                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="auto" data-price="110">Auto</div>
-                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camioneta" data-price="130">Camioneta</div>
-                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camion" data-price="170">Pequeño camión</div>
-                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="utilitario" data-price="170">Pequeño utilitario</div>
+                    <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
+                        <p>Las fechas van en intervalos de 30 minutos, la fecha que elija se adaptará automáticamente a estos intervalos</p> 
+                    </div>
+                </section>
+
+                <!-- Sección Fecha final -->
+                <section>
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha final</h2>
+                    <div class="w-full max-w-[340px] mx-auto">
+                        <input type="datetime-local" id="fecha_final" name="fecha_final" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                    </div>
+                    <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
+                        <p>Las fechas van en intervalos de 30 minutos, la fecha que elija se adaptará automáticamente a estos intervalos</p> 
+                    </div>
+                </section>
+
+                <!-- Sección Mis Vehículos -->
+                <section>
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
+                    <div class="relative w-full max-w-[340px] mx-auto">
+                        <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                            <option value="">Seleccione un vehículo</option>
+                            {% if misVehiculos is defined and misVehiculos is not empty %}
+                                {% for vehiculo in misVehiculos %}
+                                    <option value="{{ vehiculo.matricula }}" data-tipo="{{ vehiculo.tipo }}">{{ vehiculo.matricula }} ({{ vehiculo.tipo }})</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Sección Tipo de vehículo -->
+                <section id="tipoVehiculoSection">
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
+                    <div class="relative mb-2">
+                        <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                            <div id="selectedOptionAuto" class="text-center text-black text-xl font-semibold">Tipo</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <div id="dropTipoVehiculo" class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                            <div class="py-1">
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="moto" data-price="55">Moto</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="auto" data-price="110">Auto</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camioneta" data-price="130">Camioneta</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camion" data-price="170">Pequeño camión</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="utilitario" data-price="170">Pequeño utilitario</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <input type="hidden" id="tipoVehiculo" name="tipoVehiculo" value="">
+                    <input type="hidden" id="tipoVehiculo" name="tipoVehiculo" value="">
                 </section>
-             <script>
-                // Dropdown functionality for vehicle type selection
-                const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
-                const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
-                const selectedOptionAuto = document.getElementById('selectedOptionAuto');
-                const selectedVehicleType = document.getElementById('tipoVehiculo');
-                
-                dropdownButtonAuto.addEventListener('click', () => {
-                    dropdownMenuAuto.classList.toggle('hidden');
-                });
-                
-                const optionsAuto = document.querySelectorAll('#dropTipoVehiculo .option');
-                optionsAuto.forEach(option => {
-                    option.addEventListener('click', () => {
-                        selectedOptionAuto.textContent = option.textContent;
-                        selectedVehicleType.value = option.dataset.value;
-                        dropdownMenuAuto.classList.add('hidden');
-                    });
-                });
-             </script>
-             <section>
-                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
-                <div class="relative w-full max-w-[340px] mx-auto">
-                      <section>
-                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
-                <div class="relative w-full max-w-[340px] mx-auto">
-                    <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                        <option value="" selected disabled>Seleccione un vehículo</option>
 
-                        {% if misVehiculos is defined and misVehiculos is not empty %}
-                            {% for vehiculo in misVehiculos %}
-                                <option value="{{ vehiculo.matricula }}">{{ vehiculo.matricula }} ({{ vehiculo.tipo }})</option>
-                            {% endfor %}
-                        {% else %}
-                            <option value="" disabled>No tienes vehículos vinculados</option>
-                        {% endif %}
-                    </select>
+                <!-- Sección Matrícula Manual -->
+                <div id="matriculaManualSection" class="h-[52px] relative">
+                    <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="space-x-6 p-2 w-[340px] h-[50px] text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
                 </div>
-             </section>
 
-             <div class="h-[52px] relative">
-                <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="space-x-6 p-2 w-[340px] h-[50px] text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
-             </div>
+                <!-- Sección Errores -->
+                <section class="text-center">
+                    {% if response is defined and response.errors is defined and response.errors is not empty %}
+                        <div id="error-container" class="text-red-600">
+                            <ul id="error-list">
+                                {% for error in response.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </section>
 
-             <section class="text-center">
-                {% if response is defined and response.errors is defined and response.errors is not empty %}
-                    <div id="error-container" class="display-none text-red-600">
-                        <ul id="error-list">
-                            {% for error in response.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-             </section>
-             <!--Continuar-->
-             <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 duration-300 btnPark rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
-             </section>
-          </form>
-       </div>
+                <!-- Botón Continuar -->
+                <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 duration-300 btnPark rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
+            </form>
+        </div>
     </main>
-    
+
     <script>
-        // Código para validar el envío del formulario
-        const form = document.getElementById('servicioForm');
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Verificar si el usuario seleccionó un vehículo o ingresó uno manualmente
-            const vehiculoDropdown = document.getElementById('vehiculosDropdown');
+        document.addEventListener('DOMContentLoaded', function() {
+            const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+            const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+            const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+            const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
+            const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+            const selectedVehicleType = document.getElementById('tipoVehiculo');
             const matriculaYa = document.getElementById('matriculaYa');
-        
-            if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
-                alert("Debe seleccionar un vehículo o ingresar una matrícula.");
-            } else {
-                if (vehiculoDropdown.value !== "") {
-                    matriculaYa.value = "";  // Si seleccionó un vehículo, limpiar el campo de matrícula manual
+            const matriculaManualSection = document.getElementById('matriculaManualSection');
+
+            // Función para bloquear/desbloquear el selector de tipo
+            function toggleTipoVehiculoSection(blocked) {
+                dropdownButtonAuto.style.pointerEvents = blocked ? 'none' : 'auto';
+                dropdownButtonAuto.style.opacity = blocked ? '0.7' : '1';
+                if (blocked) {
+                    dropdownMenuAuto.classList.add('hidden');
                 }
-                form.submit();  // Enviar el formulario si todo es válido
             }
+
+            // Event listener para el dropdown de vehículos
+            vehiculosDropdown.addEventListener('change', function() {
+                if (this.value !== "") {
+                    // Si se seleccionó un vehículo
+                    const selectedOption = this.options[this.selectedIndex];
+                    const tipo = selectedOption.getAttribute('data-tipo');
+                    
+                    // Actualizar y bloquear tipo de vehículo
+                    selectedOptionAuto.textContent = tipo;
+                    selectedVehicleType.value = tipo.toLowerCase();
+                    toggleTipoVehiculoSection(true);
+                    
+                    // Ocultar sección de matrícula manual
+                    matriculaManualSection.style.display = 'none';
+                    matriculaYa.value = '';
+                } else {
+                    // Si se deseleccionó el vehículo
+                    toggleTipoVehiculoSection(false);
+                    matriculaManualSection.style.display = 'block';
+                    selectedOptionAuto.textContent = 'Tipo';
+                    selectedVehicleType.value = '';
+                }
+            });
+
+            // Event listener para matrícula manual
+            matriculaYa.addEventListener('input', function() {
+                if (this.value !== "") {
+                    vehiculosDropdown.value = "";
+                    toggleTipoVehiculoSection(false);
+                }
+            });
+
+            // Dropdown de tipo de vehículo
+            dropdownButtonAuto.addEventListener('click', () => {
+                if (dropdownButtonAuto.style.pointerEvents !== 'none') {
+                    dropdownMenuAuto.classList.toggle('hidden');
+                }
+            });
+
+            // Opciones del dropdown de tipo de vehículo
+            const optionsAuto = document.querySelectorAll('#dropTipoVehiculo .option');
+            optionsAuto.forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedOptionAuto.textContent = option.textContent;
+                    selectedVehicleType.value = option.dataset.value;
+                    dropdownMenuAuto.classList.add('hidden');
+                });
+            });
+
+            // Validación del formulario
+            const form = document.getElementById('servicioForm');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
+                    alert("Debe seleccionar un vehículo o ingresar una matrícula.");
+                    return;
+                }
+
+                if (matriculaYa.value !== "" && selectedVehicleType.value === "") {
+                    alert("Debe seleccionar un tipo de vehículo.");
+                    return;
+                }
+
+                form.submit();
+            });
         });
     </script>
 
-          {% include 'partials/footer.html.twig' %}
-
- </body>
+    {% include 'partials/footer.html.twig' %}
+</body>
 </html>
