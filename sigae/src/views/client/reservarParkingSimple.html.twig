@@ -176,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener para el dropdown de vehículos
     vehiculosDropdown.addEventListener('change', function() {
         if (this.value !== "") {
-            // Si se seleccionó un vehículo existente
             const selectedOption = this.options[this.selectedIndex];
             const tipo = selectedOption.getAttribute('data-tipo');
             
@@ -187,7 +186,6 @@ document.addEventListener('DOMContentLoaded', function() {
             matriculaYa.value = '';
             matriculaManualSection.style.display = 'none';
         } else {
-            // Si se deseleccionó el vehículo
             tipoVehiculoSection.classList.remove('disabled-section');
             matriculaManualSection.style.display = 'block';
             selectedOptionAuto.textContent = 'Tipo';
@@ -207,28 +205,30 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        const fechaInicio = document.getElementById('fecha_inicio').value;
-        const fechaFinal = document.getElementById('fecha_final').value;
-        
-        // Validar fechas
-        if (!fechaInicio || !fechaFinal) {
+        if (!document.getElementById('fecha_inicio').value || !document.getElementById('fecha_final').value) {
             alert("Debe seleccionar las fechas de inicio y fin.");
             return;
         }
 
-        // Validar vehículo o matrícula
         if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
             alert("Debe seleccionar un vehículo o ingresar una matrícula.");
             return;
         }
 
-        // Validar tipo de vehículo para matrícula manual
         if (matriculaYa.value !== "" && selectedVehicleType.value === "") {
             alert("Debe seleccionar un tipo de vehículo.");
             return;
         }
 
-        // Enviar el formulario
+        // Si se está usando un vehículo existente, asegurarse de que se envíe como tal
+        if (vehiculosDropdown.value) {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'es_vehiculo_existente';
+            hiddenInput.value = 'true';
+            form.appendChild(hiddenInput);
+        }
+
         this.submit();
     });
 });
