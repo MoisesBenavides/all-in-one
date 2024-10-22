@@ -114,17 +114,15 @@
              <section>
                 <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
                 <div class="relative w-full max-w-[340px] mx-auto">
+                      <section>
+                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
+                <div class="relative w-full max-w-[340px] mx-auto">
                     <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                        {# Mensaje por defecto #}
                         <option value="" selected disabled>Seleccione un vehículo</option>
 
-                        {# Mostrar los vehículos si tiene vinculados, o deshabilitar dropdown#}
-                        {% if misVehiculos %}
+                        {% if misVehiculos is defined and misVehiculos is not empty %}
                             {% for vehiculo in misVehiculos %}
                                 <option value="{{ vehiculo.matricula }}">{{ vehiculo.matricula }} ({{ vehiculo.tipo }})</option>
-                                <script>
-                                    // tiposDropdown.prop('disabled', true).hide(); // Deshabilitar y ocultar el dropdown de tipo
-                                </script>
                             {% endfor %}
                         {% else %}
                             <option value="" disabled>No tienes vehículos vinculados</option>
@@ -132,13 +130,13 @@
                     </select>
                 </div>
              </section>
-             <div class="h-[52px] relative  ">
-                <!--INPUT PARA MATRICULA-->
-                <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="space-x-6  p-2 w-[340px] h-[50px]  text-[#2f353c] text-[22px] font-normal   tracking-wide bg-white rounded-md border border-[#2f353c]   text-left">
+
+             <div class="h-[52px] relative">
+                <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="space-x-6 p-2 w-[340px] h-[50px] text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
              </div>
-             <section class="text-center"></section>
-             <!-- DIV PARA ERRORES DE PHP -->
-                {% if response.errors is defined and response.errors is not empty %}
+
+             <section class="text-center">
+                {% if response is defined and response.errors is defined and response.errors is not empty %}
                     <div id="error-container" class="display-none text-red-600">
                         <ul id="error-list">
                             {% for error in response.errors %}
@@ -147,7 +145,7 @@
                         </ul>
                     </div>
                 {% endif %}
-             <!--  FINAL DE DIV PARA ERRORES DE PHP -->
+             </section>
              <!--Continuar-->
              <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 duration-300 btnPark rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
              </section>
