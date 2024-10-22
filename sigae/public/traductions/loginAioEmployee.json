@@ -1,0 +1,23 @@
+{
+    "es": {
+      "usuario": "Usuario",
+      "contrasena": "Contraseña",
+      "olvidaste_contrasena": "¿Olvidaste tu contraseña?",
+      "ingresar": "Ingresar",
+      "continuar_google": "Continuar con Google"
+    },
+    "it": {
+      "usuario": "Utente",
+      "contrasena": "Password",
+      "olvidaste_contrasena": "Hai dimenticato la password?",
+      "ingresar": "Accedi",
+      "continuar_google": "Continua con Google"
+    },
+    "en": {
+      "usuario": "Username",
+      "contrasena": "Password",
+      "olvidaste_contrasena": "Forgot your password?",
+      "ingresar": "Log in",
+      "continuar_google": "Continue with Google"
+    }
+  }

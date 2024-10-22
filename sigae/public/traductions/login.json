@@ -1,0 +1,26 @@
+{
+    "es": {
+      "correo": "Correo",
+      "contrasena": "Contraseña",
+      "olvidaste_contrasena": "¿Olvidaste tu contrase{a?",
+      "ingresar": "Ingresar",
+      "continuar_google": "Continuar con Google",
+      "registrate": "¿No tienes una cuenta? Regístrate aquí"
+    },
+    "it": {
+      "correo": "Email",
+      "contrasena": "Password",
+      "olvidaste_contrasena": "Hai dimenticato la password?",
+      "ingresar": "Accedi",
+      "continuar_google": "Continua con Google",
+      "registrate": "Non hai un account? Registrati qui"
+    },
+    "en": {
+      "correo": "Email",
+      "contrasena": "Password",
+      "olvidaste_contrasena": "Forgot your password?",
+      "ingresar": "Log in",
+      "continuar_google": "Continue with Google",
+      "registrate": "Don't have an account? Sign up here"
+    }
+  }

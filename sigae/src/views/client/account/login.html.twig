@@ -38,16 +38,16 @@
 
             <form id="login-form" action="{{ path('doLogin') }}" method="POST">
                 <div class="mb-6">
-                    <input id="email" name="email" type="email" placeholder="Correo"
+                    <input traducir="correo" id="email" name="email" type="email" placeholder="Correo"
                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                 </div>
                 <div class="mb-4">
-                    <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña"
+                    <input traducir="contrasena" id="contrasena" name="contrasena" type="password" placeholder="Contraseña"
                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                 </div>
                 <div class="mb-2">
                     <p>
-                        <a href="{{ path('forgotPassword') }}" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
+                        <a traducir="olvidaste_contrasena" href="{{ path('forgotPassword') }}" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
                     </p>
                 </div>    
                 {% if response.errors is defined and response.errors is not empty %}
@@ -60,23 +60,29 @@
                     </div>
                 {% endif %}
 
-                <button type="submit"  class=" btn w-full duration-300  text-white py-2 rounded-md  transition">
+                <button traducir="ingresar" type="submit"  class=" btn w-full duration-300  text-white py-2 rounded-md  transition">
                     Ingresar
                 </button>
             </form>
 
             <button class="w-full mt-4 flex justify-center items-center bg-[#ffffff] px-4 py-2 border rounded-md hover:bg-[#e5e5e5] transition">
                 <img class="w-6 h-6 mr-4" src="{{ asset('svg/google-icon-logo.svg') }}" alt="Google"/>
-                <a href="{{ path('doLoginOAuth') }}" class="text-gray-600">Continuar con Google</a>
+                <a traducir="continuar_google" href="{{ path('doLoginOAuth') }}" class="text-gray-600">Continuar con Google</a>
             </button>
             <div class="mt-6 text-center space-y-2">
                 <p>
-                    <a href="{{ path('signup') }}" class="text-sm text-gray-600 hover:underline">¿No tienes una cuenta? Regístrate aquí</a>
+                    <a traducir="registrate" href="{{ path('signup') }}" class="text-sm text-gray-600 hover:underline">¿No tienes una cuenta? Regístrate aquí</a>
                 </p>
             </div>
         </div>
     </div>
    
 </body>
-
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+        const archivoTraduccionHome = "{{ asset('traductions/login.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+    });
+</script>
 </html>

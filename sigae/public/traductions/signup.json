@@ -1,0 +1,47 @@
+{
+    "es": {
+      "correo": "Correo",
+      "ingrese_correo": "Por favor ingrese su correo electrónico",
+      "nombre": "Nombre",
+      "ingrese_nombre": "Por favor ingrese su nombre",
+      "apellido": "Apellido",
+      "ingrese_apellido": "Por favor ingrese su apellido",
+      "contrasena": "Contraseña",
+      "ingrese_contrasena": "Por favor ingrese una contraseña",
+      "repetir_contrasena": "Repetir contraseña",
+      "repita_contrasena": "Por favor repita la contraseña",
+      "minimo_caracteres": "Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.",
+      "enviar": "Enviar",
+      "tienes_cuenta": "¿Ya tienes una cuenta? Inicia sesión aquí"
+    },
+    "it": {
+      "correo": "Email",
+      "ingrese_correo": "Per favore inserisci la tua email",
+      "nombre": "Nome",
+      "ingrese_nombre": "Per favore inserisci il tuo nome",
+      "apellido": "Cognome",
+      "ingrese_apellido": "Per favore inserisci il tuo cognome",
+      "contrasena": "Password",
+      "ingrese_contrasena": "Per favore inserisci una password",
+      "repetir_contrasena": "Ripeti la password",
+      "repita_contrasena": "Per favore ripeti la password",
+      "minimo_caracteres": "Usa almeno 6 caratteri con lettere maiuscole, minuscole e numeri.",
+      "enviar": "Invia",
+      "tienes_cuenta": "Hai già un account? Accedi qui"
+    },
+    "en": {
+      "correo": "Email",
+      "ingrese_correo": "Please enter your email",
+      "nombre": "First Name",
+      "ingrese_nombre": "Please enter your first name",
+      "apellido": "Last Name",
+      "ingrese_apellido": "Please enter your last name",
+      "contrasena": "Password",
+      "ingrese_contrasena": "Please enter a password",
+      "repetir_contrasena": "Repeat password",
+      "repita_contrasena": "Please repeat the password",
+      "minimo_caracteres": "Use at least 6 characters with uppercase, lowercase, and numbers.",
+      "enviar": "Submit",
+      "tienes_cuenta": "Already have an account? Log in here"
+    }
+  }

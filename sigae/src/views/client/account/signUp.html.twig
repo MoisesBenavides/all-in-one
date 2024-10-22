@@ -63,25 +63,25 @@
     <form id="signup-form" action="{{ path('doSignup') }}" method="POST" class="space-y-4">
       <div class="input-container">
         <div class="input-wrapper">
-          <input id="email" name="email" type="email" placeholder="Correo" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <input traducir="correo" id="email" name="email" type="email" placeholder="Correo" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         </div>
         <div class="error-message" id="email-error"></div>
       </div>
       <div class="input-container">
         <div class="input-wrapper">
-          <input id="nombre" name="nombre" type="text" placeholder="Nombre" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <input traducir="nombre" id="nombre" name="nombre" type="text" placeholder="Nombre" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         </div>
         <div class="error-message" id="nombre-error"></div>
       </div>
       <div class="input-container">
         <div class="input-wrapper">
-          <input id="apellido" name="apellido" type="text" placeholder="Apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <input traducir="apellido" id="apellido" name="apellido" type="text" placeholder="Apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         </div>
         <div class="error-message" id="apellido-error"></div>
       </div>
       <div class="input-container">
         <div class="input-wrapper">
-          <input id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <input traducir="contrasena" id="contrasena" name="contrasena" type="password" placeholder="Contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
           <button type="button" class="password-toggle" onclick="togglePasswordVisibility('contrasena')">
             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -89,11 +89,11 @@
             </svg>
           </button>
         </div>
-        <div class="error-message" id="contrasena-error"></div>
+        <div  class="error-message" id="contrasena-error"></div>
       </div>
       <div class="input-container">
         <div class="input-wrapper">
-          <input id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <input traducir="repita_contrasena" id="repContrasena" name="repContrasena" type="password" placeholder="Repetir contraseña" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
           <button type="button" class="password-toggle" onclick="togglePasswordVisibility('repContrasena')">
             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -104,7 +104,7 @@
         <div class="error-message" id="repContrasena-error"></div>
       </div>
 
-      <p class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
+      <p traducir="minimo_caracteres" class="text-sm text-gray-600">Use un mínimo 6 caracteres con mayúsculas, minúsculas y números.</p>
       {% if response.errors is defined and response.errors is not empty %}
         <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
           <ul id="error-list">
@@ -115,16 +115,25 @@
         </div>
       {% endif %}
 
-      <button type="submit" class="w-full duration-300 btn  text-white py-2 rounded-md  transition cursor-pointer">
+      <button traducir="enviar" type="submit" class="w-full duration-300 btn  text-white py-2 rounded-md  transition cursor-pointer">
         Enviar
       </button>
     </form>
     <div class="mt-6 text-center space-y-2">
       <p>
-        <a href="{{ path('login') }}" class="text-sm text-gray-600 hover:underline">¿Ya tienes una cuenta? Inicia sesión aquí</a>
+        <a traducir="tienes_cuenta" href="{{ path('login') }}" class="text-sm text-gray-600 hover:underline">¿Ya tienes una cuenta? Inicia sesión aquí</a>
       </p>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+        const archivoTraduccionHome = "{{ asset('traductions/home.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+    });
+</script>
+
   <script>
     // Obtener referencias a los elementos del formulario
     const form = document.getElementById('signup-form');
