@@ -68,22 +68,21 @@
                 </section>
 
                 <!-- Tus vehículos -->
-                <section>
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
-                    <div class="relative w-full max-w-[340px] mx-auto">
-                        <select id="vehiculosDropdown" name="vehiculo_existente" 
-                            class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                            <option value="">Seleccione un vehículo</option>
-                            {% if misVehiculos is defined and misVehiculos is not empty %}
-                                {% for vehiculo in misVehiculos %}
-                                    <option value="{{ vehiculo.matricula }}" data-tipo="{{ vehiculo.tipo }}">
-                                        {{ vehiculo.matricula }} ({{ vehiculo.tipo }})
-                                    </option>
-                                {% endfor %}
-                            {% endif %}
-                        </select>
-                    </div>
-                </section>
+                    <section>
+                <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
+                <div class="relative w-full max-w-[340px] mx-auto">
+                    <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                        <option value="" selected>Seleccione un vehículo</option>
+                        {% if misVehiculos is defined and misVehiculos is not empty %}
+                            {% for vehiculo in misVehiculos %}
+                                <option value="{{ vehiculo.matricula }}" data-tipo="{{ vehiculo.tipo }}">
+                                    {{ vehiculo.matricula }} ({{ vehiculo.tipo }})
+                                </option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+            </section>
 
                 <!-- Tipo de vehículo -->
                 <section id="tipoVehiculoSection">
@@ -185,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedVehicleType.value = tipo.toLowerCase();
             tipoVehiculoSection.classList.add('disabled-section');
             
+            // Limpiar y ocultar matrícula manual
             matriculaYa.value = '';
             matriculaManualSection.style.display = 'none';
         } else {
@@ -207,24 +207,39 @@ document.addEventListener('DOMContentLoaded', function() {
     // Validación del formulario
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+
+        const fechaInicio = document.getElementById('fecha_inicio').value;
+        const fechaFinal = document.getElementById('fecha_final').value;
         
-        // Verificar que haya seleccionado un vehículo o ingresado una matrícula
+        // Validar fechas
+        if (!fechaInicio || !fechaFinal) {
+            alert("Debe seleccionar las fechas de inicio y fin.");
+            return;
+        }
+
+        // Validar vehículo o matrícula
         if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
             alert("Debe seleccionar un vehículo o ingresar una matrícula.");
             return;
         }
 
-        // Verificar tipo de vehículo para matrícula manual
+        // Validar tipo de vehículo para matrícula manual
         if (matriculaYa.value !== "" && selectedVehicleType.value === "") {
             alert("Debe seleccionar un tipo de vehículo.");
             return;
         }
 
-        // Limpiar el valor no utilizado en lugar de deshabilitar
+        // Si se usa matrícula manual, asegurarse de que el vehículo existente no se envíe
         if (matriculaYa.value !== "") {
-            vehiculosDropdown.value = "";
-        } else if (vehiculosDropdown.value !== "") {
-            matriculaYa.value = "";
+            // Crear un campo oculto temporal para la matrícula
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'matricula';
+            hiddenInput.value = matriculaYa.value;
+            form.appendChild(hiddenInput);
+            
+            // Quitar el name del dropdown
+            vehiculosDropdown.removeAttribute('name');
         }
 
         // Enviar el formulario
