@@ -34,11 +34,16 @@
         }
 </style>
     <script src="{{ asset('js/fechaInicioHandler.js') }}">
-        const startHandler = initializeStartDate('fecha_inicio');
     </script>
     <script src="{{ asset('js/fechaFinalHandler.js') }}">
-        const endHandler = initializeEndDate('fecha_final', 'fecha_inicio');
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar los handler de fechas
+        const startHandler = initializeStartDate('fecha_inicio');
+        const endHandler = initializeEndDate('fecha_final', 'fecha_inicio');
+    });
+</script>
         {% include 'partials/headerParking.html.twig' %}
 
 <body>
