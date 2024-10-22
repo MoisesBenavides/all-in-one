@@ -1,37 +1,4 @@
-<style>
-    @font-face {
-        font-family: 'Teachers';
-        src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    body, input, select, button, option {
-        font-family: 'Teachers', sans-serif;
-    }
-    
-    .language-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        margin: 0 5px;
-        transition: transform 0.3s ease;
-    }
-
-    .language-button:hover {
-        transform: scale(1.2);
-    }
-
-    .language-button img {
-        width: 30px;
-        height: 20px;
-        object-fit: cover;
-    }
-</style>
-
 <header class="w-screen">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <div class="container mx-auto px-4 py-4">
         <div class="relative flex flex-col md:flex-row justify-between items-center">
             <!-- Hamburguesa (visible solo en móviles) -->
@@ -50,7 +17,7 @@
                 </div>
             </a>
 
-            <!-- Navegación - visible solo en pantallas medianas y grandes -->
+            <!-- Navegación -->
             <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
                 <a href="{{ path('services') }}" traducir="services" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">Servicios</a>
                 <a href="{{ path('aioParking') }}" traducir="aioParking" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">AIO Parking</a>
@@ -58,28 +25,36 @@
                 <a href="{{ path('faq') }}" traducir="faq" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">FAQ</a>
             </nav>
 
-            <!-- User icon y botones de idioma -->
-            <div class="absolute top-2 right-4 md:static flex items-center">
-                <!-- Botones de idioma -->
-                <div class="flex flex-col mr-4">
-                    <button data-idioma="es" class="language-button mb-1">
-                        <img src="{{ asset('img/es.png') }}" alt="Español" title="Español">
+            <!-- User icon y selector de idioma -->
+            <div class="absolute top-2 right-4 md:static flex items-center space-x-4">
+                <!-- Selector de idioma -->
+                <div class="relative">
+                    <button id="languageToggle" class="w-8 h-8 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
+                        <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
                     </button>
-                    <button data-idioma="it" class="language-button mb-1">
-                        <img src="{{ asset('img/it.png') }}" alt="Italiano" title="Italiano">
-                    </button>
-                    <button data-idioma="en" class="language-button">
-                        <img src="{{ asset('img/en.png') }}" alt="English" title="English">
-                    </button>
+                    
+                    <!-- Menú desplegable de idiomas -->
+                    <div id="languageMenu" class="hidden absolute right-0 mt-2 py-2 w-12 bg-white rounded-lg shadow-lg transform scale-95 transition-all duration-200 ease-in-out">
+                        <button data-idioma="es" class="w-full px-2 py-1 hover:bg-gray-100 transition-colors duration-200">
+                            <img src="{{ asset('img/es.png') }}" alt="Español" class="w-full h-5 object-cover">
+                        </button>
+                        <button data-idioma="it" class="w-full px-2 py-1 hover:bg-gray-100 transition-colors duration-200">
+                            <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-full h-5 object-cover">
+                        </button>
+                        <button data-idioma="en" class="w-full px-2 py-1 hover:bg-gray-100 transition-colors duration-200">
+                            <img src="{{ asset('img/en.png') }}" alt="English" class="w-full h-5 object-cover">
+                        </button>
+                    </div>
                 </div>
+
                 <!-- User icon -->
-                <a href="{{ path('myAccount') }}">
+                <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300">
                     <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
                 </a>
             </div>
         </div>
 
-        <!-- Menú hamburguesa desplegable (oculto por defecto) -->
+        <!-- Menú hamburguesa móvil -->
         <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
             <a href="{{ path('services') }}" traducir="services" class="block text-black text-sm font-bold">Servicios</a>
             <a href="{{ path('aioParking') }}" traducir="aioParking" class="block text-black text-sm font-bold">AIO Parking</a>
@@ -98,6 +73,31 @@
             mobileMenu.classList.toggle('hidden');
         });
 
+        // Lógica del selector de idioma
+        const languageToggle = document.getElementById('languageToggle');
+        const languageMenu = document.getElementById('languageMenu');
+
+        languageToggle.addEventListener('click', () => {
+            languageMenu.classList.toggle('hidden');
+            // Añadir animación de escala
+            if (!languageMenu.classList.contains('hidden')) {
+                languageMenu.classList.add('scale-100');
+                languageMenu.classList.remove('scale-95');
+            } else {
+                languageMenu.classList.add('scale-95');
+                languageMenu.classList.remove('scale-100');
+            }
+        });
+
+        // Cerrar el menú cuando se hace clic fuera
+        document.addEventListener('click', (event) => {
+            if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
+                languageMenu.classList.add('hidden');
+                languageMenu.classList.add('scale-95');
+                languageMenu.classList.remove('scale-100');
+            }
+        });
+
         // Lógica de traducción
         const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
 
@@ -105,12 +105,12 @@
             inicializarTraduccion(archivoTraduccionHeader, 'es');
         });
 
-        document.querySelectorAll('.language-button').forEach(button => {
+        languageMenu.querySelectorAll('button').forEach(button => {
             button.addEventListener('click', (e) => {
                 const idioma = e.currentTarget.getAttribute('data-idioma');
                 cambiarIdioma(idioma);
+                languageMenu.classList.add('hidden');
             });
         });
     </script>
-    
 </header>
