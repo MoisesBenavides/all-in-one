@@ -51,7 +51,7 @@
             <p><strong>C1-50:</strong> Autos, camionetas y pequeños camiones (segundo piso)</p>
         </div>
           
-        <form id="parkingForm" action="respuesta.php" method="POST">
+        <form id="parkingForm" action="{{ path('submitParkingSlots') }}" method="POST">
             <div id="parkingContainer"
                 class="w-full max-w-[600px] h-auto min-h-[359px] p-4 pt-8 bg-white border border-black relative">
             <!-- Parking spots will be generated here -->
@@ -71,7 +71,7 @@
         var puestosLibres = {{ plazasLibres|map(plaza => "'" ~ plaza.getId() ~ "'")|join(', ')|raw }};
     </script>
     <script>
-           let selectedSpots = [];
+        let selectedSpots = [];
         let vehicleType = "pequenoCamion"; // "auto", "moto", o "pequenoCamion"
         let currentFloor = 1;
 
