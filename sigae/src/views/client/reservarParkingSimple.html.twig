@@ -140,7 +140,7 @@
 
     <script src="{{ asset('js/fechaInicioHandler.js') }}"></script>
     <script src="{{ asset('js/fechaFinalHandler.js') }}"></script>
-  <script>
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializar los handler de fechas
     const startHandler = initializeStartDate('fecha_inicio');
@@ -157,123 +157,84 @@ document.addEventListener('DOMContentLoaded', function() {
     const matriculaYa = document.getElementById('matriculaYa');
     const matriculaManualSection = document.getElementById('matriculaManualSection');
 
-    // Función para actualizar la visibilidad y estado de los campos
-    function updateFieldsVisibility(isExistingVehicle) {
-        if (isExistingVehicle) {
-            // Si se seleccionó un vehículo existente
-            matriculaYa.value = '';
-            matriculaYa.name = ''; // Removemos el name para que no se envíe
-            matriculaManualSection.style.display = 'none';
-            vehiculosDropdown.name = 'matricula';
-        } else {
-            // Si se está usando matrícula manual o ninguna selección
-            matriculaManualSection.style.display = 'block';
-            matriculaYa.name = 'matricula';
-            vehiculosDropdown.name = '';
-            if (!matriculaYa.value) {
-                // Solo resetear el tipo si no hay matrícula manual ingresada
-                selectedOptionAuto.textContent = 'Tipo';
-                selectedVehicleType.value = '';
-            }
-        }
-    }
-
-    // Función para actualizar el tipo de vehículo
-    function updateVehicleType(tipo, blocked) {
-        if (tipo) {
-            selectedOptionAuto.textContent = tipo;
-            selectedVehicleType.value = tipo.toLowerCase();
-        }
-        
-        if (blocked) {
-            tipoVehiculoSection.classList.add('disabled-section');
-            dropdownButtonAuto.style.pointerEvents = 'none';
-        } else {
-            tipoVehiculoSection.classList.remove('disabled-section');
-            dropdownButtonAuto.style.pointerEvents = 'auto';
-        }
-    }
-
     // Control del dropdown de tipo de vehículo
     dropdownButtonAuto.addEventListener('click', () => {
-        if (!tipoVehiculoSection.classList.contains('disabled-section')) {
+        if (!dropdownButtonAuto.classList.contains('disabled-section')) {
             dropdownMenuAuto.classList.toggle('hidden');
         }
     });
 
-    // Manejo de selección de tipo de vehículo
+    // Selección de tipo de vehículo
     const optionsAuto = document.querySelectorAll('#dropTipoVehiculo .option');
     optionsAuto.forEach(option => {
         option.addEventListener('click', () => {
-            if (!tipoVehiculoSection.classList.contains('disabled-section')) {
-                selectedOptionAuto.textContent = option.textContent;
-                selectedVehicleType.value = option.dataset.value;
-                dropdownMenuAuto.classList.add('hidden');
-            }
+            selectedOptionAuto.textContent = option.textContent;
+            selectedVehicleType.value = option.dataset.value;
+            dropdownMenuAuto.classList.add('hidden');
         });
     });
 
     // Event listener para el dropdown de vehículos
     vehiculosDropdown.addEventListener('change', function() {
-        const selectedVehicle = this.options[this.selectedIndex];
-        
         if (this.value !== "") {
             // Si se seleccionó un vehículo existente
-            const tipo = selectedVehicle.getAttribute('data-tipo');
-            updateVehicleType(tipo, true);
-            updateFieldsVisibility(true);
+            const selectedOption = this.options[this.selectedIndex];
+            const tipo = selectedOption.getAttribute('data-tipo');
+            
+            selectedOptionAuto.textContent = tipo;
+            selectedVehicleType.value = tipo.toLowerCase();
+            tipoVehiculoSection.classList.add('disabled-section');
+            
+            matriculaYa.value = '';
+            matriculaYa.disabled = true;
+            matriculaManualSection.style.display = 'none';
         } else {
             // Si se deseleccionó el vehículo
-            updateVehicleType(null, false);
-            updateFieldsVisibility(false);
+            tipoVehiculoSection.classList.remove('disabled-section');
+            matriculaManualSection.style.display = 'block';
+            matriculaYa.disabled = false;
+            selectedOptionAuto.textContent = 'Tipo';
+            selectedVehicleType.value = '';
         }
     });
 
     // Event listener para matrícula manual
     matriculaYa.addEventListener('input', function() {
         if (this.value !== "") {
-            // Si se está ingresando una matrícula manual
             vehiculosDropdown.value = "";
-            updateFieldsVisibility(false);
-            updateVehicleType(null, false);
+            vehiculosDropdown.disabled = true;
+            tipoVehiculoSection.classList.remove('disabled-section');
         } else {
-            // Si se borró la matrícula manual
-            updateFieldsVisibility(false);
-        }
-    });
-
-    // Event listener para cerrar el dropdown de tipo al hacer click fuera
-    document.addEventListener('click', function(event) {
-        if (!dropdownButtonAuto.contains(event.target) && !dropdownMenuAuto.contains(event.target)) {
-            dropdownMenuAuto.classList.add('hidden');
+            vehiculosDropdown.disabled = false;
         }
     });
 
     // Validación del formulario
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-
-        // Validar que se haya seleccionado un método de ingreso
-        if (!matriculaYa.value && !vehiculosDropdown.value) {
+        
+        // Verificar que haya seleccionado un vehículo o ingresado una matrícula
+        if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
             alert("Debe seleccionar un vehículo o ingresar una matrícula.");
             return;
         }
 
-        // Validar tipo de vehículo para matrícula manual
-        if (matriculaYa.value && !selectedVehicleType.value) {
+        // Verificar tipo de vehículo para matrícula manual
+        if (matriculaYa.value !== "" && selectedVehicleType.value === "") {
             alert("Debe seleccionar un tipo de vehículo.");
             return;
         }
 
-        // Actualizar los campos según el método seleccionado
-        updateFieldsVisibility(vehiculosDropdown.value !== "");
+        // Preparar los datos antes del envío
+        if (matriculaYa.value) {
+            vehiculosDropdown.disabled = true;
+        } else {
+            matriculaYa.disabled = true;
+        }
 
         // Enviar el formulario
         this.submit();
     });
-
-    // Inicialización inicial
-    updateFieldsVisibility(false);
 });
 </script>
 
