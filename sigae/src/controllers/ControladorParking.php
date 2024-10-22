@@ -22,6 +22,7 @@ class ControladorParking extends AbstractController{
     private $plazasAutoSimple;
     private $plazasAutoLargoPlazo;
     private $controladorVehiculo;
+    private $registrarYa;
 
     public function __construct(){
         $this->cargarPreciosHora(self::PATH_PRECIOS_JSON);
@@ -87,8 +88,20 @@ class ControladorParking extends AbstractController{
                 
                     $id_cliente = $_SESSION['id'];
 
+                    $datos_parking_simple = [
+                        'largo_plazo' => null,
+                        'tipo_plaza' => $tipo_plaza,
+                        'precio' => $precio,
+                        'fecha_inicio' => $fecha_inicioParsed,
+                        'fecha_final' => $fecha_finalParsed,
+                        'matricula' => $matricula
+                    ];
+
+                    // Guardar variables de sesión para reservar posteriormente a la elección de plazas
+                    $_SESSION['parking_simple'] = $datos_parking_simple;
+                    
                     // $this->parking = new Parking(false, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
-                    if (!$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
+                    if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                         $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
                     } else{
                         $plazasOcupadas = $this->parking->obtenerPlazasOcupadas(false, $tipo_plaza, $fecha_inicioParsed, $fecha_finalParsed);
@@ -118,7 +131,8 @@ class ControladorParking extends AbstractController{
 
                             // Redireccionar al usuario a la página de eleccion de plaza
                             return $this->render('client/eleccionPlazaParking.html.twig', [
-                                'plazasLibres' => $plazasLibres // TODO: ¿Enviar tipo de vehiculo?
+                                'plazasLibres' => $plazasLibres,
+                                'tipoVehiculo' => $tipoVehiculo
                             ]);                        
                         }                       
                     }      
@@ -196,7 +210,7 @@ class ControladorParking extends AbstractController{
                     $id_cliente = $_SESSION['id'];
 
                     $this->parking = new Parking(true, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
-                    if (!$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
+                    if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                         $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
                     } elseif (!$this->parking->reservarServicio($matricula)){
                         $response['errors'][] = "Error al reservar servicio.";
@@ -228,6 +242,26 @@ class ControladorParking extends AbstractController{
         return $this->render('client/reservarParkingLargoPlazo.html.twig', [
             'response' => $response
         ]); // Pasa la respuesta a la vista
+    }
+
+    function submitParkingSlots(): Response|RedirectResponse{
+        session_start();
+        $response=['success' => false, 'errors' => [], 'debug' => []];
+
+        // Debug: Log all received data
+        $response['debug']['received_data']=$_POST;
+
+        
+        if (false){
+            // Validacion de plazas
+        } else {
+            $response['errors'][] = "Debe llenar todos los campos.";
+            // Debug: Log which fields are missing
+            $response['debug']['missing_fields'] = array_diff(
+                ['fecha_inicio', 'fecha_final', 'tipoVehiculo', 'matricula'],
+                array_keys($_POST)
+            );
+        }
     }
 
     function parkingConfirmation(): Response{
@@ -316,8 +350,10 @@ class ControladorParking extends AbstractController{
         if (empty($matRegistrarYa) && empty($matVehiculoSelect)) {
             throw new InvalidArgumentException("Debe ingresar una matrícula.");
         } elseif (isset($matRegistrarYa) && !isset($matVehiculoSelect)) {
+            $this->registrarYa=true;
             return $matRegistrarYa;  // Retorna la matricula a registrar, si es la unica esta seteada
         } elseif (!isset($matRegistrarYa) && isset($matVehiculoSelect)) {
+            $this->registrarYa=false;
             return $matVehiculoSelect;  // Retorna la matricula del vehículo seleccionado por el cliente, si es la unica seteada
         } else {
             // Si ambos están seteados o ninguno está seteado, lanza un error
