@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener para el dropdown de vehículos
     vehiculosDropdown.addEventListener('change', function() {
         if (this.value !== "") {
+            // Si se seleccionó un vehículo existente
             const selectedOption = this.options[this.selectedIndex];
             const tipo = selectedOption.getAttribute('data-tipo');
             
@@ -185,19 +186,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             matriculaYa.value = '';
             matriculaManualSection.style.display = 'none';
-            
-            // Cuando se selecciona un vehículo existente
-            vehiculosDropdown.name = 'vehiculo_existente';
-            matriculaYa.name = '';
         } else {
+            // Si se deseleccionó el vehículo
             tipoVehiculoSection.classList.remove('disabled-section');
             matriculaManualSection.style.display = 'block';
             selectedOptionAuto.textContent = 'Tipo';
             selectedVehicleType.value = '';
-            
-            // Cuando no hay vehículo seleccionado
-            vehiculosDropdown.name = '';
-            matriculaYa.name = 'matricula';
         }
     });
 
@@ -205,8 +199,6 @@ document.addEventListener('DOMContentLoaded', function() {
     matriculaYa.addEventListener('input', function() {
         if (this.value !== "") {
             vehiculosDropdown.value = "";
-            vehiculosDropdown.name = '';
-            matriculaYa.name = 'matricula';
             tipoVehiculoSection.classList.remove('disabled-section');
         }
     });
@@ -236,13 +228,15 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Asegurarse de que solo un campo de matrícula esté activo
-        if (vehiculosDropdown.value !== "") {
-            vehiculosDropdown.name = 'vehiculo_existente';
-            matriculaYa.name = '';
-        } else {
-            vehiculosDropdown.name = '';
+        // Asegurar que solo se envíe una matrícula
+        if (matriculaYa.value) {
+            // Si hay matrícula manual, usar esa
             matriculaYa.name = 'matricula';
+            vehiculosDropdown.name = '';
+        } else {
+            // Si hay vehículo seleccionado, usar ese
+            vehiculosDropdown.name = 'matricula';
+            matriculaYa.name = '';
         }
 
         // Enviar el formulario
