@@ -83,7 +83,7 @@ function generateParkingLayout() {
     container.innerHTML = ''; // Limpia el contenedor antes de generar nuevo layout
 
     // Switch para determinar qué tipo de layout mostrar según el vehículo
-    switch(tipovehiculo) {
+    switch(tipoVehiculo) {
         case 'moto':
             // Las motos solo pueden estar en el primer piso
             if (currentFloor === 2) {
@@ -97,7 +97,7 @@ function generateParkingLayout() {
             // Autos y camionetas pueden usar cualquier plaza normal
             generateAutoLayout(container);
             break;
-        case 'pequenoCamion':
+        case 'camion':
         case 'utilitario':
             // Vehículos grandes necesitan dos plazas consecutivas
             generateLargeVehicleLayout(container);
