@@ -25,33 +25,33 @@
                 <a href="{{ path('faq') }}" traducir="faq" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">FAQ</a>
             </nav>
 
-            <!-- User icon y selector de idioma -->
-            <div class="absolute top-2 right-4 md:static flex items-center space-x-4">
-                <!-- Selector de idioma -->
-                <div class="relative">
-                    <button id="languageToggle" class="w-8 h-8 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
-                        <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
-                    </button>
-                    
-                    <!-- Menú desplegable de idiomas -->
-                    <div id="languageMenu" class="hidden absolute right-0 mt-2 py-2 w-12 bg-white rounded-lg shadow-lg transform scale-95 transition-all duration-200 ease-in-out">
-                        <button data-idioma="es" class="w-full px-2 py-1 hover:bg-gray-100 transition-colors duration-200">
-                            <img src="{{ asset('img/es.png') }}" alt="Español" class="w-full h-5 object-cover">
+                <div class="absolute top-2 right-4 md:static flex items-center space-x-6"> 
+            <!-- Selector de idioma -->
+            <div class="relative">
+                <button id="languageToggle" class="w-8 h-8 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
+                    <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
+                </button>
+                
+                <!-- Menú desplegable de idiomas reposicionado -->
+                <div id="languageMenu" class="hidden absolute -right-24 top-0 py-2 bg-white rounded-lg shadow-lg transform scale-95 transition-all duration-200 ease-in-out">
+                    <div class="flex space-x-2 px-2">
+                        <button data-idioma="es" class="hover:bg-gray-100 transition-colors duration-200 rounded-lg">
+                            <img src="{{ asset('img/es.png') }}" alt="Español" class="w-8 h-5 object-cover">
                         </button>
-                        <button data-idioma="it" class="w-full px-2 py-1 hover:bg-gray-100 transition-colors duration-200">
-                            <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-full h-5 object-cover">
+                        <button data-idioma="it" class="hover:bg-gray-100 transition-colors duration-200 rounded-lg">
+                            <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-8 h-5 object-cover">
                         </button>
-                        <button data-idioma="en" class="w-full px-2 py-1 hover:bg-gray-100 transition-colors duration-200">
-                            <img src="{{ asset('img/en.png') }}" alt="English" class="w-full h-5 object-cover">
+                        <button data-idioma="en" class="hover:bg-gray-100 transition-colors duration-200 rounded-lg">
+                            <img src="{{ asset('img/en.png') }}" alt="English" class="w-8 h-5 object-cover">
                         </button>
                     </div>
                 </div>
-
-                <!-- User icon -->
-                <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300">
-                    <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
-                </a>
             </div>
+
+            <!-- User icon -->
+            <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300">
+                <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
+            </a>
         </div>
 
         <!-- Menú hamburguesa móvil -->
