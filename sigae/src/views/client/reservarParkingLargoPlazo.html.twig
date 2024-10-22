@@ -61,14 +61,25 @@
         }
 </style>
         {% include 'partials/headerParking.html.twig' %}
-
+   <script src="{{ asset('js/fechaInicioHandler.js') }}">
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar el handler de la fechap
+        const startHandler = initializeStartDate('fecha_inicio');
+    });
+</script>
 <main class="container mx-auto px-4 py-8">
     <div class="max-w-3xl mx-auto space-y-8 sm:space-y-12">
         <section>
             <h2 class="text-center text-black text-xl sm:text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
             <div class="w-full max-w-[340px] mx-auto">
-                <input type="datetime-local" class="w-full h-[60px] px-4 py-3 bg-white rounded-[10px] border border-[#161212] text-center text-black text-lg sm:text-xl font-semibold">
+                <input type="datetime-local" id="fecha_inicio" class="w-full h-[60px] px-4 py-3 bg-white rounded-[10px] border border-[#161212] text-center text-black text-lg sm:text-xl font-semibold">
             </div>
+            <!--fehca disclaimer-->
+              <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
+                    <p>Las fehcas van en intervalos de 30 minutos, la fecha que elija se adaptará automaticamente a estos intervalos</p> 
+                </div>
         </section>
 
         <section>
