@@ -245,6 +245,7 @@ class ControladorParking extends AbstractController{
         ]); // Pasa la respuesta a la vista
     }
 
+    // TODO: Implementar
     function submitParkingSlots(): Response|RedirectResponse{
         session_start();
         $response=['success' => false, 'errors' => [], 'debug' => []];
@@ -253,15 +254,16 @@ class ControladorParking extends AbstractController{
         $response['debug']['received_data']=$_POST;
 
         
-        if (isset($_POST["fecha_inicio"], $_POST["fecha_final"], $_POST["tipoVehiculo"]) 
-        && !empty($_POST["fecha_inicio"]) && !empty($_POST["fecha_final"])){
-            // Validacion de plazas
-        } else {
+        if (isset($_POST["plazasSeleccionadas"]) && !empty($_POST["plazasSeleccionadas"])){
             if (isset($_SESSION["tipo_vehiculo"])){
-                ($_SESSION["tipo_vehiculo"] == moto auto) ? 
+                ($_SESSION["tipo_vehiculo"] == "moto" || "auto" || "camioneta") ? 
+                    $response['errors'][] = "Debe seleccionar una plaza de parking." : 
+                    $response['errors'][] = "Debe seleccionar dos plazas de parking.";
+                    // Debug: Log which fields are missing
+            } else {
+                $response['errors'][] = "Debe seleccionar un tipo de vehículo.";
             }
-            $response['errors'][] = "Debe seleccionar .";
-            // Debug: Log which fields are missing
+        } else {
             $response['debug']['missing_fields'] = array_diff(
                 ['fecha_inicio', 'fecha_final', 'tipoVehiculo', 'matricula'],
                 array_keys($_POST)
