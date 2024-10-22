@@ -1,4 +1,3 @@
-
 function initializeStartDate(inputId = 'fecha_inicio') {
     //  Obtener el elemento input del DOM osea del HTML
     const startInput = document.getElementById(inputId);
@@ -7,6 +6,12 @@ function initializeStartDate(inputId = 'fecha_inicio') {
     if (!startInput) {
         console.error(`Error: No se encontró el input con id ${inputId}`);
         return;
+    }
+
+    // Verifica si una fecha es anterior a la actual
+    function isPastDate(date) {
+        const now = new Date();
+        return date < now;
     }
 
     // Esta función redondea una fecha a la próxima media hora o hora en punto
@@ -26,6 +31,12 @@ function initializeStartDate(inputId = 'fecha_inicio') {
         // Limpiamos segundos y milisegundos para tener una hora exacta
         date.setSeconds(0);
         date.setMilliseconds(0);
+
+        // Si la fecha redondeada es pasada, avanzamos al siguiente slot
+        if (isPastDate(date)) {
+            date.setMinutes(date.getMinutes() + 30);
+        }
+
         return date;
     }
 
@@ -55,8 +66,11 @@ function initializeStartDate(inputId = 'fecha_inicio') {
         // Establecer la fecha mínima que se puede seleccionar
         startInput.min = formatDateTime(minDateTime);
         
-        // Si no hay fecha seleccionada o es menor que la mínima permitida, establecer la fecha mínima como valor
-        if (!startInput.value || new Date(startInput.value) < minDateTime) {
+        // Si no hay fecha seleccionada o es menor que la mínima permitida o es pasada,
+        // establecer la fecha mínima como valor
+        if (!startInput.value || 
+            new Date(startInput.value) < minDateTime || 
+            isPastDate(new Date(startInput.value))) {
             startInput.value = formatDateTime(minDateTime);
         }
         
@@ -73,10 +87,10 @@ function initializeStartDate(inputId = 'fecha_inicio') {
         // Redondear la fecha seleccionada al intervalo de 30 minutos más cercano
         const roundedDate = roundToNearestSlot(selectedDate);
         
-        // Si la fecha redondeada es menor que la mínima permitida,
-        // usar la fecha mínima en su lugar
-        if (roundedDate < minDate) {
+        // Si la fecha es pasada o menor que la mínima permitida, usar la mínima
+        if (isPastDate(roundedDate) || roundedDate < minDate) {
             startInput.value = formatDateTime(minDate);
+            alert("No se pueden seleccionar fechas pasadas.");
         } else {
             startInput.value = formatDateTime(roundedDate);
         }

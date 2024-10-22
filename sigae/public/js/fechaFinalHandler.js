@@ -1,4 +1,3 @@
-
 function initializeEndDate(inputId = 'fecha_final', startInputId = 'fecha_inicio') {
     //  ambos inputs del HTML
     const endInput = document.getElementById(inputId);         // Input de fecha final
@@ -8,6 +7,12 @@ function initializeEndDate(inputId = 'fecha_final', startInputId = 'fecha_inicio
     if (!endInput || !startInput) {
         console.error(`Error: No se encontraron los inputs necesarios`);
         return;
+    }
+
+    // Verifica si una fecha es anterior a la actual
+    function isPastDate(date) {
+        const now = new Date();
+        return date < now;
     }
 
     // Convierte una fecha al formato que acepta el input datetime-local
@@ -38,26 +43,39 @@ function initializeEndDate(inputId = 'fecha_final', startInputId = 'fecha_inicio
         // Limpiamos segundos y milisegundos
         date.setSeconds(0);
         date.setMilliseconds(0);
+
+        // Si la fecha redondeada es pasada, avanzamos al siguiente slot
+        if (isPastDate(date)) {
+            date.setMinutes(date.getMinutes() + 30);
+        }
+
         return date;
     }
 
     // Actualiza el input de fecha final basándose en la fecha inicial
     function updateEndInput() {
-        // Si no hay fecha inicial, no puede funcioanr
+        // Si no hay fecha inicial, no puede funcionar
         if (!startInput.value) return;
         
         // Obtener la fecha inicial y calcular la mínima fecha final posible
         const startTime = new Date(startInput.value);
         const minEndTime = new Date(startTime);
         minEndTime.setMinutes(minEndTime.getMinutes() + 30); // 30 minutos después
+
+        // Si la fecha mínima es pasada, avanzar al siguiente slot disponible
+        if (isPastDate(minEndTime)) {
+            minEndTime.setMinutes(minEndTime.getMinutes() + 30);
+        }
         
         // Establecer restricciones en el input
         endInput.min = formatDateTime(minEndTime);  // Fecha mínima permitida
         endInput.step = "1800";                     // Intervalos de 30 minutos
         
-        // Si no hay fecha seleccionada o es menor que la mínima permitida,
+        // Si no hay fecha seleccionada o es menor que la mínima permitida o es pasada,
         // establecer la fecha mínima como valor
-        if (!endInput.value || new Date(endInput.value) < minEndTime) {
+        if (!endInput.value || 
+            new Date(endInput.value) < minEndTime || 
+            isPastDate(new Date(endInput.value))) {
             endInput.value = formatDateTime(minEndTime);
         }
     }
@@ -75,9 +93,10 @@ function initializeEndDate(inputId = 'fecha_final', startInputId = 'fecha_inicio
         // Redondear la fecha seleccionada al intervalo de 30 minutos más cercano
         const roundedDate = roundToNearestSlot(endTime);
         
-        // Si la fecha es menor a la mínima permitida, usar la mínima
-        if (roundedDate < minEndTime) {
+        // Si la fecha es pasada o menor a la mínima permitida, usar la mínima
+        if (isPastDate(roundedDate) || roundedDate < minEndTime) {
             endInput.value = formatDateTime(minEndTime);
+            alert("La fecha final debe ser al menos 30 minutos después de la fecha inicial y no puede ser pasada.");
         } else {
             endInput.value = formatDateTime(roundedDate);
         }
