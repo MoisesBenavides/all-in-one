@@ -174,32 +174,36 @@
                 });
             });
 
-            // Manejo de selección de vehículo existente
+            // Event listener para el dropdown de vehículos
             vehiculosDropdown.addEventListener('change', function() {
                 if (this.value !== "") {
-                    // Si se selecciona un vehículo existente
                     const selectedOption = this.options[this.selectedIndex];
                     const tipo = selectedOption.getAttribute('data-tipo');
                     
                     selectedOptionAuto.textContent = tipo;
                     selectedVehicleType.value = tipo.toLowerCase();
                     tipoVehiculoSection.classList.add('disabled-section');
-                    matriculaManualSection.style.display = 'none';
+                    
                     matriculaYa.value = '';
+                    matriculaYa.disabled = true;
+                    matriculaManualSection.style.display = 'none';
                 } else {
-                    // Si se deselecciona el vehículo
                     tipoVehiculoSection.classList.remove('disabled-section');
                     matriculaManualSection.style.display = 'block';
+                    matriculaYa.disabled = false;
                     selectedOptionAuto.textContent = 'Tipo';
                     selectedVehicleType.value = '';
                 }
             });
 
-            // Manejo de ingreso de matrícula manual
+            // Event listener para matrícula manual
             matriculaYa.addEventListener('input', function() {
                 if (this.value !== "") {
                     vehiculosDropdown.value = "";
+                    vehiculosDropdown.disabled = true;
                     tipoVehiculoSection.classList.remove('disabled-section');
+                } else {
+                    vehiculosDropdown.disabled = false;
                 }
             });
 
@@ -212,19 +216,23 @@
                     return;
                 }
 
-                if (matriculaYa.value !== "" && selectedVehicleType.value === "") {
-                    alert("Debe seleccionar un tipo de vehículo.");
-                    return;
-                }
-
-                // Limpiar el campo no utilizado antes de enviar
                 if (matriculaYa.value !== "") {
+                    if (selectedVehicleType.value === "") {
+                        alert("Debe seleccionar un tipo de vehículo.");
+                        return;
+                    }
+                    vehiculosDropdown.disabled = true;
                     vehiculosDropdown.value = "";
-                } else {
+                } else if (vehiculosDropdown.value !== "") {
                     matriculaYa.value = "";
+                    matriculaYa.disabled = true;
                 }
 
                 this.submit();
+
+                // Reactivar los campos después del envío
+                vehiculosDropdown.disabled = false;
+                matriculaYa.disabled = false;
             });
         });
     </script>
