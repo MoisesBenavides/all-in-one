@@ -132,7 +132,7 @@ class ControladorParking extends AbstractController{
                 array_keys($_POST)
             );
         }
-        return $this->render('client/reservaraParkingSimple.html.twig', [
+        return $this->render('client/reservarParkingSimple.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
         ]);
     }
