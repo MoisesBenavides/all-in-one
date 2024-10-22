@@ -142,6 +142,10 @@
     <script src="{{ asset('js/fechaFinalHandler.js') }}"></script>
 <script>
  document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar los handler de fechas
+    const startHandler = initializeStartDate('fecha_inicio');
+    const endHandler = initializeEndDate('fecha_final', 'fecha_inicio');
+
         // Referencias a elementos del DOM
         const form = document.getElementById('servicioForm');
         const vehiculosDropdown = document.getElementById('vehiculosDropdown');
