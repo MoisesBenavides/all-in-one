@@ -110,7 +110,7 @@
             <div class="space-y-6">
                 {% for vehiculo in misVehiculos %}
                   <form class="vehicle-form" action="{{ path('editVehicle') }}" method="POST"> 
-                        <form class="vehicle-form" action="{{ path('') }}" method="POST">
+                     {#   <form class="vehicle-form" action="{{ path('') }}" method="POST"> #}
                         <input type="hidden" name="vehiculo_id" value="{{ vehiculo.id }}">
                         <div class="flex justify-between items-center text-lg font-semibold" id="vehiculo-{{ loop.index }}">
                             <div class="flex-grow">
