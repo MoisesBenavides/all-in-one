@@ -26,15 +26,20 @@ let traduccionesVista = {};
 
 // Función para cargar las traducciones
 function cargarTraducciones(archivo, tipo) {
+    if (!archivo) {
+        console.error(`Ruta de archivo no válida para ${tipo}`);
+        return Promise.reject('Ruta de archivo no válida');
+    }
+
     return fetch(archivo)
         .then(response => {
             if (!response.ok) {
-                console.error(`Error al cargar traducciones (${tipo}):`, response.status);
-                return {};
+                throw new Error(`Error HTTP ${response.status} al cargar ${tipo}`);
             }
             return response.json();
         })
         .then(data => {
+            console.log(`Traducciones cargadas para ${tipo}:`, data);
             if (tipo === 'header') {
                 traduccionesHeader = data;
             } else if (tipo === 'vista') {
@@ -43,58 +48,82 @@ function cargarTraducciones(archivo, tipo) {
             return data;
         })
         .catch(error => {
-            console.error(`Error al procesar traducciones (${tipo}):`, error);
+            console.error(`Error al cargar traducciones de ${tipo}:`, error);
             return {};
         });
 }
 
 // Función para cambiar el idioma
 function cambiarIdioma(idioma) {
-    aplicarTraducciones(traduccionesHeader[idioma], 'header');
-    aplicarTraducciones(traduccionesVista[idioma], 'vista');
-    // Guardar el idioma seleccionado en una cookie que dura 30 días
+    console.log('Cambiando idioma a:', idioma);
+    
+    if (traduccionesHeader[idioma]) {
+        aplicarTraducciones(traduccionesHeader[idioma], 'header');
+    } else {
+        console.warn('No se encontraron traducciones del header para el idioma:', idioma);
+    }
+    
+    if (traduccionesVista[idioma]) {
+        aplicarTraducciones(traduccionesVista[idioma], 'vista');
+    } else {
+        console.warn('No se encontraron traducciones de la vista para el idioma:', idioma);
+    }
+    
     setCookie('selectedLanguage', idioma, 30);
 }
 
 // Función para aplicar las traducciones
 function aplicarTraducciones(traducciones, tipo) {
-    if (!traducciones || Object.keys(traducciones).length === 0) {
-        console.warn(`Traducciones no disponibles para ${tipo}`);
+    if (!traducciones) {
+        console.warn(`No hay traducciones disponibles para ${tipo}`);
         return;
     }
-
-    const elementos = document.querySelectorAll(`[traducir]`);
-    elementos.forEach(elemento => {
+    document.querySelectorAll('[traducir]').forEach(elemento => {
         const clave = elemento.getAttribute('traducir');
         if (traducciones[clave]) {
-            elemento.textContent = traducciones[clave];
+            if (elemento.tagName === 'INPUT') {
+                elemento.placeholder = traducciones[clave];
+            } else {
+                elemento.textContent = traducciones[clave];
+            }
+        } else {
+            console.warn(`No se encontró traducción para la clave "${clave}" en ${tipo}`);
         }
     });
 }
 
+
 // Función para inicializar la traducción
 function inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionVista, idiomaInicial = 'es') {
-    // Verificar si existe una cookie con un idioma guardado
-    const idiomaGuardado = getCookie('selectedLanguage');
-    const idiomaAUsar = idiomaGuardado || idiomaInicial;
+    console.log('Cargando traducciones con archivos:', {
+        header: archivoTraduccionHeader,
+        vista: archivoTraduccionVista
+    });
 
+    // Primero cargamos las traducciones
     Promise.all([
         cargarTraducciones(archivoTraduccionHeader, 'header'),
         cargarTraducciones(archivoTraduccionVista, 'vista')
     ]).then(() => {
-        cambiarIdioma(idiomaAUsar);
-
-        // Usar data-idioma en lugar de class
+        // Configurar los botones de idioma
         document.querySelectorAll('[data-idioma]').forEach(button => {
-            button.addEventListener('click', () => {
-                const idioma = button.getAttribute('data-idioma');
+            button.addEventListener('click', (e) => {
+                const idioma = e.target.closest('[data-idioma]').getAttribute('data-idioma');
                 cambiarIdioma(idioma);
             });
         });
+
+        // Obtener el idioma guardado o usar el inicial
+        const idiomaGuardado = getCookie('selectedLanguage');
+        const idiomaAUsar = idiomaGuardado || idiomaInicial;
+        
+        // Aplicar el idioma inicial
+        cambiarIdioma(idiomaAUsar);
     }).catch(error => {
         console.error("Error al inicializar las traducciones:", error);
     });
 }
+
 // Exponer las funciones necesarias globalmente
 window.inicializarTraduccion = inicializarTraduccion;
 window.cambiarIdioma = cambiarIdioma;
