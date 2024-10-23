@@ -111,7 +111,7 @@
         languageMenu.classList.toggle('hidden');
     });
 
-    // Cerrar menú de idiomas al hacer clic fuera
+    // Cerrar menú de idiomas al hacer afuera
     document.addEventListener('click', (event) => {
         if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
             languageMenu.classList.add('hidden');
