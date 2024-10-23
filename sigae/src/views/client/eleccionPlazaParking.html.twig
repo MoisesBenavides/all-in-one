@@ -154,7 +154,7 @@
             // Prepara el array según el tipo de vehículo
             let plazasArray;
             
-            if (tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') {
+            if (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') {
                 if (plazasSeleccionadas.length === 1 && isAdjacentSpot(plazasSeleccionadas[0], spot)) {
                     plazasArray = [plazasSeleccionadas[0].dataset.spot, spot.dataset.spot];
                 } else {
@@ -179,7 +179,7 @@
             .then(data => {
                 if (data.success) {
                     // Continúa con la lógica visual normal
-                    if (tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') {
+                    if (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') {
                         handleLargeVehicleSelection(spot);
                     } else {
                         handleRegularSelection(spot);
@@ -251,7 +251,7 @@
             
             // Preparar el array de plazas según el tipo de vehículo
             let plazasArray;
-            if (tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') {
+            if (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') {
                 if (plazasSeleccionadas.length === 1) {
                     plazasArray = [plazasSeleccionadas[0].dataset.spot, spotId];
                 } else {
@@ -297,7 +297,7 @@
         document.getElementById('parkingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            if ((tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') && plazasSeleccionadas.length !== 2) {
+            if ((tipovehiculo === 'camion' || tipovehiculo === 'utilitario') && plazasSeleccionadas.length !== 2) {
                 alert('Debe seleccionar dos espacios consecutivos para vehículos grandes');
                 return;
             }
@@ -307,7 +307,7 @@
                 return;
             }
 
-            const output = (tipovehiculo === 'pequenoCamion' || tipovehiculo === 'utilitario') 
+            const output = (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') 
                 ? plazasSeleccionadas.map(spot => spot.dataset.spot)
                 : [plazasSeleccionadas[0].dataset.spot, null];
 
