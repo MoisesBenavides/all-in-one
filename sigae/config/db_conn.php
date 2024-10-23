@@ -1,7 +1,7 @@
 <?php
 
 namespace Sigae\Config;
-
+use Exception;
 use PDO;
 use PDOException;
 
