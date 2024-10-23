@@ -89,7 +89,7 @@ class ControladorParking extends AbstractController{
                 
                     $id_cliente = $_SESSION['id'];
 
-                    $datos_parking_simple = [
+                    $datos_parking = [
                         'largo_plazo' => null,
                         'tipo_plaza' => $tipo_plaza,
                         'precio' => $precio,
@@ -100,7 +100,7 @@ class ControladorParking extends AbstractController{
                     ];
 
                     // Guardar variables de sesión para reservar posteriormente a la elección de plazas
-                    $_SESSION['parking_simple'] = $datos_parking_simple;
+                    $_SESSION['parking_simple'] = $datos_parking;
                     
                     // $this->parking = new Parking(false, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
                     if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
@@ -226,8 +226,6 @@ class ControladorParking extends AbstractController{
                         $_SESSION['servicio'] = 'parking';
                         $_SESSION['matricula'] = $matricula;
 
-                        error_log(print_r($this->parking, true)); // Esto mostrará los datos de la reserva.
-
                         // Redireccionar al usuario a la página de confirmación de reserva
                         return $this->redirectToRoute('parkingConfirmation');
                     }      
@@ -247,15 +245,31 @@ class ControladorParking extends AbstractController{
     }
 
     function holdParkingSlot(Request $request): JsonResponse{
+        session_start();
 
-        $datos = json_decode($request->getContent(), true);
-        $numeroPlaza = $datos['numero_plaza'];
+        if(isset($_SESSION['parking']) && !empty($_SESSION['parking'])){
 
-        if($this->parking->apartarPlaza($numeroPlaza)){
-            $_SESSION['plaza_apartada'] = $numeroPlaza;
-            return new JsonResponse(['success' => true]);
-        } else{
-            return new JsonResponse(['success' => false, 'message' => 'Error al apartar temporalmente la plaza']);
+            $largo_plazo=$_SESSION['parking']['largo_plazo'];
+            $tipo_plaza=$_SESSION['parking']['tipo_plaza'];
+            $precio=$_SESSION['parking']['precio'];
+            $fecha_inicio = $_SESSION['parking']['fecha_inicio'];
+            $fecha_final = $_SESSION['parking']['fecha_final'];
+            $matricula = $_SESSION['parking']['matricula'];
+
+            $datos = json_decode($request->getContent(), true);
+            $numeroPlaza = $datos['numero_plaza'];
+
+            $this->parking = new Parking($largo_plazo, $tipo_plaza, null, $precio, $fecha_inicio, $fecha_final);
+
+            if($this->parking->apartarPlaza($numeroPlaza)){
+                $_SESSION['plaza_apartada'] = $numeroPlaza;
+                return new JsonResponse(['success' => true]);
+            } else{
+                return new JsonResponse(['success' => false, 'message' => 'Error al apartar la plaza']);
+            }
+
+        } else {
+            return new JsonResponse(['success' => false, 'message' => 'Debe registrarse una reserva de parking antes de elegir plaza']);
         }
     }
 
@@ -314,7 +328,6 @@ class ControladorParking extends AbstractController{
         // Imprimir los datos en pagina de confirmacion
         return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
     }
-
 
     private function calcularPrecio($difFechas, $tipoVehiculo) {
         $prHora = $this->preciosHora[$tipoVehiculo]['precio']; // Precio por hora según el tipo de vehículo
