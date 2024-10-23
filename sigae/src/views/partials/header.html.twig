@@ -25,32 +25,39 @@
                 <a href="{{ path('faq') }}" traducir="faq" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">FAQ</a>
             </nav>
 
-            <div class="absolute top-2 right-4 md:static flex items-center space-x-6"> 
-            <!-- Selector de idioma -->
-            <div class="relative flex items-center">
-                <!-- Menú de idiomas (columna vertical) -->
-                <div id="languageMenu" class="hidden absolute right-full top-1/2 -translate-y-1/2 -mr-2 bg-white p-2 rounded-lg shadow-lg flex flex-col space-y-2">
-                    <button data-idioma="es" class="transition-transform duration-200 hover:scale-110">
-                        <img src="{{ asset('img/es.png') }}" alt="Español" class="w-8 h-5 object-cover">
-                    </button>
-                    <button data-idioma="it" class="transition-transform duration-200 hover:scale-110">
-                        <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-8 h-5 object-cover">
-                    </button>
-                    <button data-idioma="en" class="transition-transform duration-200 hover:scale-110">
-                        <img src="{{ asset('img/en.png') }}" alt="English" class="w-8 h-5 object-cover">
-                    </button>
+            <div class="absolute top-2 right-4 md:static flex items-center space-x-4"> 
+                <!-- Selector de idioma -->
+                <div class="relative flex items-center">
+                    <!-- Menú de idiomas (columna vertical) -->
+                    <div id="languageMenu" class="hidden absolute right-full top-1/2 -translate-y-1/2 -mr-2 bg-white p-2 rounded-lg shadow-lg flex flex-col space-y-2">
+                        <button data-idioma="es" class="flex items-center space-x-2 transition-transform duration-200 hover:scale-110">
+                            <img src="{{ asset('img/es.png') }}" alt="Español" class="w-6 h-4 object-cover">
+                            <span class="text-sm">Español</span>
+                        </button>
+                        <button data-idioma="it" class="flex items-center space-x-2 transition-transform duration-200 hover:scale-110">
+                            <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-6 h-4 object-cover">
+                            <span class="text-sm">Italiano</span>
+                        </button>
+                        <button data-idioma="en" class="flex items-center space-x-2 transition-transform duration-200 hover:scale-110">
+                            <img src="{{ asset('img/en.png') }}" alt="English" class="w-6 h-4 object-cover">
+                            <span class="text-sm">English</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Contenedor del idioma actual -->
+                    <div class="flex items-center space-x-2">
+                        <button id="languageToggle" class="w-6 h-6 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
+                            <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
+                        </button>
+                        <span id="currentLanguage" class="text-xs sm:text-sm font-medium hidden sm:inline">Español</span>
+                    </div>
                 </div>
-                
-                <!-- Icono del mundo -->
-                <button id="languageToggle" class="w-8 h-8 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
-                    <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
-                </button>
-            </div>
 
-            <!-- User icon -->
-            <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300">
-                <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
-            </a>
+                <!-- User icon -->
+                <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300">
+                    <img class="w-8 h-8" src="{{ asset('img/user.png') }}" alt="User">
+                </a>
+            </div>
         </div>
 
         <!-- Menú hamburguesa móvil -->
@@ -67,47 +74,48 @@
         // Lógica del menú hamburguesa
         const hamburger = document.getElementById('hamburger');
         const mobileMenu = document.getElementById('mobileMenu');
+        const currentLanguage = document.getElementById('currentLanguage');
 
         hamburger.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
 
-     const languageToggle = document.getElementById('languageToggle');
-    const languageMenu = document.getElementById('languageMenu');
+        const languageToggle = document.getElementById('languageToggle');
+        const languageMenu = document.getElementById('languageMenu');
 
-    languageToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        languageMenu.classList.toggle('hidden');
-    });
-
-    // Cerrar al hacer clic fuera
-    document.addEventListener('click', (event) => {
-        if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
-            languageMenu.classList.add('hidden');
-        }
-    });
-
-    // Manejar selección de idioma
-    languageMenu.querySelectorAll('button').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const idioma = e.currentTarget.getAttribute('data-idioma');
-            cambiarIdioma(idioma);
-            languageMenu.classList.add('hidden');
+        languageToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            languageMenu.classList.toggle('hidden');
         });
-    });
+
+        // Cerrar al hacer clic fuera
+        document.addEventListener('click', (event) => {
+            if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
+                languageMenu.classList.add('hidden');
+            }
+        });
+
+        // Manejar selección de idioma
+        const languageNames = {
+            'es': 'Español',
+            'it': 'Italiano',
+            'en': 'English'
+        };
+
+        languageMenu.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const idioma = e.currentTarget.getAttribute('data-idioma');
+                currentLanguage.textContent = languageNames[idioma];
+                cambiarIdioma(idioma);
+                languageMenu.classList.add('hidden');
+            });
+        });
+
         // Lógica de traducción
         const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
 
         document.addEventListener('DOMContentLoaded', () => {
             inicializarTraduccion(archivoTraduccionHeader, 'es');
-        });
-
-        languageMenu.querySelectorAll('button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const idioma = e.currentTarget.getAttribute('data-idioma');
-                cambiarIdioma(idioma);
-                languageMenu.classList.add('hidden');
-            });
         });
     </script>
 </header>
