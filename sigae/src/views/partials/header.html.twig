@@ -69,7 +69,8 @@
 
     <script src="{{ asset('js/traduccion.js') }}"></script>
     <script>
-         const hamburger = document.getElementById('hamburger');
+      // Elementos del DOM
+    const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
     const languageToggle = document.getElementById('languageToggle');
     const languageMenu = document.getElementById('languageMenu');
@@ -81,6 +82,23 @@
         'it': 'ITALIANO',
         'en': 'ENGLISH'
     };
+
+    // Función para obtener el valor de una cookie
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+            return parts.pop().split(';').shift();
+        }
+        return 'es'; // Idioma por defecto si no hay cookie
+    }
+
+    // Función para actualizar el texto del idioma
+    function updateLanguageDisplay(idioma) {
+        if (languageNames[idioma]) {
+            currentLanguage.textContent = languageNames[idioma];
+        }
+    }
 
     // Lógica del menú hamburguesa
     hamburger.addEventListener('click', () => {
@@ -104,11 +122,8 @@
     languageMenu.querySelectorAll('button').forEach(button => {
         button.addEventListener('click', (e) => {
             const idioma = e.currentTarget.getAttribute('data-idioma');
-            // Actualizar el texto mostrado
-            currentLanguage.textContent = languageNames[idioma];
-            // Cambiar el idioma de la página
+            updateLanguageDisplay(idioma);
             cambiarIdioma(idioma);
-            // Ocultar el menú
             languageMenu.classList.add('hidden');
         });
     });
@@ -116,24 +131,35 @@
     // Lógica de traducción
     const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
 
-    // Inicializar traducción cuando el DOM está listo
+    // Inicializar traducción y mostrar idioma actual cuando el DOM está listo
     document.addEventListener('DOMContentLoaded', () => {
-        // Inicializar con español como idioma predeterminado
-        inicializarTraduccion(archivoTraduccionHeader, 'es');
+        // Obtener el idioma de la cookie
+        const savedLanguage = getCookie('idioma');
+        // Actualizar el texto mostrado
+        updateLanguageDisplay(savedLanguage);
+        // Inicializar traducción con el idioma guardado
+        inicializarTraduccion(archivoTraduccionHeader, savedLanguage);
     });
 
-    // Opcional: Cerrar el menú móvil al cambiar el tamaño de la ventana
+    //  Cerrar el menú móvil al cambiar el tamaño de la ventana
     window.addEventListener('resize', () => {
-        if (window.innerWidth >= 768) { // 768px es el breakpoint de md en Tailwind
+        if (window.innerWidth >= 768) {
             mobileMenu.classList.add('hidden');
         }
     });
 
-    // Opcional: Cerrar menús al presionar la tecla Escape
+    //  Cerrar menús al presionar la tecla Escape, para mejor manejo con teclado para accesibilidad :)
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             mobileMenu.classList.add('hidden');
             languageMenu.classList.add('hidden');
+        }
+    });
+
+    // Actualizar el idioma mostrado si cambia la cookie
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'idioma') {
+            updateLanguageDisplay(e.newValue || 'es');
         }
     });
     </script>
