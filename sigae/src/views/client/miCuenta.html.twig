@@ -111,10 +111,9 @@
                 {% for vehiculo in misVehiculos %}
                   <form class="vehicle-form" > 
                      {#   <form class="vehicle-form" action="{{ path('') }}" method="POST"> #}
-                        <input type="hidden" name="vehiculo_id" value="{{ vehiculo.id }}">
+                         <input type="text" name="matricula" class="editable" value="{{ vehiculo.matricula }}" readonly>
                         <div class="flex justify-between items-center text-lg font-semibold" id="vehiculo-{{ loop.index }}">
                             <div class="flex-grow">
-                                <input type="text" name="matricula" class="editable" value="{{ vehiculo.matricula }}" readonly>
                                 (<input type="text" name="tipo" class="editable" value="{{ vehiculo.tipo }}" readonly>)
                             </div>
                             <div class="flex items-center">
