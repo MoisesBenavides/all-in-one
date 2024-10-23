@@ -102,7 +102,7 @@ class ControladorParking extends AbstractController{
                     // Guardar variables de sesión para reservar posteriormente a la elección de plazas
                     $_SESSION['parking_simple'] = $datos_parking_simple;
                     
-                     $this->parking = new Parking(false, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
+                    // $this->parking = new Parking(false, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
                     if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                         $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
                     } else{
