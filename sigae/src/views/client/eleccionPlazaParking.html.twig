@@ -26,11 +26,11 @@
             font-family: 'Teachers', sans-serif;
         }
 
-         .btnPark{
+        .btnPark {
             background-color: #1f3de0
         }
 
-        .btnPark:hover{
+        .btnPark:hover {
             background-color: #233181
         }
     </style>
@@ -40,22 +40,20 @@
 
 <body class="bg-white">
     <div class="w-full max-w-[1440px] px-4 py-8 mx-auto flex flex-col items-center gap-8">
-        <div
-            class="w-full max-w-[896px] h-[46px] px-4 py-2 bg-[#d9d9d9] rounded-[10px] border border-[#c5b8b8] flex justify-center items-center gap-2.5">
+        <div class="w-full max-w-[896px] h-[46px] px-4 py-2 bg-[#d9d9d9] rounded-[10px] border border-[#c5b8b8] flex justify-center items-center gap-2.5">
             <button id="decrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center">&lt;</button>
             <div id="floorDisplay" class="text-center text-black text-base font-medium">Piso 1</div>
             <button id="incrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center">&gt;</button>
         </div>
         <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
-            <p><strong>B1-20:</strong> Motos (solo primer piso)</p> 
-            <p><strong>A1-50:</strong> Autos, camionetas y pequeños camiones (primer piso)</p> 
+            <p><strong>B1-20:</strong> Motos (solo primer piso)</p>
+            <p><strong>A1-50:</strong> Autos, camionetas y pequeños camiones (primer piso)</p>
             <p><strong>C1-50:</strong> Autos, camionetas y pequeños camiones (segundo piso)</p>
         </div>
-          
-        <form id="parkingForm" action="{{ path('submitParkingSlots') }}" method="POST">
-            <div id="parkingContainer"
-                class="w-full max-w-[600px] h-auto min-h-[359px] p-4 pt-8 bg-white border border-black relative">
-            <!-- Parking spots will be generated here -->
+
+        <form id="parkingForm" action="{{ path('submitParkingSimple') }}" method="POST">
+            <div id="parkingContainer" class="w-full max-w-[600px] h-auto min-h-[359px] p-4 pt-8 bg-white border border-black relative">
+                <!-- Parking spots will be generated here -->
             </div>
 
             <input type="hidden" name="plazasSeleccionadas" id="plazasSeleccionadasInput">
@@ -65,29 +63,146 @@
                 </button>
             </div>
         </form>
-    </div>    
+    </div>
 
     <script>
-        // Convertir las plazas libres a un array de strings
-        var plazasLibres = {{ plazasLibres|map(plaza => "'" ~ plaza.getId() ~ "'")|join(', ')|raw }};
-    </script>
+        // Variables globales
+        const tipovehiculo = {{ tipoVehiculo }};
+        const plazasLibres = {{ plazasLibres|json_encode()|raw }};
+        let plazasSeleccionadas = [];
+        let currentFloor = 1;
 
-    <script>
-        const tipovehiculo = {{ tipoVehiculo }}; 
+        // Funciones de utilidad
+        function createDiv(className, children = []) {
+            const div = document.createElement('div');
+            div.className = className;
+            children.forEach(child => div.appendChild(child));
+            return div;
+        }
 
-        // Variables globales para manejar el estado del parking
-        let plazasSeleccionadas = [];  // Almacena las plazas seleccionadas actualmente
-        let currentFloor = 1;   
+        function createParkingSpot(number, prefix) {
+            const spotId = `${prefix}${number}`;
+            const spot = document.createElement('button');
+            
+            spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
+            spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
+            spot.dataset.spot = spotId;
+            spot.type = 'button';
 
-        // Función principal que genera el layout del estacionamiento
+            if (!plazasLibres.includes(spotId)) {
+                spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
+                spot.disabled = true;
+            } else {
+                spot.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    try {
+                        const response = await fetch('{{ path("holdParkingSlot") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({ 
+                                numero_plaza: spotId
+                            })
+                        });
+
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            handleSpotSelection(spot);
+                        } else {
+                            alert(data.message || 'Esta plaza ya no está disponible');
+                            window.location.reload();
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Hubo un error al apartar la plaza');
+                    }
+                });
+            }
+
+            return spot;
+        }
+
+        function handleSpotSelection(spot) {
+            if (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') {
+                handleLargeVehicleSelection(spot);
+            } else {
+                handleRegularSelection(spot);
+            }
+        }
+
+        function handleRegularSelection(spot) {
+            plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
+            plazasSeleccionadas = [spot];
+            spot.classList.add('bg-[#5381c6]', 'text-white');
+        }
+
+        function handleLargeVehicleSelection(spot) {
+            if (plazasSeleccionadas.length === 0) {
+                plazasSeleccionadas.push(spot);
+                spot.classList.add('bg-[#5381c6]', 'text-white');
+            } else if (plazasSeleccionadas.length === 1) {
+                if (isAdjacentSpot(plazasSeleccionadas[0], spot)) {
+                    plazasSeleccionadas.push(spot);
+                    spot.classList.add('bg-[#5381c6]', 'text-white');
+                } else {
+                    plazasSeleccionadas[0].classList.remove('bg-[#5381c6]', 'text-white');
+                    plazasSeleccionadas = [spot];
+                    spot.classList.add('bg-[#5381c6]', 'text-white');
+                }
+            } else {
+                plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
+                plazasSeleccionadas = [spot];
+                spot.classList.add('bg-[#5381c6]', 'text-white');
+            }
+        }
+
+        function isAdjacentSpot(spot1, spot2) {
+            const num1 = parseInt(spot1.dataset.spot.match(/\d+/)[0]);
+            const num2 = parseInt(spot2.dataset.spot.match(/\d+/)[0]);
+            return Math.abs(num1 - num2) === 1;
+        }
+
+        // Funciones de generación de layout
+        function generateMotoLayout(container) {
+            const motoSpots = createParkingColumn(1, 20, 'B');
+            container.appendChild(createDiv('flex justify-center', [
+                createDiv('w-1/4', [motoSpots])
+            ]));
+        }
+
+        function generateAutoLayout(container) {
+            const prefix = currentFloor === 1 ? 'A' : 'C';
+            const leftColumn = createParkingColumn(1, 20, prefix);
+            const middleColumn = createParkingColumn(21, 30, prefix);
+            const rightColumn = createParkingColumn(31, 50, prefix);
+
+            container.appendChild(createDiv('flex justify-center gap-[150px] h-full', [
+                createDiv('flex flex-col justify-start overflow-y-auto', [leftColumn]),
+                createDiv('flex flex-col justify-end', [
+                    middleColumn,
+                    createDiv('w-[45px] h-[108px] border-t border-b border-l border-black')
+                ]),
+                createDiv('flex flex-col justify-start overflow-y-auto', [rightColumn])
+            ]));
+        }
+
+        function generateLargeVehicleLayout(container) {
+            generateAutoLayout(container);
+            const message = document.createElement('div');
+            message.className = 'absolute top-0 left-0 right-0 text-center text-red-500 p-2';
+            message.textContent = 'Debe seleccionar dos espacios consecutivos';
+            container.insertBefore(message, container.firstChild);
+        }
+
         function generateParkingLayout() {
             const container = document.getElementById('parkingContainer');
-            container.innerHTML = ''; // Limpia el contenedor antes de generar nuevo layout
+            container.innerHTML = '';
 
-            // Switch para determinar qué tipo de layout mostrar según el vehículo
-            switch(tipoVehiculo) {
+            switch(tipovehiculo) {
                 case 'moto':
-                    // Las motos solo pueden estar en el primer piso
                     if (currentFloor === 2) {
                         container.innerHTML = '<p class="text-center text-red-500">Las motos solo pueden estacionar en el primer piso.</p>';
                         return;
@@ -96,12 +211,10 @@
                     break;
                 case 'auto':
                 case 'camioneta':
-                    // Autos y camionetas pueden usar cualquier plaza normal
                     generateAutoLayout(container);
                     break;
                 case 'camion':
                 case 'utilitario':
-                    // Vehículos grandes necesitan dos plazas consecutivas
                     generateLargeVehicleLayout(container);
                     break;
                 default:
@@ -110,208 +223,27 @@
             }
         }
 
-        // Genera el layout específico para motos
-        function generateMotoLayout(container) {
-            const motoSpots = createParkingColumn(1, 20, 'B');
-            container.appendChild(createDiv('flex justify-center', [
-                createDiv('w-1/4', [motoSpots])
-            ]));
-        }
-
-        // Genera el layout para autos y camionetas
-        function generateAutoLayout(container) {
-            // Usa prefijo A para primer piso y C para segundo piso
-            const prefix = currentFloor === 1 ? 'A' : 'C';
-            
-            // Crea tres columnas de plazas
-            const leftColumn = createParkingColumn(1, 20, prefix);    // Plazas 1-20
-            const middleColumn = createParkingColumn(21, 30, prefix); // Plazas 21-30
-            const rightColumn = createParkingColumn(31, 50, prefix);  // Plazas 31-50
-
-            // Estructura el layout con las tres columnas y un pasillo
-            container.appendChild(createDiv('flex justify-center gap-[150px] h-full', [
-                createDiv('flex flex-col justify-start overflow-y-auto', [leftColumn]),
-                createDiv('flex flex-col justify-end', [
-                    middleColumn,
-                    createDiv('w-[45px] h-[108px] border-t border-b border-l border-black') // Pasillo
-                ]),
-                createDiv('flex flex-col justify-start overflow-y-auto', [rightColumn])
-            ]));
-        }
-
-        // Genera el layout para vehículos grandes
-        function generateLargeVehicleLayout(container) {
-            generateAutoLayout(container);
-            // Agrega mensaje informativo sobre selección de espacios consecutivos
-            const message = document.createElement('div');
-            message.className = 'absolute top-0 left-0 right-0 text-center text-red-500 p-2';
-            message.textContent = 'Debe seleccionar dos espacios consecutivos';
-            container.insertBefore(message, container.firstChild);
-        }
-
-        // Maneja la selección de plazas según el tipo de vehículo
-        function handleSpotSelection(spot) {
-            // Prepara el array según el tipo de vehículo
-            let plazasArray;
-            
-            if (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') {
-                if (plazasSeleccionadas.length === 1 && isAdjacentSpot(plazasSeleccionadas[0], spot)) {
-                    plazasArray = [plazasSeleccionadas[0].dataset.spot, spot.dataset.spot];
-                } else {
-                    plazasArray = [spot.dataset.spot, null];
-                }
-            } else {
-                plazasArray = [spot.dataset.spot, null];
+        function createParkingColumn(start, end, prefix) {
+            const column = document.createElement('div');
+            column.className = 'flex flex-col items-center';
+            for (let i = start; i <= end; i++) {
+                column.appendChild(createParkingSpot(i, prefix));
             }
-
-            // Envía la plaza al backend para apartarla
-            fetch('{{ path("submitParkingSlots") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({ 
-                    plazasSeleccionadas: plazasArray 
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Continúa con la lógica visual normal
-                    if (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') {
-                        handleLargeVehicleSelection(spot);
-                    } else {
-                        handleRegularSelection(spot);
-                    }
-                } else {
-                    alert('Esta plaza ya no está disponible');
-                    window.location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error al apartar la plaza');
-            });
+            return column;
         }
 
-        // Maneja la selección de una única plaza para vehículos normales
-        function handleRegularSelection(spot) {
-            // Limpia selecciones anteriores
-            plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
-            // Actualiza la selección
-            plazasSeleccionadas = [spot];
-            // Marca visualmente la plaza seleccionada
-            spot.classList.add('bg-[#5381c6]', 'text-white');
-        }
-
-        // Maneja la selección de plazas para vehículos grandes
-        function handleLargeVehicleSelection(spot) {
-            if (plazasSeleccionadas.length === 0) {
-                // Primera selección
-                plazasSeleccionadas.push(spot);
-                spot.classList.add('bg-[#5381c6]', 'text-white');
-            } else if (plazasSeleccionadas.length === 1) {
-                // Verifica si la segunda selección es adyacente
-                if (isAdjacentSpot(plazasSeleccionadas[0], spot)) {
-                    plazasSeleccionadas.push(spot);
-                    spot.classList.add('bg-[#5381c6]', 'text-white');
-                } else {
-                    // Reinicia selección si no es adyacente
-                    plazasSeleccionadas[0].classList.remove('bg-[#5381c6]', 'text-white');
-                    plazasSeleccionadas = [spot];
-                    spot.classList.add('bg-[#5381c6]', 'text-white');
-                }
-            } else {
-                // Reinicia selección si ya había dos spots
-                plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
-                plazasSeleccionadas = [spot];
-                spot.classList.add('bg-[#5381c6]', 'text-white');
-            }
-        }
-
-        function createParkingSpot(number, prefix) {
-    const spotId = `${prefix}${number}`;
-    const spot = document.createElement('button');
-    
-    // Configuración visual de la plaza
-    spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
-    spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
-    spot.dataset.spot = spotId;
-    spot.type = 'button';
-
-    // Si la plaza no está libre, la deshabilita
-    if (!puestosLibres.includes(spotId)) {
-        spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
-        spot.disabled = true;
-    } else {
-        // Agrega el manejador de eventos si la plaza está libre
-        spot.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // Preparar el array de plazas según el tipo de vehículo
-            let plazasArray;
-            if (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') {
-                if (plazasSeleccionadas.length === 1) {
-                    plazasArray = [plazasSeleccionadas[0].dataset.spot, spotId];
-                } else {
-                    plazasArray = [spotId, null];
-                }
-            } else {
-                plazasArray = [spotId, null];
-            }
-
-            // Enviar AJAX para apartar la plaza
-            fetch('{{ path("submitParkingSlots") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({ 
-                    plazasSeleccionadas: plazasArray
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Si se apartó exitosamente, continuamos con la selección visual
-                    handleSpotSelection(spot);
-                } else {
-                    alert('Esta plaza ya no está disponible');
-                    window.location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error al apartar la plaza');
-            });
-        });
-    }
-
-    return spot;
-}
-
-
-        // Event Listeners para el formulario y controles de piso
+        // Event Listeners
         document.getElementById('parkingForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            if ((tipovehiculo === 'camion' || tipovehiculo === 'utilitario') && plazasSeleccionadas.length !== 2) {
-                alert('Debe seleccionar dos espacios consecutivos para vehículos grandes');
-                return;
-            }
             
             if (plazasSeleccionadas.length === 0) {
                 alert('Debe seleccionar al menos un espacio de estacionamiento');
                 return;
             }
 
-            const output = (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') 
-                ? plazasSeleccionadas.map(spot => spot.dataset.spot)
-                : [plazasSeleccionadas[0].dataset.spot, null];
-
-            document.getElementById('plazasSeleccionadasInput').value = JSON.stringify(output);
+            // Adaptar al formato
+            const plazasArray = plazasSeleccionadas.map(spot => spot.dataset.spot);
+            document.getElementById('plazasSeleccionadasInput').value = JSON.stringify(plazasArray);
             this.submit();
         });
 
@@ -335,23 +267,20 @@
             document.getElementById('floorDisplay').textContent = `Piso ${currentFloor}`;
         }
 
-        // Inicialización cuando el DOM está listo
+        // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             updateFloorDisplay();
             generateParkingLayout();
         });
     </script>
+
     <script src="{{ asset('js/parkingTimer.js') }}"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                new ParkingTimer();
-            });
-        </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new ParkingTimer();
+        });
+    </script>
 
-            {% include 'partials/footer.html.twig' %}
-
+    {% include 'partials/footer.html.twig' %}
 </body>
-
-
-
 </html>
