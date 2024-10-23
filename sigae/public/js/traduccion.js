@@ -25,11 +25,11 @@ let traduccionesHeader = {};
 let traduccionesVista = {};
 
 // Función para cargar las traducciones
-function cargarTraducciones(archivo, tipo) {
+/* function cargarTraducciones(archivo, tipo) {
     if (!archivo) {
         console.error(`Ruta de archivo no válida para ${tipo}`);
         return Promise.reject('Ruta de archivo no válida');
-    }
+    }*/
 
     return fetch(archivo)
         .then(response => {
