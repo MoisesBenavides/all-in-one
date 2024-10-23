@@ -29,7 +29,8 @@ function cargarTraducciones(archivo, tipo) {
     return fetch(archivo)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                console.error(`Error al cargar traducciones (${tipo}):`, response.status);
+                return {};
             }
             return response.json();
         })
@@ -39,11 +40,11 @@ function cargarTraducciones(archivo, tipo) {
             } else if (tipo === 'vista') {
                 traduccionesVista = data;
             }
-            console.log(`Traducciones de ${tipo} cargadas correctamente:`, data);
+            return data;
         })
         .catch(error => {
-            console.error(`Error al cargar el archivo de traducciones de ${tipo}:`, error);
-            return {}; // Retorna un objeto vacío en caso de error
+            console.error(`Error al procesar traducciones (${tipo}):`, error);
+            return {};
         });
 }
 
@@ -83,10 +84,10 @@ function inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionVista, 
     ]).then(() => {
         cambiarIdioma(idiomaAUsar);
 
-        // Configurar los botones de idioma
-        document.querySelectorAll('.language-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const idioma = e.currentTarget.getAttribute('data-idioma');
+        // Usar data-idioma en lugar de class
+        document.querySelectorAll('[data-idioma]').forEach(button => {
+            button.addEventListener('click', () => {
+                const idioma = button.getAttribute('data-idioma');
                 cambiarIdioma(idioma);
             });
         });
@@ -94,7 +95,6 @@ function inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionVista, 
         console.error("Error al inicializar las traducciones:", error);
     });
 }
-
 // Exponer las funciones necesarias globalmente
 window.inicializarTraduccion = inicializarTraduccion;
 window.cambiarIdioma = cambiarIdioma;
