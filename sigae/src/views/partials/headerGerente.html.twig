@@ -1,0 +1,113 @@
+<header class="w-screen">
+    <div class="container mx-auto px-4 py-4">
+        <div class="relative flex flex-col md:flex-row justify-between items-center">
+            <!-- Hamburguesa (visible solo en móviles) -->
+            <div class="absolute top-2 left-4 md:hidden">
+                <button id="hamburger" class="text-black focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Logo -->
+            <a href="{{ path('home') }}">
+                <div class="w-40 h-auto mb-4 md:mb-0 mx-auto md:mx-0">
+                    <img class="w-full h-auto" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
+                </div>
+            </a>
+
+            <!-- Navegación -->
+            <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4">
+                <a href="{{ path('services') }}" traducir="services" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">Servicios</a>
+                <a href="{{ path('aioParking') }}" traducir="aioParking" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">AIO Parking</a>
+                <a href="{{ path('products') }}" traducir="products" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">Repuestos y accesorios</a>
+                <a href="{{ path('faq') }}" traducir="faq" class="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-bold">FAQ</a>
+            </nav>
+
+            <div class="absolute top-2 right-4 md:static flex items-center space-x-6"> 
+            <!-- Selector de idioma -->
+            <div class="relative flex items-center">
+                <!-- Menú de idiomas (columna vertical) -->
+                <div id="languageMenu" class="hidden absolute right-full top-1/2 -translate-y-1/2 -mr-2 bg-white p-2 rounded-lg shadow-lg flex flex-col space-y-2">
+                    <button data-idioma="es" class="transition-transform duration-200 hover:scale-110">
+                        <img src="{{ asset('img/es.png') }}" alt="Español" class="w-8 h-5 object-cover">
+                    </button>
+                    <button data-idioma="it" class="transition-transform duration-200 hover:scale-110">
+                        <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-8 h-5 object-cover">
+                    </button>
+                    <button data-idioma="en" class="transition-transform duration-200 hover:scale-110">
+                        <img src="{{ asset('img/en.png') }}" alt="English" class="w-8 h-5 object-cover">
+                    </button>
+                </div>
+                
+                <!-- Icono del mundo -->
+                <button id="languageToggle" class="w-8 h-8 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
+                    <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
+                </button>
+            </div>
+
+            <!-- User icon -->
+            <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300">
+                <img class="w-10 h-10" src="{{ asset('img/user.png') }}" alt="User">
+            </a>
+        </div>
+
+        <!-- Menú hamburguesa móvil -->
+        <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+            <a href="{{ path('') }}" traducir="" class="block text-black text-sm font-bold">Informes</a>
+            <a href="{{ path('') }}" traducir="" class="block text-black text-sm font-bold">Stock</a>
+            <a href="{{ path('') }}" traducir="" class="block text-black text-sm font-bold">Inventario</a>
+            <a href="{{ path('') }}" traducir="" class="block text-black text-sm font-bold">Gestion usuario</a>
+        </nav>
+    </div>
+
+    <script src="{{ asset('js/traduccion.js') }}"></script>
+    <script>
+        // Lógica del menú hamburguesa
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+     const languageToggle = document.getElementById('languageToggle');
+    const languageMenu = document.getElementById('languageMenu');
+
+    languageToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        languageMenu.classList.toggle('hidden');
+    });
+
+    // Cerrar al hacer clic fuera
+    document.addEventListener('click', (event) => {
+        if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
+            languageMenu.classList.add('hidden');
+        }
+    });
+
+    // Manejar selección de idioma
+    languageMenu.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const idioma = e.currentTarget.getAttribute('data-idioma');
+            cambiarIdioma(idioma);
+            languageMenu.classList.add('hidden');
+        });
+    });
+        // Lógica de traducción
+        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarTraduccion(archivoTraduccionHeader, 'es');
+        });
+
+        languageMenu.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const idioma = e.currentTarget.getAttribute('data-idioma');
+                cambiarIdioma(idioma);
+                languageMenu.classList.add('hidden');
+            });
+        });
+    </script>
+</header>

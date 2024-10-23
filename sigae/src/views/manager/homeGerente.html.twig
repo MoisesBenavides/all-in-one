@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!--SEO-->
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <!--Es responsivo-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIO - Taller, neumáticos, reservas y más</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+
+           .btn{
+            background-color: #dc2626
+        }
+
+        .btn:hover{
+            background-color: #b91c1c
+        }
+
+    </style>
+</head>
+        {% include 'partials/headerGerente.html.twig' %}
+
+<body>
+    <main class="flex overflow-hidden flex-col justify-center items-center font-bold bg-white">
+        <div class="flex flex-col max-w-full w-[1297px]">
+            <section class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
+                <h2 class="text-4xl text-neutral-900">Pagina de informes</h2>
+                <a href="#" class="btn gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose whitespace-nowrap rounded-xl min-h-[100px] w-[600px] max-md:px-5 text-center">
+                    Ingresar
+                </a>
+            </section>
+            <section class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 mt-6 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
+                <h2 class="text-4xl text-neutral-900">Ingreso stock</h2>
+                <a href="#" class="btn gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose whitespace-nowrap rounded-xl min-h-[100px] w-[600px] max-md:px-5 text-center">
+                    Ingresar
+                </a>
+            </section>
+            <section class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 mt-6 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
+                <h2 class="text-4xl text-neutral-900">Gestion de usuarios</h2>
+                <a href="#" class="btn gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose whitespace-nowrap rounded-xl min-h-[100px] w-[600px] max-md:px-5 text-center">
+                    Ingresar
+                </a>
+            </section>
+            <section class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 mt-6 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
+                <h2 class="text-4xl text-neutral-900">Gestion de inventario</h2>
+                <a href="#" class="btn gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose whitespace-nowrap rounded-xl min-h-[100px] w-[600px] max-md:px-5 text-center">
+                    Ingresar
+                </a>
+            </section>
+        </div>
+    </main>
+</body>
+
+        {% include 'partials/footer.html.twig' %}
+
+
+      
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+        const archivoTraduccionHome = "{{ asset('traductions/.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+    });
+</script>
+</html>
