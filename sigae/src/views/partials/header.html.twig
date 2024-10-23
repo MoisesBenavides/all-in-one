@@ -27,31 +27,29 @@
 
             <div class="absolute top-2 right-4 md:static flex items-center space-x-4"> 
                 <!-- Selector de idioma -->
-                <div class="relative flex items-center">
-                    <!-- Menú de idiomas (columna vertical) -->
-                    <div id="languageMenu" class="hidden absolute right-full top-1/2 -translate-y-1/2 -mr-2 bg-white p-2 rounded-lg shadow-lg flex flex-col space-y-2">
-                        <button data-idioma="es" class="flex items-center space-x-2 transition-transform duration-200 hover:scale-110">
-                            <img src="{{ asset('img/es.png') }}" alt="Español" class="w-6 h-4 object-cover">
-                            <span class="text-sm">Español</span>
-                        </button>
-                        <button data-idioma="it" class="flex items-center space-x-2 transition-transform duration-200 hover:scale-110">
-                            <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-6 h-4 object-cover">
-                            <span class="text-sm">Italiano</span>
-                        </button>
-                        <button data-idioma="en" class="flex items-center space-x-2 transition-transform duration-200 hover:scale-110">
-                            <img src="{{ asset('img/en.png') }}" alt="English" class="w-6 h-4 object-cover">
-                            <span class="text-sm">English</span>
-                        </button>
-                    </div>
-                    
-                    <!-- Contenedor del idioma actual -->
-                    <div class="flex items-center space-x-2">
-                        <button id="languageToggle" class="w-6 h-6 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
-                            <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
-                        </button>
-                        <span id="currentLanguage" class="text-xs sm:text-sm font-medium hidden sm:inline">Español</span>
-                    </div>
-                </div>
+              <div class="relative flex items-center">
+    <!-- Menú de idiomas (columna vertical) -->
+            <div id="languageMenu" class="hidden absolute right-0 top-full mt-2 bg-white p-2 rounded-lg shadow-lg flex flex-col space-y-2 z-10">
+                <button data-idioma="es" class="flex items-center space-x-2 transition-transform duration-200 hover:scale-110 px-3 py-1 hover:bg-gray-100 rounded">
+                    <img src="{{ asset('img/es.png') }}" alt="Español" class="w-5 h-4 object-cover">
+                    <span class="text-sm whitespace-nowrap">ESPAÑOL</span>
+                </button>
+                <button data-idioma="it" class="flex items-center space-x-2 transition-transform duration-200 hover:scale-110 px-3 py-1 hover:bg-gray-100 rounded">
+                    <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-5 h-4 object-cover">
+                    <span class="text-sm whitespace-nowrap">ITALIANO</span>
+                </button>
+                <button data-idioma="en" class="flex items-center space-x-2 transition-transform duration-200 hover:scale-110 px-3 py-1 hover:bg-gray-100 rounded">
+                    <img src="{{ asset('img/en.png') }}" alt="English" class="w-5 h-4 object-cover">
+                    <span class="text-sm whitespace-nowrap">ENGLISH</span>
+                </button>
+            </div>
+            
+            <!-- Botón de idioma actual -->
+            <button id="languageToggle" class="flex items-center space-x-2 hover:scale-105 transition-transform duration-300 focus:outline-none">
+                <img src="{{ asset('img/world.png') }}" alt="Language" class="w-5 h-5 object-cover">
+                <span id="currentLanguage" class="text-xs uppercase font-medium">ESPAÑOL</span>
+            </button>
+        </div>
 
                 <!-- User icon -->
                 <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300">
@@ -71,51 +69,72 @@
 
     <script src="{{ asset('js/traduccion.js') }}"></script>
     <script>
-        // Lógica del menú hamburguesa
-        const hamburger = document.getElementById('hamburger');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const currentLanguage = document.getElementById('currentLanguage');
+         const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const languageToggle = document.getElementById('languageToggle');
+    const languageMenu = document.getElementById('languageMenu');
+    const currentLanguage = document.getElementById('currentLanguage');
 
-        hamburger.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+    // Objeto con los nombres de los idiomas en mayúsculas
+    const languageNames = {
+        'es': 'ESPAÑOL',
+        'it': 'ITALIANO',
+        'en': 'ENGLISH'
+    };
+
+    // Lógica del menú hamburguesa
+    hamburger.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Lógica del menú de idiomas
+    languageToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        languageMenu.classList.toggle('hidden');
+    });
+
+    // Cerrar menú de idiomas al hacer clic fuera
+    document.addEventListener('click', (event) => {
+        if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
+            languageMenu.classList.add('hidden');
+        }
+    });
+
+    // Manejar selección de idioma
+    languageMenu.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const idioma = e.currentTarget.getAttribute('data-idioma');
+            // Actualizar el texto mostrado
+            currentLanguage.textContent = languageNames[idioma];
+            // Cambiar el idioma de la página
+            cambiarIdioma(idioma);
+            // Ocultar el menú
+            languageMenu.classList.add('hidden');
         });
+    });
 
-        const languageToggle = document.getElementById('languageToggle');
-        const languageMenu = document.getElementById('languageMenu');
+    // Lógica de traducción
+    const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
 
-        languageToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            languageMenu.classList.toggle('hidden');
-        });
+    // Inicializar traducción cuando el DOM está listo
+    document.addEventListener('DOMContentLoaded', () => {
+        // Inicializar con español como idioma predeterminado
+        inicializarTraduccion(archivoTraduccionHeader, 'es');
+    });
 
-        // Cerrar al hacer clic fuera
-        document.addEventListener('click', (event) => {
-            if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
-                languageMenu.classList.add('hidden');
-            }
-        });
+    // Opcional: Cerrar el menú móvil al cambiar el tamaño de la ventana
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) { // 768px es el breakpoint de md en Tailwind
+            mobileMenu.classList.add('hidden');
+        }
+    });
 
-        // Manejar selección de idioma
-        const languageNames = {
-            'es': 'Español',
-            'it': 'Italiano',
-            'en': 'English'
-        };
-
-        languageMenu.querySelectorAll('button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const idioma = e.currentTarget.getAttribute('data-idioma');
-                currentLanguage.textContent = languageNames[idioma];
-                cambiarIdioma(idioma);
-                languageMenu.classList.add('hidden');
-            });
-        });
-
-        // Lógica de traducción
-        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
-
-        document.addEventListener('DOMContentLoaded', () => {
-            inicializarTraduccion(archivoTraduccionHeader, 'es');
-        });
+    // Opcional: Cerrar menús al presionar la tecla Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            mobileMenu.classList.add('hidden');
+            languageMenu.classList.add('hidden');
+        }
+    });
     </script>
 </header>
