@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIO - Taller, neumáticos, reservas y más</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+
+        .btn{
+            background-color: #dc2626;
+            text: white;
+        }
+
+        .btn:hover{
+            background-color: #b91c1c;
+            text: white;
+        }
+    </style>
+</head>
+
+{% include 'partials/headerGerente.html.twig' %}
+
+<body>
+
+
+<section class="flex overflow-hidden flex-col justify-center items-center py-60 pr-16 pl-20 font-bold whitespace-nowrap bg-white max-md:px-5 max-md:py-24">
+  <div class="flex flex-col max-w-full w-[1297px]">
+    <article class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
+      <h2 class="text-4xl text-neutral-900">CONSULTA</h2>
+      <button class="gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose bg-red-600 rounded-xl min-h-[100px] text-neutral-50 w-[600px] max-md:px-5">
+        Consultar
+      </button>
+    </article>
+    <article class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 mt-6 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
+      <h2 class="text-4xl text-neutral-900">CONSULTA</h2>
+      <button class="gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose bg-red-600 rounded-xl min-h-[100px] text-neutral-50 w-[600px] max-md:px-5">
+        Consultar
+      </button>
+    </article>
+    <article class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 mt-6 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
+      <h2 class="text-4xl text-neutral-900">CONSULTA</h2>
+      <button class="gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose bg-red-600 rounded-xl min-h-[100px] text-neutral-50 w-[600px] max-md:px-5">
+        Consultar
+      </button>
+    </article>
+  </div>
+</section>
+
+  </main>
+
+    {% include 'partials/footer.html.twig' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+            const archivoTraduccionHome = "{{ asset('traductions/.json') }}";
+            inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+        });
+    </script>
+</body>

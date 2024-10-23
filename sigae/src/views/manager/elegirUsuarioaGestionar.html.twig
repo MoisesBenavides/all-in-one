@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIO - Taller, neumáticos, reservas y más</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+
+        .btn{
+            background-color: #dc2626;
+            text: white;
+        }
+
+        .btn:hover{
+            background-color: #b91c1c;
+            text: white;
+        }
+    </style>
+</head>
+
+{% include 'partials/headerGerente.html.twig' %}
+
+<body>
+    <main class="min-h-screen bg-white p-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Título principal -->
+            <h2 class="text-2xl md:text-4xl text-center font-bold text-neutral-900 p-4 bg-neutral-50 border border-neutral-900 rounded-lg mb-8">
+                Gestión de usuarios
+            </h2>
+
+            <!-- Grid de cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Jefe de diagnóstico -->
+                <section class="flex flex-col items-center justify-center p-6 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[215px]">
+                    <h3 class="text-xl md:text-2xl font-bold text-center text-neutral-900 mb-6">Jefe de diagnóstico</h3>
+                    <a href="#" class="btn flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-white transition-colors duration-300">
+                        Gestionar
+                    </a>
+                </section>
+
+                <!-- Jefe de alineación y balanceo -->
+                <section class="flex flex-col items-center justify-center p-6 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[215px]">
+                    <h3 class="text-xl md:text-2xl font-bold text-center text-neutral-900 mb-6">Jefe de alineación y balanceo</h3>
+                    <a href="#" class="btn flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-white transition-colors duration-300">
+                        Gestionar
+                    </a>
+                </section>
+
+                <!-- Cajero -->
+                <section class="flex flex-col items-center justify-center p-6 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[215px]">
+                    <h3 class="text-xl md:text-2xl font-bold text-center text-neutral-900 mb-6">Cajero</h3>
+                    <a href="#" class="btn flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-white transition-colors duration-300">
+                        Gestionar
+                    </a>
+                </section>
+
+                <!-- Valet -->
+                <section class="flex flex-col items-center justify-center p-6 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[215px]">
+                    <h3 class="text-xl md:text-2xl font-bold text-center text-neutral-900 mb-6">Valet</h3>
+                    <a href="#" class="btn flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-white transition-colors duration-300">
+                        Gestionar
+                    </a>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    {% include 'partials/footer.html.twig' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+            const archivoTraduccionHome = "{{ asset('traductions/.json') }}";
+            inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+        });
+    </script>
+</body>
+
+</html>

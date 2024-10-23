@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIO - Taller, neumáticos, reservas y más</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+
+        .btn{
+            background-color: #dc2626;
+            text: white;
+        }
+
+        .btn:hover{
+            background-color: #b91c1c;
+            text: white;
+        }
+    </style>
+</head>
+
+{% include 'partials/headerGerente.html.twig' %}
+
+<body>
+    <main class="min-h-screen bg-white p-4">
+        <div class="max-w-7xl mx-auto flex justify-center items-center">
+            <div class="w-full max-w-[732px] flex flex-col items-center space-y-8">
+                <!-- Header -->
+                <header class="w-full bg-neutral-50 border border-black rounded-md p-4 relative flex items-center justify-center">
+                    <img src="{{ asset('svg/edit.svg') }}" alt="Editar" class="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-7"/>
+                    <h1 class="text-4xl font-medium tracking-wider text-black">Modificar usuario</h1>
+                </header>
+
+                <!-- Formulario -->
+                <form class="w-full max-w-[564px] space-y-8">
+                    <!-- Campo Email -->
+                    <div class="relative w-full">
+                        <div class="flex items-center bg-white border border-slate-600 rounded-md p-4">
+                            <label for="userEmail" class="text-2xl tracking-wider text-slate-600 w-[182px]">
+                                Mail de Usuario
+                            </label>
+                            <input 
+                                type="email" 
+                                id="userEmail" 
+                                class="flex-1 bg-transparent border-none focus:outline-none text-2xl"
+                                placeholder="Ingrese email"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Campo Rol -->
+                <div class="relative w-full">
+                    <div class="relative flex items-center bg-white border border-slate-600 rounded-md p-4">
+                        <label class="text-2xl tracking-wider text-slate-600 w-[131px]">
+                            Rol
+                        </label>
+                        <div class="relative flex-1">
+                            <select 
+                                id="userRole" 
+                                class="w-full bg-transparent border-none focus:outline-none text-2xl appearance-none pr-10"
+                            >
+                                <option value="">Seleccione un rol</option>
+                                <option value="jefeDiagnostico">Jefe diagnostico</option>
+                                <option value="jefeTaller">Jefe taller</option>
+                                <option value="Cajero">Cajero</option>
+                                <option value="valet">Valet parking</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+                                <svg 
+                                    id="dropdownIcon"
+                                    class="w-7 h-7 text-slate-600 transform transition-transform duration-300" 
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path 
+                                        stroke-linecap="round" 
+                                        stroke-linejoin="round" 
+                                        stroke-width="2" 
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const select = document.getElementById('userRole');
+        const icon = document.getElementById('dropdownIcon');
+        let isOpen = false;
+
+        select.addEventListener('mousedown', () => {
+            isOpen = !isOpen;
+            if(isOpen) {
+                icon.classList.add('rotate-180');
+            } else {
+                icon.classList.remove('rotate-180');
+            }
+        });
+
+        select.addEventListener('blur', () => {
+            isOpen = false;
+            icon.classList.remove('rotate-180');
+        });
+
+        select.addEventListener('change', () => {
+            isOpen = false;
+            icon.classList.remove('rotate-180');
+        });
+    });
+</script>
+
+                    <!-- Botón Submit -->
+                    <div class="flex justify-center w-full">
+                        <button type="submit" class="btn w-full max-w-[312px] py-3.5 text-3xl font-bold text-white rounded-xl transition-colors duration-200">
+                            Ingresar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    {% include 'partials/footer.html.twig' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+            const archivoTraduccionHome = "{{ asset('traductions/.json') }}";
+            inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+        });
+    </script>
+</body>
+</html>

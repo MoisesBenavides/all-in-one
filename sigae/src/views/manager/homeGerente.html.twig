@@ -2,15 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
-    <!--Es responsivo-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIO - Taller, neumáticos, reservas y más</title>
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
         @font-face {
             font-family: 'Teachers';
@@ -23,58 +22,65 @@
             font-family: 'Teachers', sans-serif;
         }
 
-           .btn{
-            background-color: #dc2626
+        .btn{
+            background-color: #dc2626;
+            text: white;
         }
 
         .btn:hover{
-            background-color: #b91c1c
+            background-color: #b91c1c;
+            text: white;
         }
-
     </style>
 </head>
-        {% include 'partials/headerGerente.html.twig' %}
+
+{% include 'partials/headerGerente.html.twig' %}
 
 <body>
-    <main class="flex overflow-hidden flex-col justify-center items-center font-bold bg-white">
-        <div class="flex flex-col max-w-full w-[1297px]">
-            <section class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
-                <h2 class="text-4xl text-neutral-900">Pagina de informes</h2>
-                <a href="#" class="btn gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose whitespace-nowrap rounded-xl min-h-[100px] w-[600px] max-md:px-5 text-center">
+    <main class="min-h-screen bg-white p-4">
+        <div class="max-w-7xl mx-auto space-y-6">
+            <!-- Sección de Informes -->
+            <section class="flex flex-col items-center justify-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
+                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Pagina de informes</h2>
+                <a href="#" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
                     Ingresar
                 </a>
             </section>
-            <section class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 mt-6 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
-                <h2 class="text-4xl text-neutral-900">Ingreso stock</h2>
-                <a href="#" class="btn gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose whitespace-nowrap rounded-xl min-h-[100px] w-[600px] max-md:px-5 text-center">
+
+            <!-- Sección de Stock -->
+            <section class="flex flex-col items-center justify-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
+                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Ingreso stock</h2>
+                <a href="#" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
                     Ingresar
                 </a>
             </section>
-            <section class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 mt-6 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
-                <h2 class="text-4xl text-neutral-900">Gestion de usuarios</h2>
-                <a href="#" class="btn gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose whitespace-nowrap rounded-xl min-h-[100px] w-[600px] max-md:px-5 text-center">
+
+            <!-- Sección de Usuarios -->
+            <section class="flex flex-col items-center justify-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
+                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Gestion de usuarios</h2>
+                <a href="#" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
                     Ingresar
                 </a>
             </section>
-            <section class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 mt-6 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
-                <h2 class="text-4xl text-neutral-900">Gestion de inventario</h2>
-                <a href="#" class="btn gap-1.5 self-stretch px-7 py-6 mt-6 max-w-full text-3xl leading-loose whitespace-nowrap rounded-xl min-h-[100px] w-[600px] max-md:px-5 text-center">
+
+            <!-- Sección de Inventario -->
+            <section class="flex flex-col items-center justify-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
+                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Gestion de inventario</h2>
+                <a href="#" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
                     Ingresar
                 </a>
             </section>
         </div>
     </main>
+
+    {% include 'partials/footer.html.twig' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+            const archivoTraduccionHome = "{{ asset('traductions/.json') }}";
+            inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+        });
+    </script>
 </body>
-
-        {% include 'partials/footer.html.twig' %}
-
-
-      
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
-        const archivoTraduccionHome = "{{ asset('traductions/.json') }}";
-        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
-    });
-</script>
 </html>
