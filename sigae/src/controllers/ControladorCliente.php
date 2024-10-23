@@ -100,8 +100,8 @@ class ControladorCliente extends AbstractController {
     function doLoginOAuth(): Response|RedirectResponse{
         // Configurar cliente Google
         $client= new Google_Client();
-        $client->setAuthConfig('/var/www/html/private/credentials.json');
-        $client->setRedirectUri('https://actualizar-link.ngrok.com/doLoginOAuth');
+        $client->setAuthConfig('/var/www/html/private/credencialesOAuth.json');
+        $client->setRedirectUri('"https://16fd-167-56-5-207.ngrok-free.app/doLoginOAuth"');
         $client->addScope('email');
         $client->addScope('profile');
 
@@ -122,9 +122,22 @@ class ControladorCliente extends AbstractController {
 
             if ($this->cliente->iniciarCliente($email, null)) {
                 $response['success'] = true;
+
+                // Parámetros de cookie de sesión
+                session_set_cookie_params([
+                    'lifetime' => 0,          // La cookie se elimina al salir del navegador
+                    'path' => '/',            // Accesible en toda la aplicación
+                    'secure' => true,         // Solo se envía por HTTPS
+                    'httponly' => true,       // Protege que no sea accesible desde JavaScript
+                    'samesite' => 'Lax'       // Se envía en la mayoría de las solicitudes siempre que sean "seguras", evitando ataques CSRF
+                ]);
                 
                 // Iniciar sesión del cliente
                 session_start();
+
+                // Regenerar el ID de sesión para prevenir fijación de sesión
+                session_regenerate_id(true);
+
                 $_SESSION['ultima_solicitud']= time();
                 $_SESSION['id']=$this->cliente->getId();
                 $_SESSION['ci']=$this->cliente->getCi();
@@ -145,6 +158,66 @@ class ControladorCliente extends AbstractController {
         ]);
     }
     function doSignUpOAuth(){
+        $response=['success' => false, 'errors' => [], 'debug' => []];
+
+        // Debug: Log all received data
+        $response['debug']['received_data']=$_POST;
+
+        // Validacion de campos vacios
+        if (isset($_POST["email"], $_POST["nombre"], $_POST["apellido"], $_POST["contrasena"], $_POST["repContrasena"]) && 
+            !empty($_POST["email"]) && !empty($_POST["nombre"]) && !empty($_POST["apellido"]) && !empty($_POST["contrasena"]) && !empty($_POST["repContrasena"])) {
+
+            $email = $_POST["email"];
+            $nombre = $_POST["nombre"];
+            $apellido = $_POST["apellido"];
+            $contrasena = $_POST["contrasena"];
+            $repContrasena = $_POST["repContrasena"];
+
+            // Debug: Datos procesados
+            $response['debug']['processed_data'] = [
+                'email' => $email,
+                'nombre' => $nombre,
+                'apellido' => $apellido,
+                'contrasena' => 'REDACTED',
+                'repContrasena' => 'REDACTED'
+            ];
+
+            if (!$this->validarEmail($email, 63)) {
+                $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
+
+            } elseif (!$this->validarNombreApellido($nombre, 23) || !$this->validarNombreApellido($apellido, 23)) {
+                $response['errors'][] = "Por favor, ingrese un nombre o apellido válido.";
+
+            } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
+                $response['errors'][] = "Use un mínimo de 6 caracteres con mayúsculas, minúsculas y números.";
+
+            } elseif ($contrasena !== $repContrasena) {
+                $response['errors'][] = "Las contraseñas no coinciden.";
+
+            } elseif(Cliente::existeEmail($email)) {
+                error_log('Email ya existe: ' . $email);
+                $response['errors'][]= "Ya existe un usuario con el correo ingresado.";
+
+            } elseif(!$this->cliente->guardarCliente(null, $email, $contrasena, $nombre, $apellido, null)){
+                $response['errors'][] = "Error al registrarse.";
+
+            } else {
+                $response['success'] = true;
+                // Redirigir al login
+                return $this->redirectToRoute('login');
+            }
+            
+        } else {
+            $response['errors'][] = "Debe llenar todos los campos.";
+            // Debug: Log which fields are missing
+            $response['debug']['missing_fields'] = array_diff(
+                ['email', 'nombre', 'apellido', 'contrasena', 'repContrasena'],
+                array_keys($_POST)
+            );
+        }
+        return $this->render('client/account/signUp.html.twig', [
+            'response' => $response
+        ]);
     }
     function signup(): Response{
         return $this->render('client/account/signUp.html.twig');
