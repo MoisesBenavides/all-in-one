@@ -100,7 +100,7 @@ class ControladorParking extends AbstractController{
                     ];
 
                     // Guardar variables de sesión para reservar posteriormente a la elección de plazas
-                    $_SESSION['parking_simple'] = $datos_parking;
+                    $_SESSION['parking'] = $datos_parking;
                     
                     // $this->parking = new Parking(false, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
                     if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
@@ -261,11 +261,15 @@ class ControladorParking extends AbstractController{
 
             $this->parking = new Parking($largo_plazo, $tipo_plaza, null, $precio, $fecha_inicio, $fecha_final);
 
-            if($this->parking->apartarPlaza($numeroPlaza)){
+            if(!$this->parking->reservarServicio($matricula)){
+                return new JsonResponse(['success' => false, 'message' => 'Error al reservar servicio']);
+            }elseif(!$this->parking->apartarPlaza($numeroPlaza)){
+                return new JsonResponse(['success' => false, 'message' => 'Error al apartar la plaza']);
+            } else{
+                // Si no hay errores, crea una variable de sesión con el número de plaza que fue seleccionada
+                // Retorna la respuesta como exitosa, true
                 $_SESSION['plaza_apartada'] = $numeroPlaza;
                 return new JsonResponse(['success' => true]);
-            } else{
-                return new JsonResponse(['success' => false, 'message' => 'Error al apartar la plaza']);
             }
 
         } else {
@@ -283,19 +287,23 @@ class ControladorParking extends AbstractController{
 
         
         if (isset($_POST["plazasSeleccionadas"]) && !empty($_POST["plazasSeleccionadas"])){
-            if (isset($_SESSION["tipo_vehiculo"])){
-                ($_SESSION["tipo_vehiculo"] == "moto" || "auto" || "camioneta") ? 
-                    $response['errors'][] = "Debe seleccionar una plaza de parking." : 
-                    $response['errors'][] = "Debe seleccionar dos plazas de parking.";
-                    // Debug: Log which fields are missing
-            } else {
+
+            $plazas = $_POST["plazasSeleccionadas"];
+
+            if (!isset($_SESSION["tipo_vehiculo"])){
                 $response['errors'][] = "Debe seleccionar un tipo de vehículo.";
+            } elseif (count($plazas) != 1 && $_SESSION["tipo_vehiculo"] == "moto" || "auto" || "camioneta"){
+                // Envia error si es un vehiculo que ocupa una plaza y selecciona una cantidad distinta a una plaza
+                $response['errors'][] = "Debe seleccionar una plaza de parking.";
+            } elseif (count($plazas) != 2 && $_SESSION["tipo_vehiculo"] == "camion" || "utilitario") {
+                // Envia error si es vehiculo grande y selecciona una cantidad distinta a dos plazas
+                $response['errors'][] = "Debe seleccionar dos plazas de parking.";
+            } elseif(true){
+                // TODO: Registrar la reserva en la base de datos (commit transaccion)
+                $response['success'] = true;
             }
-        } else {
-            $response['debug']['missing_fields'] = array_diff(
-                ['fecha_inicio', 'fecha_final', 'tipoVehiculo', 'matricula'],
-                array_keys($_POST)
-            );
+        } else {                    
+            $response['errors'][] ='No se ha seleccionado ninguna plaza para la reserva';
         }
         return $this->render('client/eleccionPlazaParking.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
