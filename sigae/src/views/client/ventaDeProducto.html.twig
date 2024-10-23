@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!--SEO-->
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <!--Es responsivo-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIO - Taller, neumáticos, reservas y más</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+
+           .btn{
+            background-color: #dc2626
+        }
+
+        .btn:hover{
+            background-color: #b91c1c
+        }
+
+        .btnPark{
+            background-color: #1f3de0
+        }
+
+        .btnPark:hover{
+            background-color: #233181
+        }
+    </style>
+</head>
+        {% include 'partials/header.html.twig' %}
+
+<body class="bg-gray-100">
+<section class="flex overflow-hidden gap-10 justify-center items-center px-24 py-80 bg-white max-md:px-5 max-md:py-24">
+    <article class="flex overflow-hidden flex-wrap justify-center items-center self-stretch my-auto rounded-lg border border-solid border-neutral-600 min-w-[240px] w-[1046px]">
+        <figure class="flex flex-col justify-center items-center self-stretch my-auto min-h-[602px] min-w-[240px] w-[508px] max-md:max-w-full">
+            <div class="flex flex-col justify-center items-center max-w-full min-h-[595px] w-[508px]">
+                <div class="flex flex-col max-w-full w-[368px]">
+                    <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/f87f44814f7d467a176e00e5ab03d56cd22520998597b8b2248bbbb113994ef4?placeholderIfAbsent=true&apiKey=a40a685faae740adbd35922fff105163" alt="Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato tire" class="object-contain w-full aspect-[0.75]" />
+                </div>
+            </div>
+        </figure>
+        <section class="flex flex-col justify-center items-center self-stretch my-auto min-w-[240px] w-[472px] max-md:max-w-full">
+            <h1 class="text-2xl font-bold leading-7 text-center text-neutral-900 max-md:max-w-full">
+                Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato
+            </h1>
+            <form class="flex flex-col justify-center mt-16 max-w-full w-[354px] max-md:mt-10">
+                <div class="flex flex-col w-full">
+                    <div class="flex gap-2.5 justify-center items-center w-full min-h-[33px]">
+                        <button type="button" class="gap-1.5 self-stretch px-7 py-2 my-auto text-base leading-tight rounded-md bg-red-600 bg-opacity-30 min-h-[33px] text-neutral-700 w-[184px] max-md:px-5">
+                            Agregar al carrito
+                        </button>
+                        <label for="quantity" class="sr-only">Cantidad</label>
+                        <select id="quantity" name="quantity" class="gap-2 self-stretch pl-6 my-auto w-40 text-sm rounded-md bg-stone-200 bg-opacity-50 min-h-[33px] text-neutral-600">
+                            <option value="1">Cantidad: 1</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="gap-1.5 self-stretch px-7 py-3 mt-3.5 w-full text-base font-bold leading-tight whitespace-nowrap bg-red-600 rounded-md min-h-[40px] text-neutral-50 max-md:px-5">
+                        Comprar
+                    </button>
+                </div>
+            </form>
+        </section>
+    </article>
+</section>
+
+
+        {% include 'partials/footer.html.twig' %}   
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+        const archivoTraduccionHome = "{{ asset('traductions/home.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+    });
+</script>
+</body>
+</html>
