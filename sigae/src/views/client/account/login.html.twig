@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +30,28 @@
 
 <body class="bg-gray-100">
     <div class="flex justify-center items-center min-h-screen px-4 sm:px-0">
-        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8 relative">
+            <!-- Contenedor del selector de idioma -->
+            <div class="absolute top-4 right-4">
+                <!-- Icono del mundo -->
+                <button id="languageToggle" class="w-8 h-8 rounded-full hover:scale-110 transition-transform duration-300 focus:outline-none">
+                    <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
+                </button>
+                
+                <!-- Menú de idiomas -->
+                <div id="languageMenu" class="hidden absolute right-0 top-full mt-2 bg-white p-2 rounded-lg shadow-lg flex flex-col space-y-2 z-10">
+                    <button data-idioma="es" class="transition-transform duration-200 hover:scale-110">
+                        <img src="{{ asset('img/es.png') }}" alt="Español" class="w-8 h-5 object-cover">
+                    </button>
+                    <button data-idioma="it" class="transition-transform duration-200 hover:scale-110">
+                        <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-8 h-5 object-cover">
+                    </button>
+                    <button data-idioma="en" class="transition-transform duration-200 hover:scale-110">
+                        <img src="{{ asset('img/en.png') }}" alt="English" class="w-8 h-5 object-cover">
+                    </button>
+                </div>
+            </div>
+
             <div class="text-center mb-8">
                 <img src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" class="mx-auto max-w-[200px] sm:max-w-[150px]">
             </div>
@@ -60,7 +80,7 @@
                     </div>
                 {% endif %}
 
-                <button traducir="ingresar" type="submit"  class=" btn w-full duration-300  text-white py-2 rounded-md  transition">
+                <button traducir="ingresar" type="submit" class="btn w-full duration-300 text-white py-2 rounded-md transition">
                     Ingresar
                 </button>
             </form>
@@ -76,10 +96,31 @@
             </div>
         </div>
     </div>
-   
 </body>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const languageToggle = document.getElementById('languageToggle');
+        const languageMenu = document.getElementById('languageMenu');
+
+        // Toggle del menú de idiomas
+        languageToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            languageMenu.classList.toggle('hidden');
+        });
+
+        // Cerrar el menú cuando se hace clic fuera de él
+        document.addEventListener('click', () => {
+            if (!languageMenu.classList.contains('hidden')) {
+                languageMenu.classList.add('hidden');
+            }
+        });
+
+        // Prevenir que el menú se cierre cuando se hace clic en él
+        languageMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
         const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
         const archivoTraduccionHome = "{{ asset('traductions/login.json') }}";
         inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
