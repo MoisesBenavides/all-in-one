@@ -1,0 +1,32 @@
+{
+    
+    "Primer_lapso":{
+        "fecha:inicio": "05:00",
+        "fecha_final": "05:59"
+    },
+    "Segundo_lapso":{
+        "fecha:inicio": "06:00",
+        "fecha_final": "06:59"
+    },
+    "Tercer_lapso":{
+        "fecha:inicio": "07:00",
+        "fecha_final": "07:59"
+    },
+    "Cuarto_lapso":{
+        "fecha:inicio": "08:00",
+        "fecha_final": "08:59"
+    },
+    "Quinto_lapso":{
+        "fecha:inicio": "09:00",
+        "fecha_final": "09:59"
+    },
+    "Sexto_lapso":{
+        "fecha:inicio": "10:00",
+        "fecha_final": "10:59"
+    },
+    "Septimo_lapso":{
+        "fecha:inicio": "10:00",
+        "fecha_final": "10:59"
+    }
+
+}
