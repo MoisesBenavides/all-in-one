@@ -15,6 +15,43 @@ class Parking extends Servicio {
         $this->tipo_plaza = $tipo_plaza;
     }
 
+    public function getTipo_pLaza(): string{
+        return $this->tipo_plaza->value;
+    }
+
+    public function setTipo_plaza(TipoPlazaParking $tipo_plaza){
+        $this->tipo_plaza = $tipo_plaza;
+    }
+    public function getLargo_plazo(){
+        return $this->largo_plazo;
+    }
+
+    public function setLargo_plazo($largo_plazo){
+        $this->largo_plazo = $largo_plazo;
+
+        return $this;
+    }
+
+    public function apartarPlaza($numero_plaza){
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
+
+            return true;
+
+        } catch(Exception $e){
+            error_log($e->getMessage()); // Registro del error en el log
+            return false; // False si hubo un error de base de datos
+        } finally {
+            $conn = null;
+        }
+
+
+    }
+
     public function obtenerPlazasOcupadas($largo_plazo, $tipo_plaza, $fecha_inicio, $fecha_final){
         $ocupadas=[];
         $largo_plazo = !empty($largo_plazo) ? (int)$largo_plazo : 0;
@@ -52,22 +89,6 @@ class Parking extends Servicio {
         }
     }
 
-    public function getTipo_pLaza(): string{
-        return $this->tipo_plaza->value;
-    }
-
-    public function setTipo_plaza(TipoPlazaParking $tipo_plaza){
-        $this->tipo_plaza = $tipo_plaza;
-    }
-    public function getLargo_plazo(){
-        return $this->largo_plazo;
-    }
-
-    public function setLargo_plazo($largo_plazo){
-        $this->largo_plazo = $largo_plazo;
-
-        return $this;
-    }
 
     public function reservarServicio($matricula) {
         $precio = $this->getPrecio();
