@@ -282,6 +282,7 @@ class ControladorParking extends AbstractController{
                 $this->parking->deshacerTransaccion();
                 return new JsonResponse(['success' => false, 'message' => 'Error al reservar servicio']);
             }elseif(!$this->parking->apartarPlaza($numeroPlaza)){
+                error_log(print_r($this->parking, true));
                 $this->parking->deshacerTransaccion();
                 return new JsonResponse(['success' => false, 'message' => 'Error al apartar la plaza']);
             } else{
