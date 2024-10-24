@@ -306,6 +306,32 @@ class ControladorParking extends AbstractController{
         $response=['success' => false, 'errors' => [], 'debug' => []];
     
         // Debug: Log all received data
+        $response['debug']['received_data']=$_POST;
+
+        
+        if (isset($_POST["plazasSeleccionadas"]) && !empty($_POST["plazasSeleccionadas"])){
+
+            $plazas = $_POST["plazasSeleccionadas"];
+
+            if (!isset($_SESSION['parking']["tipoVehiculo"])){
+                $response['errors'][] = "Debe seleccionar un tipo de vehículo.";
+            } elseif (count($plazas) != 1 && $_SESSION['parking']["tipoVehiculo"] == "moto" || "auto" || "camioneta"){
+                // Envia error si es un vehiculo que ocupa una plaza y selecciona una cantidad distinta a una plaza
+                $response['errors'][] = "Debe seleccionar una plaza de parking.";
+            } elseif (count($plazas) != 2 && $_SESSION['parking']["tipoVehiculo"] == "camion" || "utilitario") {
+                // Envia error si es vehiculo grande y selecciona una cantidad distinta a dos plazas
+                $response['errors'][] = "Debe seleccionar dos plazas de parking.";
+            } else {
+                $this->parking->confirmarTransaccion();
+                $response['success'] = true;
+
+                // Guardar la reserva en la sesión
+                $_SESSION['reserva'] = $this->parking;
+                $_SESSION['servicio'] = 'parking';
+                $_SESSION['matricula'] = $_SESSION['parking']['matricula'];
+
+                // Redireccionar al usuario a la página de confirmación de reserva
+                return $this->redirectToRoute('parkingConfirmation');
         $response['debug']['received_data'] = $_POST;
     
         if (isset($_POST["plazasSeleccionadas"]) && !empty($_POST["plazasSeleccionadas"])) {
@@ -321,7 +347,7 @@ class ControladorParking extends AbstractController{
                 // Debug
                 error_log('Plazas recibidas: ' . print_r($plazas, true));
     
-                if (!isset($_SESSION['parking']) || !isset($_SESSION['parking']["tipoVehiculo"])) {
+                if (!isset($_SESSION['parking']["tipoVehiculo"]) || !isset($_SESSION['parking']["tipoVehiculo"])) {
                     $response['errors'][] = "Debe seleccionar un tipo de vehículo.";
                 } else {
                     $tipoVehiculo = $_SESSION['parking']["tipoVehiculo"];
