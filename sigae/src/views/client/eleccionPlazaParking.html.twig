@@ -80,7 +80,7 @@
             return div;
         }
 
-       function createParkingSpot(number, prefix) {
+        function createParkingSpot(number, prefix) {
     const spotId = `${prefix}${number}`;
     const spot = document.createElement('button');
     
@@ -280,30 +280,9 @@
         }
 
         // Inicialización
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Inicializar la variable de sesión antes de continuar
-            try {
-                const response = await fetch('{{ path("iniciarEleccionPlaza") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('No se pudo iniciar la elección de plaza');
-                }
-
-                // Continuar con la inicialización normal
-                updateFloorDisplay();
-                generateParkingLayout();
-                new ParkingTimer();
-            } catch (error) {
-                console.error('Error al inicializar:', error);
-                alert('Error al cargar la página. Por favor, recargue.');
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            updateFloorDisplay();
+            generateParkingLayout();
         });
     </script>
 
