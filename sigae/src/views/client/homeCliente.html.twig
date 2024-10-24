@@ -11,6 +11,7 @@
     <title>AIO - Taller, neumáticos, reservas y más</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+
     <style>
         @font-face {
             font-family: 'Teachers';
@@ -71,34 +72,33 @@
             </button>
             <div id="indicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"></div>
         </section>
-
         <section id="parking" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
             <div class="flex flex-col items-center text-center">
                 <img class="w-48 md:w-64 lg:w-80 mb-6" src="{{ asset('img/AIO Parking positivo.png') }}" alt="AIO Parking" />
-                <p traducir="AIOParking_presentacion" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold  mb-6">AIO PARKING es nuestro servicio de parking inteligente.</p>
-                <p traducir="AIOParking_clickAbajo" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold  mb-6">clickea Abajo para mas informacion</p>
-                <a href="{{ path('aioParking') }}" class="btnPark text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold  py-3 px-6 rounded-[10px]">AIO PARKING</a>
+                <p traducir="parkingPresentacion" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold mb-6">AIO PARKING es nuestro servicio de parking inteligente.</p>
+                <p traducir="reservarPlaza" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold mb-6">clickea Abajo para mas informacion</p>
+                <a href="{{ path('aioParking') }}" traducir="botonParking" class="btnPark text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[10px]">AIO PARKING</a>
             </div>
         </section>
 
-         <section id="servicios" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
+        <section id="servicios" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
             <div class="flex flex-col items-center text-center">
-                <h2 class="text-[#161212] text-3xl md:text-4xl lg:text-5xl font-bold  mb-4">Nuestros Servicios</h2>
-                <p class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium  mb-6">Entra para saber todos los servicios que ofrecemos en AIO</p>
-                <a href="{{path('services')}}" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold  py-3 px-6 rounded-[10px]">Servicios</a>
+                <h2 traducir="nuestrosServicios" class="text-[#161212] text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Nuestros Servicios</h2>
+                <p traducir="entra" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium mb-6">Entra para saber todos los servicios que ofrecemos en AIO</p>
+                <a href="{{path('services')}}" traducir="botonServicios" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[10px]">Servicios</a>
             </div>
         </section>
 
         <section id="reservas" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
             <div class="flex flex-col items-center text-center">
-                <h2 class="text-[#161212] text-3xl md:text-4xl lg:text-5xl font-bold  mb-4">¿Ya reservaste?</h2>
-                <p class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium  mb-6">Si ya reservaste accede a nuestro apartado de "Mis reservas"</p>
-                <a href="#" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold  py-3 px-6 rounded-[10px]">Mis reservas</a>
+                <h2 traducir="yaReservaste" class="text-[#161212] text-3xl md:text-4xl lg:text-5xl font-bold mb-4">¿Ya reservaste?</h2>
+                <p traducir="apartadoMisReservas" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium mb-6">Si ya reservaste accede a nuestro apartado de "Mis reservas"</p>
+                <a href="#" traducir="botonMisReservas" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[10px]">Mis reservas</a>
             </div>
         </section>
 
         <section id="productos" class="bg-neutral-50 rounded-[21px] border border-black p-8">
-            <h2 class="text-center text-[#161212] text-3xl md:text-4xl lg:text-5xl font-semibold  mb-8">Productos destacados</h2>
+            <h2 traducir="productosDestacados" class="text-center text-[#161212] text-3xl md:text-4xl lg:text-5xl font-semibold mb-8">Productos destacados</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="flex flex-col items-center">
                     <img class="w-full h-auto mb-4" src="{{ asset('img/Cubierta Pirelli1.webp') }}" alt="Cubierta Pirelli" />
@@ -116,9 +116,8 @@
                     <img class="w-full h-auto mb-4" src="{{ asset('img/Aceite1.webp') }}" alt="Aceite Motul" />
                     <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Aceite para motor Motul sintético 5W-40</p>
                 </div>
-            </div>
-            <div class="text-center mt-8">
-                <a href="{{ path('products') }}" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[7px] inline-block">Ver todos</a>
+            </div>            <div class="text-center mt-8">
+                <a href="{{ path('products') }}" traducir="botonProductos" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[7px] inline-block">Ver todos</a>
             </div>
         </section>
     </main>
@@ -134,7 +133,6 @@
         const archivoTraduccionHome = "{{ asset('traductions/home.json') }}";
         inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
     });
-</script>
 
     
     </script>

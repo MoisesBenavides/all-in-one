@@ -1,0 +1,50 @@
+{
+    "es": {
+      "tituloFaq": "FAQ",
+      "descripcionFaq": "Bienvenido a la sección de preguntas frecuentes de All In One, aquí intentaremos resolver todas tus dudas",
+      
+      "pregunta1": "¿Se puede realizar un servicio mecánico sin reservar previamente?",
+      "respuesta1": "Para poder realizar un servicio mecánico en All In One se debe realizar una reserva para tener un puesto asegurado en el que nuestro equipo podrá asistirte en el servicio que desees",
+      
+      "pregunta2": "¿Puedo realizar una reserva a largo plazo en AIO Parking?",
+      "respuesta2": "¡Claro! en All In One Parking ofrecemos el servicio de reserva a largo plazo, ya sea para dejarlo semanalmente, quincenalmente, mensualmente o anualmente.",
+      
+      "pregunta3": "¿Con que marcas de neumaticos trabajan?",
+      "respuesta3": "En AIO trabajamos con Bridgeston, Michelin y Pirelli, puedes encontrar todos los modelos que ofrecemos en nuestra sección de catalogo.",
+      
+      "pregunta4": "¿Trabajan con todas las marcas de vehículos?",
+      "respuesta4": "Sí, nuestro equipo de mecánicos está capacitado para trabajar con una amplia gama de marcas y modelos de vehículos, tanto nacionales como importados. Sin embargo, para algunos modelos muy específicos o de lujo, es posible que necesitemos más tiempo para obtener piezas especializadas."
+    },
+    "it": {
+      "tituloFaq": "FAQ",
+      "descripcionFaq": "Benvenuto alla sezione delle domande frequenti di All In One, qui cercheremo di risolvere tutti i tuoi dubbi",
+      
+      "pregunta1": "È possibile effettuare un servizio meccanico senza prenotazione?",
+      "respuesta1": "Per poter effettuare un servizio meccanico in All In One è necessario effettuare una prenotazione per avere un posto assicurato in cui il nostro team potrà assisterti nel servizio che desideri",
+      
+      "pregunta2": "Posso effettuare una prenotazione a lungo termine in AIO Parking?",
+      "respuesta2": "Certo! All In One Parking offre il servizio di prenotazione a lungo termine, sia settimanale, quindicinale, mensile o annuale.",
+      
+      "pregunta3": "Con quali marchi di pneumatici lavorate?",
+      "respuesta3": "In AIO lavoriamo con Bridgeston, Michelin e Pirelli, puoi trovare tutti i modelli che offriamo nella nostra sezione catalogo.",
+      
+      "pregunta4": "Lavorate con tutte le marche di veicoli?",
+      "respuesta4": "Sì, il nostro team di meccanici è qualificato per lavorare con un'ampia gamma di marche e modelli di veicoli, sia nazionali che importati. Tuttavia, per alcuni modelli molto specifici o di lusso, potremmo aver bisogno di più tempo per ottenere parti specializzate."
+    },
+    "en": {
+      "tituloFaq": "FAQ",
+      "descripcionFaq": "Welcome to All In One's frequently asked questions section, here we will try to resolve all your doubts",
+      
+      "pregunta1": "Can mechanical service be performed without prior reservation?",
+      "respuesta1": "To be able to perform a mechanical service at All In One, you must make a reservation to have an assured position where our team can assist you in the service you desire",
+      
+      "pregunta2": "Can I make a long-term reservation at AIO Parking?",
+      "respuesta2": "Of course! At All In One Parking we offer long-term reservation service, whether it's weekly, biweekly, monthly or annually.",
+      
+      "pregunta3": "What tire brands do you work with?",
+      "respuesta3": "At AIO we work with Bridgeston, Michelin and Pirelli, you can find all the models we offer in our catalog section.",
+      
+      "pregunta4": "Do you work with all vehicle brands?",
+      "respuesta4": "Yes, our team of mechanics is trained to work with a wide range of vehicle brands and models, both domestic and imported. However, for some very specific or luxury models, we may need more time to obtain specialized parts."
+    }
+  }
