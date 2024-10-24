@@ -98,8 +98,8 @@ holdParkingSlot:
   methods: POST
 
 submitParkingSimple:
-  path: /submitParkingSlots
-  controller: Sigae\Controllers\ControladorParking::submitParkingSlots
+  path: /submitParkingSimple
+  controller: Sigae\Controllers\ControladorParking::submitParkingSimple
   methods: POST
 
 parkingConfirmation:
