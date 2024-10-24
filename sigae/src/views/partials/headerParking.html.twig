@@ -43,9 +43,9 @@
 
             <!-- Navegación Principal -->
             <nav class="flex justify-center space-x-6 mx-4 flex-grow">
-                <a href="{{ path('home') }}" traducir="services" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">all in one</a>
-                <a href="{{ path('aioParkingBookSimple') }}" traducir="aioParking" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">reservas</a>
-                <a href="{{ path('aioParkingBookLongTerm') }}" traducir="products" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">reservar a largo plazo</a>
+                <a href="{{ path('home') }}" traducir="services" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">All in one</a>
+                <a href="{{ path('aioParkingBookSimple') }}" traducir="aioParking" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservas</a>
+                <a href="{{ path('aioParkingBookLongTerm') }}" traducir="products" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservar a largo plazo</a>
                 <a href="#" class="text-black text-base lg:text-lg font-bold hover:text-gray-600 transition-colors">Mis Reservas</a>
                 <a href="{{ path('faq') }}" traducir="faq" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">FAQ</a>
             </nav>
@@ -79,7 +79,9 @@
                 </button>
 
                 <!-- Logo móvil -->
+                <a href="{{ path('aioParking') }}" class="shrink-0">
                 <img class="logo-size-mobile transition-all duration-300" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
+                </a>
 
                 <!-- Iconos móviles -->
                 <div class="flex items-center space-x-4">
@@ -144,9 +146,9 @@
         <!-- Menú hamburguesa móvil -->
         <nav id="mobileMenu" class="hidden mt-4 bg-white rounded-lg shadow-lg">
             <div class="py-2">
-                <a href="{{ path('home') }}" traducir="services" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">all in one</a>
-                <a href="{{ path('aioParkingBookSimple') }}" traducir="aioParking" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">reservas</a>
-                <a href="{{ path('aioParkingBookLongTerm') }}" traducir="products" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">reservar a largo plazo</a>
+                <a href="{{ path('home') }}" traducir="services" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">All in one</a>
+                <a href="{{ path('aioParkingBookSimple') }}" traducir="aioParking" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservas</a>
+                <a href="{{ path('aioParkingBookLongTerm') }}" traducir="products" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservar a largo plazo</a>
                 <a href="#" class="text-black text-base lg:text-lg font-bold hover:text-gray-600 transition-colors">Mis Reservas</a>
                 <a href="{{ path('faq') }}" traducir="faq" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">FAQ</a>
             </div>
