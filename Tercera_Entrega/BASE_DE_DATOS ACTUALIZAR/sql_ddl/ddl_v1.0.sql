@@ -103,7 +103,7 @@ CREATE TABLE parking (
 
 -- Numero de plaza
 CREATE TABLE numero_plaza (
-    numero_plaza INT NOT NULL,
+    numero_plaza VARCHAR(4) NOT NULL,
     id_servicio INT NOT NULL,
     PRIMARY KEY (numero_plaza, id_servicio),
     FOREIGN KEY (id_servicio) REFERENCES parking(id_servicio)
