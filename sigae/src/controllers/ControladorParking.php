@@ -159,6 +159,7 @@ class ControladorParking extends AbstractController{
         ]);
     }
 
+    //TODO: Actualizar reservas largo plazo
     function bookParkingLongTerm(): Response|RedirectResponse{
         session_start();
         $response=['success' => false, 'errors' => [], 'debug' => []];
