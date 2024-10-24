@@ -256,10 +256,13 @@ function updateLanguageDisplay(idioma) {
 }
 
 // Función para cambiar el idioma
+// Función para cambiar el idioma (en el header)
 function cambiarIdioma(idioma) {
     setCookie('idioma', idioma);
     updateLanguageDisplay(idioma);
-    inicializarTraduccion(archivoTraduccionHeader, idioma);
+    
+    // Usar la función global del manejador de traducciones
+    window.cambiarIdioma(idioma);
 }
 
 // Lógica del menú hamburguesa
