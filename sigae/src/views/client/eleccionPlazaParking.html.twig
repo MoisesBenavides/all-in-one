@@ -73,50 +73,51 @@
         }
 
         function createParkingSpot(number, prefix) {
-            const spotId = `${prefix}${number}`;
-            const spot = document.createElement('button');
-            
-            spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
-            spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
-            spot.dataset.spot = spotId;
-            spot.type = 'button';
+    const spotId = `${prefix}${number}`;
+    const spot = document.createElement('button');
+    
+    spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
+    spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
+    spot.dataset.spot = spotId;
+    spot.type = 'button';
 
-            if (!plazasLibres.includes(spotId)) {
-                spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
-                spot.disabled = true;
-            } else {
-                spot.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    try {
-                        const response = await fetch('{{ path("holdParkingSlot") }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: JSON.stringify({ 
-                                numero_plaza: spotId
-                            })
-                        });
+    if (!plazasLibres.includes(spotId)) {
+        spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
+        spot.disabled = true;
+    } else {
+        spot.addEventListener('click', async (e) => {
+            e.preventDefault();
 
-                        const data = await response.json();
-                        
-                        if (data.success) {
-                            handleSpotSelection(spot);
-                        } else {
-                            alert(data.message || 'Esta plaza ya no está disponible');
-                            window.location.reload();
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Hubo un error al apartar la plaza');
-                    }
+            const data = {
+                numero_plaza: spotId
+            };
+
+            try {
+                const response = await fetch('{{ path("holdParkingSlot") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
                 });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    handleSpotSelection(spot);
+                } else {
+                    alert(result.message || 'Esta plaza ya no está disponible');
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Hubo un error al apartar la plaza');
             }
+        });
+    }
 
-            return spot;
-        }
-
+    return spot;
+}
         function handleSpotSelection(spot) {
             if (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') {
                 handleLargeVehicleSelection(spot);
