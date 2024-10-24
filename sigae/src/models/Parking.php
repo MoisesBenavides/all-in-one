@@ -102,6 +102,7 @@ class Parking extends Servicio {
 
             $this->conn->commit();
             $ocupadas=$stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log(print_r($ocupadas, true));
             
             return $ocupadas;
 
