@@ -307,33 +307,6 @@ class ControladorParking extends AbstractController{
     
         // Debug: Log all received data
         $response['debug']['received_data']=$_POST;
-
-        
-        if (isset($_POST["plazasSeleccionadas"]) && !empty($_POST["plazasSeleccionadas"])){
-
-            $plazas = $_POST["plazasSeleccionadas"];
-
-            if (!isset($_SESSION['parking']["tipoVehiculo"])){
-                $response['errors'][] = "Debe seleccionar un tipo de vehículo.";
-            } elseif (count($plazas) != 1 && $_SESSION['parking']["tipoVehiculo"] == "moto" || "auto" || "camioneta"){
-                // Envia error si es un vehiculo que ocupa una plaza y selecciona una cantidad distinta a una plaza
-                $response['errors'][] = "Debe seleccionar una plaza de parking.";
-            } elseif (count($plazas) != 2 && $_SESSION['parking']["tipoVehiculo"] == "camion" || "utilitario") {
-                // Envia error si es vehiculo grande y selecciona una cantidad distinta a dos plazas
-                $response['errors'][] = "Debe seleccionar dos plazas de parking.";
-            } else {
-                $this->parking->confirmarTransaccion();
-                $response['success'] = true;
-
-                // Guardar la reserva en la sesión
-                $_SESSION['reserva'] = $this->parking;
-                $_SESSION['servicio'] = 'parking';
-                $_SESSION['matricula'] = $_SESSION['parking']['matricula'];
-
-                // Redireccionar al usuario a la página de confirmación de reserva
-                return $this->redirectToRoute('parkingConfirmation');
-        $response['debug']['received_data'] = $_POST;
-    
         if (isset($_POST["plazasSeleccionadas"]) && !empty($_POST["plazasSeleccionadas"])) {
             try {
                 // Decodificar el JSON a array
@@ -480,7 +453,6 @@ class ControladorParking extends AbstractController{
     private function calcularPrecio($difFechas, $tipoVehiculo) {
         $prHora = $this->preciosHora[$tipoVehiculo]['precio']; // Precio por hora según el tipo de vehículo
         $precioCalc = 0;
-        
         // Se cobra mínimo una hora completa
         if ($difFechas <= 60) {
             $precioCalc = $prHora;
@@ -488,7 +460,6 @@ class ControladorParking extends AbstractController{
             // Se resta la primer hora aplicada...
             $precioCalc = $prHora;
             $difFechas -= 60;
-            
             while ($difFechas > 0) {
                 if ($difFechas < 15) {
                     // Si no han pasado 15 minutos después de la primera hora, se cobra una hora completa
@@ -505,7 +476,6 @@ class ControladorParking extends AbstractController{
                 }
             }
         }
-    
         return $precioCalc;
     }
     
