@@ -81,7 +81,13 @@
             return div;
         }
 
-      function createParkingSpot(number, prefix) {
+console.log('Session data:', {
+    tipoVehiculo: tipovehiculo,
+    plazasLibres: plazasLibres
+});
+
+// Y modifiquemos la función createParkingSpot
+function createParkingSpot(number, prefix) {
     const spotId = `${prefix}${number}`;
     const spot = document.createElement('button');
     
@@ -98,30 +104,40 @@
             e.preventDefault();
             
             try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                
                 const response = await fetch('{{ path("holdParkingSlot") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken
                     },
+                    credentials: 'include',
                     body: JSON.stringify({ 
-                        numero_plaza: spotId
+                        numero_plaza: spotId,
+                        tipoVehiculo: tipovehiculo // Añadimos el tipo de vehículo
                     })
                 });
 
-                // Agregar logs para debuggear
-                console.log('Status:', response.status);
+                console.log('Request sent with data:', {
+                    numero_plaza: spotId,
+                    tipoVehiculo: tipovehiculo
+                });
+
                 const result = await response.json();
                 console.log('Response:', result);
                 
                 if (result.success) {
                     handleSpotSelection(spot);
                 } else {
-                    console.log('Error message:', result.message);
-                    alert(result.message || 'Esta plaza ya no está disponible');
+                    // Mostrar mensaje más específico
+                    const errorMessage = result.message || 'Esta plaza ya no está disponible';
+                    console.error('Server error:', errorMessage);
+                    alert(errorMessage);
                 }
             } catch (error) {
-                console.error('Error details:', error);
+                console.error('Fetch error:', error);
                 alert('Hubo un error al apartar la plaza');
             }
         });
