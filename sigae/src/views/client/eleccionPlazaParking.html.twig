@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
@@ -18,56 +17,49 @@
             font-style: normal;
         }
 
-        body,
-        input,
-        select,
-        button,
-        option {
+        body, input, select, button, option {
             font-family: 'Teachers', sans-serif;
-        }
-
-        .btnPark {
-            background-color: #1f3de0
-        }
-
-        .btnPark:hover {
-            background-color: #233181
         }
     </style>
 </head>
 
-{% include 'partials/headerParking.html.twig' %}
-
 <body class="bg-white">
+    {% include 'partials/headerParking.html.twig' %}
+
     <div class="w-full max-w-[1440px] px-4 py-8 mx-auto flex flex-col items-center gap-8">
+        <!-- Floor Selection -->
         <div class="w-full max-w-[896px] h-[46px] px-4 py-2 bg-[#d9d9d9] rounded-[10px] border border-[#c5b8b8] flex justify-center items-center gap-2.5">
-            <button id="decrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center">&lt;</button>
+            <button id="decrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">&lt;</button>
             <div id="floorDisplay" class="text-center text-black text-base font-medium">Piso 1</div>
-            <button id="incrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center">&gt;</button>
+            <button id="incrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">&gt;</button>
         </div>
+
+        <!-- Legend -->
         <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
             <p><strong>B1-20:</strong> Motos (solo primer piso)</p>
             <p><strong>A1-50:</strong> Autos, camionetas y pequeños camiones (primer piso)</p>
             <p><strong>C1-50:</strong> Autos, camionetas y pequeños camiones (segundo piso)</p>
         </div>
 
-        <form id="parkingForm" action="{{ path('submitParkingSimple') }}" method="POST">
-            <div id="parkingContainer" class="w-full max-w-[600px] h-auto min-h-[359px] p-4 pt-8 bg-white border border-black relative">
+        <!-- Parking Form -->
+        <form id="parkingForm" action="{{ path('submitParkingSimple') }}" method="POST" class="w-full max-w-[600px]">
+            <div id="parkingContainer" class="w-full min-h-[359px] p-4 pt-8 bg-white border border-black relative">
                 <!-- Parking spots will be generated here -->
             </div>
 
             <input type="hidden" name="plazasSeleccionadas" id="plazasSeleccionadasInput">
-            <div class="w-full max-w-[388px] flex justify-center mt-4">
-                <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 duration-300 btnPark rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">
+            <div class="w-full max-w-[388px] mx-auto flex justify-center mt-4">
+                <button type="submit" class="w-full max-w-[340px] h-[62px] px-7 py-2.5 bg-[#1f3de0] hover:bg-[#233181] transition-colors rounded-lg text-white text-[32px] font-bold leading-[51.78px]">
                     Continuar
                 </button>
             </div>
         </form>
+        <!-- El timer se insertará automáticamente aquí por el script -->
     </div>
 
     <script>
         // Variables globales
-        const tipovehiculo = {{ tipoVehiculo }};
+        const tipovehiculo = {{ tipoVehiculo|json_encode()|raw }};
         const plazasLibres = {{ plazasLibres|json_encode()|raw }};
         let plazasSeleccionadas = [];
         let currentFloor = 1;
@@ -165,7 +157,6 @@
             return Math.abs(num1 - num2) === 1;
         }
 
-        // Funciones de generación de layout
         function generateMotoLayout(container) {
             const motoSpots = createParkingColumn(1, 20, 'B');
             container.appendChild(createDiv('flex justify-center', [
@@ -241,7 +232,6 @@
                 return;
             }
 
-            // Adaptar al formato
             const plazasArray = plazasSeleccionadas.map(spot => spot.dataset.spot);
             document.getElementById('plazasSeleccionadasInput').value = JSON.stringify(plazasArray);
             this.submit();
@@ -274,6 +264,7 @@
         });
     </script>
 
+    <!-- Cargamos el script del timer -->
     <script src="{{ asset('js/parkingTimer.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
