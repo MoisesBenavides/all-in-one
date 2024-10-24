@@ -277,6 +277,7 @@ class ControladorParking extends AbstractController{
             $this->parking = new Parking($largo_plazo, $tipo_plaza, null, $precio, $fecha_inicio, $fecha_final);
 
             $this->parking->comenzarTransaccion();
+            error_log(print_r($this->parking->conn, true));
 
             if(!$this->parking->reservarServicio($matricula)){
                 $this->parking->deshacerTransaccion();
