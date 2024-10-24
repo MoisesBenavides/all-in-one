@@ -10,10 +10,10 @@
     "it": {
       "correo": "Email",
       "contrasena": "Password",
-      "olvidaste_contrasena": "Hai dimenticato la password?",
-      "ingresar": "Accedi",
-      "continuar_google": "Continua con Google",
-      "registrate": "Non hai un account? Registrati qui"
+      "olvidaste_contrasena": "Ha dimenticato la password?",
+      "ingresar": "Accedere",
+      "continuar_google": "Continuare con Google",
+      "registrate": "Non ha un account? Registrarsi qui"
     },
     "en": {
       "correo": "Email",

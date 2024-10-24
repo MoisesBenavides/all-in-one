@@ -16,18 +16,18 @@
     },
     "it": {
       "correo": "Email",
-      "ingrese_correo": "Per favore inserisci la tua email",
+      "ingrese_correo": "Per favore inserire la email",
       "nombre": "Nome",
-      "ingrese_nombre": "Per favore inserisci il tuo nome",
+      "ingrese_nombre": "Per favore inserire il nome",
       "apellido": "Cognome",
-      "ingrese_apellido": "Per favore inserisci il tuo cognome",
+      "ingrese_apellido": "Per favore inserire il cognome",
       "contrasena": "Password",
-      "ingrese_contrasena": "Per favore inserisci una password",
-      "repetir_contrasena": "Ripeti la password",
-      "repita_contrasena": "Per favore ripeti la password",
-      "minimo_caracteres": "Usa almeno 6 caratteri con lettere maiuscole, minuscole e numeri.",
+      "ingrese_contrasena": "Per favore inserire una password",
+      "repetir_contrasena": "Ripetere la password",
+      "repita_contrasena": "Per favore ripetere la password",
+      "minimo_caracteres": "Usare almeno 6 caratteri con lettere maiuscole, minuscole e numeri.",
       "enviar": "Invia",
-      "tienes_cuenta": "Hai già un account? Accedi qui"
+      "tienes_cuenta": "Ha già un account? Accedere qui"
     },
     "en": {
       "correo": "Email",

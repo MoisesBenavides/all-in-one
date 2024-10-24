@@ -9,9 +9,9 @@
     "it": {
       "usuario": "Utente",
       "contrasena": "Password",
-      "olvidaste_contrasena": "Hai dimenticato la password?",
-      "ingresar": "Accedi",
-      "continuar_google": "Continua con Google"
+      "olvidaste_contrasena": "Ha dimenticato la password?",
+      "ingresar": "Accedere",
+      "continuar_google": "Continuare con Google"
     },
     "en": {
       "usuario": "Username",

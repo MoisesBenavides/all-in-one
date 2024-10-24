@@ -1,0 +1,18 @@
+{
+    "es": {
+      "encabezado": "¿Ya reservaste?",
+      "cta": "Si ya reservaste accede a nuestro apartado de 'Mis reservas'",
+      "boton": "Mis reservas"
+    },
+    "it": {
+      "encabezado": "Ha già prenotato?",
+      "cta": "Se ha già prenotato accedere alla nostra sezione 'Le mie prenotazioni'",
+      "boton": "Le mie prenotazioni"
+    },
+    "en": {
+      "encabezado": "Did you already book?",
+      "cta": "If you already booked, access our 'My bookings' section",
+      "boton": "My bookings"
+    }
+  }
+  
