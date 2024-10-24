@@ -257,13 +257,15 @@ function updateLanguageDisplay(idioma) {
 
 // Función para cambiar el idioma
 // Función para cambiar el idioma (en el header)
-function cambiarIdioma(idioma) {
+function handleLanguageChange(idioma) {
     setCookie('idioma', idioma);
     updateLanguageDisplay(idioma);
-    
-    // Usar la función global del manejador de traducciones
-    window.cambiarIdioma(idioma);
+    // Llamar a la función global de traducción
+    if (window.cambiarIdioma) {
+        window.cambiarIdioma(idioma);
+    }
 }
+
 
 // Lógica del menú hamburguesa
 if (hamburger) {
@@ -315,13 +317,14 @@ function setupLanguageButtons(menuElement) {
     menuElement.querySelectorAll('button[data-idioma]').forEach(button => {
         button.addEventListener('click', (e) => {
             const idioma = e.currentTarget.getAttribute('data-idioma');
-            cambiarIdioma(idioma);
+            handleLanguageChange(idioma);  // Usar la nueva función
             // Cerrar todos los menús
             languageMenu?.classList.add('hidden');
             languageMenuDesktop?.classList.add('hidden');
         });
     });
 }
+
 
 // Configurar los botones en ambos menús
 setupLanguageButtons(languageMenu);
