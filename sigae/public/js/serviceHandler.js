@@ -1,9 +1,16 @@
-// Maneja toda la lógica relacionada con los servicios
 const ServiceHandler = {
-    // Carga los servicios desde el JSON
+    jsonUrl: null,
+
+    setJsonUrl(url) {
+        this.jsonUrl = url;
+    },
+
     async cargarServicios() {
         try {
-            const response = await fetch("{{ asset('js/diccionarioTaller.json'}}");
+            if (!this.jsonUrl) {
+                throw new Error('URL del JSON no configurada');
+            }
+            const response = await fetch(this.jsonUrl);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -14,7 +21,6 @@ const ServiceHandler = {
         }
     },
 
-    // Configura los dropdowns
     setupDropdown(buttonId, menuId, optionsSelector, selectedOptionId, hiddenInputId) {
         const button = document.getElementById(buttonId);
         const menu = document.getElementById(menuId);
@@ -34,7 +40,6 @@ const ServiceHandler = {
         });
     },
 
-    // Actualiza las opciones de subtipos de servicio
     updateServiceSubtypes(serviceType, servicios, onSelect) {
         const subtypes = {
             alineacion: ['A01', 'A02', 'A03'],
@@ -59,5 +64,4 @@ const ServiceHandler = {
     }
 };
 
-// Hacer el objeto disponible globalmente
 window.ServiceHandler = ServiceHandler;

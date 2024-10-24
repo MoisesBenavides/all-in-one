@@ -20,29 +20,26 @@ const TimeSlotHandler = {
         const loadingIndicator = document.getElementById('loadingIndicator');
         const timeSlotsContainer = document.getElementById('timeSlots');
         
-        // Muestra indicador de carga
         loadingIndicator.classList.remove('hidden');
         timeSlotsContainer.classList.add('hidden');
-
+    
         try {
-            const response = await fetch(`{{path('')}}`);
+            const response = await fetch(`${GET_BLOCKED_TIMES_URL}?date=${selectedDate}`);
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+    
             const data = await response.json();
             return data.horariosOcupados;
         } catch (error) {
             console.error('Error al obtener horarios:', error);
             throw error;
         } finally {
-            // Oculta indicador de carga
             loadingIndicator.classList.add('hidden');
             timeSlotsContainer.classList.remove('hidden');
         }
     },
-
     // Maneja la selección de horarios
      
     handleTimeSelection(time, button) {
