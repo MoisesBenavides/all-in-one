@@ -1,38 +1,70 @@
+<!-- Estilos para tamaños específicos -->
+<style>
+    .logo-size {
+        width: 110px;
+        height: auto;
+    }
+    
+    .logo-size-mobile {
+        width: 90px;
+        height: auto;
+    }
+    
+    .icon-size {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .flag-size {
+        width: 20px;
+        height: 15px;
+    }
+    
+    @media (min-width: 768px) {
+        .logo-size {
+            width: 120px;
+        }
+        
+        .icon-size {
+            width: 24px;
+            height: 24px;
+        }
+    }
+</style>
+
 <header class="w-screen bg-white">
     <div class="container mx-auto px-4 py-4">
         <!-- Desktop View -->
         <div class="hidden md:flex items-center justify-between">
             <!-- Logo -->
             <a href="{{ path('home') }}" class="shrink-0">
-                <div class="w-28 lg:w-32 transition-all duration-300">
-                    <img class="w-full h-auto" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
-                </div>
+                <img class="logo-size transition-all duration-300" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
             </a>
 
             <!-- Navegación Principal -->
             <nav class="flex justify-center space-x-6 mx-4 flex-grow">
-                <a href="{{ path('services') }}" traducir="services" class="text-black text-base lg:text-lg font-bold hover:text-gray-600 transition-colors whitespace-nowrap">Servicios</a>
-                <a href="{{ path('aioParking') }}" traducir="aioParking" class="text-black text-base lg:text-lg font-bold hover:text-gray-600 transition-colors whitespace-nowrap">AIO Parking</a>
-                <a href="{{ path('products') }}" traducir="products" class="text-black text-base lg:text-lg font-bold hover:text-gray-600 transition-colors whitespace-nowrap">Repuestos y accesorios</a>
-                <a href="{{ path('faq') }}" traducir="faq" class="text-black text-base lg:text-lg font-bold hover:text-gray-600 transition-colors whitespace-nowrap">FAQ</a>
+                <a href="{{ path('services') }}" traducir="services" class="text-black text-base font-bold hover:text-gray-600 transition-colors whitespace-nowrap">Servicios</a>
+                <a href="{{ path('aioParking') }}" traducir="aioParking" class="text-black text-base font-bold hover:text-gray-600 transition-colors whitespace-nowrap">AIO Parking</a>
+                <a href="{{ path('products') }}" traducir="products" class="text-black text-base font-bold hover:text-gray-600 transition-colors whitespace-nowrap">Repuestos y accesorios</a>
+                <a href="{{ path('faq') }}" traducir="faq" class="text-black text-base font-bold hover:text-gray-600 transition-colors whitespace-nowrap">FAQ</a>
             </nav>
 
             <!-- Contenedor de idioma y usuario -->
             <div class="flex items-center space-x-4 shrink-0">
                 <!-- Selector de idioma Desktop -->
-                <div class="relative">
+                <div>
                     <button id="languageToggleDesktop" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                        <img src="{{ asset('img/world.png') }}" alt="Language" class="w-6 h-6">
-                        <span class="text-base lg:text-lg font-medium">Idioma:</span>
-                        <span id="currentLanguageDesktop" class="text-base lg:text-lg font-bold uppercase"></span>
+                        <img src="{{ asset('img/world.png') }}" alt="Language" class="icon-size">
+                        <span class="text-base font-medium">Idioma:</span>
+                        <span id="currentLanguageDesktop" class="text-base font-bold uppercase"></span>
                     </button>
-
-                    <!-- User icon Desktop -->
-                    <a href="{{ path('myAccount') }}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                        <img class="w-6 h-6" src="{{ asset('img/user.png') }}" alt="User">
-                        <span class="text-base lg:text-lg font-medium">Mi Cuenta</span>
-                    </a>
                 </div>
+
+                <!-- User icon Desktop -->
+                <a href="{{ path('myAccount') }}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
+                    <img class="icon-size" src="{{ asset('img/user.png') }}" alt="User">
+                    <span class="text-base font-medium">Mi Cuenta</span>
+                </a>
             </div>
         </div>
 
@@ -40,48 +72,46 @@
         <div class="md:hidden">
             <div class="flex items-center justify-between">
                 <button id="hamburger" class="text-black p-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                     </svg>
                 </button>
 
                 <!-- Logo móvil -->
-                <div class="w-24 sm:w-28">
-                    <img class="w-full h-auto" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
-                </div>
+                <img class="logo-size-mobile transition-all duration-300" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
 
                 <!-- Iconos móviles -->
                 <div class="flex items-center space-x-4">
                     <!-- Selector de idioma móvil -->
                     <div>
                         <button id="languageToggle" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                            <img src="{{ asset('img/world.png') }}" alt="Language" class="w-6 h-6">
+                            <img src="{{ asset('img/world.png') }}" alt="Language" class="icon-size">
                             <span id="currentLanguage" class="text-sm font-bold uppercase hidden sm:inline md:hidden">ES</span>
                         </button>
                     </div>
 
                     <!-- User icon móvil -->
                     <a href="{{ path('myAccount') }}" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                        <img class="w-6 h-6" src="{{ asset('img/user.png') }}" alt="User">
+                        <img class="icon-size" src="{{ asset('img/user.png') }}" alt="User">
                     </a>
                 </div>
             </div>
 
-            <!-- Menú de idiomas móvil (expandible) -->
+            <!-- Menú de idiomas móvil -->
             <div id="languageMenu" class="hidden mt-4 bg-white rounded-lg shadow-lg">
                 <div class="py-2">
                     <button data-idioma="es" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
-                        <img src="{{ asset('img/es.png') }}" alt="Español" class="w-5 h-4 mr-3">
+                        <img src="{{ asset('img/es.png') }}" alt="Español" class="flag-size mr-3">
                         <span class="text-base">Español</span>
                         <span class="text-sm text-gray-500 ml-auto">ES</span>
                     </button>
                     <button data-idioma="it" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
-                        <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-5 h-4 mr-3">
+                        <img src="{{ asset('img/it.png') }}" alt="Italiano" class="flag-size mr-3">
                         <span class="text-base">Italiano</span>
                         <span class="text-sm text-gray-500 ml-auto">IT</span>
                     </button>
                     <button data-idioma="en" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
-                        <img src="{{ asset('img/en.png') }}" alt="English" class="w-5 h-4 mr-3">
+                        <img src="{{ asset('img/en.png') }}" alt="English" class="flag-size mr-3">
                         <span class="text-base">English</span>
                         <span class="text-sm text-gray-500 ml-auto">EN</span>
                     </button>
@@ -89,21 +119,21 @@
             </div>
         </div>
 
-        <!-- Menú desktop de idiomas (expandible) -->
+        <!-- Menú desktop de idiomas -->
         <div id="languageMenuDesktop" class="hidden mt-4 bg-white rounded-lg shadow-lg">
             <div class="py-2">
                 <button data-idioma="es" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
-                    <img src="{{ asset('img/es.png') }}" alt="Español" class="w-5 h-4 mr-3">
+                    <img src="{{ asset('img/es.png') }}" alt="Español" class="flag-size mr-3">
                     <span class="text-base">Español</span>
                     <span class="text-sm text-gray-500 ml-auto">ES</span>
                 </button>
                 <button data-idioma="it" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
-                    <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-5 h-4 mr-3">
+                    <img src="{{ asset('img/it.png') }}" alt="Italiano" class="flag-size mr-3">
                     <span class="text-base">Italiano</span>
                     <span class="text-sm text-gray-500 ml-auto">IT</span>
                 </button>
                 <button data-idioma="en" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
-                    <img src="{{ asset('img/en.png') }}" alt="English" class="w-5 h-4 mr-3">
+                    <img src="{{ asset('img/en.png') }}" alt="English" class="flag-size mr-3">
                     <span class="text-base">English</span>
                     <span class="text-sm text-gray-500 ml-auto">EN</span>
                 </button>
