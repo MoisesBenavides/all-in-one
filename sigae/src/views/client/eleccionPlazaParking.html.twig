@@ -80,7 +80,7 @@
             return div;
         }
 
-        function createParkingSpot(number, prefix) {
+       function createParkingSpot(number, prefix) {
     const spotId = `${prefix}${number}`;
     const spot = document.createElement('button');
     
@@ -95,30 +95,44 @@
     } else {
         spot.addEventListener('click', async (e) => {
             e.preventDefault();
+            
+            // Deshabilitar el botón mientras se procesa
+            spot.disabled = true;
 
             try {
                 const response = await fetch('{{ path("holdParkingSlot") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'  
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: JSON.stringify({ 
                         numero_plaza: spotId
-                    })
+                    }),
+                    // Asegurarnos de enviar las cookies
+                    credentials: 'same-origin'
                 });
+
+                // Habilitar el botón de nuevo
+                spot.disabled = false;
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 const result = await response.json();
                 
                 if (result.success) {
                     handleSpotSelection(spot);
                 } else {
+                    console.error('Error en la respuesta:', result);
                     alert(result.message || 'Esta plaza ya no está disponible');
                     window.location.reload();
                 }
             } catch (error) {
-                console.error('Error:', error);
-                alert('Hubo un error al apartar la plaza');
+                console.error('Error al apartar plaza:', error);
+                spot.disabled = false;
+                alert('Hubo un error al apartar la plaza. Por favor, inténtelo de nuevo.');
             }
         });
     }
@@ -266,9 +280,30 @@
         }
 
         // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
-            updateFloorDisplay();
-            generateParkingLayout();
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Inicializar la variable de sesión antes de continuar
+            try {
+                const response = await fetch('{{ path("iniciarEleccionPlaza") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('No se pudo iniciar la elección de plaza');
+                }
+
+                // Continuar con la inicialización normal
+                updateFloorDisplay();
+                generateParkingLayout();
+                new ParkingTimer();
+            } catch (error) {
+                console.error('Error al inicializar:', error);
+                alert('Error al cargar la página. Por favor, recargue.');
+            }
         });
     </script>
 
