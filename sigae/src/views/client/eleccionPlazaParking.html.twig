@@ -64,6 +64,7 @@
         </form>
         <!-- El timer se insertará automáticamente aquí por el script -->
     </div>
+    <script src="{{ asset('js/parkingTimer.js') }}"></script>
 
     <script>
         // Variables globales
@@ -80,7 +81,7 @@
             return div;
         }
 
-        function createParkingSpot(number, prefix) {
+      function createParkingSpot(number, prefix) {
     const spotId = `${prefix}${number}`;
     const spot = document.createElement('button');
     
@@ -96,43 +97,31 @@
         spot.addEventListener('click', async (e) => {
             e.preventDefault();
             
-            // Deshabilitar el botón mientras se procesa
-            spot.disabled = true;
-
             try {
+                const formData = new FormData();
+                formData.append('numero_plaza', spotId);
+
                 const response = await fetch('{{ path("holdParkingSlot") }}', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
                     },
+                    credentials: 'same-origin',
                     body: JSON.stringify({ 
                         numero_plaza: spotId
-                    }),
-                    // Asegurarnos de enviar las cookies
-                    credentials: 'same-origin'
+                    })
                 });
-
-                // Habilitar el botón de nuevo
-                spot.disabled = false;
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
 
                 const result = await response.json();
                 
                 if (result.success) {
                     handleSpotSelection(spot);
                 } else {
-                    console.error('Error en la respuesta:', result);
                     alert(result.message || 'Esta plaza ya no está disponible');
-                    window.location.reload();
                 }
             } catch (error) {
-                console.error('Error al apartar plaza:', error);
-                spot.disabled = false;
-                alert('Hubo un error al apartar la plaza. Por favor, inténtelo de nuevo.');
+                console.error('Error:', error);
+                alert('Hubo un error al apartar la plaza');
             }
         });
     }
@@ -279,20 +268,16 @@
             document.getElementById('floorDisplay').textContent = `Piso ${currentFloor}`;
         }
 
-        // Inicialización
+    // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             updateFloorDisplay();
             generateParkingLayout();
+            new ParkingTimer();
         });
     </script>
 
     <!-- Cargamos el script del timer -->
-    <script src="{{ asset('js/parkingTimer.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            new ParkingTimer();
-        });
-    </script>
+ 
 
     {% include 'partials/footer.html.twig' %}
 </body>
