@@ -27,7 +27,17 @@
 }
     </style>
 </head>
+<script>
+let archivoTraduccionHeader = null;
+let archivoTraduccionFAQ = null;
 
+document.addEventListener('DOMContentLoaded', () => {
+    archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+    archivoTraduccionFAQ = "{{ asset('traductions/FAQ.json') }}";
+    inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionFAQ, 'es');
+});
+
+</script>
 <body class="flex flex-col min-h-screen">
 
             {% include 'partials/header.html.twig' %}
@@ -104,17 +114,7 @@
 
 </body>
       
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
-    const archivoTraduccionFAQ = "{{ asset('traductions/FAQ.json') }}";
-    
-    console.log('Ruta header:', archivoTraduccionHeader);
-    console.log('Ruta FAQ:', archivoTraduccionFAQ);
-    
-    inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionFAQ, 'it');
-});
-</script>
+
 <script>
 
 function toggleFAQ(button) {
