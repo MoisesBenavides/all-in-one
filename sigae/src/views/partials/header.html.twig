@@ -1,6 +1,6 @@
 
 <header class="w-screen">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
     <div class="container mx-auto px-4 py-4">
         <div class="relative flex flex-col md:flex-row justify-between items-center">
             <!-- Barra superior para móvil -->
@@ -57,9 +57,63 @@
                 </div>
             </a>
 
-            <!-- El resto del código permanece igual... -->
+            <!-- Navegación Desktop -->
+            <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-6">
+                <a href="{{ path('services') }}" traducir="services" class="text-black text-base sm:text-lg md:text-xl font-bold hover:text-gray-600 transition-colors">Servicios</a>
+                <a href="{{ path('aioParking') }}" traducir="aioParking" class="text-black text-base sm:text-lg md:text-xl font-bold hover:text-gray-600 transition-colors">AIO Parking</a>
+                <a href="{{ path('products') }}" traducir="products" class="text-black text-base sm:text-lg md:text-xl font-bold hover:text-gray-600 transition-colors">Repuestos y accesorios</a>
+                <a href="{{ path('faq') }}" traducir="faq" class="text-black text-base sm:text-lg md:text-xl font-bold hover:text-gray-600 transition-colors">FAQ</a>
+            </nav>
 
+            <!-- Contenedor de idioma y usuario Desktop -->
+            <div class="hidden md:flex items-center space-x-6">
+                <!-- Selector de idioma Desktop -->
+                <div class="relative">
+                    <button id="languageToggleDesktop" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
+                        <img src="{{ asset('img/world.png') }}" alt="Language" class="w-6 h-6">
+                        <span class="text-base font-medium">Idioma:</span>
+                        <span id="currentLanguageDesktop" class="text-base font-bold uppercase"></span>
+                    </button>
+
+                    <!-- Menú de idiomas Desktop -->
+                    <div id="languageMenuDesktop" class="hidden absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg z-50 min-w-[200px]">
+                        <div class="p-2">
+                            <button data-idioma="es" class="w-full flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                                <img src="{{ asset('img/es.png') }}" alt="Español" class="w-6 h-5">
+                                <span class="text-base">Español</span>
+                                <span class="text-sm text-gray-500 ml-auto">ES</span>
+                            </button>
+                            <button data-idioma="it" class="w-full flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                                <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-6 h-5">
+                                <span class="text-base">Italiano</span>
+                                <span class="text-sm text-gray-500 ml-auto">IT</span>
+                            </button>
+                            <button data-idioma="en" class="w-full flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                                <img src="{{ asset('img/en.png') }}" alt="English" class="w-6 h-5">
+                                <span class="text-base">English</span>
+                                <span class="text-sm text-gray-500 ml-auto">EN</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User icon Desktop -->
+                <a href="{{ path('myAccount') }}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
+                    <img class="w-6 h-6 sm:w-8 sm:h-8" src="{{ asset('img/user.png') }}" alt="User">
+                    <span class="text-base sm:text-lg font-medium">Mi Cuenta</span>
+                </a>
+            </div>
         </div>
+
+        <!-- Menú hamburguesa móvil -->
+        <nav id="mobileMenu" class="hidden md:hidden mt-4 bg-white rounded-lg shadow-lg">
+            <div class="py-2 space-y-1">
+                <a href="{{ path('services') }}" traducir="services" class="block text-black text-lg font-bold px-4 py-3 hover:bg-gray-100">Servicios</a>
+                <a href="{{ path('aioParking') }}" traducir="aioParking" class="block text-black text-lg font-bold px-4 py-3 hover:bg-gray-100">AIO Parking</a>
+                <a href="{{ path('products') }}" traducir="products" class="block text-black text-lg font-bold px-4 py-3 hover:bg-gray-100">Repuestos y accesorios</a>
+                <a href="{{ path('faq') }}" traducir="faq" class="block text-black text-lg font-bold px-4 py-3 hover:bg-gray-100">FAQ</a>
+            </div>
+        </nav>
     </div>
 
     <script src="{{ asset('js/traduccion.js') }}"></script>
