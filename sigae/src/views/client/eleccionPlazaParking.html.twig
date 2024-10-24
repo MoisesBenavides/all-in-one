@@ -98,29 +98,30 @@
             e.preventDefault();
             
             try {
-                const formData = new FormData();
-                formData.append('numero_plaza', spotId);
-
                 const response = await fetch('{{ path("holdParkingSlot") }}', {
                     method: 'POST',
                     headers: {
+                        'Content-Type': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
                     },
-                    credentials: 'same-origin',
                     body: JSON.stringify({ 
                         numero_plaza: spotId
                     })
                 });
 
+                // Agregar logs para debuggear
+                console.log('Status:', response.status);
                 const result = await response.json();
+                console.log('Response:', result);
                 
                 if (result.success) {
                     handleSpotSelection(spot);
                 } else {
+                    console.log('Error message:', result.message);
                     alert(result.message || 'Esta plaza ya no está disponible');
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error details:', error);
                 alert('Hubo un error al apartar la plaza');
             }
         });
