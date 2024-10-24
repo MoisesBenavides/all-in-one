@@ -338,6 +338,7 @@ class ControladorParking extends AbstractController{
                     }
     
                     if (empty($response['errors'])) {
+                        error_log(print_r($this->parking->conn, true));
                         $this->parking->confirmarTransaccion();
                         $response['success'] = true;
     

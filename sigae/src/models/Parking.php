@@ -6,7 +6,7 @@ use PDO;
 use Exception;
 
 class Parking extends Servicio {
-    private $conn;
+    public $conn;
     private $largo_plazo;
     private TipoPlazaParking $tipo_plaza;
 
