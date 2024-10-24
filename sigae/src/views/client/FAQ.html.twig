@@ -35,8 +35,8 @@
     <main class="flex-grow justify-center items-center min-h-[600px] flex flex-col">
         <section class="flex flex-wrap justify-center text-center w-full max-w-7xl mx-auto py-8">        
             <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 lg:p-16">
-                <h1 class="text-5xl lg:text-8xl font-bold mb-4">FAQ</h1>
-                <p class="text-xl lg:text-2xl font-medium max-w-lg">
+                <h1 traducir="tituloFaq" class="text-5xl lg:text-8xl font-bold mb-4">FAQ</h1>
+                <p traducir="descripcionFaq" class="text-xl lg:text-2xl font-medium max-w-lg">
                     Bienvenido a la sección de preguntas frecuentes de All In One, aquí intentaremos resolver todas tus dudas
                 </p>
             </div>
@@ -46,53 +46,53 @@
                 <div class="mb-4 border-b border-stone-400 pb-4">
                     <button class="w-full text-left focus:outline-none" onclick="toggleFAQ(this)">
                         <div class="flex justify-between items-center text-xl font-bold cursor-pointer">
-                            <span>¿Se puede realizar un servicio mecánico sin reservar previamente?</span>
+                            <span traducir="pregunta1">¿Se puede realizar un servicio mecánico sin reservar previamente?</span>
                             <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
                     </button>
                     <div class="mt-2 text-left hidden">
-                        <p>Para poder realizar un servicio mecánico en All In One se debe realizar una reserva para tener un puesto asegurado en el que nuestro equipo podrá asistirte en el servicio que desees</p>
+                        <p traducir="respuesta1">Para poder realizar un servicio mecánico en All In One se debe realizar una reserva para tener un puesto asegurado en el que nuestro equipo podrá asistirte en el servicio que desees</p>
                     </div>
                 </div>
                 <div class="mb-4 border-b border-stone-400 pb-4">
                     <button class="w-full text-left focus:outline-none" onclick="toggleFAQ(this)">
                         <div class="flex justify-between items-center text-xl font-bold cursor-pointer">
-                            <span>¿Puedo realizar una reserva a largo plazo en AIO Parking?</span>
+                            <span traducir="pregunta2">¿Puedo realizar una reserva a largo plazo en AIO Parking?</span>
                             <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
                     </button>
                     <div class="mt-2 text-left hidden">
-                        <p> ¡Claro! en All In One Parking ofrecemos el servicio de reserva a largo plazo, ya sea para dejarlo semanalmente, quincenalmente, mensualmente o anualmente.</p>
+                        <p traducir="respuesta2">¡Claro! en All In One Parking ofrecemos el servicio de reserva a largo plazo, ya sea para dejarlo semanalmente, quincenalmente, mensualmente o anualmente.</p>
                     </div>
                 </div>
                 <div class="mb-4 border-b border-stone-400 pb-4">
                     <button class="w-full text-left focus:outline-none" onclick="toggleFAQ(this)">
                         <div class="flex justify-between items-center text-xl font-bold cursor-pointer">
-                            <span>¿Con que marcas de neumaticos trabajan?</span>
+                            <span traducir="pregunta3">¿Con que marcas de neumaticos trabajan?</span>
                             <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
                     </button>
                     <div class="mt-2 text-left hidden">
-                        <p> En AIO trabajamos con Bridgeston, Michelin y Pirelli, puedes encontrar todos los modelos que ofrecemos en nuestra sección de catalogo.</p>
+                        <p traducir="respuesta3">En AIO trabajamos con Bridgeston, Michelin y Pirelli, puedes encontrar todos los modelos que ofrecemos en nuestra sección de catalogo.</p>
                     </div>
                 </div>
                 <div class="mb-4 border-b border-stone-400 pb-4">
                     <button class="w-full text-left focus:outline-none" onclick="toggleFAQ(this)">
                         <div class="flex justify-between items-center text-xl font-bold cursor-pointer">
-                            <span>¿Trabajan con todas las marcas de vehículos?</span>
+                            <span traducir="pregunta4">¿Trabajan con todas las marcas de vehículos?</span>
                             <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
                     </button>
                     <div class="mt-2 text-left hidden">
-                        <p>Sí, nuestro equipo de mecánicos está capacitado para trabajar con una amplia gama de marcas y modelos de vehículos, tanto nacionales como importados. Sin embargo, para algunos modelos muy específicos o de lujo, es posible que necesitemos más tiempo para obtener piezas especializadas.</p>
+                        <p traducir="respuesta4">Sí, nuestro equipo de mecánicos está capacitado para trabajar con una amplia gama de marcas y modelos de vehículos, tanto nacionales como importados. Sin embargo, para algunos modelos muy específicos o de lujo, es posible que necesitemos más tiempo para obtener piezas especializadas.</p>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,14 @@
           {% include 'partials/footer.html.twig' %}
 
 </body>
-
+      
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+        const archivoTraduccionHome = "{{ asset('traductions/FAQ.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+    });
+</script>
 <script>
 
 function toggleFAQ(button) {
