@@ -1,169 +1,268 @@
 <header class="w-screen">
     <div class="container mx-auto px-4 py-4">
         <div class="relative flex flex-col md:flex-row justify-between items-center">
-            <!-- Hamburguesa (visible solo en móviles) -->
-            <div class="absolute top-2 left-4 md:hidden">
-                <button id="hamburger" class="text-black focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- Barra superior para móvil -->
+            <div class="w-full flex justify-between items-center md:hidden">
+                <!-- Hamburguesa -->
+                <button id="hamburger" class="text-black focus:outline-none p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                     </svg>
                 </button>
+
+                <!-- Iconos de idioma y usuario para móvil -->
+                <div class="flex items-center space-x-4">
+                    <!-- Selector de idioma móvil -->
+                    <div class="relative">
+                        <button id="languageToggle" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
+                            <img src="{{ asset('img/world.png') }}" alt="Language" class="w-6 h-6">
+                            <span id="currentLanguage" class="text-sm font-bold uppercase md:hidden"></span>
+                        </button>
+
+                        <!-- Menú de idiomas móvil -->
+                        <div id="languageMenu" class="hidden absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg z-50 min-w-[200px]">
+                            <div class="p-2">
+                                <button data-idioma="es" class="w-full flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                                    <img src="{{ asset('img/es.png') }}" alt="Español" class="w-6 h-5">
+                                    <span class="text-base">Español</span>
+                                    <span class="text-sm text-gray-500 ml-auto">ES</span>
+                                </button>
+                                <button data-idioma="it" class="w-full flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                                    <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-6 h-5">
+                                    <span class="text-base">Italiano</span>
+                                    <span class="text-sm text-gray-500 ml-auto">IT</span>
+                                </button>
+                                <button data-idioma="en" class="w-full flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                                    <img src="{{ asset('img/en.png') }}" alt="English" class="w-6 h-5">
+                                    <span class="text-base">English</span>
+                                    <span class="text-sm text-gray-500 ml-auto">EN</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User icon móvil -->
+                    <a href="{{ path('myAccount') }}" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
+                        <img class="w-6 h-6" src="{{ asset('img/user.png') }}" alt="User">
+                    </a>
+                </div>
             </div>
 
-            <!-- Logo -->
-            <a href="{{ path('home') }}" class="flex justify-center md:justify-start">
-                <div class="w-32 sm:w-40 h-auto mb-4 md:mb-0">
+            <!-- Logo - Ahora más responsive -->
+            <a href="{{ path('home') }}" class="flex justify-center w-full md:w-auto py-4 md:py-0">
+                <div class="w-24 sm:w-32 md:w-40 lg:w-48 transition-all duration-300">
                     <img class="w-full h-auto" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
                 </div>
             </a>
 
-            <!-- Navegación -->
-            <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-4 items-center">
-                <a href="{{ path('services') }}" traducir="services" class="text-black text-xs sm:text-sm md:text-base lg:text-lg font-bold hover:text-gray-600 transition-colors">Servicios</a>
-                <a href="{{ path('aioParking') }}" traducir="aioParking" class="text-black text-xs sm:text-sm md:text-base lg:text-lg font-bold hover:text-gray-600 transition-colors">AIO Parking</a>
-                <a href="{{ path('products') }}" traducir="products" class="text-black text-xs sm:text-sm md:text-base lg:text-lg font-bold hover:text-gray-600 transition-colors">Repuestos y accesorios</a>
-                <a href="{{ path('faq') }}" traducir="faq" class="text-black text-xs sm:text-sm md:text-base lg:text-lg font-bold hover:text-gray-600 transition-colors">FAQ</a>
+            <!-- Navegación Desktop -->
+            <nav class="hidden md:flex flex-wrap justify-center md:justify-end space-x-2 md:space-x-6">
+                <a href="{{ path('services') }}" traducir="services" class="text-black text-base sm:text-lg md:text-xl font-bold hover:text-gray-600 transition-colors">Servicios</a>
+                <a href="{{ path('aioParking') }}" traducir="aioParking" class="text-black text-base sm:text-lg md:text-xl font-bold hover:text-gray-600 transition-colors">AIO Parking</a>
+                <a href="{{ path('products') }}" traducir="products" class="text-black text-base sm:text-lg md:text-xl font-bold hover:text-gray-600 transition-colors">Repuestos y accesorios</a>
+                <a href="{{ path('faq') }}" traducir="faq" class="text-black text-base sm:text-lg md:text-xl font-bold hover:text-gray-600 transition-colors">FAQ</a>
             </nav>
 
-            <!-- Contenedor de idioma y usuario -->
-            <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                <!-- Selector de idioma -->
+            <!-- Contenedor de idioma y usuario Desktop -->
+            <div class="hidden md:flex items-center space-x-6">
+                <!-- Selector de idioma Desktop -->
                 <div class="relative">
-                    <!-- Botón de idioma actual -->
-                    <button id="languageToggle" class="flex items-center space-x-2 hover:scale-105 transition-transform duration-300 focus:outline-none p-2 rounded-lg hover:bg-gray-100">
-                        <img src="{{ asset('img/world.png') }}" alt="Language" class="w-5 h-5 object-cover">
-                        <span id="currentLanguage" class="text-xs sm:text-sm uppercase font-medium hidden sm:inline"></span>
+                    <button id="languageToggleDesktop" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
+                        <img src="{{ asset('img/world.png') }}" alt="Language" class="w-6 h-6">
+                        <span class="text-base font-medium">Idioma:</span>
+                        <span id="currentLanguageDesktop" class="text-base font-bold uppercase"></span>
                     </button>
 
-                    <!-- Menú de idiomas (desplegable) -->
-                    <div id="languageMenu" class="hidden absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg z-50 min-w-[150px] transform origin-top-right transition-all duration-200">
-                        <div class="p-1">
-                            <button data-idioma="es" class="w-full flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
-                                <img src="{{ asset('img/es.png') }}" alt="Español" class="w-5 h-4 object-cover">
-                                <span class="text-sm">ESPAÑOL</span>
+                    <!-- Menú de idiomas Desktop -->
+                    <div id="languageMenuDesktop" class="hidden absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg z-50 min-w-[200px]">
+                        <div class="p-2">
+                            <button data-idioma="es" class="w-full flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                                <img src="{{ asset('img/es.png') }}" alt="Español" class="w-6 h-5">
+                                <span class="text-base">Español</span>
+                                <span class="text-sm text-gray-500 ml-auto">ES</span>
                             </button>
-                            <button data-idioma="it" class="w-full flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
-                                <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-5 h-4 object-cover">
-                                <span class="text-sm">ITALIANO</span>
+                            <button data-idioma="it" class="w-full flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                                <img src="{{ asset('img/it.png') }}" alt="Italiano" class="w-6 h-5">
+                                <span class="text-base">Italiano</span>
+                                <span class="text-sm text-gray-500 ml-auto">IT</span>
                             </button>
-                            <button data-idioma="en" class="w-full flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
-                                <img src="{{ asset('img/en.png') }}" alt="English" class="w-5 h-4 object-cover">
-                                <span class="text-sm">ENGLISH</span>
+                            <button data-idioma="en" class="w-full flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                                <img src="{{ asset('img/en.png') }}" alt="English" class="w-6 h-5">
+                                <span class="text-base">English</span>
+                                <span class="text-sm text-gray-500 ml-auto">EN</span>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- User icon -->
-                <a href="{{ path('myAccount') }}" class="hover:scale-110 transition-transform duration-300 p-2">
+                <!-- User icon Desktop -->
+                <a href="{{ path('myAccount') }}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
                     <img class="w-6 h-6 sm:w-8 sm:h-8" src="{{ asset('img/user.png') }}" alt="User">
+                    <span class="text-base sm:text-lg font-medium">Mi Cuenta</span>
                 </a>
             </div>
         </div>
 
         <!-- Menú hamburguesa móvil -->
-        <nav id="mobileMenu" class="hidden md:hidden mt-4 py-2 space-y-3 bg-white rounded-lg shadow-lg">
-            <a href="{{ path('services') }}" traducir="services" class="block text-black text-sm font-bold px-4 py-2 hover:bg-gray-100">Servicios</a>
-            <a href="{{ path('aioParking') }}" traducir="aioParking" class="block text-black text-sm font-bold px-4 py-2 hover:bg-gray-100">AIO Parking</a>
-            <a href="{{ path('products') }}" traducir="products" class="block text-black text-sm font-bold px-4 py-2 hover:bg-gray-100">Repuestos y accesorios</a>
-            <a href="{{ path('faq') }}" traducir="faq" class="block text-black text-sm font-bold px-4 py-2 hover:bg-gray-100">FAQ</a>
+        <nav id="mobileMenu" class="hidden md:hidden mt-4 bg-white rounded-lg shadow-lg">
+            <div class="py-2 space-y-1">
+                <a href="{{ path('services') }}" traducir="services" class="block text-black text-lg font-bold px-4 py-3 hover:bg-gray-100">Servicios</a>
+                <a href="{{ path('aioParking') }}" traducir="aioParking" class="block text-black text-lg font-bold px-4 py-3 hover:bg-gray-100">AIO Parking</a>
+                <a href="{{ path('products') }}" traducir="products" class="block text-black text-lg font-bold px-4 py-3 hover:bg-gray-100">Repuestos y accesorios</a>
+                <a href="{{ path('faq') }}" traducir="faq" class="block text-black text-lg font-bold px-4 py-3 hover:bg-gray-100">FAQ</a>
+            </div>
         </nav>
     </div>
 
     <script src="{{ asset('js/traduccion.js') }}"></script>
     <script>
-      // Elementos del DOM
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const languageToggle = document.getElementById('languageToggle');
-    const languageMenu = document.getElementById('languageMenu');
-    const currentLanguage = document.getElementById('currentLanguage');
+   // Elementos del DOM
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+const languageToggle = document.getElementById('languageToggle');
+const languageToggleDesktop = document.getElementById('languageToggleDesktop');
+const languageMenu = document.getElementById('languageMenu');
+const languageMenuDesktop = document.getElementById('languageMenuDesktop');
+const currentLanguage = document.getElementById('currentLanguage');
+const currentLanguageDesktop = document.getElementById('currentLanguageDesktop');
 
-    // Objeto con los nombres de los idiomas en mayúsculas
-    const languageNames = {
-        'es': 'ESPAÑOL',
-        'it': 'ITALIANO',
-        'en': 'ENGLISH'
-    };
+// Objeto con los nombres de los idiomas
+const languageNames = {
+    'es': 'ESPAÑOL',
+    'it': 'ITALIANO',
+    'en': 'ENGLISH'
+};
 
-    // Función para obtener el valor de una cookie
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) {
-            return parts.pop().split(';').shift();
-        }
-        return 'es'; // Idioma por defecto si no hay cookie
+// Función para obtener el valor de una cookie
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+        return parts.pop().split(';').shift();
     }
+    return 'es'; // Idioma por defecto si no hay cookie
+}
 
-    // Función para actualizar el texto del idioma
-    function updateLanguageDisplay(idioma) {
-        if (languageNames[idioma]) {
-            currentLanguage.textContent = languageNames[idioma];
-        }
+// Función para establecer una cookie
+function setCookie(name, value, days = 365) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = `expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${value};${expires};path=/`;
+}
+
+// Función para actualizar el texto del idioma en todos los elementos
+function updateLanguageDisplay(idioma) {
+    if (languageNames[idioma]) {
+        if (currentLanguage) currentLanguage.textContent = languageNames[idioma];
+        if (currentLanguageDesktop) currentLanguageDesktop.textContent = languageNames[idioma];
     }
+}
 
-    // Lógica del menú hamburguesa
+// Función para cambiar el idioma
+function cambiarIdioma(idioma) {
+    setCookie('idioma', idioma);
+    updateLanguageDisplay(idioma);
+    // Aquí va tu lógica de traducción
+    inicializarTraduccion(archivoTraduccionHeader, idioma);
+}
+
+// Lógica del menú hamburguesa
+if (hamburger) {
     hamburger.addEventListener('click', () => {
         mobileMenu.classList.toggle('hidden');
     });
+}
 
-    // Lógica del menú de idiomas
+// Lógica del menú de idiomas móvil
+if (languageToggle) {
     languageToggle.addEventListener('click', (e) => {
         e.stopPropagation();
         languageMenu.classList.toggle('hidden');
+        // Cerrar el menú desktop si está abierto
+        if (languageMenuDesktop) {
+            languageMenuDesktop.classList.add('hidden');
+        }
     });
+}
 
-    // Cerrar menú de idiomas al hacer afuera
-    document.addEventListener('click', (event) => {
-        if (!languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
+// Lógica del menú de idiomas desktop
+if (languageToggleDesktop) {
+    languageToggleDesktop.addEventListener('click', (e) => {
+        e.stopPropagation();
+        languageMenuDesktop.classList.toggle('hidden');
+        // Cerrar el menú móvil si está abierto
+        if (languageMenu) {
             languageMenu.classList.add('hidden');
         }
     });
+}
 
-    // Manejar selección de idioma
-    languageMenu.querySelectorAll('button').forEach(button => {
+// Cerrar menús al hacer click fuera
+document.addEventListener('click', (event) => {
+    // Cerrar menú móvil
+    if (mobileMenu && !hamburger.contains(event.target) && !mobileMenu.contains(event.target)) {
+        mobileMenu.classList.add('hidden');
+    }
+    
+    // Cerrar menú de idiomas móvil
+    if (languageMenu && !languageToggle?.contains(event.target) && !languageMenu.contains(event.target)) {
+        languageMenu.classList.add('hidden');
+    }
+    
+    // Cerrar menú de idiomas desktop
+    if (languageMenuDesktop && !languageToggleDesktop?.contains(event.target) && !languageMenuDesktop.contains(event.target)) {
+        languageMenuDesktop.classList.add('hidden');
+    }
+});
+
+// Manejar selección de idioma en ambos menús
+function setupLanguageButtons(menuElement) {
+    if (!menuElement) return;
+    
+    menuElement.querySelectorAll('button[data-idioma]').forEach(button => {
         button.addEventListener('click', (e) => {
             const idioma = e.currentTarget.getAttribute('data-idioma');
-            updateLanguageDisplay(idioma);
             cambiarIdioma(idioma);
-            languageMenu.classList.add('hidden');
+            // Cerrar ambos menús
+            if (languageMenu) languageMenu.classList.add('hidden');
+            if (languageMenuDesktop) languageMenuDesktop.classList.add('hidden');
         });
     });
+}
 
-    // Lógica de traducción
-    const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+// Configurar botones de idioma en ambos menús
+setupLanguageButtons(languageMenu);
+setupLanguageButtons(languageMenuDesktop);
 
-    // Inicializar traducción y mostrar idioma actual cuando el DOM está listo
-    document.addEventListener('DOMContentLoaded', () => {
-        // Obtener el idioma de la cookie
-        const savedLanguage = getCookie('idioma');
-        // Actualizar el texto mostrado
-        updateLanguageDisplay(savedLanguage);
-        // Inicializar traducción con el idioma guardado
-        inicializarTraduccion(archivoTraduccionHeader, savedLanguage);
-    });
+// Cerrar el menú móvil al cambiar el tamaño de la ventana
+window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768) { // 768px es el breakpoint md de Tailwind
+        if (mobileMenu) mobileMenu.classList.add('hidden');
+    }
+});
 
-    //  Cerrar el menú móvil al cambiar el tamaño de la ventana
-    window.addEventListener('resize', () => {
-        if (window.innerWidth >= 768) {
-            mobileMenu.classList.add('hidden');
-        }
-    });
+// Cerrar menús al presionar la tecla Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        if (mobileMenu) mobileMenu.classList.add('hidden');
+        if (languageMenu) languageMenu.classList.add('hidden');
+        if (languageMenuDesktop) languageMenuDesktop.classList.add('hidden');
+    }
+});
 
-    //  Cerrar menús al presionar la tecla Escape, para mejor manejo con teclado para accesibilidad :)
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            mobileMenu.classList.add('hidden');
-            languageMenu.classList.add('hidden');
-        }
-    });
+// Actualizar el idioma si cambia la cookie en otra pestaña
+window.addEventListener('storage', (e) => {
+    if (e.key === 'idioma') {
+        updateLanguageDisplay(e.newValue || 'es');
+    }
+});
 
-    // Actualizar el idioma mostrado si cambia la cookie
-    window.addEventListener('storage', (e) => {
-        if (e.key === 'idioma') {
-            updateLanguageDisplay(e.newValue || 'es');
-        }
-    });
+// Inicializar con el idioma guardado cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLanguage = getCookie('idioma');
+    updateLanguageDisplay(savedLanguage);
+    inicializarTraduccion(archivoTraduccionHeader, savedLanguage);
+});
     </script>
 </header>
