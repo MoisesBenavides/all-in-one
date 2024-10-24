@@ -3,18 +3,18 @@
       "slogan": "All In One, un punto de partida para nuevos caminos",
       "iniciar_sesion": "Iniciar sesión",
       "registrate": "¿No tienes una cuenta? Regístrate aquí",
-      "entrar_funcionario": "Entrar como funcionario"
+      "entrar_funcionario": "Entrar como funcionario AIO"
     },
     "it": {
       "slogan": "All In One, un punto di partenza per nuove strade",
       "iniciar_sesion": "Accedere",
       "registrate": "Non ha un account? Registrarsi qui",
-      "entrar_funcionario": "Accedere come dipendente"
+      "entrar_funcionario": "Accedere come dipendente AIO"
     },
     "en": {
       "slogan": "All In One, a starting point for new paths",
       "iniciar_sesion": "Log in",
       "registrate": "Don't have an account? Sign up here",
-      "entrar_funcionario": "Log in as staff"
+      "entrar_funcionario": "Log in as AIO staff"
     }
   }
