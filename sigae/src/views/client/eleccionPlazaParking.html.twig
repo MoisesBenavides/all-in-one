@@ -93,6 +93,24 @@ console.log('Session data:', {
 });
 
 // Y modifiquemos la función createParkingSpot
+// Modifica la parte de inicialización al final del script
+document.addEventListener('DOMContentLoaded', function() {
+    // Establecer el tiempo de inicio de elección
+    fetch('{{ path("holdParkingSlot") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ init: true })
+    });
+
+    updateFloorDisplay();
+    generateParkingLayout();
+    new ParkingTimer();
+});
+
+// Y actualiza la función createParkingSpot
 function createParkingSpot(number, prefix) {
     const spotId = `${prefix}${number}`;
     const spot = document.createElement('button');
@@ -109,13 +127,10 @@ function createParkingSpot(number, prefix) {
         spot.addEventListener('click', async (e) => {
             e.preventDefault();
             
+            // Deshabilitar el botón mientras se procesa
+            spot.disabled = true;
+            
             try {
-                // Verificar si tenemos los datos necesarios
-                if (!parkingData) {
-                    window.location.href = '{{ path("aioParking") }}';
-                    return;
-                }
-
                 const response = await fetch('{{ path("holdParkingSlot") }}', {
                     method: 'POST',
                     headers: {
@@ -123,25 +138,28 @@ function createParkingSpot(number, prefix) {
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     credentials: 'include',
-                    body: JSON.stringify({
+                    body: JSON.stringify({ 
                         numero_plaza: spotId
                     })
                 });
 
                 const result = await response.json();
-                console.log('Full response:', result);
+                console.log('Response:', result);
                 
                 if (result.success) {
                     handleSpotSelection(spot);
                 } else {
-                    if (result.message.includes("sesión")) {
-                        window.location.href = '{{ path("aioParking") }}';
+                    spot.disabled = false;
+                    if (result.message.includes('Sesión')) {
+                        alert('La sesión ha expirado. Se recargará la página.');
+                        window.location.reload();
                     } else {
                         alert(result.message || 'Esta plaza ya no está disponible');
                     }
                 }
             } catch (error) {
                 console.error('Error:', error);
+                spot.disabled = false;
                 alert('Hubo un error al apartar la plaza');
             }
         });
