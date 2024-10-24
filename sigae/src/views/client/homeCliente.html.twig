@@ -42,11 +42,8 @@
     </style>
 </head>
 <script>
-//aca estuvo bocho
     document.addEventListener('DOMContentLoaded', () => {
-        console.log("Hola mundo cruel!");
         const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
-        console.log(archivoTraduccionHeader);
         const archivoTraduccionHome = "{{ asset('traductions/home.json') }}";
         inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
     });
