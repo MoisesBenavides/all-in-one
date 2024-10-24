@@ -16,6 +16,7 @@ use InvalidArgumentException;
 class ControladorParking extends AbstractController{
     private const PATH_PRECIOS_JSON = __DIR__ . '/../data/preciosHoraParking.json';
     private const PATH_PLAZAS_JSON = __DIR__ . '/../data/plazasParking.json';
+    private const INACTIVIDAD_MAX_SESION = 600;
     private const INACTIVIDAD_MAX_TRANSACCION = 300;
     private $parking;
     private $preciosHora;
@@ -250,7 +251,10 @@ class ControladorParking extends AbstractController{
     }
 
     function holdParkingSlot(Request $request): JsonResponse{
-        session_start();
+        $redireccion = $this->verificarSesion();
+        if ($redireccion) {
+            return $redireccion;
+        }
 
         $tiempoAhora = time();
         $difTiempo = $tiempoAhora - $_SESSION['eleccionPlazaComienzo'];
@@ -294,7 +298,10 @@ class ControladorParking extends AbstractController{
 
     // TODO: Implementar
     function submitParkingSimple(): Response|RedirectResponse{
-        session_start();
+        $redireccion = $this->verificarSesion();
+        if ($redireccion) {
+            return $redireccion;
+        }
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
         // Debug: Log all received data
@@ -313,9 +320,17 @@ class ControladorParking extends AbstractController{
             } elseif (count($plazas) != 2 && $_SESSION["tipo_vehiculo"] == "camion" || "utilitario") {
                 // Envia error si es vehiculo grande y selecciona una cantidad distinta a dos plazas
                 $response['errors'][] = "Debe seleccionar dos plazas de parking.";
-            } elseif(true){
+            } else {
                 $this->parking->confirmarTransaccion();
                 $response['success'] = true;
+
+                // Guardar la reserva en la sesión
+                $_SESSION['reserva'] = $this->parking;
+                $_SESSION['servicio'] = 'parking';
+                $_SESSION['matricula'] = $_SESSION['parking']['matricula'];
+
+                // Redireccionar al usuario a la página de confirmación de reserva
+                return $this->redirectToRoute('parkingConfirmation');
             }
         } else {                    
             $response['errors'][] ='No se ha seleccionado ninguna plaza para la reserva';
@@ -323,6 +338,62 @@ class ControladorParking extends AbstractController{
         return $this->render('client/eleccionPlazaParking.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
         ]);
+    }
+
+    function verificarSesion(): ?RedirectResponse {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        // Verificar si la variable de tiempo de inactividad está definida
+        if (!isset($_SESSION["ultima_solicitud"])) {
+            return $this->logout(); // Si no hay un tiempo definido, se realiza el logout
+        }
+    
+        // Obtiene el tiempo desde la última solicitud
+        $inactividad = time() - $_SESSION["ultima_solicitud"];
+    
+        // Verificación de inactividad de la sesión
+        if ($inactividad > $this::INACTIVIDAD_MAX_SESION) {
+            return $this->logout(); // Si ha excedido el tiempo de inactividad, cierra la sesión
+        }
+    
+        // Actualiza el tiempo de la última solicitud y regenera la ID de sesión por seguridad
+        $_SESSION["ultima_solicitud"] = time();
+        session_regenerate_id(true);
+    
+        // Si la sesión es válida, no se realiza ninguna redirección
+        return null;
+    }
+
+    function logout(): RedirectResponse{
+        if (session_status() === PHP_SESSION_NONE){
+            session_start();
+        }
+        // Limpia variables de sesión
+        session_unset();
+        $_SESSION=[];
+
+        // Destruye las variables en el servidor
+        session_destroy();
+
+        /// Borra la cookie de sesión
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+
+            // Fomatea el header de la cookie para eliminarla
+            $cookieHeader = sprintf(
+                '%s=; expires=%s; Max-Age=0; path=%s; domain=%s; secure; httponly; samesite=%s',
+                session_name(),
+                gmdate('D, d M Y H:i:s T', time() - 42000),// Formatea la fecha para que sea validada por el navegador
+                $params["path"], $params["domain"],
+                $params["samesite"] ?? 'Lax'// Usa 'Lax' como se especificó 'samesite'
+            );
+            // Envía el header con los parámetros formateados, sin reemplazar otros headers
+            header('Set-Cookie: ' . $cookieHeader, false); 
+        }
+
+        return $this->redirectToRoute('showLandingPage');
     }
 
     function parkingConfirmation(): Response{
