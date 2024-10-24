@@ -9,6 +9,7 @@
     <title>Reserva de Servicio | AIO</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @font-face {
             font-family: 'Teachers';
@@ -23,11 +24,9 @@
             max-height: 200px;
             overflow-y: auto;
         }
-
-           .btn{
+        .btn{
             background-color: #dc2626
         }
-
         .btn:hover{
             background-color: #b91c1c
         }
@@ -36,28 +35,11 @@
 </head>
 <body>
     {% include 'partials/header.html.twig' %}
-  <script src="{{ asset('js/fechaInicioHandler.js') }}">
-    </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar el handler de la fechap
-        const startHandler = initializeStartDate('fecha_inicio');
-    });
-</script>
+
     <main class="container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto space-y-8">
             <form id="servicioForm" action="{{ path('doBookService')}}" method="POST" class="w-full max-w-[340px] mx-auto">
-                <section class="mb-6">
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
-                    <div class="w-full max-w-[340px] mx-auto">
-                        <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                    </div>
-                     <!--fecha disclaimer-->
-                <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
-                    <p>Las fechas van en intervalos de 30 minutos, la fecha que elija se adaptará automaticamente a estos intervalos</p> 
-                </div>
-                </section>
-            
+                <!-- Sección de Tipo de Servicio -->
                 <section class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Seleccione el servicio</h2>
                     <div class="relative mb-2">
@@ -80,6 +62,7 @@
                     <input type="hidden" id="selectedServiceType" name="categoriaServicio" value="">
                 </section>
 
+                <!-- Sección de Subtipo de Servicio -->
                 <section class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Subtipo de Servicio</h2>
                     <div class="relative mb-2">
@@ -91,14 +74,42 @@
                         </div>
                         <div id="dropdownMenu2" class="dropdown-menu absolute z-10 left-0 w-full mt-1 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
                             <div id="tipoServicioOptions" class="py-1">
-                                <!-- Options will be dynamically populated based on the selected service -->
+                                <!-- Options will be dynamically populated -->
                             </div>
                         </div>
                     </div>
                     <input type="hidden" id="selectedServiceSubtype" name="tipoServicio" value="">
                 </section>
 
-                <section id="tipoVehiculoSection" class="mb-6">
+                <!-- Sección de Fecha y Hora -->
+                <section class="mb-6">
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha y Hora</h2>
+                    <div class="w-full max-w-[340px] mx-auto">
+                        <input type="date" 
+                               id="fecha_inicio" 
+                               name="fecha_inicio" 
+                               class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold mb-4"
+                               disabled>
+                        
+                        <div id="loadingIndicator" class="hidden">
+                            <div class="flex items-center justify-center py-4">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+                            </div>
+                        </div>
+
+                        <div id="timeSlots" class="grid grid-cols-3 gap-2 mt-4"></div>
+
+                        <input type="hidden" id="hora_inicio" name="hora_inicio">
+
+                        <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm mt-4">
+                            <p>Los horarios están disponibles en intervalos de 30 minutos</p>
+                            <p>Horario de atención: 5:00 AM - 5:00 PM</p>
+                            <p id="serviceDurationMessage" class="text-red-600 hidden">Este servicio requiere seleccionar dos horarios consecutivos</p>
+                        </div>
+                    </div>
+                </section>
+            <!-- Sección de Tipo de Vehículo -->
+            <section id="tipoVehiculoSection" class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
                     <div class="relative mb-2">
                         <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
@@ -113,14 +124,14 @@
                                 <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="moto">Motocicleta</div>
                                 <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camion">Pequeño camión</div>
                                 <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camioneta">Camioneta</div>
-                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="utilitario" data-price="170">Pequeño utilitario</div>
-
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="utilitario">Pequeño utilitario</div>
                             </div>
                         </div>
                     </div>
                     <input type="hidden" id="tipoVehiculo" name="tipoVehiculo" value="">
                 </section>
 
+                <!-- Sección de Vehículos -->
                 <section class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
                     <div class="relative w-full max-w-[340px] mx-auto">
@@ -140,12 +151,12 @@
                 <div id="matriculaYaContainer" class="mb-6 w-full max-w-[340px] mx-auto">
                     <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="w-full h-[50px] px-[22px] py-3.5 text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
                 </div>
-                
-                <!-- DIV PARA ERRORES DE PHP -->
+
+                <!-- Contenedor de errores -->
                 <div id="error-container" class="hidden bg-[#ffcccc] text-[#ff0000] p-4 mb-6 rounded-lg"></div>
 
                 <div class="w-full max-w-[340px] mx-auto">
-                    <button type="submit" class="w-full h-[62px] px-7 py-2.5 duration-300 btnr rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
+                    <button type="submit" class="w-full h-[62px] px-7 py-2.5 duration-300 btn rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
                 </div>
             </form>
         </div>
@@ -153,196 +164,63 @@
 
     {% include 'partials/footer.html.twig' %}
 
-    <script>
-     let servicios = {}; // Variable  para almacenar los servicios
+    <script src="{{asset('js/serviceHandler.js')}}"></script>
+<script src="{{asset('js/timeSlotHandler.js')}}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    // Tu código principal aquí, usando ServiceHandler y TimeSlotHandler
+    let servicios = {};
 
-    // Función para cargar los servicios desde el archivo JSON
-    async function cargarServicios() {
-        try {
-            const response = await fetch('{{asset('js/diccionarioServicios.json')}}');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            servicios = await response.json();
-            console.log('Servicios cargados:', servicios);
-            // Una vez cargados los servicios, inicializamos los dropdowns
-            inicializarFormulario();
-        } catch (error) {
-            console.error('Error al cargar los servicios:', error);
-            showError('Error al cargar los servicios. Por favor, recarga la página.');
-        }
-    }
+    // Configuración inicial de la fecha
+    const fechaInput = document.getElementById('fecha_inicio');
+    const today = new Date();
+    const formattedToday = today.toISOString().split('T')[0];
+    fechaInput.min = formattedToday;
+    fechaInput.value = formattedToday;
+    fechaInput.disabled = true;
 
-    // Función para inicializar el formulario
-    function inicializarFormulario() {
-        setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
-        setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
-        setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+    try {
+        // Cargar servicios
+        servicios = await ServiceHandler.cargarServicios();
 
-        // Evento para actualizar subtipos cuando se selecciona un tipo de servicio
+        // Configurar dropdowns
+        ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
+        ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
+        ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+
+        // Evento para actualizar subtipos
         document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
             option.addEventListener('click', () => {
-                updateServiceSubtypes(option.dataset.value);
+                ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
+                    document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                    document.getElementById('selectedServiceSubtype').value = subtype;
+                    TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
+                    document.getElementById('dropdownMenu2').classList.add('hidden');
+                    
+                    fechaInput.disabled = false;
+                    
+                    if (fechaInput.value) {
+                        TimeSlotHandler.updateTimeSlots(fechaInput.value);
+                    }
+                });
             });
         });
 
-        // Manejar la selección de vehículos
-        const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-        const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
-        const matriculaYaContainer = document.getElementById('matriculaYaContainer');
-
-        vehiculosDropdown.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            if (selectedOption.value !== "") {
-                const tipoVehiculo = selectedOption.dataset.tipo;
-                document.getElementById('selectedOptionAuto').textContent = tipoVehiculo;
-                document.getElementById('tipoVehiculo').value = tipoVehiculo;
-                tipoVehiculoSection.style.pointerEvents = 'none';
-                tipoVehiculoSection.style.opacity = '0.5';
-                matriculaYaContainer.style.display = 'none';
-            } else {
-                tipoVehiculoSection.style.pointerEvents = 'auto';
-                tipoVehiculoSection.style.opacity = '1';
-                matriculaYaContainer.style.display = 'block';
-            }
+        // Event listener para cambio de fecha
+        fechaInput.addEventListener('change', function() {
+            TimeSlotHandler.updateTimeSlots(this.value);
         });
 
-        // Validación del formulario
+        // Event listener para el formulario
         document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
+
+    } catch (error) {
+        console.error('Error en la inicialización:', error);
+        TimeSlotHandler.showError('Error al inicializar el formulario');
     }
 
-    // Función para manejar los dropdowns
-    function setupDropdown(buttonId, menuId, optionsSelector, selectedOptionId, hiddenInputId) {
-        const button = document.getElementById(buttonId);
-        const menu = document.getElementById(menuId);
-        const selectedOption = document.getElementById(selectedOptionId);
-        const hiddenInput = document.getElementById(hiddenInputId);
-
-        button.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-
-        document.querySelectorAll(optionsSelector).forEach(option => {
-            option.addEventListener('click', () => {
-                selectedOption.textContent = option.textContent;
-                hiddenInput.value = option.dataset.value;
-                menu.classList.add('hidden');
-            });
-        });
-    }
-
-    // Función para actualizar los subtipos de servicio
-    function updateServiceSubtypes(serviceType) {
-        const subtypes = {
-            alineacion: ['A01', 'A02', 'A03'],
-            balanceo: ['B01', 'B02', 'B03', 'B04'],
-            neumaticos: ['N01', 'N02', 'N03', 'N04'],
-            diagnostico: ['D01'],
-            completo: ['SVC']
-        };
-
-        const tipoServicioOptions = document.getElementById('tipoServicioOptions');
-        tipoServicioOptions.innerHTML = '';
-        
-        subtypes[serviceType].forEach(subtype => {
-            const div = document.createElement('div');
-            div.className = 'option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100';
-            div.textContent = servicios[subtype].descripcion;
-            div.dataset.value = subtype;
-            div.addEventListener('click', () => {
-                document.getElementById('selectedOption2').textContent = servicios[subtype].descripcion;
-                document.getElementById('selectedServiceSubtype').value = subtype;
-                document.getElementById('dropdownMenu2').classList.add('hidden');
-            });
-            tipoServicioOptions.appendChild(div);
-        });
-
-        // Resetear la selección del subtipo
-        document.getElementById('selectedOption2').textContent = 'Subtipo de Servicio';
-        document.getElementById('selectedServiceSubtype').value = '';
-    }
-
-    // Función para mostrar errores
-    function showError(message) {
-        const errorContainer = document.getElementById('error-container');
-        errorContainer.textContent = message;
-        errorContainer.style.display = 'block';
-    }
-
-    // Función para validar el formulario
-    function validarFormulario(event) {
-        let isValid = true;
-        let errorMessage = '';
-
-        // Validar fecha
-        if (!document.querySelector('input[name="fecha_inicio"]').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione una fecha de inicio. ';
-        }
-
-        // Validar tipo de servicio
-        if (!document.getElementById('selectedServiceType').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un tipo de servicio. ';
-        }
-
-        // Validar subtipo de servicio
-        if (!document.getElementById('selectedServiceSubtype').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
-        }
-
-        // Validar tipo de vehículo o selección de vehículo existente
-        if (!document.getElementById('tipoVehiculo').value && document.getElementById('vehiculosDropdown').value === "") {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
-        }
-
-        // Validar matrícula
-        if (document.getElementById('vehiculosDropdown').value === "" && !document.getElementById('matriculaYa').value) {
-            isValid = false;
-            errorMessage += 'Por favor, ingrese una matrícula o seleccione un vehículo existente. ';
-        }
-
-        if (!isValid) {
-            event.preventDefault();
-            showError(errorMessage);
-        }
-    }
-
-    // Cargar los servicios cuando se carga la página
-    document.addEventListener('DOMContentLoaded', cargarServicios);
-
-    // Función para obtener la fecha y hora actual en el formato adecuado para el input
-    function setMinDateTime() {
-        const inputFecha = document.getElementById('fecha_inicio');
-            
-        const now = new Date();
-            
-        // Formatea la fecha y hora en el formato YYYY-MM-DDTHH:MM
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-
-        // Combina todo para formar la cadena en formato `datetime-local`
-        const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-            
-        // Estable el valor mínimo para el campo
-        inputFecha.min = currentDateTime;
-
-        // Si la fecha seleccionada es anterior al nuevo mínimo se ajusta a la nueva hora mínima
-        if (inputFecha.value && inputFecha.value < currentDateTime) {
-                inputFecha.value = currentDateTime;
-        }
-    }
-
-    // Ejecutar la función al cargar la página
-    window.onload = setMinDateTime;
-
-    // Actualizar el campo cada minuto
-    setInterval(setMinDateTime, 60000); // 60000 ms = 1 minuto
-    </script>
+  
+});
+</script>
 </body>
 </html>
