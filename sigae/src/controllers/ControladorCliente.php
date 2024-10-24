@@ -438,6 +438,19 @@ class ControladorCliente extends AbstractController {
         return null;
     }
 
+    function getClientSession(): ?JsonResponse {
+        session_start();
+        return new JsonResponse([
+            'ultima_solicitud' => $_SESSION['ultima_solicitud'],
+            'id' => $_SESSION['id'],
+            'ci' => $_SESSION['ci'] ?? null,
+            'email' => $_SESSION['email'],
+            'nombre' => $_SESSION['nombre'] ?? null,
+            'apellido' => $_SESSION['apellido'] ?? null,
+            'telefono' => $_SESSION['telefono'] ?? null,
+            'fotoPerfil' => $_SESSION['fotoPerfil'] ?? null]);
+    }
+
     function getClientProfilePhoto(): ?JsonResponse {
         session_start();
         $fotoPerfil = $_SESSION['fotoPerfil'] ?? null;
