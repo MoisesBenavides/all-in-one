@@ -5,6 +5,7 @@
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
+    <meta name="csrf-token" content="{{ csrf_token('parking_token') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
@@ -32,6 +33,8 @@
 </head>
 
 <body class="bg-white">
+{% set parking_data = app.session.get('parking') %}
+
     {% include 'partials/headerParking.html.twig' %}
 
     <div class="w-full max-w-[1440px] px-4 py-8 mx-auto flex flex-col items-center gap-8">
@@ -72,6 +75,9 @@
         const plazasLibres = {{ plazasLibres|json_encode()|raw }};
         let plazasSeleccionadas = [];
         let currentFloor = 1;
+        const parkingData = {{ parking_data|json_encode()|raw }};
+        console.log('Parking data:', parkingData);
+
 
         // Funciones de utilidad
         function createDiv(className, children = []) {
@@ -84,6 +90,7 @@
 console.log('Session data:', {
     tipoVehiculo: tipovehiculo,
     plazasLibres: plazasLibres
+
 });
 
 // Y modifiquemos la función createParkingSpot
@@ -104,40 +111,38 @@ function createParkingSpot(number, prefix) {
             e.preventDefault();
             
             try {
-                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-                
+                // Verificar si tenemos los datos necesarios
+                if (!parkingData) {
+                    window.location.href = '{{ path("aioParking") }}';
+                    return;
+                }
+
                 const response = await fetch('{{ path("holdParkingSlot") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': csrfToken
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     credentials: 'include',
-                    body: JSON.stringify({ 
-                        numero_plaza: spotId,
-                        tipoVehiculo: tipovehiculo // Añadimos el tipo de vehículo
+                    body: JSON.stringify({
+                        numero_plaza: spotId
                     })
                 });
 
-                console.log('Request sent with data:', {
-                    numero_plaza: spotId,
-                    tipoVehiculo: tipovehiculo
-                });
-
                 const result = await response.json();
-                console.log('Response:', result);
+                console.log('Full response:', result);
                 
                 if (result.success) {
                     handleSpotSelection(spot);
                 } else {
-                    // Mostrar mensaje más específico
-                    const errorMessage = result.message || 'Esta plaza ya no está disponible';
-                    console.error('Server error:', errorMessage);
-                    alert(errorMessage);
+                    if (result.message.includes("sesión")) {
+                        window.location.href = '{{ path("aioParking") }}';
+                    } else {
+                        alert(result.message || 'Esta plaza ya no está disponible');
+                    }
                 }
             } catch (error) {
-                console.error('Fetch error:', error);
+                console.error('Error:', error);
                 alert('Hubo un error al apartar la plaza');
             }
         });
