@@ -203,7 +203,7 @@ function updateLanguageDisplay(idioma) {
 function cambiarIdioma(idioma) {
     setCookie('idioma', idioma);
     updateLanguageDisplay(idioma);
-    inicializarTraduccion("{{ asset('traductions/header.json') }}", idioma);
+    inicializarTraduccion(archivoTraduccionHeader, idioma);
 }
 
 // Lógica del menú hamburguesa
