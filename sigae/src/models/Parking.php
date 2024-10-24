@@ -6,6 +6,7 @@ use PDO;
 use Exception;
 
 class Parking extends Servicio {
+    private $conn;
     private $largo_plazo;
     private TipoPlazaParking $tipo_plaza;
 
@@ -13,6 +14,13 @@ class Parking extends Servicio {
         parent::__construct($id, $precio, $fecha_inicio, $fecha_final);
         $this->largo_plazo = $largo_plazo;
         $this->tipo_plaza = $tipo_plaza;
+
+        // Inicializar la conexión de bd
+        $this->conn = conectarDB("def_cliente", "password_cliente", "localhost");
+        if($this->conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
     }
 
     public function getTipo_pLaza(): string{
@@ -32,24 +40,43 @@ class Parking extends Servicio {
         return $this;
     }
 
+    public function comenzarTransaccion() {
+        $this->conn->beginTransaction();
+    }
+
+    // Método para confirmar una transacción
+    public function confirmarTransaccion() {
+        $this->conn->commit();
+        $this->conn = null;
+    }
+
+    // Método para revertir una transacción
+    public function deshacerTransaccion() {
+        $this->conn->rollBack();
+        $this->conn = null;
+    }
+
+
     public function apartarPlaza($numero_plaza){
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $stmt = $this->conn->prepare('SELECT numero_plaza FROM numero_plaza WHERE id_servicio IN (
+                SELECT s.id FROM servicio s INNER JOIN parking p ON s.id = p.id_servicio
+                WHERE   p.tipo_plaza = :tip_plaza AND
+                        p.largo_plazo = :lrg_plazo AND
+                        s.estado = "pendiente" AND (
+                            s.fecha_inicio < :fecha_fin AND s.fecha_final > :fecha_ini
+                        )
+            )');
+            $stmt->bindParam(':num_plaza', $numero_plaza);
 
-            if($conn === false){
-                throw new Exception("No se puede conectar con la base de datos.");
-            }
+            $stmt->execute();
 
             return true;
 
-        } catch(Exception $e){
+        } catch(Exception $e) {
             error_log($e->getMessage()); // Registro del error en el log
             return false; // False si hubo un error de base de datos
-        } finally {
-            $conn = null;
         }
-
-
     }
 
     public function obtenerPlazasOcupadas($largo_plazo, $tipo_plaza, $fecha_inicio, $fecha_final){
@@ -57,13 +84,7 @@ class Parking extends Servicio {
         $largo_plazo = !empty($largo_plazo) ? (int)$largo_plazo : 0;
 
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-
-            if($conn === false){
-                throw new Exception("No se puede conectar con la base de datos.");
-            }
-
-            $stmt = $conn->prepare('SELECT numero_plaza FROM numero_plaza WHERE id_servicio IN (
+            $stmt = $this->conn->prepare('SELECT numero_plaza FROM numero_plaza WHERE id_servicio IN (
                                         SELECT s.id FROM servicio s INNER JOIN parking p ON s.id = p.id_servicio
                                         WHERE   p.tipo_plaza = :tip_plaza AND
                                                 p.largo_plazo = :lrg_plazo AND
@@ -84,8 +105,6 @@ class Parking extends Servicio {
         } catch(Exception $e){
             error_log($e->getMessage()); // Registro del error en el log
             return false; // False si hubo un error de base de datos
-        } finally {
-            $conn = null;
         }
     }
 
@@ -97,16 +116,7 @@ class Parking extends Servicio {
         $estado = $this->getEstado();
     
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-    
-            if ($conn === false) {
-                throw new Exception("No se pudo conectar a la base de datos.");
-            }
-    
-            // Log de datos a insertar
-            error_log("Datos a insertar en servicio: " . json_encode(compact('matricula', 'precio', 'fecha_inicio', 'fecha_final', 'estado')));
-    
-            $stmt = $conn->prepare('INSERT INTO servicio (matricula, precio, fecha_inicio, fecha_final, estado) 
+            $stmt = $this->conn->prepare('INSERT INTO servicio (matricula, precio, fecha_inicio, fecha_final, estado) 
                                     VALUES (:mat, :precio, :fecha_ini, :fecha_fin, :estado)');
     
             $stmt->bindParam(':mat', $matricula);
@@ -116,18 +126,14 @@ class Parking extends Servicio {
             $stmt->bindParam(':estado', $estado);
                 
             $stmt->execute();
-            $this->setId($conn->lastInsertId());
+            $this->setId($this->conn->lastInsertId());
     
             return $this->reservarParking() !== false;
     
         } catch (Exception $e) {
             error_log($e->getMessage());
             echo "Error procesar la reserva: " . $e->getMessage();
-            return false;
-            
-        } finally {
-            $conn = null;
-
+            return false; 
         }
     }
 
@@ -138,16 +144,7 @@ class Parking extends Servicio {
         $tipo_plaza=$this->getTipo_plaza();
 
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-            
-            if ($conn === false) {
-                throw new Exception("No se pudo conectar a la base de datos.");
-            }
-
-            // Log de datos a insertar
-            error_log("Datos a insertar en parking: " . json_encode(compact('id', 'largo_plazo', 'tipo_plaza')));
-    
-            $stmt = $conn->prepare('INSERT INTO parking (id_servicio, largo_plazo, tipo_plaza) 
+            $stmt = $this->conn->prepare('INSERT INTO parking (id_servicio, largo_plazo, tipo_plaza) 
                                     VALUES (:id, :lrg_plazo, :tip_plaza)');
 
             $stmt->bindParam(':id', $id);
@@ -158,8 +155,6 @@ class Parking extends Servicio {
 
         } catch (Exception $e) {
             error_log("Error procesar la reserva: " . $e->getMessage());
-        } finally {
-            $conn = null;
         }
         
     }

@@ -16,6 +16,7 @@ use InvalidArgumentException;
 class ControladorParking extends AbstractController{
     private const PATH_PRECIOS_JSON = __DIR__ . '/../data/preciosHoraParking.json';
     private const PATH_PLAZAS_JSON = __DIR__ . '/../data/plazasParking.json';
+    private const INACTIVIDAD_MAX_TRANSACCION = 300;
     private $parking;
     private $preciosHora;
     private $plazasMotoSimple;
@@ -130,6 +131,7 @@ class ControladorParking extends AbstractController{
                             $response['errors'][] = "No hay plazas disponibles en este horario.";
                         } else {
                             $response['success'] = true;
+                            $_SESSION['eleccionPlazaComienzo'] = time();
 
                             // Redireccionar al usuario a la página de eleccion de plaza
                             return $this->render('client/eleccionPlazaParking.html.twig', [
@@ -247,7 +249,13 @@ class ControladorParking extends AbstractController{
     function holdParkingSlot(Request $request): JsonResponse{
         session_start();
 
-        if(isset($_SESSION['parking']) && !empty($_SESSION['parking'])){
+        $tiempoAhora = time();
+        $difTiempo = $tiempoAhora - $_SESSION['eleccionPlazaComienzo'];
+
+        // Tiempo expirado
+        if ($difTiempo > $this::INACTIVIDAD_MAX_TRANSACCION) {
+            return new JsonResponse(['success' => false, 'message' => 'Tiempo para hacer transacción expirado']);
+        }elseif(isset($_SESSION['parking']) && !empty($_SESSION['parking'])){
 
             $largo_plazo=$_SESSION['parking']['largo_plazo'];
             $tipo_plaza=$_SESSION['parking']['tipo_plaza'];
@@ -261,9 +269,13 @@ class ControladorParking extends AbstractController{
 
             $this->parking = new Parking($largo_plazo, $tipo_plaza, null, $precio, $fecha_inicio, $fecha_final);
 
+            $this->parking->comenzarTransaccion();
+
             if(!$this->parking->reservarServicio($matricula)){
+                $this->parking->deshacerTransaccion();
                 return new JsonResponse(['success' => false, 'message' => 'Error al reservar servicio']);
             }elseif(!$this->parking->apartarPlaza($numeroPlaza)){
+                $this->parking->deshacerTransaccion();
                 return new JsonResponse(['success' => false, 'message' => 'Error al apartar la plaza']);
             } else{
                 // Si no hay errores, crea una variable de sesión con el número de plaza que fue seleccionada
@@ -299,7 +311,7 @@ class ControladorParking extends AbstractController{
                 // Envia error si es vehiculo grande y selecciona una cantidad distinta a dos plazas
                 $response['errors'][] = "Debe seleccionar dos plazas de parking.";
             } elseif(true){
-                // TODO: Registrar la reserva en la base de datos (commit transaccion)
+                $this->parking->confirmarTransaccion();
                 $response['success'] = true;
             }
         } else {                    
