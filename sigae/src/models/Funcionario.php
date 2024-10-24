@@ -7,5 +7,7 @@ use PDOException;
 use Exception;
 
 class Funcionario{
-    
+    private $usuario;
+    private $rol;
+
 }
