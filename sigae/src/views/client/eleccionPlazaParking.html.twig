@@ -274,7 +274,7 @@ function createParkingSpot(number, prefix) {
         }
 
         // Event Listeners
-        document.getElementById('parkingForm').addEventListener('submit', function(e) {
+       document.getElementById('parkingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             if (plazasSeleccionadas.length === 0) {
@@ -282,10 +282,18 @@ function createParkingSpot(number, prefix) {
                 return;
             }
 
-            const plazasArray = plazasSeleccionadas.map(spot => spot.dataset.spot);
+            // Crear un array de dos elementos, rellenando con null si es necesario
+            let plazasArray = new Array(2).fill(null);
+            plazasSeleccionadas.forEach((spot, index) => {
+                plazasArray[index] = spot.dataset.spot;
+            });
+
+            // Convertir a JSON string y asignar al input hidden
             document.getElementById('plazasSeleccionadasInput').value = JSON.stringify(plazasArray);
             this.submit();
         });
+
+
 
         document.getElementById('decrementFloor').addEventListener('click', function() {
             if (currentFloor > 1) {
