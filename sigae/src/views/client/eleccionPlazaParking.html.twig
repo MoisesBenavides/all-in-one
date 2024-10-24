@@ -96,17 +96,16 @@
         spot.addEventListener('click', async (e) => {
             e.preventDefault();
 
-            const data = {
-                numero_plaza: spotId
-            };
-
             try {
                 const response = await fetch('{{ path("holdParkingSlot") }}', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'  
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({ 
+                        numero_plaza: spotId
+                    })
                 });
 
                 const result = await response.json();
