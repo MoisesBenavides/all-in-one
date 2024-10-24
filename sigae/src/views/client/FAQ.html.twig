@@ -105,11 +105,15 @@
 </body>
       
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
-        const archivoTraduccionFAQ = "{{ asset('traductions/FAQ.json') }}";
-        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionFAQ, 'es');
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+    const archivoTraduccionHeader = "{{ asset('traductions/header.json') }}";
+    const archivoTraduccionFAQ = "{{ asset('traductions/FAQ.json') }}";
+    
+    console.log('Ruta header:', archivoTraduccionHeader);
+    console.log('Ruta FAQ:', archivoTraduccionFAQ);
+    
+    inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionFAQ, 'es');
+});
 </script>
 <script>
 
