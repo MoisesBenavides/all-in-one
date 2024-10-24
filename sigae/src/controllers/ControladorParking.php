@@ -107,7 +107,10 @@ class ControladorParking extends AbstractController{
                     if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                         $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
                     } else{
-                        $plazasOcupadas = $this->parking->obtenerPlazasOcupadas(false, $tipo_plaza, $fecha_inicioParsed, $fecha_finalParsed);
+                        // $largo_plazo, TipoPlazaParking $tipo_plaza, $id, $precio, $fecha_inicio, $fecha_final
+                        $this->parking = new Parking(false, $tipo_plaza, null, null, $fecha_inicioParsed, $fecha_finalParsed);
+
+                        $plazasOcupadas = $this->parking->obtenerPlazasOcupadas();
                         
                         if ($tipoVehiculo == "moto"){
                             // Obtiene las plazas de moto para parking simple que no están ocupadas

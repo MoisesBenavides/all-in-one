@@ -58,16 +58,11 @@ class Parking extends Servicio {
 
 
     public function apartarPlaza($numero_plaza){
+        $id_servicio=$this->getId();
         try {
-            $stmt = $this->conn->prepare('SELECT numero_plaza FROM numero_plaza WHERE id_servicio IN (
-                SELECT s.id FROM servicio s INNER JOIN parking p ON s.id = p.id_servicio
-                WHERE   p.tipo_plaza = :tip_plaza AND
-                        p.largo_plazo = :lrg_plazo AND
-                        s.estado = "pendiente" AND (
-                            s.fecha_inicio < :fecha_fin AND s.fecha_final > :fecha_ini
-                        )
-            )');
+            $stmt = $this->conn->prepare('INSERT INTO numero_plaza (numero_plaza, id_servicio) VALUES (:num_plaza, :id_serv)');
             $stmt->bindParam(':num_plaza', $numero_plaza);
+            $stmt->bindParam(':id_serv', $id_servicio);
 
             $stmt->execute();
 
@@ -79,11 +74,17 @@ class Parking extends Servicio {
         }
     }
 
-    public function obtenerPlazasOcupadas($largo_plazo, $tipo_plaza, $fecha_inicio, $fecha_final){
-        $ocupadas=[];
+    public function obtenerPlazasOcupadas(){
+        $tipo_plaza=$this->getTipo_plaza();
+        $largo_plazo=$this->getLargo_plazo();
         $largo_plazo = !empty($largo_plazo) ? (int)$largo_plazo : 0;
+        $fecha_inicio = $this->getFecha_inicio();
+        $fecha_final = $this->getFecha_final();
+        
+        $ocupadas=[];
 
         try {
+            $this->conn->beginTransaction();
             $stmt = $this->conn->prepare('SELECT numero_plaza FROM numero_plaza WHERE id_servicio IN (
                                         SELECT s.id FROM servicio s INNER JOIN parking p ON s.id = p.id_servicio
                                         WHERE   p.tipo_plaza = :tip_plaza AND
@@ -98,11 +99,14 @@ class Parking extends Servicio {
             $stmt->bindParam('fecha_ini', $fecha_inicio);
 
             $stmt->execute();
+
+            $this->conn->commit();
             $ocupadas=$stmt->fetchAll(PDO::FETCH_ASSOC);
             
             return $ocupadas;
 
         } catch(Exception $e){
+            $this->conn->rollback();
             error_log($e->getMessage()); // Registro del error en el log
             return false; // False si hubo un error de base de datos
         }
