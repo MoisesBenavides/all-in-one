@@ -313,12 +313,12 @@ class ControladorParking extends AbstractController{
 
             $plazas = $_POST["plazasSeleccionadas"];
 
-            if (!isset($_SESSION["tipo_vehiculo"])){
+            if (!isset($_SESSION['parking']["tipoVehiculo"])){
                 $response['errors'][] = "Debe seleccionar un tipo de vehículo.";
-            } elseif (count($plazas) != 1 && $_SESSION["tipo_vehiculo"] == "moto" || "auto" || "camioneta"){
+            } elseif (count($plazas) != 1 && $_SESSION['parking']["tipoVehiculo"] == "moto" || "auto" || "camioneta"){
                 // Envia error si es un vehiculo que ocupa una plaza y selecciona una cantidad distinta a una plaza
                 $response['errors'][] = "Debe seleccionar una plaza de parking.";
-            } elseif (count($plazas) != 2 && $_SESSION["tipo_vehiculo"] == "camion" || "utilitario") {
+            } elseif (count($plazas) != 2 && $_SESSION['parking']["tipoVehiculo"] == "camion" || "utilitario") {
                 // Envia error si es vehiculo grande y selecciona una cantidad distinta a dos plazas
                 $response['errors'][] = "Debe seleccionar dos plazas de parking.";
             } else {
