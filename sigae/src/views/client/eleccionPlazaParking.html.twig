@@ -70,7 +70,7 @@
 
     <script>
         // Variables globales
-        const tipovehiculo = {{ tipoVehiculo|json_encode()|raw }};
+        const tipoVehiculo = {{ tipoVehiculo|json_encode()|raw }};
         const plazasLibres = {{ plazasLibres|json_encode()|raw }};
         let plazasSeleccionadas = [];
         let currentFloor = 1;
@@ -87,7 +87,7 @@
         }
 
 console.log('Session data:', {
-    tipoVehiculo: tipovehiculo,
+    tipoVehiculo: tipoVehiculo,
     plazasLibres: plazasLibres
 
 });
@@ -168,7 +168,7 @@ function createParkingSpot(number, prefix) {
     return spot;
 }
         function handleSpotSelection(spot) {
-            if (tipovehiculo === 'camion' || tipovehiculo === 'utilitario') {
+            if (tipoVehiculo === 'camion' || tipoVehiculo === 'utilitario') {
                 handleLargeVehicleSelection(spot);
             } else {
                 handleRegularSelection(spot);
@@ -242,7 +242,7 @@ function createParkingSpot(number, prefix) {
             const container = document.getElementById('parkingContainer');
             container.innerHTML = '';
 
-            switch(tipovehiculo) {
+            switch(tipoVehiculo) {
                 case 'moto':
                     if (currentFloor === 2) {
                         container.innerHTML = '<p class="text-center text-red-500">Las motos solo pueden estacionar en el primer piso.</p>';
@@ -296,7 +296,7 @@ function createParkingSpot(number, prefix) {
         });
 
         document.getElementById('incrementFloor').addEventListener('click', function() {
-            if (currentFloor < 2 && tipovehiculo !== 'moto') {
+            if (currentFloor < 2 && tipoVehiculo !== 'moto') {
                 currentFloor++;
                 updateFloorDisplay();
                 generateParkingLayout();
