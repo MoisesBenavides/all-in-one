@@ -62,6 +62,16 @@ uploadMyVehicles:
   path: /uploadMyVehicles
   controller: Sigae\Controllers\ControladorCliente::cargarMisVehiculosAjax
 
+addVehicle:
+  path: /addVehicle
+  controller: Sigae\Controllers\ControladorVehiculo::addVehicle
+  methods: POST
+
+deleteVehicle:
+  path: /deleteVehicle
+  controller: Sigae\Controllers\ControladorVehiculo::deleteVehicle
+  methods: POST
+
 serviceConfirmation:
   path: /serviceConfirmation
   controller: Sigae\Controllers\ControladorTaller::serviceConfirmation

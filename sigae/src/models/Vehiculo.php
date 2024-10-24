@@ -70,7 +70,42 @@ class Vehiculo
         $this->color = $color;
     }
 
-    public function borrar(){
+    public function create(){
+        $matricula = $this->getMatricula();
+        $marca = $this->getMarca();
+        $modelo = $this->getModelo();
+        $tipo = $this->getTipo();
+        $color = $this->getColor();
+
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+    
+            $stmt = $conn->prepare('INSERT INTO vehiculo (matricula, marca, modelo, tipo, color) VALUES (:mat, :marca, :mod, :tipo, :color)');
+            
+            $stmt->bindParam(':mat', $matricula);
+            $stmt->bindParam(':marca', $marca);
+            $stmt->bindParam(':mod', $modelo);
+            $stmt->bindParam(':tipo', $tipo);
+            $stmt->bindParam(':color', $color);
+                
+            $stmt->execute();
+            
+            return true; // Registro de vehículo exitoso
+
+        } catch (Exception $e) {
+            error_log("Error al registrar el vehículo: " . $e->getMessage());
+            return false;
+            
+        } finally {
+            $conn = null;
+        }
+    }
+
+    public function delete(){
         $matricula = $this->getMatricula();
         try {
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");
