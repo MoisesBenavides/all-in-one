@@ -3,7 +3,7 @@ const ServiceHandler = {
     // Carga los servicios desde el JSON
     async cargarServicios() {
         try {
-            const response = await fetch('diccionarioTaller.json');
+            const response = await fetch("{{ asset('js/diccionarioTaller.json'}}");
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
