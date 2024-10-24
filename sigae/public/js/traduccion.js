@@ -17,6 +17,7 @@ async function cargarTraducciones(archivo, tipo) {
         const data = await response.json();
         console.log(`Traducciones cargadas para ${tipo}:`, data);
         
+        /*
         if (tipo === 'header') {
             traduccionesHeader = data;
         } else if (tipo === 'vista') {
@@ -25,6 +26,7 @@ async function cargarTraducciones(archivo, tipo) {
             // Para páginas como la landing que solo tienen un archivo
             traduccionesVista = data;
         }
+            */
         return data;
     } catch (error) {
         console.error(`Error al cargar traducciones de ${tipo}:`, error);
