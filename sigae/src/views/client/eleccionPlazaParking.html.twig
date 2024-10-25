@@ -53,6 +53,16 @@
 
         <!-- Parking Form -->
         <form id="parkingForm" action="{{ path('submitParkingSimple') }}" method="POST" class="w-full max-w-[600px]">
+             {% if response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
             <div id="parkingContainer" class="w-full min-h-[359px] p-4 pt-8 bg-white border border-black relative">
                 <!-- Parking spots will be generated here -->
             </div>
