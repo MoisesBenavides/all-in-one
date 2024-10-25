@@ -6,7 +6,7 @@ use PDO;
 use Exception;
 
 class Parking extends Servicio {
-    public $conn;
+    private $conn;
     private $largo_plazo;
     private TipoPlazaParking $tipo_plaza;
 
@@ -21,6 +21,10 @@ class Parking extends Servicio {
             throw new Exception("No se puede conectar con la base de datos.");
         }
 
+    }
+
+    public function getDBConnection(){
+        return $this->conn;
     }
 
     public function getTipo_pLaza(): string{
