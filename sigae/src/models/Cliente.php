@@ -160,7 +160,7 @@ class Cliente{
         }
     }
 
-    public function cargarMisVehiculos($id){
+    public static function cargarMisVehiculos($id){
         try {
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");
             $stmt = $conn->prepare('SELECT * FROM vehiculo v 

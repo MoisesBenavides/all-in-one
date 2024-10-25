@@ -455,7 +455,7 @@ class ControladorCliente extends AbstractController {
     function getClientVehicles(): ?JsonResponse {
         session_start();
         $id = $_SESSION['id'];
-        $misVehiculos = $this->cliente->cargarMisVehiculos($id) ?? [];
+        $misVehiculos = Cliente::cargarMisVehiculos($id) ?? [];
         
         //Debug
         error_log(print_r($misVehiculos, true));
