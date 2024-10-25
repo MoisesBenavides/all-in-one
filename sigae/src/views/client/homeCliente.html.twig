@@ -41,6 +41,9 @@
         }
     </style>
 </head>
+<script>
+const SESSION_URL = "{{ path('getClientSession') }}";
+</script>
 <script src="{{ asset('js/fetchClientSession.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
