@@ -185,9 +185,12 @@
                             <button type="submit" class="edit-button px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
                                 Guardar cambios
                             </button>
-                            <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300">
-                                🗑️
-                            </button>
+                              <form action="{{ path('deleteVehicle') }}" method="POST" class="inline">
+                                    <input type="hidden" name="vehiculo_id" value="{{ vehiculo.id }}">
+                                    <button type="submit" class="text-2xl hover:scale-110 transition-transform duration-300 text-red-500">
+                                        🗑️
+                                    </button>
+                               </form>
                         </div>
                         </form>
                     </div>
