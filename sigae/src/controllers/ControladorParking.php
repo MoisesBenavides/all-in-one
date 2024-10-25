@@ -307,7 +307,7 @@ class ControladorParking extends AbstractController{
         }
         $response=['success' => false, 'errors' => [], 'debug' => []];
     
-        // Debug: Log all received data
+        // Debug
         $response['debug']['received_data']=$_POST;
         if (isset($_POST["plazasSeleccionadas"]) && !empty($_POST["plazasSeleccionadas"])) {
             try {
@@ -340,7 +340,18 @@ class ControladorParking extends AbstractController{
                     }
     
                     if (empty($response['errors'])) {
-                        error_log(print_r($this->parking->conn, true));
+                        if (!$this->parking) {
+                            $this->parking = new Parking(
+                                $_SESSION['parking']['largo_plazo'],
+                                $_SESSION['parking']['tipo_plaza'],
+                                null, // ID
+                                $_SESSION['parking']['precio'],
+                                $_SESSION['parking']['fecha_inicio'],
+                                $_SESSION['parking']['fecha_final']
+                            );
+                        }
+    
+                        // Confirmar la transacción iniciada en holdParkingSlot()
                         $this->parking->confirmarTransaccion();
                         $response['success'] = true;
     
@@ -365,7 +376,7 @@ class ControladorParking extends AbstractController{
         return $this->render('client/eleccionPlazaParking.html.twig', [
             'response' => $response,
             'tipoVehiculo' => $_SESSION['parking']['tipoVehiculo'] ?? null,
-            'plazasLibres' => $this->parking->obtenerPlazasLibres() ?? [],
+            'plazasLibres' => $this->parking ? $this->parking->obtenerPlazasLibres() : [],
             'parking_data' => $_SESSION['parking'] ?? null
         ]);
     }
