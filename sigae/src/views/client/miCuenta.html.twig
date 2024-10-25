@@ -248,7 +248,7 @@
                 const addVehicleBtn = document.getElementById('add-vehicle-btn');
                 const newVehicleForm = document.getElementById('new-vehicle-form');
                 const dropdownIcon = document.getElementById('dropdown-icon');
-                const makeSelect = document.getElementById('makeSelect');
+                const makeSelectDOM = document.getElementById('makeSelect');
                 const modelSelect = document.getElementById('modelSelect');
                 //variables de toggle vehicle para debugger
                        const form = document.getElementById(`vehicle-form-${index}`);
@@ -263,7 +263,7 @@
                     dropdownIcon.classList.toggle('rotate-180');
                     
                     // Cargar las marcas solo cuando se abre el formulario por primera vez
-                    if (!newVehicleForm.classList.contains('hidden') && makeSelect.options.length <= 1) {
+                    if (!newVehicleForm.classList.contains('hidden') && makeSelectDOM.options.length <= 1) {
                         loadMakes();
                     }
                 });
@@ -278,7 +278,7 @@
                             const option = document.createElement('option');
                             option.value = make.MakeName;
                             option.textContent = make.MakeName;
-                            makeSelect.appendChild(option);
+                            makeSelectDOM.appendChild(option);
                         });
                     } catch (error) {
                         console.error('Error cargando marcas:', error);
@@ -307,7 +307,7 @@
                 }
 
                 // Event listener para el cambio de marca en el formulario de nuevo vehículo
-                makeSelect.addEventListener('change', (e) => {
+                makeSelectDOM.addEventListener('change', (e) => {
                     loadModels(e.target.value);
                 });
 
@@ -334,14 +334,14 @@
                     }
                 }
 
-                async function loadModelsForEdit(makeSelect, modelSelect) {
+                async function loadModelsForEdit(makeSelectDOM, modelSelect) {
                     try {
                         modelSelect.innerHTML = '<option value="">Seleccione un modelo</option>';
                         const currentModel = modelSelect.getAttribute('data-current-value');
                         
-                        if (!makeSelect.value) return;
+                        if (!makeSelectDOM.value) return;
 
-                        const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${makeSelect.value}?format=json`);
+                        const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${makeSelectDOM.value}?format=json`);
                         const data = await response.json();
                         
                         data.Results.forEach(model => {
@@ -420,8 +420,8 @@
                     editButton.classList.toggle('hidden');
                     
                     // Si estamos habilitando la edición, cargar los modelos para la marca actual
-                    if (!makeSelect.disabled) {
-                        loadModelsForEdit(makeSelect, modelSelect);
+                    if (!makeSelectDOM.disabled) {
+                        loadModelsForEdit(makeSelectDOM, modelSelect);
                     }
                 
             </script>
