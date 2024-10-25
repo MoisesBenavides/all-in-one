@@ -123,7 +123,10 @@
                          <input type="text" name="matricula" class="editable" value="{{ vehiculo.matricula }}" readonly>
                         <div class="flex justify-between items-center text-lg font-semibold" id="vehiculo-{{ loop.index }}">
                             <div class="flex-grow">
+                                (<input type="text" name="marca" class="editable" value="{{ vehiculo.marca }}" readonly>)
+                                (<input type="text" name="modelo" class="editable" value="{{ vehiculo.modelo }}" readonly>)
                                 (<input type="text" name="tipo" class="editable" value="{{ vehiculo.tipo }}" readonly>)
+                                (<input type="text" name="color" class="editable" value="{{ vehiculo.color }}" readonly>)
                             </div>
                             <div class="flex items-center">
                                 <button type="button" class="ml-2 text-blue-500" onclick="toggleVehicleEdit({{ loop.index }})">✏️</button>
