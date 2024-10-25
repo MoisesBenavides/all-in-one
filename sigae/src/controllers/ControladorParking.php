@@ -136,10 +136,11 @@ class ControladorParking extends AbstractController{
                         } else {
                             $response['success'] = true;
                             $_SESSION['eleccionPlazaComienzo'] = time();
+                            $_SESSION['plazasLibres'] = $plazasLibres;
 
                             // Redireccionar al usuario a la página de eleccion de plaza
                             return $this->render('client/eleccionPlazaParking.html.twig', [
-                                'plazasLibres' => $plazasLibres,
+                                'plazasLibres' => $_SESSION['plazasLibres'],
                                 'tipoVehiculo' => $tipoVehiculo
                             ]);                        
                         }                       
@@ -376,7 +377,7 @@ class ControladorParking extends AbstractController{
         return $this->render('client/eleccionPlazaParking.html.twig', [
             'response' => $response,
             'tipoVehiculo' => $_SESSION['parking']['tipoVehiculo'] ?? null,
-            'plazasLibres' => $this->parking ? $this->parking->obtenerPlazasOcupadas() : [],
+            'plazasLibres' => $_SESSION['plazasLibres'] ?? null,
             'parking_data' => $_SESSION['parking'] ?? null
         ]);
     }
