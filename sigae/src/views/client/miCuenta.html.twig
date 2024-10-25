@@ -249,7 +249,7 @@
                 const newVehicleForm = document.getElementById('new-vehicle-form');
                 const dropdownIcon = document.getElementById('dropdown-icon');
                 const makeSelectDOM = document.getElementById('makeSelect');
-                const modelSelect = document.getElementById('modelSelect');
+                const modelSelectDOM = document.getElementById('modelSelect');
                 //variables de toggle vehicle para debugger
                        const form = document.getElementById(`vehicle-form-${index}`);
                     const inputs = form.querySelectorAll('.editable');
@@ -288,7 +288,7 @@
                 // Cargar los modelos cuando se seleccione una marca en el formulario de nuevo vehículo
                 async function loadModels(make) {
                     try {
-                        modelSelect.innerHTML = '<option value="">Seleccione un modelo</option>';
+                        modelSelectDOM.innerHTML = '<option value="">Seleccione un modelo</option>';
                         
                         if (!make) return;
 
@@ -299,7 +299,7 @@
                             const option = document.createElement('option');
                             option.value = model.Model_Name;
                             option.textContent = model.Model_Name;
-                            modelSelect.appendChild(option);
+                            modelSelectDOM.appendChild(option);
                         });
                     } catch (error) {
                         console.error('Error cargando modelos:', error);
@@ -334,10 +334,10 @@
                     }
                 }
 
-                async function loadModelsForEdit(makeSelectDOM, modelSelect) {
+                async function loadModelsForEdit(makeSelectDOM, modelSelectDOM) {
                     try {
-                        modelSelect.innerHTML = '<option value="">Seleccione un modelo</option>';
-                        const currentModel = modelSelect.getAttribute('data-current-value');
+                        modelSelectDOM.innerHTML = '<option value="">Seleccione un modelo</option>';
+                        const currentModel = modelSelectDOM.getAttribute('data-current-value');
                         
                         if (!makeSelectDOM.value) return;
 
@@ -351,7 +351,7 @@
                             if (model.Model_Name.toLowerCase() === currentModel.toLowerCase()) {
                                 option.selected = true;
                             }
-                            modelSelect.appendChild(option);
+                            modelSelectDOM.appendChild(option);
                         });
                     } catch (error) {
                         console.error('Error cargando modelos:', error);
