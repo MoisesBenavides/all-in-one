@@ -352,6 +352,21 @@
                     }
                 }
 
+                function validateColorFormat(color) {
+                    // Si no empieza con #, añadirlo
+                    if (!color.startsWith('#')) {
+                        color = '#' + color;
+                    }
+                    
+                    // Asegurarse de que tenga 6 dígitos después del #
+                    if (color.length === 7 && /^#[0-9A-Fa-f]{6}$/.test(color)) {
+                        return color;
+                    }
+                    
+                    // Si no es válido, retornar negro por defecto
+                    return '#000000';
+                }
+
                 function toggleVehicleEdit(index) {
                     const form = document.getElementById(`vehicle-form-${index}`);
                     const inputs = form.querySelectorAll('.editable');
@@ -359,21 +374,45 @@
                     const makeSelect = form.querySelector('select[name="marca"]');
                     const modelSelect = form.querySelector('select[name="modelo"]');
                     
-                    // Toggle el estado de edición de los inputs
                     inputs.forEach(input => {
+                        if (input.type === 'color') {
+                            input.value = validateColorFormat(input.value);
+                        }
                         if (input.tagName === 'SELECT') {
                             input.disabled = !input.disabled;
                             
-                            // Si estamos habilitando la edición y es el select de marca
                             if (!input.disabled && input.name === 'marca') {
                                 loadMakesForEdit(input);
-                                // Añadir event listener para cargar modelos cuando cambie la marca
                                 input.addEventListener('change', () => loadModelsForEdit(input, modelSelect));
                             }
                         } else {
                             input.readOnly = !input.readOnly;
                         }
                     });
+                    
+                    editButton.classList.toggle('hidden');
+                    
+                    if (!makeSelect.disabled) {
+                        loadModelsForEdit(makeSelect, modelSelect);
+                    }
+                }
+
+                // Agregar validación antes de enviar los formularios
+                document.querySelectorAll('form.vehicle-form').forEach(form => {
+                    form.addEventListener('submit', function(e) {
+                        const colorInput = this.querySelector('input[type="color"]');
+                        if (colorInput) {
+                            colorInput.value = validateColorFormat(colorInput.value);
+                        }
+                    });
+                });
+
+                document.getElementById('new-vehicle-form').addEventListener('submit', function(e) {
+                    const colorInput = this.querySelector('input[type="color"]');
+                    if (colorInput) {
+                        colorInput.value = validateColorFormat(colorInput.value);
+                    }
+                });
                     
                     // Toggle la visibilidad del botón de guardar
                     editButton.classList.toggle('hidden');
