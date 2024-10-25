@@ -376,7 +376,7 @@ class ControladorParking extends AbstractController{
         return $this->render('client/eleccionPlazaParking.html.twig', [
             'response' => $response,
             'tipoVehiculo' => $_SESSION['parking']['tipoVehiculo'] ?? null,
-            'plazasLibres' => $this->parking ? $this->parking->obtenerPlazasLibres() : [],
+            'plazasLibres' => $this->parking ? $this->parking->obtenerPlazasOcupadas() : [],
             'parking_data' => $_SESSION['parking'] ?? null
         ]);
     }
