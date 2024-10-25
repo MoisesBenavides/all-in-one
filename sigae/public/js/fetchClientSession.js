@@ -1,5 +1,5 @@
 function fetchSessionData() {
-    fetch("{{ path('getClienSession') }}", {
+    fetch("{{ path('getClientSession') }}", {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
