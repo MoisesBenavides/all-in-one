@@ -137,6 +137,11 @@ getClientSession:
   controller: Sigae\Controllers\ControladorCliente::getClientSession
   methods: GET
 
+getClientVehicles:
+  path: /api/getClientVehicles
+  controller: Sigae\Controllers\ControladorCliente::getClientVehicles
+  methods: GET
+
 myAccount:
   path: /myAccount
   controller: Sigae\Controllers\ControladorCliente::myAccount
