@@ -65,7 +65,3 @@ class ParkingTimer {
     }
 }
 
-// Iniciar timer cuando se carga la página
-document.addEventListener('DOMContentLoaded', () => {
-    new ParkingTimer();
-});
