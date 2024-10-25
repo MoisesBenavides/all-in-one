@@ -11,7 +11,7 @@ login:
 logout:
   path: /logout
   controller: Sigae\Controllers\ControladorCliente::logout
-  methods: POST
+  methods: GET
 
 doLogin:
   path: /doLogin

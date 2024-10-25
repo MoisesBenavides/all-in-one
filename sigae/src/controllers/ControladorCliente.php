@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ControladorCliente extends AbstractController {
     private $cliente;
-    private const INACTIVIDAD_MAX_SESION = 600; // límite de 10 minutos de inactividad
+    private const INACTIVIDAD_MAX_SESION = 30; // límite de 10 minutos de inactividad
 
     public function __construct(){
         $this->cliente=new Cliente();
@@ -414,7 +414,7 @@ class ControladorCliente extends AbstractController {
     
         // Verificar si la variable de tiempo de inactividad está definida
         if (!isset($_SESSION["ultima_solicitud"])) {
-            return $this->logout(); // Si no hay un tiempo definido, se realiza el logout
+            return $this->redirectToRoute('logout'); // Si no hay un tiempo definido, se realiza el logout
         }
     
         // Obtiene el tiempo desde la última solicitud
@@ -422,7 +422,7 @@ class ControladorCliente extends AbstractController {
     
         // Verificación de inactividad de la sesión
         if ($inactividad > $this::INACTIVIDAD_MAX_SESION) {
-            return $this->logout(); // Si ha excedido el tiempo de inactividad, cierra la sesión
+            return $this->redirectToRoute('logout'); // Si ha excedido el tiempo de inactividad, cierra la sesión
         }
     
         // Actualiza el tiempo de la última solicitud y regenera la ID de sesión por seguridad
