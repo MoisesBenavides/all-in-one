@@ -452,6 +452,18 @@ class ControladorCliente extends AbstractController {
         return new JsonResponse(['fotoPerfil' => $fotoPerfil]);
     }
 
+    function getClientVehicles(): ?JsonResponse {
+        session_start();
+        $id = $_SESSION['id'];
+        $misVehiculos = $this->cliente->cargarMisVehiculos($id) ?? [];
+        
+        //Debug
+        error_log(print_r($misVehiculos, true));
+
+        return new JsonResponse([
+            'misVehiculos' => $misVehiculos]);
+    }
+
     function getClientEmail(): JsonResponse {
         session_start();
         $email = $_SESSION['email'];
