@@ -250,6 +250,11 @@
                 const dropdownIcon = document.getElementById('dropdown-icon');
                 const makeSelect = document.getElementById('makeSelect');
                 const modelSelect = document.getElementById('modelSelect');
+                //variables de toggle vehicle para debugger
+                       const form = document.getElementById(`vehicle-form-${index}`);
+                    const inputs = form.querySelectorAll('.editable');
+                    const makeSelect = form.querySelector('select[name="marca"]');
+                    const modelSelect = form.querySelector('select[name="modelo"]');
                 const editButton = form.querySelector('.edit-button');
 
                 // Toggle del formulario de nuevo vehículo
@@ -369,10 +374,7 @@
                 }
 
                 function toggleVehicleEdit(index) {
-                    const form = document.getElementById(`vehicle-form-${index}`);
-                    const inputs = form.querySelectorAll('.editable');
-                    const makeSelect = form.querySelector('select[name="marca"]');
-                    const modelSelect = form.querySelector('select[name="modelo"]');
+             
                     
                     inputs.forEach(input => {
                         if (input.type === 'color') {
