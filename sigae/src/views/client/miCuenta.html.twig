@@ -186,7 +186,7 @@
                                 Guardar cambios
                             </button>
                               <form action="{{ path('deleteVehicle') }}" method="POST" class="inline">
-                                    <input type="hidden" name="vehiculo_id" value="{{ vehiculo.id }}">
+                                    <input type="hidden" name="matricula" value="{{ vehiculo.matricula }}">
                                     <button type="submit" class="text-2xl hover:scale-110 transition-transform duration-300 text-red-500">
                                         🗑️
                                     </button>
