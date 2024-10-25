@@ -37,14 +37,14 @@
     {% include 'partials/headerParking.html.twig' %}
 
     <div class="w-full max-w-[1440px] px-4 py-8 mx-auto flex flex-col items-center gap-8">
-        <!-- Floor Selection -->
+        <!-- Seleccion de piso -->
         <div class="w-full max-w-[896px] h-[46px] px-4 py-2 bg-[#d9d9d9] rounded-[10px] border border-[#c5b8b8] flex justify-center items-center gap-2.5">
             <button id="decrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">&lt;</button>
             <div id="floorDisplay" class="text-center text-black text-base font-medium">Piso 1</div>
             <button id="incrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">&gt;</button>
         </div>
 
-        <!-- Legend -->
+        <!-- leyenda -->
         <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
             <p><strong>B1-20:</strong> Motos (solo primer piso)</p>
             <p><strong>A1-50:</strong> Autos, camionetas y pequeños camiones (primer piso)</p>
@@ -64,7 +64,6 @@
                 {% endif %}
 
             <div id="parkingContainer" class="w-full min-h-[359px] p-4 pt-8 bg-white border border-black relative">
-                <!-- Parking spots will be generated here -->
             </div>
 
             <input type="hidden" name="plazasSeleccionadas" id="plazasSeleccionadasInput">
@@ -74,7 +73,6 @@
                 </button>
             </div>
         </form>
-        <!-- El timer se insertará automáticamente aquí por el script -->
     </div> 
     <script>    
     const rutaRedireccion = "{{path('aioParking')}}";
