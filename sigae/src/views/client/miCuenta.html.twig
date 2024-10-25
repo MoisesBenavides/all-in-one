@@ -49,6 +49,26 @@
         .editing .edit-button {
             display: inline-block;
         }
+
+            .editing-mode {
+            background-color: #f0f9ff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .editing-mode input:not([readonly]),
+        .editing-mode select:not([disabled]) {
+            background-color: white;
+            border-color: #3b82f6;
+        }
+
+        .edit-button {
+            display: none;
+        }
+
+        .editing-mode .edit-button {
+            display: inline-flex;
+        }
     </style>
 </head>
 
@@ -157,17 +177,18 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-end items-center space-x-4">
-                                <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300" onclick="toggleVehicleEdit({{ loop.index }})">
-                                    ✏️
-                                </button>
-                                <button type="submit" class="edit-button hidden px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
-                                    Guardar
-                                </button>
-                                <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300">
-                                    🗑️
-                                </button>
-                            </div>
+                         <div class="flex justify-end items-center space-x-4">
+                            <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300" onclick="toggleVehicleEdit({{ loop.index }})">
+                                <span class="edit-icon">✏️</span>
+                                <span class="save-icon hidden">💾</span>
+                            </button>
+                            <button type="submit" class="edit-button px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
+                                Guardar cambios
+                            </button>
+                            <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300">
+                                🗑️
+                            </button>
+                        </div>
                         </form>
                     </div>
                 {% endfor %}
@@ -368,34 +389,52 @@
     }
 
     function toggleVehicleEdit(index) {
-        const form = document.getElementById(`vehicle-form-${index}`);
-        const inputs = form.querySelectorAll('.editable');
-        const editButton = form.querySelector('.edit-button');
-        const makeSelect = form.querySelector('select[name="marca"]');
-        const modelSelect = form.querySelector('select[name="modelo"]');
-        
-        inputs.forEach(input => {
-            if (input.type === 'color') {
-                input.value = validateColorFormat(input.value);
-            }
-            if (input.tagName === 'SELECT') {
-                input.disabled = !input.disabled;
-                
-                if (!input.disabled && input.name === 'marca') {
-                    loadMakesForEdit(input);
-                    input.addEventListener('change', () => loadModelsForEdit(input, modelSelect));
-                }
-            } else {
-                input.readOnly = !input.readOnly;
-            }
-        });
-        
-        editButton.classList.toggle('hidden');
-        
-        if (!makeSelect.disabled) {
-            loadModelsForEdit(makeSelect, modelSelect);
+    const form = document.getElementById(`vehicle-form-${index}`);
+    const formContainer = form.closest('.bg-white');
+    const inputs = form.querySelectorAll('.editable');
+    const editButton = form.querySelector('.edit-button');
+    const makeSelect = form.querySelector('select[name="marca"]');
+    const modelSelect = form.querySelector('select[name="modelo"]');
+    const editIcon = form.querySelector('.edit-icon');
+    const saveIcon = form.querySelector('.save-icon');
+    
+    // Toggle la clase de modo edición
+    formContainer.classList.toggle('editing-mode');
+    
+    // Toggle iconos
+    editIcon.classList.toggle('hidden');
+    saveIcon.classList.toggle('hidden');
+    
+    inputs.forEach(input => {
+        if (input.type === 'color') {
+            input.value = validateColorFormat(input.value);
+            input.readOnly = !input.readOnly;
         }
+        else if (input.tagName === 'SELECT') {
+            input.disabled = !input.disabled;
+            
+            if (!input.disabled && input.name === 'marca') {
+                loadMakesForEdit(input);
+                input.addEventListener('change', () => loadModelsForEdit(input, modelSelect));
+            }
+        } else {
+            input.readOnly = !input.readOnly;
+        }
+
+        // Añadir focus al primer input cuando se entra en modo edición
+        if (!input.readOnly && !input.disabled) {
+            input.focus();
+        }
+    });
+    
+    // Toggle el botón de guardar
+    editButton.classList.toggle('hidden');
+    
+    // Si estamos habilitando la edición, cargar los modelos para la marca actual
+    if (!makeSelect.disabled) {
+        loadModelsForEdit(makeSelect, modelSelect);
     }
+}
 
     // Agregar validación antes de enviar los formularios
     document.querySelectorAll('form.vehicle-form').forEach(form => {
