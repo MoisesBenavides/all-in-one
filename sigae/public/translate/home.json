@@ -27,7 +27,12 @@
       "botonServicios": "Servizi",
 
       "productosDestacados": "Prodotti in evidenza",
-      "botonProductos": "Vedere tutti"
+      "botonProductos": "Vedere tutti",
+
+      
+      "yaReservaste": "Già hai prenotato?",
+      "apartadoMisReservas": "Si già hai prenotato accerdi a la nostra sezione di 'Miei prenotazioni'",
+      "botonMisReservas": "Miei prenotazioni"
 
     },
     "en": {
@@ -40,7 +45,11 @@
       "botonServicios": "Services",
 
       "productosDestacados": "Featured products",
-      "botonProductos": "View all"
+      "botonProductos": "View all",
+      
+      "yaReservaste": "Already booked?",
+      "apartadoMisReservas": "If you've already booked, access our 'My bookings' section",
+      "botonMisReservas": "My bookings"
 
 
     }
