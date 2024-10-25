@@ -14,16 +14,20 @@ class ControladorVehiculo extends AbstractController{
         session_start();
 
         $response=['success' => false, 'errors' => []];
+
+        $cliente = [
+            'id' => $_SESSION['id'],
+            'email' => $_SESSION['email'],
+            'nombre' => $_SESSION['nombre'],
+            'apellido' => isset($_SESSION['apellido']) ? $_SESSION['apellido'] : null,
+            'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
+            'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
+        ];
+        $misVehiculos = Vehiculo::cargarMisVehiculos($_SESSION['id']);
         
         if (isset($_SESSION["email"])) {
             $email_cliente=$_SESSION["email"];
-        }else{
-            $response['errors'][] = "Sesión expirada.";
-            return $this->render('client/miCuenta.html.twig', [
-                'response' => $response  // Aquí pasa la respuesta a la vista
-            ]);
-        }
-        
+        }        
 
         // Validacion de campos vacios
         if (isset($_POST["matricula"], $_POST["tipo"]) && 
@@ -65,7 +69,10 @@ class ControladorVehiculo extends AbstractController{
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
         }
+
         return $this->render('client/miCuenta.html.twig', [
+            'cliente' => $cliente, // Pasa variables de sesión de cliente
+            'misVehiculos' => $misVehiculos, // Pasa vehículos actualizados del cliente
             'response' => $response  // Aquí pasa la respuesta a la vista
         ]);
     }

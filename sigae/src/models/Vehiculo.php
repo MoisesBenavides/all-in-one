@@ -3,6 +3,7 @@
 namespace Sigae\Models;
 use function Sigae\Config\conectarDB;
 use Exception;
+use PDO;
 
 class Vehiculo
 {
@@ -203,6 +204,30 @@ class Vehiculo
         } catch (Exception $e) {
             error_log($e->getMessage()); // Registro del error en el log
             return false; // Devuelve false si hubo un error de base de datos
+        } finally {
+            $conn = null;
+        }
+    }
+
+    public static function cargarMisVehiculos($id){
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $stmt = $conn->prepare('SELECT * FROM vehiculo v 
+                                    WHERE v.matricula IN (SELECT t.matricula 
+                                    FROM tiene t 
+                                    WHERE t.id_cliente=:id)');
+
+            $stmt->bindParam(':id', $id);
+
+            $stmt->execute();
+            
+            $misVehiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $misVehiculos;
+
+        } catch (Exception $e) {
+            error_log($e->getMessage()); // Registro del error en el log
+            return false; // False si hubo un error de base de datos
         } finally {
             $conn = null;
         }
