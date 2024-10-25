@@ -9,4 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ControladorFuncionario extends AbstractController {
     private $funcionario;
+
+    function loginAioEmployee(): Response{
+        return $this->render('employee/loginEmpleado.html.twig');
+    }
+
+    function doLoginAioEmployee(){
+    }
 }
