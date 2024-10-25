@@ -37,7 +37,8 @@ class ControladorVehiculo extends AbstractController{
             $tipo = $_POST["tipo"];
             $marca = isset($_POST["marca"]) ? $_POST["marca"] : null;
             $modelo = isset($_POST["modelo"]) ? $_POST["modelo"] : null;
-            $color = isset($_POST["color"]) ? $_POST["color"] : null;
+            $colorConHash = isset($_POST["color"]) ? $_POST["color"] : null;
+            $color = substr($colorConHash, 1);
 
             // Validar email
             if (!$this->validarMatricula($matricula)) {
@@ -124,7 +125,7 @@ class ControladorVehiculo extends AbstractController{
 
     private function validarColorHexa($hex){
         // Valida si el color de vehículo es un código hexadecimal válido
-        return preg_match("/^#[a-zA-Z0-9]{7}$/", $hex);
+        return preg_match("/^[a-zA-Z0-9]{6}$/", $hex);
     }
 
     private function validarMarcaModelo($str, $max) {
