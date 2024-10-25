@@ -2,36 +2,57 @@ class ParkingTimer {
     constructor() {
         this.timeLeft = 300; // 5 minutos
         this.timer = null;
-        this.start();
+        this.isRedirecting = false;
+        this.initializeTimer();
     }
 
-    start() {
-        // Crear elementos del timer
+    initializeTimer() {
+        // crear container de timer si no existe
+        if (!document.getElementById('timerContainer')) {
+            this.createTimerElements();
+        }
+        
+        // comenzar la cuenta regresiva
+        this.start();
+
+        // beforeunload handler para prevenir navegacion i
+      
+    }
+
+    createTimerElements() {
+        // Timer container
         const timerContainer = document.createElement('div');
         timerContainer.className = 'w-full max-w-[600px] mt-4 p-4 bg-white border border-black';
         timerContainer.id = 'timerContainer';
 
-        const progressBar = document.createElement('div');
-        progressBar.className = 'w-full bg-gray-200 h-4 rounded-full';
-        
-        const progress = document.createElement('div');
-        progress.className = 'bg-blue-600 h-4 rounded-full transition-all duration-1000';
-        progress.style.width = '100%';
-        progress.id = 'timerProgress';
-
+        // Timer texto
         const timerText = document.createElement('p');
-        timerText.className = 'text-center mb-2';
+        timerText.className = 'text-center mb-2 font-bold';
         timerText.id = 'timerText';
 
+        // container de la barra de progreso
+        const progressBar = document.createElement('div');
+        progressBar.className = 'w-full bg-gray-200 h-4 rounded-full overflow-hidden';
+        
+        // relleno de la barra
+        const progress = document.createElement('div');
+        progress.className = 'bg-blue-600 h-full rounded-full transition-all duration-1000 ease-linear';
+        progress.id = 'timerProgress';
+        progress.style.width = '100%';
+
+        
         progressBar.appendChild(progress);
         timerContainer.appendChild(timerText);
         timerContainer.appendChild(progressBar);
 
-        // Insertar después del form
+        // insertarse despues de el formulario
         const parkingForm = document.getElementById('parkingForm');
-        parkingForm.parentNode.insertBefore(timerContainer, parkingForm.nextSibling);
+        if (parkingForm && parkingForm.parentNode) {
+            parkingForm.parentNode.insertBefore(timerContainer, parkingForm.nextSibling);
+        }
+    }
 
-        this.timeLeft = 300;
+    start() {
         this.updateTimer();
 
         this.timer = setInterval(() => {
@@ -39,8 +60,7 @@ class ParkingTimer {
             this.updateTimer();
 
             if (this.timeLeft <= 0) {
-                this.stop();
-                window.location.href = rutaRedireccion;
+                this.redirectToParking();
             }
         }, 1000);
     }
@@ -51,9 +71,46 @@ class ParkingTimer {
         const timerText = document.getElementById('timerText');
         const progress = document.getElementById('timerProgress');
         
-        if (timerText && progress) {
+        if (timerText) {
             timerText.textContent = `Tiempo restante: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            progress.style.width = `${(this.timeLeft / 300) * 100}%`;
+        }
+        
+        if (progress) {
+            const percentage = (this.timeLeft / 300) * 100;
+            progress.style.width = `${percentage}%`;
+            
+            // mandejo de el color segun cuanto tiempo paso :)
+            if (percentage <= 25) {
+                progress.className = 'bg-red-600 h-full rounded-full transition-all duration-1000 ease-linear';
+            } else if (percentage <= 50) {
+                progress.className = 'bg-yellow-600 h-full rounded-full transition-all duration-1000 ease-linear';
+            }
+        }
+    }
+
+    redirectToParking() {
+        this.stop();
+        this.isRedirecting = true;
+
+        // chequear si ruta esta definida
+        if (typeof rutaRedireccion === 'undefined') {
+            console.error('Error: rutaRedireccion no está definida');
+            return;
+        }
+
+        try {
+            // mensaje antes de reidirig
+            const timerText = document.getElementById('timerText');
+            if (timerText) {
+                timerText.textContent = 'Tiempo agotado. Redirigiendo...';
+            }
+
+            
+            setTimeout(() => {
+                window.location.replace(rutaRedireccion);
+            }, 500);
+        } catch (error) {
+            console.error('Error al redireccionar:', error);
         }
     }
 
