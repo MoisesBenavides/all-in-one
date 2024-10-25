@@ -29,7 +29,7 @@ class ControladorVehiculo extends AbstractController{
         if (isset($_POST["matricula"], $_POST["tipo"]) && 
             !empty($_POST["matricula"]) && !empty($_POST["tipo"])) {
 
-            $matricula = $_POST["matricula"];
+            $matricula = strtoupper($_POST["matricula"]);
             $tipo = $_POST["tipo"];
             $marca = isset($_POST["marca"]) ? $_POST["marca"] : null;
             $modelo = isset($_POST["modelo"]) ? $_POST["modelo"] : null;
