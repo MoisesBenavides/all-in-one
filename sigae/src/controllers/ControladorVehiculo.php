@@ -24,11 +24,7 @@ class ControladorVehiculo extends AbstractController{
             'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
         ];
         $misVehiculos = Vehiculo::cargarMisVehiculos($_SESSION['id']);
-        
-        if (isset($_SESSION["email"])) {
-            $email_cliente=$_SESSION["email"];
-        }        
-
+        $id_cliente = $_SESSION['id'];
         // Validacion de campos vacios
         if (isset($_POST["matricula"], $_POST["tipo"]) && 
             !empty($_POST["matricula"]) && !empty($_POST["tipo"])) {
@@ -57,7 +53,7 @@ class ControladorVehiculo extends AbstractController{
 
                 if (!$this->vehiculo->create()) {
                     $response['errors'][] = "Error al registrar vehículo.";
-                } elseif (!$this->vehiculo->vincularCliente($email_cliente)){
+                } elseif (!$this->vehiculo->vincularCliente($id_cliente)){
                     $response['errors'][] = "Error al vincular vehículo.";
                 } else {
                     // Debug: Registro y vinculación exitosa
