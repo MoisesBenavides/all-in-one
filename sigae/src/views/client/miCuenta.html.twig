@@ -57,7 +57,7 @@
 <body class="bg-white">
     <section class="container mx-auto px-4 py-8 max-w-2xl">
                 {% if response.errors is defined and response.errors is not empty %}
-                    <div id="error-container" class="text-gray-950 text-center bg-[#cd7979] p-4 rounded-md mb-4">
+                    <div id="error-container" styles="background-color: #ffcec6;" class="text-gray-950 text-center  p-4 rounded-md mb-4">
                         <ul id="error-list">
                             {% for error in response.errors %}
                                 <li>{{ error }}</li>
