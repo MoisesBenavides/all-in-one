@@ -57,7 +57,7 @@
 <body class="bg-white">
     <section class="container mx-auto px-4 py-8 max-w-2xl">
                 {% if response.errors is defined and response.errors is not empty %}
-                    <div id="error-container" class="bg-red-100 text-gray-950 text-center  p-4 rounded-md mb-4">
+                    <div id="error-container" style="background-color: #ffcec6;" class=" text-gray-950 text-center  p-4 rounded-md mb-4">
                         <ul id="error-list">
                             {% for error in response.errors %}
                                 <li>{{ error }}</li>
@@ -185,8 +185,8 @@
                             <option value="">Seleccione un tipo</option>
                             <option value="auto">Auto</option>
                             <option value="camioneta">Camioneta</option>
-                            <option value="pequeno_camion">Pequeño camión</option>
-                            <option value="pequeno_utilitario">Pequeño utilitario</option>
+                            <option value="camion">Pequeño camión</option>
+                            <option value="utilitario">Pequeño utilitario</option>
                             <option value="moto">Moto</option>
                         </select>
                     </div>
