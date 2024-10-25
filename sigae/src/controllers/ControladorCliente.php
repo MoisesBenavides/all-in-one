@@ -22,9 +22,6 @@ class ControladorCliente extends AbstractController {
     function login(): Response{
         return $this->render('client/account/login.html.twig');
     }
-    function loginAioEmployee(): Response{
-        return $this->render('employee/loginEmpleado.html.twig');
-    }
     function doLogin(): Response|RedirectResponse{
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
@@ -94,8 +91,6 @@ class ControladorCliente extends AbstractController {
         return $this->render('client/account/login.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
         ]);
-    }
-    function doLoginAioEmployee(){
     }
     function doLoginOAuth(): Response|RedirectResponse{
         // Configurar cliente Google

@@ -123,13 +123,18 @@ products:
   methods: GET
 
 getClientProfilePhoto:
-  path: /getClientProfilePhoto
+  path: /api/getClientProfilePhoto
   controller: Sigae\Controllers\ControladorCliente::getClientProfilePhoto
   methods: GET
 
 getClientEmail:
-  path: /getClientEmail
+  path: /api/getClientEmail
   controller: Sigae\Controllers\ControladorCliente::getClientEmail
+  methods: GET
+
+getClientSession:
+  path: /api/getClientSession
+  controller: Sigae\Controllers\ControladorCliente::getClientSession
   methods: GET
 
 myAccount:
@@ -154,10 +159,10 @@ home:
 
 loginAioEmployee:
   path: /loginAioEmployee
-  controller: Sigae\Controllers\ControladorCliente::loginAioEmployee
+  controller: Sigae\Controllers\ControladorFuncionario::loginAioEmployee
   methods: GET
 
 doLoginAioEmployee:
   path: /doLoginAioEmployee
-  controller: Sigae\Controllers\ControladorCliente::doLoginAioEmployee
+  controller: Sigae\Controllers\ControladorFuncionario::doLoginAioEmployee
   methods: POST
