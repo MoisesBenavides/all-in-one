@@ -179,11 +179,14 @@ class Vehiculo
             $stmt->bindParam(':mat', $matricula);
                 
             $stmt->execute();
+
+            return true; // Vinculación con cliente exitosa
             
 
         } catch (Exception $e) {
             error_log($e->getMessage());
             error_log("Error al registrar el vehículo: " . $e->getMessage());
+            return false;
             
         } finally {
             $conn = null;
