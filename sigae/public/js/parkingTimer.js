@@ -1,6 +1,6 @@
 class ParkingTimer {
     constructor() {
-        this.timeLeft = 20; // 5 minutos
+        this.timeLeft = 300; // 5 minutos
         this.timer = null;
         this.start();
     }
@@ -31,7 +31,7 @@ class ParkingTimer {
         const parkingForm = document.getElementById('parkingForm');
         parkingForm.parentNode.insertBefore(timerContainer, parkingForm.nextSibling);
 
-        this.timeLeft = 20;
+        this.timeLeft = 300;
         this.updateTimer();
 
         this.timer = setInterval(() => {
