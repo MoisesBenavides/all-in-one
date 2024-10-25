@@ -6,7 +6,7 @@ use PDO;
 use Exception;
 
 class Parking extends Servicio {
-    private $conn;
+    private PDO $conn;
     private $largo_plazo;
     private TipoPlazaParking $tipo_plaza;
 
@@ -14,13 +14,20 @@ class Parking extends Servicio {
         parent::__construct($id, $precio, $fecha_inicio, $fecha_final);
         $this->largo_plazo = $largo_plazo;
         $this->tipo_plaza = $tipo_plaza;
-
         // Inicializar la conexión de bd
         $this->conn = conectarDB("def_cliente", "password_cliente", "localhost");
         if($this->conn === false){
             throw new Exception("No se puede conectar con la base de datos.");
         }
 
+    }
+
+    public function setDBConnection($user, $password , $hostname){
+        $this->conn = conectarDB($user, $password, $hostname);
+        if($this->conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+        return $this;
     }
 
     public function getDBConnection(){
