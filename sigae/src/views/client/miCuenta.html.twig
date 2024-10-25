@@ -250,6 +250,7 @@
                 const dropdownIcon = document.getElementById('dropdown-icon');
                 const makeSelect = document.getElementById('makeSelect');
                 const modelSelect = document.getElementById('modelSelect');
+                const editButton = form.querySelector('.edit-button');
 
                 // Toggle del formulario de nuevo vehículo
                 addVehicleBtn.addEventListener('click', () => {
@@ -370,7 +371,6 @@
                 function toggleVehicleEdit(index) {
                     const form = document.getElementById(`vehicle-form-${index}`);
                     const inputs = form.querySelectorAll('.editable');
-                    const editButton = form.querySelector('.edit-button');
                     const makeSelect = form.querySelector('select[name="marca"]');
                     const modelSelect = form.querySelector('select[name="modelo"]');
                     
@@ -390,7 +390,7 @@
                         }
                     });
                     
-                    edit-button.classList.toggle('hidden');
+                    editButton.classList.toggle('hidden');
                     
                     if (!makeSelect.disabled) {
                         loadModelsForEdit(makeSelect, modelSelect);
