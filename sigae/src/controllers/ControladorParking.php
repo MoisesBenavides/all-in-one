@@ -285,7 +285,12 @@ class ControladorParking extends AbstractController{
             //Debug plazas
             error_log('Plazas recibidas: ' . print_r($plazas, true));
 
-            $cantidadPlazas = count($plazas);
+            // Filtrar plazas que no están vacías (null)
+            $plazasValidas = array_filter($plazas, function($plaza) {
+                return $plaza !== null;
+            });
+
+            $cantidadPlazas = count($plazasValidas);
 
             if (in_array($tipoVehiculo, ['moto', 'auto', 'camioneta']) && $cantidadPlazas !== 1) {
                 $response['errors'][] = "Debe seleccionar una plaza de parking.";
