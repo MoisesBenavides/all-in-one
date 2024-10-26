@@ -125,6 +125,8 @@ class Parking extends Servicio {
             $this->conn->rollback();
             error_log($e->getMessage()); // Registro del error en el log
             return false; // False si hubo un error de base de datos
+        } finally {
+            $this->cerrarDBConnection();
         }
     }
 
