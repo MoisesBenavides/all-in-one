@@ -6,7 +6,7 @@ use PDO;
 use Exception;
 
 class Parking extends Servicio {
-    private PDO $conn;
+    private ?PDO $conn =null;
     private $largo_plazo;
     private TipoPlazaParking $tipo_plaza;
 
@@ -46,19 +46,23 @@ class Parking extends Servicio {
     }
 
     public function comenzarTransaccion() {
-        $this->conn->beginTransaction();
+        if ($this->conn) {
+            $this->conn->beginTransaction();
+        }
     }
 
     // Método para confirmar una transacción
     public function confirmarTransaccion() {
-        $this->conn->commit();
-        $this->conn = null;
+        if ($this->conn) {
+            $this->conn->commit();
+        }
     }
 
     // Método para revertir una transacción
     public function deshacerTransaccion() {
-        $this->conn->rollBack();
-        $this->conn = null;
+        if ($this->conn) {
+            $this->conn->rollback();
+        }
     }
 
     public function cerrarDBConnection(){
@@ -121,6 +125,8 @@ class Parking extends Servicio {
             $this->conn->rollback();
             error_log($e->getMessage()); // Registro del error en el log
             return false; // False si hubo un error de base de datos
+        } finally {
+            $this->cerrarDBConnection();
         }
     }
 
