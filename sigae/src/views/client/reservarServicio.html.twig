@@ -162,99 +162,99 @@
     </main>
 
     {% include 'partials/footer.html.twig' %}
-<script>
-    // Definir la URL antes de cargar los scripts
-    const GET_BLOCKED_TIMES_URL = "{{ path('PATH DE FECHAS BLOQUEADAS') }}";
-</script>
-<script src="{{ asset('js/serviceHandler.js') }}"></script>
-<script src="{{ asset('js/timeSlotHandler.js') }}"></script>
-<script>
-document.addEventListener('DOMContentLoaded', async function() {
-    // Configurar URLs
-    ServiceHandler.setJsonUrl("{{ asset('js/diccionarioTaller.json') }}");
+    <script>
+        // Definir la URL antes de cargar los scripts
+        const GET_BLOCKED_TIMES_URL = "{{ path('PATH DE FECHAS BLOQUEADAS') }}";
+    </script>
+    <script src="{{ asset('js/serviceHandler.js') }}"></script>
+    <script src="{{ asset('js/timeSlotHandler.js') }}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Configurar URLs
+        ServiceHandler.setJsonUrl("../../data/serviciosTaller.json");
 
-    let servicios = {};
+        let servicios = {};
 
-    // Configuración inicial de la fecha
-    const fechaInput = document.getElementById('fecha_inicio');
-    const today = new Date();
-    const formattedToday = today.toISOString().split('T')[0];
-    fechaInput.min = formattedToday;
-    fechaInput.value = formattedToday;
-    fechaInput.disabled = true;
+        // Configuración inicial de la fecha
+        const fechaInput = document.getElementById('fecha_inicio');
+        const today = new Date();
+        const formattedToday = today.toISOString().split('T')[0];
+        fechaInput.min = formattedToday;
+        fechaInput.value = formattedToday;
+        fechaInput.disabled = true;
 
-    try {
-        // Cargar servicios
-        servicios = await ServiceHandler.cargarServicios();
+        try {
+            // Cargar servicios
+            servicios = await ServiceHandler.cargarServicios();
 
-        // Configurar dropdowns
-        ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
-        ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
-        ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+            // Configurar dropdowns
+            ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
+            ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
+            ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
 
-        // Evento para actualizar subtipos
-        document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
-            option.addEventListener('click', () => {
-                ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
-                    document.getElementById('selectedOption2').textContent = servicioData.descripcion;
-                    document.getElementById('selectedServiceSubtype').value = subtype;
-                    TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
-                    document.getElementById('dropdownMenu2').classList.add('hidden');
-                    
-                    fechaInput.disabled = false;
-                    
-                    if (fechaInput.value) {
-                        TimeSlotHandler.updateTimeSlots(fechaInput.value);
-                    }
+            // Evento para actualizar subtipos
+            document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
+                option.addEventListener('click', () => {
+                    ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
+                        document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                        document.getElementById('selectedServiceSubtype').value = subtype;
+                        TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
+                        document.getElementById('dropdownMenu2').classList.add('hidden');
+                        
+                        fechaInput.disabled = false;
+                        
+                        if (fechaInput.value) {
+                            TimeSlotHandler.updateTimeSlots(fechaInput.value);
+                        }
+                    });
                 });
             });
-        });
 
-        // Event listener para cambio de fecha
-        fechaInput.addEventListener('change', function() {
-            TimeSlotHandler.updateTimeSlots(this.value);
-        });
+            // Event listener para cambio de fecha
+            fechaInput.addEventListener('change', function() {
+                TimeSlotHandler.updateTimeSlots(this.value);
+            });
 
-        // Event listener para el formulario
-        document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
+            // Event listener para el formulario
+            document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
 
-    } catch (error) {
-        console.error('Error en la inicialización:', error);
-        TimeSlotHandler.showError('Error al inicializar el formulario');
-    }
-
-    // Función de validación del formulario
-    function validarFormulario(event) {
-        let isValid = true;
-        let errorMessage = '';
-
-        if (!document.getElementById('selectedServiceType').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un tipo de servicio. ';
+        } catch (error) {
+            console.error('Error en la inicialización:', error);
+            TimeSlotHandler.showError('Error al inicializar el formulario');
         }
 
-        if (!document.getElementById('selectedServiceSubtype').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
-        }
+        // Función de validación del formulario
+        function validarFormulario(event) {
+            let isValid = true;
+            let errorMessage = '';
 
-        if (!fechaInput.value || !document.getElementById('hora_inicio').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione fecha y hora. ';
-        }
+            if (!document.getElementById('selectedServiceType').value) {
+                isValid = false;
+                errorMessage += 'Por favor, seleccione un tipo de servicio. ';
+            }
 
-        if (!document.getElementById('tipoVehiculo').value && 
-            document.getElementById('vehiculosDropdown').value === "") {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
-        }
+            if (!document.getElementById('selectedServiceSubtype').value) {
+                isValid = false;
+                errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
+            }
 
-        if (!isValid) {
-            event.preventDefault();
-            TimeSlotHandler.showError(errorMessage);
+            if (!fechaInput.value || !document.getElementById('hora_inicio').value) {
+                isValid = false;
+                errorMessage += 'Por favor, seleccione fecha y hora. ';
+            }
+
+            if (!document.getElementById('tipoVehiculo').value && 
+                document.getElementById('vehiculosDropdown').value === "") {
+                isValid = false;
+                errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+                TimeSlotHandler.showError(errorMessage);
+            }
         }
-    }
-});
-</script>
+    });
+    </script>
 </body>
 </html>
