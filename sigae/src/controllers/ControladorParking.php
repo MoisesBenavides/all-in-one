@@ -104,7 +104,6 @@ class ControladorParking extends AbstractController{
                     // Guardar variables de sesión para reservar posteriormente a la elección de plazas
                     $_SESSION['parking'] = $datos_parking;
                     
-                    // $this->parking = new Parking(false, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
                     if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                         $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
                     } else{
@@ -252,7 +251,7 @@ class ControladorParking extends AbstractController{
         ]); // Pasa la respuesta a la vista
     }
 
-    function holdParkingSlot(Request $request): JsonResponse{
+    function submitParkingSimple(): Response|RedirectResponse{
         $redireccion = $this->verificarSesion();
         if ($redireccion) {
             return $redireccion;
@@ -263,123 +262,77 @@ class ControladorParking extends AbstractController{
 
         // Tiempo expirado
         if ($difTiempo > $this::INACTIVIDAD_MAX_TRANSACCION) {
-            return new JsonResponse(['success' => false, 'message' => 'Tiempo para hacer transacción expirado']);
-        }elseif(isset($_SESSION['parking']) && !empty($_SESSION['parking'])){
+            //Debug
+            error_log("Tiempo de transaccion de parking expirado");
+            return $this->redirectToRoute('bookParkingSimple');
+        } elseif (isset($_SESSION['parking'], $_POST["plazasSeleccionadas"])
+            && !empty($_SESSION['parking']) && !empty($_POST["plazasSeleccionadas"])){
 
-            $largo_plazo=$_SESSION['parking']['largo_plazo'];
-            $tipo_plaza=$_SESSION['parking']['tipo_plaza'];
-            $precio=$_SESSION['parking']['precio'];
+            $largo_plazo = $_SESSION['parking']['largo_plazo'];
+            $tipo_plaza = $_SESSION['parking']['tipo_plaza'];
+            $precio = $_SESSION['parking']['precio'];
             $fecha_inicio = $_SESSION['parking']['fecha_inicio'];
             $fecha_final = $_SESSION['parking']['fecha_final'];
             $matricula = $_SESSION['parking']['matricula'];
+            $tipoVehiculo = $_SESSION['parking']["tipoVehiculo"];
 
-            $datos = json_decode($request->getContent(), true);
-            $numeroPlaza = $datos['numero_plaza'];
+            // Decodificar el JSON a array
+            $plazas = json_decode($_POST["plazasSeleccionadas"], true);
+            //Debug plazas
+            error_log('Plazas recibidas: ' . print_r($plazas, true));
 
-            $this->parking = new Parking($largo_plazo, $tipo_plaza, null, $precio, $fecha_inicio, $fecha_final);
+            $cantidadPlazas = count($plazas);
 
-            $this->parking->comenzarTransaccion();
-            error_log(print_r($this->parking->getDBConnection(), true));
+            if (in_array($tipoVehiculo, ['moto', 'auto', 'camioneta']) && $cantidadPlazas !== 1) {
+                $response['errors'][] = "Debe seleccionar una plaza de parking.";
+            } elseif (in_array($tipoVehiculo, ['camion', 'utilitario']) && $cantidadPlazas !== 2) {
+                $response['errors'][] = "Debe seleccionar dos plazas de parking.";
+            } else {
+                // Instanciar una reserva de Parking
+                $this->parking = new Parking($largo_plazo, $tipo_plaza, null, $precio, $fecha_inicio, $fecha_final);
 
-            if(!$this->parking->reservarServicio($matricula)){
-                $this->parking->deshacerTransaccion();
-                return new JsonResponse(['success' => false, 'message' => 'Error al reservar servicio']);
-            }elseif(!$this->parking->apartarPlaza($numeroPlaza)){
-                error_log(print_r($this->parking, true));
-                $this->parking->deshacerTransaccion();
-                return new JsonResponse(['success' => false, 'message' => 'Error al apartar la plaza']);
-            } else{
-                // Si no hay errores, crea una variable de sesión con el número de plaza que fue seleccionada
-                // Retorna la respuesta como exitosa, true
-                $_SESSION['plaza_apartada'] = $numeroPlaza;
-                return new JsonResponse(['success' => true]);
-            }
+                // Conectar con una reserva de Parking
+                $this->parking->setDBConnection("def_cliente", "password_cliente", "localhost");
+                //Debug
+                error_log(print_r($this->parking->getDBConnection(), true));
 
-        } else {
-            return new JsonResponse(['success' => false, 'message' => 'Debe registrarse una reserva de parking antes de elegir plaza']);
-        }
-    }
+                $this->parking->comenzarTransaccion();
 
-    // TODO: Implementar
-    function submitParkingSimple(): Response|RedirectResponse {
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
-        $response=['success' => false, 'errors' => [], 'debug' => []];
-    
-        // Debug
-        $response['debug']['received_data']=$_POST;
-        if (isset($_POST["plazasSeleccionadas"]) && !empty($_POST["plazasSeleccionadas"])) {
-            try {
-                // Decodificar el JSON a array
-                $plazas = json_decode($_POST["plazasSeleccionadas"], true);
-                
-                // Validar que plazas sea un array
-                if (!is_array($plazas)) {
-                    throw new Exception('Formato de plazas inválido');
-                }
-    
-                // Debug
-                error_log('Plazas recibidas: ' . print_r($plazas, true));
-    
-                if (!isset($_SESSION['parking']["tipoVehiculo"]) || !isset($_SESSION['parking']["tipoVehiculo"])) {
-                    $response['errors'][] = "Debe seleccionar un tipo de vehículo.";
-                } else {
-                    $tipoVehiculo = $_SESSION['parking']["tipoVehiculo"];
-                    $plazasOcupadas = array_filter($plazas, function($plaza) { return $plaza !== null; });
-                    $cantidadPlazas = count($plazasOcupadas);
-    
-                    if (in_array($tipoVehiculo, ['moto', 'auto', 'camioneta'])) {
-                        if ($cantidadPlazas !== 1) {
-                            $response['errors'][] = "Debe seleccionar una plaza de parking.";
-                        }
-                    } elseif (in_array($tipoVehiculo, ['camion', 'utilitario'])) {
-                        if ($cantidadPlazas !== 2) {
-                            $response['errors'][] = "Debe seleccionar dos plazas de parking.";
+                try {
+                    if (!$this->parking->reservarServicio($matricula)) {
+                        throw new Exception("Fallo al reservar el servicio");
+                    }
+                    foreach ($plazas as $plaza) {
+                        if (!$this->parking->apartarPlaza($plaza)) {
+                            throw new Exception("Fallo al apartar la plaza");
                         }
                     }
-    
-                    if (empty($response['errors'])) {
-                        if (!$this->parking) {
-                            $this->parking = new Parking(
-                                $_SESSION['parking']['largo_plazo'],
-                                $_SESSION['parking']['tipo_plaza'],
-                                null, // ID
-                                $_SESSION['parking']['precio'],
-                                $_SESSION['parking']['fecha_inicio'],
-                                $_SESSION['parking']['fecha_final']
-                            );
-                        }
-    
-                        // Confirmar la transacción iniciada en holdParkingSlot()
-                        $this->parking->confirmarTransaccion();
-                        $response['success'] = true;
-    
-                        // Guardar la reserva en la sesión
-                        $_SESSION['reserva'] = $this->parking;
-                        $_SESSION['servicio'] = 'parking';
-                        $_SESSION['matricula'] = $_SESSION['parking']['matricula'];
-    
-                        // Redireccionar al usuario a la página de confirmación de reserva
-                        return $this->redirectToRoute('parkingConfirmation');
-                    }
+                    // Confirmar la transacción realizada
+                    $this->parking->confirmarTransaccion();
+                    $response['success'] = true;
+
+                    // Guardar la reserva en la sesión
+                    $_SESSION['reserva'] = $this->parking;
+                    $_SESSION['servicio'] = 'parking';
+                    $_SESSION['matricula'] = $_SESSION['parking']['matricula'];
+
+                    // Redireccionar al usuario a la página de confirmación de reserva
+                    return $this->redirectToRoute('parkingConfirmation');
+                } catch (Exception $e) {
+                    $this->parking->deshacerTransaccion();
+                    $response['errors'][] = "Error procesando la reserva: " . $e->getMessage();
+                } finally {
+                    // Desconectar de la base de datos
+                    $this->parking->cerrarDBConnection();
                 }
-            } catch (Exception $e) {
-                error_log('Error procesando plazas: ' . $e->getMessage());
-                $response['errors'][] = "Error procesando la selección de plazas: " . $e->getMessage();
             }
-        } else {
-            $response['errors'][] = 'No se ha seleccionado ninguna plaza para la reserva';
+            return $this->render('client/eleccionPlazaParking.html.twig', [
+                'response' => $response,
+                'tipoVehiculo' => $_SESSION['parking']['tipoVehiculo'] ?? null,
+                'plazasLibres' => $_SESSION['plazasLibres'] ?? null,
+                'parking_data' => $_SESSION['parking'] ?? null
+            ]);
         }
-    
-        // Si llegamos aquí, hubo un error
-        return $this->render('client/eleccionPlazaParking.html.twig', [
-            'response' => $response,
-            'tipoVehiculo' => $_SESSION['parking']['tipoVehiculo'] ?? null,
-            'plazasLibres' => $_SESSION['plazasLibres'] ?? null,
-            'parking_data' => $_SESSION['parking'] ?? null
-        ]);
     }
 
     function verificarSesion(): ?RedirectResponse {
