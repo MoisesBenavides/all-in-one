@@ -171,7 +171,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', async function() {
         // Configurar URLs
-        ServiceHandler.setJsonUrl("../../data/serviciosTaller.json");
+        ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
 
         let servicios = {};
 
