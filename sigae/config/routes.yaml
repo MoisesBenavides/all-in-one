@@ -102,11 +102,6 @@ bookParkingLongTerm:
   controller: Sigae\Controllers\ControladorParking::bookParkingLongTerm
   methods: POST
 
-holdParkingSlot:
-  path: /api/holdParkingSlot
-  controller: Sigae\Controllers\ControladorParking::holdParkingSlot
-  methods: POST
-
 submitParkingSimple:
   path: /submitParkingSimple
   controller: Sigae\Controllers\ControladorParking::submitParkingSimple
