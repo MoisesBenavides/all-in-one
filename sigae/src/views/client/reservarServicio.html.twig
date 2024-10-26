@@ -164,14 +164,14 @@
     {% include 'partials/footer.html.twig' %}
     <script>
         // Definir la URL antes de cargar los scripts
-       // const GET_BLOCKED_TIMES_URL = "{{ path('') }}";
+        const GET_BLOCKED_TIMES_URL = "{{ path('PATH DE FECHAS BLoQUEADAS') }}";
     </script>
     <script src="{{ asset('js/serviceHandler.js') }}"></script>
     <script src="{{ asset('js/timeSlotHandler.js') }}"></script>
     <script>
     document.addEventListener('DOMContentLoaded', async function() {
         // Configurar URLs
-        ServiceHandler.setJsonUrl("../../data/serviciosTaller.json");
+        ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
 
         let servicios = {};
 
