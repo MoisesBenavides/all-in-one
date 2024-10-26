@@ -71,6 +71,9 @@ class Parking extends Servicio {
 
 
     public function apartarPlaza($numero_plaza){
+        //Debug numero plaza
+        error_log("Plaza recibida en modelo ".$numero_plaza);
+
         $id_servicio=$this->getId();
         try {
             $stmt = $this->conn->prepare('INSERT INTO numero_plaza (numero_plaza, id_servicio) VALUES (:num_plaza, :id_serv)');

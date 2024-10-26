@@ -290,6 +290,9 @@ class ControladorParking extends AbstractController{
                 return $plaza !== null;
             });
 
+            //Debug plazas validas
+            error_log('Plazas filtradas: ' . print_r($plazasValidas, true));
+
             $cantidadPlazas = count($plazasValidas);
 
             if (in_array($tipoVehiculo, ['moto', 'auto', 'camioneta']) && $cantidadPlazas !== 1) {
