@@ -68,12 +68,13 @@
 
             <input type="hidden" name="plazasSeleccionadas" id="plazasSeleccionadasInput">
             <div class="w-full max-w-[388px] mx-auto flex justify-center mt-4">
-                <button type="submit" class=" btnPark w-full max-w-[340px] h-[62px] px-7 py-2.5  transition-colors rounded-lg text-white text-[32px] font-bold leading-[51.78px]">
+                <button type="submit" class="btnPark w-full max-w-[340px] h-[62px] px-7 py-2.5  transition-colors rounded-lg text-white text-[32px] font-bold leading-[51.78px]">
                     Continuar
                 </button>
             </div>
         </form>
     </div> 
+
     <script>    
     const rutaRedireccion = "{{path('aioParking')}}";
     </script>
@@ -89,7 +90,6 @@
         const parkingData = {{ parking_data|json_encode()|raw }};
         console.log('Parking data:', parkingData);
 
-
         // Funciones de utilidad
         function createDiv(className, children = []) {
             const div = document.createElement('div');
@@ -98,86 +98,33 @@
             return div;
         }
 
-console.log('Session data:', {
-    tipoVehiculo: tipoVehiculo,
-    plazasLibres: plazasLibres
-
-});
-
-// Y modifiquemos la función createParkingSpot
-// Modifica la parte de inicialización al final del script
-document.addEventListener('DOMContentLoaded', function() {
-    // Establecer el tiempo de inicio de elección
-    fetch('{{ path("holdParkingSlot") }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({ init: true })
-    });
-
-    updateFloorDisplay();
-    generateParkingLayout();
-});
-
-// Y actualiza la función createParkingSpot
-function createParkingSpot(number, prefix) {
-    const spotId = `${prefix}${number}`;
-    const spot = document.createElement('button');
-    
-    spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
-    spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
-    spot.dataset.spot = spotId;
-    spot.type = 'button';
-
-    if (!plazasLibres.includes(spotId)) {
-        spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
-        spot.disabled = true;
-    } else {
-        spot.addEventListener('click', async (e) => {
-            e.preventDefault();
-            
-            // Deshabilitar el botón mientras se procesa
-            spot.disabled = true;
-            
-            try {
-                const response = await fetch('{{ path("holdParkingSlot") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({ 
-                        numero_plaza: spotId
-                    })
-                });
-
-                const result = await response.json();
-                console.log('Response:', result);
-                
-                if (result.success) {
-                    handleSpotSelection(spot);
-                } else {
-                    spot.disabled = false;
-                    if (result.message.includes('Sesión')) {
-                        alert('La sesión ha expirado. Se recargará la página.');
-                        window.location.reload();
-                    } else {
-                        alert(result.message || 'Esta plaza ya no está disponible');
-                    }
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                spot.disabled = false;
-                alert('Hubo un error al apartar la plaza');
-            }
+        console.log('Session data:', {
+            tipoVehiculo: tipoVehiculo,
+            plazasLibres: plazasLibres
         });
-    }
 
-    return spot;
-}
+        function createParkingSpot(number, prefix) {
+            const spotId = `${prefix}${number}`;
+            const spot = document.createElement('button');
+            
+            spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
+            spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
+            spot.dataset.spot = spotId;
+            spot.type = 'button';
+
+            if (!plazasLibres.includes(spotId)) {
+                spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
+                spot.disabled = true;
+            } else {
+                spot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleSpotSelection(spot);
+                });
+            }
+
+            return spot;
+        }
+
         function handleSpotSelection(spot) {
             if (tipoVehiculo === 'camion' || tipoVehiculo === 'utilitario') {
                 handleLargeVehicleSelection(spot);
@@ -285,7 +232,7 @@ function createParkingSpot(number, prefix) {
         }
 
         // Event Listeners
-       document.getElementById('parkingForm').addEventListener('submit', function(e) {
+        document.getElementById('parkingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             if (plazasSeleccionadas.length === 0) {
@@ -303,8 +250,6 @@ function createParkingSpot(number, prefix) {
             document.getElementById('plazasSeleccionadasInput').value = JSON.stringify(plazasArray);
             this.submit();
         });
-
-
 
         document.getElementById('decrementFloor').addEventListener('click', function() {
             if (currentFloor > 1) {
@@ -326,15 +271,13 @@ function createParkingSpot(number, prefix) {
             document.getElementById('floorDisplay').textContent = `Piso ${currentFloor}`;
         }
 
-    // Inicialización
+        // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             updateFloorDisplay();
             generateParkingLayout();
             new ParkingTimer();
         });
     </script>
-
- 
 
     {% include 'partials/footer.html.twig' %}
 </body>
