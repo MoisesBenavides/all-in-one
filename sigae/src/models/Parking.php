@@ -14,12 +14,6 @@ class Parking extends Servicio {
         parent::__construct($id, $precio, $fecha_inicio, $fecha_final);
         $this->largo_plazo = $largo_plazo;
         $this->tipo_plaza = $tipo_plaza;
-        // Inicializar la conexión de bd
-        $this->conn = conectarDB("def_cliente", "password_cliente", "localhost");
-        if($this->conn === false){
-            throw new Exception("No se puede conectar con la base de datos.");
-        }
-
     }
 
     public function setDBConnection($user, $password , $hostname){
@@ -64,6 +58,10 @@ class Parking extends Servicio {
     // Método para revertir una transacción
     public function deshacerTransaccion() {
         $this->conn->rollBack();
+        $this->conn = null;
+    }
+
+    public function cerrarDBConnection(){
         $this->conn = null;
     }
 
@@ -113,6 +111,8 @@ class Parking extends Servicio {
 
             $this->conn->commit();
             $ocupadas=$stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            //Debug
             (!empty($ocupadas)) ? error_log(print_r($ocupadas, true)) : error_log("No se encontraron plazas ocupadas");
             
             return $ocupadas;
