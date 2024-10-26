@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!--Es responsivo-->
     <meta charset="UTF-8">
-    <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
@@ -11,129 +9,130 @@
     <title>Reserva de Parking de Largo Plazo | AIO</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
-    <script>
-        // Dropdown functionality
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const dropdownButtons = document.querySelectorAll('#dropdownButton');
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
 
-            dropdownButtons.forEach((button) => {
-                const dropdownMenu = button.nextElementSibling;
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
 
-                button.addEventListener('click', () => {
-                    dropdownMenu.classList.toggle('hidden');
-                });
-
-                const options = dropdownMenu.querySelectorAll('.option');
-
-                options.forEach((option) => {
-                    option.addEventListener('click', () => {
-                        const selectedOption = button.querySelector('#selectedOption');
-                        selectedOption.textContent = option.textContent;
-
-                        const selectedInput = button.nextElementSibling.nextElementSibling;
-                        selectedInput.value = option.dataset.value;
-
-                        dropdownMenu.classList.add('hidden');
-                    });
-                });
-            });
-        });
-    </script>
-</head>
-<style>
-    @font-face {
-        font-family: 'Teachers';
-        src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    /* Apply the 'Teachers' font to all text elements */
-    body, input, select, button, option {
-        font-family: 'Teachers', sans-serif;
-    }
-     .btnPark{
+        .btnPark{
             background-color: #1f3de0
         }
 
         .btnPark:hover{
             background-color: #233181
         }
-</style>
-        {% include 'partials/headerParking.html.twig' %}
-   <script src="{{ asset('js/fechaInicioHandler.js') }}">
-    </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar el handler de la fechap
-        const startHandler = initializeStartDate('fecha_inicio');
-    });
-</script>
-<main class="container mx-auto px-4 py-8">
-    <div class="max-w-3xl mx-auto space-y-8 sm:space-y-12">
-        <section>
-            <h2 class="text-center text-black text-xl sm:text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
-            <div class="w-full max-w-[340px] mx-auto">
-                <input type="datetime-local" id="fecha_inicio" class="w-full h-[60px] px-4 py-3 bg-white rounded-[10px] border border-[#161212] text-center text-black text-lg sm:text-xl font-semibold">
-            </div>
-            <!--fehca disclaimer-->
-              <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
-                    <p>Las fehcas van en intervalos de 30 minutos, la fecha que elija se adaptará automaticamente a estos intervalos</p> 
-                </div>
-        </section>
 
-        <section>
-            <h2 class="text-center text-black text-xl sm:text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
-            <form id="vehicleForm" action="proceso.php" method="POST" class="w-full max-w-[340px] mx-auto">
-                <div class="relative mb-2">
-                    <div id="dropdownButton" class="w-full h-[60px] px-4 py-3 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                        <div id="selectedOption" class="text-center text-black text-lg sm:text-xl font-semibold">Tipo</div>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
+        .disabled-section {
+            pointer-events: none;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'partials/headerParking.html.twig' %}
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto space-y-8">
+            <form id="servicioForm" action="{{ path('bookParkingLongTerm') }}" method="POST" class="w-full max-w-[340px] mx-auto">
+                <!-- Fecha de inicio -->
+                <section>
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
+                    <div class="w-full max-w-[340px] mx-auto">
+                        <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" required 
+                            class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
                     </div>
-                    <div id="dropdownMenu" class="absolute z-10 right-0 top-0 mt-12 w-full sm:w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
-                        <div class="py-1">
-                            <div class="option cursor-pointer px-4 py-3 hover:bg-gray-100" data-value="1" data-price="100">Motocicleta</div>
-                            <div class="option cursor-pointer px-4 py-3 hover:bg-gray-100" data-value="2" data-price="250">Camioneta</div>
-                            <div class="option cursor-pointer px-4 py-3 hover:bg-gray-100" data-value="3" data-price="200">Auto</div>
-                            <div class="option cursor-pointer px-4 py-3 hover:bg-gray-100" data-value="4" data-price="300">Pequeño camión</div>
-                            <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="utilitario" data-price="170">Pequeño utilitario</div>
+                    <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
+                        <p>Las fechas van en intervalos de 30 minutos, la fecha que elija se adaptará automáticamente a estos intervalos</p> 
+                    </div>
+                </section>
 
+                <!-- Tus vehículos -->
+                <section>
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
+                    <div class="relative w-full max-w-[340px] mx-auto">
+                        <select id="vehiculosDropdown" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                            <option value="">Seleccione un vehículo</option>
+                            {% if misVehiculos is defined and misVehiculos is not empty %}
+                                {% for vehiculo in misVehiculos %}
+                                    <option value="{{ vehiculo.matricula }}" data-tipo="{{ vehiculo.tipo }}">
+                                        {{ vehiculo.matricula }} ({{ vehiculo.tipo }})
+                                    </option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Tipo de vehículo -->
+                <section id="tipoVehiculoSection">
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
+                    <div class="relative mb-2">
+                        <div id="dropdownButtonAuto" 
+                            class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                            <div id="selectedOptionAuto" class="text-center text-black text-xl font-semibold">Tipo</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" 
+                                class="w-6 h-6 transition-transform duration-300">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <div id="dropTipoVehiculo" 
+                            class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                            <div class="py-1">
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="moto">Moto</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="auto">Auto</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camioneta">Camioneta</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="camion">Pequeño camión</div>
+                                <div class="option cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="utilitario">Pequeño utilitario</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id="priceInfo" class="text-center text-black text-sm font-semibold hidden"></div>
-                <input type="hidden" id="selectedVehicleType" name="vehicleType" value="">
-            </form>
-        </section>
+                    <input type="hidden" id="tipoVehiculo" name="tipoVehiculo" value="">
+                </section>
 
-        <section>
-            <h2 class="text-center text-black text-xl sm:text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Ingrese El tipo de reserva</h2>
-            <form id="reservationForm" action="proceso.php" method="POST" class="w-full max-w-[340px] mx-auto">
-                <div class="relative mb-2">
-                    <div id="dropdownButton" class="w-full h-[60px] px-4 py-3 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                        <div id="selectedOption" class="text-center text-black text-lg sm:text-xl font-semibold">Tipo</div>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
-                    <div id="dropdownMenu" class="absolute z-10 right-0 top-0 mt-12 w-full sm:w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
-                        <div class="py-1">
-                            <div class="option cursor-pointer px-4 py-3 hover:bg-gray-100">Semanal</div>
-                            <div class="option cursor-pointer px-4 py-3 hover:bg-gray-100">Quincena</div>
-                            <div class="option cursor-pointer px-4 py-3 hover:bg-gray-100">Mensual</div>
-                            <div class="option cursor-pointer px-4 py-3 hover:bg-gray-100">Anual</div>
+                <!-- Matrícula manual -->
+                <div id="matriculaManualSection" class="h-[52px] relative mt-4">
+                    <input id="matriculaYa" type="text" 
+                        placeholder="O registra ya con Matrícula" 
+                        class="space-x-6 p-2 w-[340px] h-[50px] text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
+                </div>
+
+                <!-- Tipo de reserva -->
+                <section>
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de reserva</h2>
+                    <div class="relative mb-2">
+                        <div id="dropdownButtonReserva" 
+                            class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
+                            <div id="selectedOptionReserva" class="text-center text-black text-xl font-semibold">Seleccione período</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" 
+                                class="w-6 h-6 transition-transform duration-300">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <div id="dropTipoReserva" 
+                            class="absolute z-10 right-0 top-0 mt-12 w-48 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
+                            <div class="py-1">
+                                <div class="option-reserva cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="semanal">Semanal</div>
+                                <div class="option-reserva cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="quincenal">Quincenal</div>
+                                <div class="option-reserva cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="mensual">Mensual</div>
+                                <div class="option-reserva cursor-pointer px-[22px] py-3.5 hover:bg-gray-100" data-value="anual">Anual</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <input type="hidden" id="sTipoReserva" name="TipoReserva" value="">
-            </form>
-        </section>
-    
-        <!-- DIV PARA ERRORES DE PHP -->
-                {% if response.errors is defined and response.errors is not empty %}
-                    <div id="error-container" class="display-none text-red-600">
+                    <input type="hidden" id="tipoReserva" name="tipoReserva" value="">
+                </section>
+
+                <!-- Sección de errores -->
+                {% if response is defined and response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" class="text-red-600 mt-4">
                         <ul id="error-list">
                             {% for error in response.errors %}
                                 <li>{{ error }}</li>
@@ -141,59 +140,166 @@
                         </ul>
                     </div>
                 {% endif %}
-        <!--  FINAL DE DIV PARA ERRORES DE PHP -->
 
-        <section class="text-center">
-            <button class="w-full max-w-[340px] h-[62px] px-7 py-2.5 duration-300 btnPark rounded-lg text-neutral-50 text-2xl sm:text-3xl font-bold leading-tight">
-                Continuar
-            </button>
-        </section>
-
-        <section>
-            <h2 class="text-center text-black text-xl sm:text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
-            <div class="relative w-full max-w-[340px] mx-auto">
-                <select id="vehiculosDropdown" name="matricula" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                        {# Mensaje por defecto #}
-                        <option value="" selected disabled>Seleccione un vehículo</option>
-
-                        {# Mostrar los vehículos si tiene vinculados, o deshabilitar dropdown#}
-                        {% if misVehiculos %}
-                            {% for vehiculo in misVehiculos %}
-                                <option value="{{ vehiculo.matricula }}">{{ vehiculo.matricula }} ({{ vehiculo.tipo }})</option>
-                                <script>
-                                    // tiposDropdown.prop('disabled', true).hide(); // Deshabilitar y ocultar el dropdown de tipo
-                                </script>
-                            {% endfor %}
-                        {% else %}
-                            <option value="" disabled>No tienes vehículos vinculados</option>
-                        {% endif %}
-                </select>
-            </div>
-        </section>
+                <!-- Botón de continuar -->
+                <button type="submit" 
+                    class="w-full max-w-[340px] h-[62px] px-7 py-2.5 duration-300 btnPark rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px] mt-4">
+                    Continuar
+                </button>
+            </form>
+        </div>
     </main>
 
+    <script defer src="{{ asset('js/fechaInicioHandler.js') }}"></script>
+
     <script>
-        // Código para validar el envío del formulario
-        const form = document.getElementById('servicioForm');
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Verificar si el usuario seleccionó un vehículo o ingresó uno manualmente
-            const vehiculoDropdown = document.getElementById('vehiculosDropdown');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar el handler de fecha
+            const startHandler = initializeStartDate('fecha_inicio');
+
+            // Referencias a elementos del DOM
+            const form = document.getElementById('servicioForm');
+            const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+            const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+            const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+            const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
+            const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+            const selectedVehicleType = document.getElementById('tipoVehiculo');
             const matriculaYa = document.getElementById('matriculaYa');
-        
-            if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
-                alert("Debe seleccionar un vehículo o ingresar una matrícula.");
-            } else {
-                if (vehiculosDropdown.value !== "") {
-                    matriculaYa.value = "";  // Si seleccionó un vehículo, limpiar el campo de matrícula manual
+            const matriculaManualSection = document.getElementById('matriculaManualSection');
+            const dropdownButtonReserva = document.getElementById('dropdownButtonReserva');
+            const dropdownMenuReserva = document.getElementById('dropTipoReserva');
+            const selectedOptionReserva = document.getElementById('selectedOptionReserva');
+            const selectedReservaType = document.getElementById('tipoReserva');
+
+            // Control del dropdown de tipo de vehículo
+            dropdownButtonAuto.addEventListener('click', () => {
+                if (!dropdownButtonAuto.classList.contains('disabled-section')) {
+                    dropdownMenuAuto.classList.toggle('hidden');
                 }
-                form.submit();  // Enviar el formulario si todo es válido
-            }
+            });
+
+            // Control del dropdown de tipo de reserva
+            dropdownButtonReserva.addEventListener('click', () => {
+                dropdownMenuReserva.classList.toggle('hidden');
+            });
+
+            // Selección de tipo de vehículo
+            const optionsAuto = document.querySelectorAll('#dropTipoVehiculo .option');
+            optionsAuto.forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedOptionAuto.textContent = option.textContent;
+                    selectedVehicleType.value = option.dataset.value;
+                    dropdownMenuAuto.classList.add('hidden');
+                });
+            });
+
+            // Selección de tipo de reserva
+            const optionsReserva = document.querySelectorAll('#dropTipoReserva .option-reserva');
+            optionsReserva.forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedOptionReserva.textContent = option.textContent;
+                    selectedReservaType.value = option.dataset.value;
+                    dropdownMenuReserva.classList.add('hidden');
+                });
+            });
+
+            // Event listener para el dropdown de vehículos
+            vehiculosDropdown.addEventListener('change', function() {
+                if (this.value !== "") {
+                    // Si se seleccionó un vehículo existente
+                    const selectedOption = this.options[this.selectedIndex];
+                    const tipo = selectedOption.getAttribute('data-tipo');
+                    
+                    selectedOptionAuto.textContent = tipo;
+                    selectedVehicleType.value = tipo.toLowerCase();
+                    tipoVehiculoSection.classList.add('disabled-section');
+                    
+                    // Limpiar y ocultar matrícula manual
+                    matriculaYa.value = '';
+                    matriculaYa.removeAttribute('name');
+                    matriculaManualSection.style.display = 'none';
+                    
+                    // Establecer el name para el vehículo seleccionado
+                    this.setAttribute('name', 'matricula');
+                } else {
+                    // Si se deseleccionó el vehículo
+                    tipoVehiculoSection.classList.remove('disabled-section');
+                    matriculaManualSection.style.display = 'block';
+                    selectedOptionAuto.textContent = 'Tipo';
+                    selectedVehicleType.value = '';
+                    
+                    // Quitar el name del dropdown
+                    this.removeAttribute('name');
+                    // Establecer el name para matrícula manual
+                    matriculaYa.setAttribute('name', 'matriculaYa');
+                }
+            });
+
+            // Event listener para matrícula manual
+            matriculaYa.addEventListener('input', function() {
+                if (this.value !== "") {
+                    vehiculosDropdown.value = "";
+                    vehiculosDropdown.removeAttribute('name');
+                    this.setAttribute('name', 'matriculaYa');
+                    tipoVehiculoSection.classList.remove('disabled-section');
+                } else {
+                    this.removeAttribute('name');
+                }
+            });
+
+            // Validación del formulario
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Validar fecha
+                if (!document.getElementById('fecha_inicio').value) {
+                    alert("Debe seleccionar la fecha de inicio.");
+                    return;
+                }
+
+                // Validar selección de vehículo o matrícula manual
+                if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
+                    alert("Debe seleccionar un vehículo o ingresar una matrícula.");
+                    return;
+                }
+
+                // Validar tipo de vehículo para matrícula manual
+                if (matriculaYa.value !== "" && selectedVehicleType.value === "") {
+                    alert("Debe seleccionar un tipo de vehículo.");
+                    return;
+                }
+
+                // Validar tipo de reserva
+                if (selectedReservaType.value === "") {
+                    alert("Debe seleccionar un tipo de reserva.");
+                    return;
+                }
+
+                // Asegurar que solo un campo de matrícula tenga name
+                if (matriculaYa.value) {
+                    matriculaYa.setAttribute('name', 'matriculaYa');
+                    vehiculosDropdown.removeAttribute('name');
+                } else if (vehiculosDropdown.value) {
+                    vehiculosDropdown.setAttribute('name', 'matricula');
+                    matriculaYa.removeAttribute('name');
+                }
+
+                this.submit();
+            });
+
+            // Cerrar dropdowns cuando se hace click fuera de ellos
+            document.addEventListener('click', function(e) {
+                if (!dropdownButtonAuto.contains(e.target) && !dropdownMenuAuto.contains(e.target)) {
+                    dropdownMenuAuto.classList.add('hidden');
+                }
+                if (!dropdownButtonReserva.contains(e.target) && !dropdownMenuReserva.contains(e.target)) {
+                    dropdownMenuReserva.classList.add('hidden');
+                }
+            });
         });
     </script>
 
-          {% include 'partials/footer.html.twig' %}
-
+    {% include 'partials/footer.html.twig' %}
 </body>
 </html>
