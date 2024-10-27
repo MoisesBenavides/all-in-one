@@ -41,6 +41,7 @@ return array(
     'Symfony\\Bridge\\Twig\\' => array($vendorDir . '/symfony/twig-bridge'),
     'Sigae\\Tests\\' => array($baseDir . '/tests'),
     'Sigae\\Models\\' => array($baseDir . '/src/models'),
+    'Sigae\\EventListeners\\' => array($baseDir . '/src/eventListeners'),
     'Sigae\\Controllers\\' => array($baseDir . '/src/controllers'),
     'Sigae\\Config\\' => array($baseDir . '/config'),
     'Sigae\\' => array($baseDir . '/src'),
