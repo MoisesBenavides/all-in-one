@@ -313,7 +313,7 @@ class ControladorParking extends AbstractController{
                     if (!$this->parking->reservarServicio($matricula)) {
                         throw new Exception("Fallo al reservar el servicio");
                     }
-                    foreach ($plazas as $plaza) {
+                    foreach ($plazasValidas as $plaza) {
                         if (!$this->parking->apartarPlaza($plaza)) {
                             throw new Exception("Fallo al apartar la plaza");
                         }
