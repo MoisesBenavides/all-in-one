@@ -63,7 +63,6 @@ class SessionTimeoutListener {
 
         // Actualiza la última solicitud y regenera el ID de sesion
         $_SESSION["ultima_solicitud"] = time();
-        session_regenerate_id(true);
     }
 
     private function logout(RequestEvent $event): void{
