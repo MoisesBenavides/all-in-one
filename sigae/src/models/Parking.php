@@ -117,7 +117,7 @@ class Parking extends Servicio {
             $stmt->execute();
 
             $this->conn->commit();
-            $ocupadas=$stmt->fetchAll(PDO::FETCH_ASSOC);
+            $ocupadas=$stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
             //Debug
             (!empty($ocupadas)) ? error_log(print_r($ocupadas, true)) : error_log("No se encontraron plazas ocupadas");
