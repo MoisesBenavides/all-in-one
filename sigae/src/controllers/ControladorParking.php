@@ -16,7 +16,6 @@ use InvalidArgumentException;
 class ControladorParking extends AbstractController{
     private const PATH_PRECIOS_JSON = __DIR__ . '/../data/preciosHoraParking.json';
     private const PATH_PLAZAS_JSON = __DIR__ . '/../data/plazasParking.json';
-    private const INACTIVIDAD_MAX_SESION = 600;
     private const INACTIVIDAD_MAX_TRANSACCION = 300;
     private $parking;
     private $preciosHora;
@@ -34,11 +33,6 @@ class ControladorParking extends AbstractController{
     }
 
     function bookParkingSimple(): Response|RedirectResponse{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
-
         // Validacion de campos vacios
         if (isset($_POST["fecha_inicio"], $_POST["fecha_final"], $_POST["tipoVehiculo"]) 
             && (!empty($_POST["matriculaYa"]) || !empty($_POST["matricula"])) &&
@@ -162,11 +156,6 @@ class ControladorParking extends AbstractController{
 
     //TODO: Actualizar reservas largo plazo
     function bookParkingLongTerm(): Response|RedirectResponse{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
-
         // Validacion de campos vacios
         if (isset($_POST["fecha_inicio"], $_POST["tipoReserva"], $_POST["tipoVehiculo"]) 
             && (!empty($_POST["matriculaYa"]) || !empty($_POST["matricula"])) &&
@@ -289,11 +278,6 @@ class ControladorParking extends AbstractController{
     }
 
     function submitParking(): Response|RedirectResponse{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
-
         $tiempoAhora = time();
         $difTiempo = $tiempoAhora - $_SESSION['eleccionPlazaComienzo'];
 
@@ -375,62 +359,6 @@ class ControladorParking extends AbstractController{
                 'parking_data' => $_SESSION['parking'] ?? null
             ]);
         }
-    }
-
-    private function verificarSesion(): ?RedirectResponse {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-    
-        // Verificar si la variable de tiempo de inactividad está definida
-        if (!isset($_SESSION["ultima_solicitud"])) {
-            return $this->redirectToRoute('logout'); // Si no hay un tiempo definido, se realiza el logout
-        }
-    
-        // Obtiene el tiempo desde la última solicitud
-        $inactividad = time() - $_SESSION["ultima_solicitud"];
-    
-        // Verificación de inactividad de la sesión
-        if ($inactividad > $this::INACTIVIDAD_MAX_SESION) {
-            return $this->redirectToRoute('logout'); // Si ha excedido el tiempo de inactividad, cierra la sesión
-        }
-    
-        // Actualiza el tiempo de la última solicitud y regenera la ID de sesión por seguridad
-        $_SESSION["ultima_solicitud"] = time();
-        session_regenerate_id(true);
-    
-        // Si la sesión es válida, no se realiza ninguna redirección
-        return null;
-    }
-
-    function logout(): RedirectResponse{
-        if (session_status() === PHP_SESSION_NONE){
-            session_start();
-        }
-        // Limpia variables de sesión
-        session_unset();
-        $_SESSION=[];
-
-        // Destruye las variables en el servidor
-        session_destroy();
-
-        /// Borra la cookie de sesión
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-
-            // Fomatea el header de la cookie para eliminarla
-            $cookieHeader = sprintf(
-                '%s=; expires=%s; Max-Age=0; path=%s; domain=%s; secure; httponly; samesite=%s',
-                session_name(),
-                gmdate('D, d M Y H:i:s T', time() - 42000),// Formatea la fecha para que sea validada por el navegador
-                $params["path"], $params["domain"],
-                $params["samesite"] ?? 'Lax'// Usa 'Lax' como se especificó 'samesite'
-            );
-            // Envía el header con los parámetros formateados, sin reemplazar otros headers
-            header('Set-Cookie: ' . $cookieHeader, false); 
-        }
-
-        return $this->redirectToRoute('showLandingPage');
     }
 
     function parkingConfirmation(): Response{

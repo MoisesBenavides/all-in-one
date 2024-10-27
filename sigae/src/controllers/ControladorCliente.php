@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ControladorCliente extends AbstractController {
     private $cliente;
-    private const INACTIVIDAD_MAX_SESION = 600; // límite de 10 minutos de inactividad
 
     public function __construct(){
         $this->cliente=new Cliente();
@@ -312,18 +311,9 @@ class ControladorCliente extends AbstractController {
         return $this->render('client/account/forgotPassword.html.twig');
     }
     function services(): Response{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
         return $this->render('client/serviciosMecanicos.html.twig');
     }
     function bookService(): Response{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
-
         $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
 
         return $this->render('client/reservarServicio.html.twig', [
@@ -332,19 +322,10 @@ class ControladorCliente extends AbstractController {
     }
     
     function parking(): Response{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
         return $this->render('client/aioParking.html.twig');
     }
 
     function parkingSimple(): Response{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
-
         $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
         
         return $this->render('client/reservarParkingSimple.html.twig', [
@@ -353,11 +334,6 @@ class ControladorCliente extends AbstractController {
     }
 
     function parkingLongTerm(): Response{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
-
         $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
         
         return $this->render('client/reservarParkingLargoPlazo.html.twig', [
@@ -366,18 +342,10 @@ class ControladorCliente extends AbstractController {
     }
 
     function products(): Response{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
         return $this->render('client/catalogo.html.twig');
     }
 
     function myAccount(): Response{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
         $cliente = [
             'id' => $_SESSION['id'],
             'email' => $_SESSION['email'],
@@ -393,44 +361,10 @@ class ControladorCliente extends AbstractController {
         ]);
     }
     function faq(): Response{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
         return $this->render('client/FAQ.html.twig');
     }
     function home(): Response{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
         return $this->render('client/homeCliente.html.twig');
-    }
-
-    private function verificarSesion(): ?RedirectResponse {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-    
-        // Verificar si la variable de tiempo de inactividad está definida
-        if (!isset($_SESSION["ultima_solicitud"])) {
-            return $this->redirectToRoute('logout'); // Si no hay un tiempo definido, se realiza el logout
-        }
-    
-        // Obtiene el tiempo desde la última solicitud
-        $inactividad = time() - $_SESSION["ultima_solicitud"];
-    
-        // Verificación de inactividad de la sesión
-        if ($inactividad > $this::INACTIVIDAD_MAX_SESION) {
-            return $this->redirectToRoute('logout'); // Si ha excedido el tiempo de inactividad, cierra la sesión
-        }
-    
-        // Actualiza el tiempo de la última solicitud y regenera la ID de sesión por seguridad
-        $_SESSION["ultima_solicitud"] = time();
-        session_regenerate_id(true);
-    
-        // Si la sesión es válida, no se realiza ninguna redirección
-        return null;
     }
 
     function getClientSession(): ?JsonResponse {

@@ -10,14 +10,8 @@ use Exception;
 
 class ControladorVehiculo extends AbstractController{
     private $vehiculo;
-    private const INACTIVIDAD_MAX_SESION = 600;
 
     public function addVehicle(): Response|RedirectResponse{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
-
         $response=['success' => false, 'errors' => []];
 
         $cliente = [
@@ -92,11 +86,6 @@ class ControladorVehiculo extends AbstractController{
     }
 
     public function deleteVehicle($matricula): Response|RedirectResponse{
-        $redireccion = $this->verificarSesion();
-        if ($redireccion) {
-            return $redireccion;
-        }
-        
         $response = ['success' => false, 'errors' => [], 'debug' => []];
 
         $cliente = [
@@ -182,32 +171,6 @@ class ControladorVehiculo extends AbstractController{
             $this->vehiculo->cerrarDBConnection();   
         }
         
-    }
-
-    private function verificarSesion(): ?RedirectResponse {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-    
-        // Verificar si la variable de tiempo de inactividad está definida
-        if (!isset($_SESSION["ultima_solicitud"])) {
-            return $this->redirectToRoute('logout'); // Si no hay un tiempo definido, se realiza el logout
-        }
-    
-        // Obtiene el tiempo desde la última solicitud
-        $inactividad = time() - $_SESSION["ultima_solicitud"];
-    
-        // Verificación de inactividad de la sesión
-        if ($inactividad > $this::INACTIVIDAD_MAX_SESION) {
-            return $this->redirectToRoute('logout'); // Si ha excedido el tiempo de inactividad, cierra la sesión
-        }
-    
-        // Actualiza el tiempo de la última solicitud y regenera la ID de sesión por seguridad
-        $_SESSION["ultima_solicitud"] = time();
-        session_regenerate_id(true);
-    
-        // Si la sesión es válida, no se realiza ninguna redirección
-        return null;
     }
 
     function validarTipoVehiculo($tipoVehiculo){
