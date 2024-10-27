@@ -58,10 +58,6 @@ doBookService:
   controller: Sigae\Controllers\ControladorTaller::doBookService
   methods: POST
 
-uploadMyVehicles:
-  path: /uploadMyVehicles
-  controller: Sigae\Controllers\ControladorCliente::cargarMisVehiculosAjax
-
 addVehicle:
   path: /addVehicle
   controller: Sigae\Controllers\ControladorVehiculo::addVehicle
@@ -117,26 +113,6 @@ products:
   controller: Sigae\Controllers\ControladorCliente::products
   methods: GET
 
-getClientProfilePhoto:
-  path: /api/getClientProfilePhoto
-  controller: Sigae\Controllers\ControladorCliente::getClientProfilePhoto
-  methods: GET
-
-getClientEmail:
-  path: /api/getClientEmail
-  controller: Sigae\Controllers\ControladorCliente::getClientEmail
-  methods: GET
-
-getClientSession:
-  path: /api/getClientSession
-  controller: Sigae\Controllers\ControladorCliente::getClientSession
-  methods: GET
-
-getClientVehicles:
-  path: /api/getClientVehicles
-  controller: Sigae\Controllers\ControladorCliente::getClientVehicles
-  methods: GET
-
 myAccount:
   path: /myAccount
   controller: Sigae\Controllers\ControladorCliente::myAccount
@@ -166,3 +142,23 @@ doLoginAioEmployee:
   path: /doLoginAioEmployee
   controller: Sigae\Controllers\ControladorFuncionario::doLoginAioEmployee
   methods: POST
+
+getClientProfilePhoto:
+  path: /api/getClientProfilePhoto
+  controller: Sigae\Controllers\ControladorCliente::getClientProfilePhoto
+  methods: GET
+
+getClientEmail:
+  path: /api/getClientEmail
+  controller: Sigae\Controllers\ControladorCliente::getClientEmail
+  methods: GET
+
+getClientSession:
+  path: /api/getClientSession
+  controller: Sigae\Controllers\ControladorCliente::getClientSession
+  methods: GET
+
+getClientVehicles:
+  path: /api/getClientVehicles
+  controller: Sigae\Controllers\ControladorCliente::getClientVehicles
+  methods: GET
