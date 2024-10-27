@@ -82,14 +82,20 @@
     <script src="{{ asset('js/parkingTimer.js') }}"></script>
 
     <script>
-        // Variables globales
-       const tipoVehiculo = {{ tipoVehiculo|json_encode()|raw }};
-    // Asegurarse de que plazasLibres sea siempre un array
-    const plazasLibres = Array.isArray({{ plazasLibres|json_encode()|raw }}) ? {{ plazasLibres|json_encode()|raw }} : [];
+         // Variables globales
+    const tipoVehiculo = {{ tipoVehiculo|json_encode()|raw }};
+    
+    // Convertir plazasLibres a array si viene como objeto
+    const plazasLibresData = {{ plazasLibres|json_encode()|raw }};
+    const plazasLibres = Array.isArray(plazasLibresData) ? plazasLibresData : 
+                        (typeof plazasLibresData === 'object' ? Object.values(plazasLibresData) : []);
+    
     let plazasSeleccionadas = [];
     let currentFloor = 1;
     const parkingData = {{ parking_data|json_encode()|raw }};
+    
     console.log('Parking data:', parkingData);
+    console.log('Plazas libres:', plazasLibres);
 
     // Funciones de utilidad
     function createDiv(className, children = []) {
@@ -98,11 +104,6 @@
         children.forEach(child => div.appendChild(child));
         return div;
     }
-
-    console.log('Session data:', {
-        tipoVehiculo: tipoVehiculo,
-        plazasLibres: plazasLibres
-    });
 
     function createParkingSpot(number, prefix) {
         const spotId = `${prefix}${number}`;
@@ -113,8 +114,11 @@
         spot.dataset.spot = spotId;
         spot.type = 'button';
 
-        // Usar Array.isArray para verificar si plazasLibres es un array
-        if (!Array.isArray(plazasLibres) || !plazasLibres.includes(spotId)) {
+        // Verificar si la plaza está en el array de plazas libres
+        const isAvailable = plazasLibres.includes(spotId);
+        console.log(`Plaza ${spotId}: ${isAvailable ? 'libre' : 'ocupada'}`);
+
+        if (!isAvailable) {
             spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
             spot.disabled = true;
         } else {
