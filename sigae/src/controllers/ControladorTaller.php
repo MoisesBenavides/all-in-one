@@ -109,6 +109,7 @@ class ControladorTaller extends AbstractController{
                         } elseif (!$this->taller->reservarServicio($matricula)){
                             throw new Exception("Fallo al reservar el servicio");
                         } else{
+                            $this->taller->confirmarTransaccion();
                             $response['success'] = true;
     
                             // TODO: Enviar correo de confirmación
