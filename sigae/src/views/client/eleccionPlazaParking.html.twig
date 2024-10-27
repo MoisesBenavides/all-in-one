@@ -83,7 +83,6 @@
 
     <script>
         // Variables globales
-        const tipoVehiculo = {{ tipoVehiculo|json_encode()|raw }};
        const tipoVehiculo = {{ tipoVehiculo|json_encode()|raw }};
     // Asegurarse de que plazasLibres sea siempre un array
     const plazasLibres = Array.isArray({{ plazasLibres|json_encode()|raw }}) ? {{ plazasLibres|json_encode()|raw }} : [];
