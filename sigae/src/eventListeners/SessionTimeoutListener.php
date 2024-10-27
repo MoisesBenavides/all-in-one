@@ -9,6 +9,19 @@ use Symfony\Component\Routing\RouterInterface;
 class SessionTimeoutListener {
     private RouterInterface $router;
     private const INACTIVIDAD_MAX_SESION = 600; // límite de 10 minutos de inactividad
+    
+    // Rutas que no deben verificar una sesión ya activa
+    private array $rutasExcluidas = [
+        'showLandingPage', 
+        'login', 
+        'doLogin', 
+        'signup', 
+        'doSignup', 
+        'doSignupOAuth', 
+        'forgotPassword', 
+        'loginAioEmployee', 
+        'doLoginAioEmployee'
+    ];
 
     public function __construct(RouterInterface $router){
         $this->router = $router;
@@ -21,6 +34,15 @@ class SessionTimeoutListener {
     }
 
     private function verificarSesion(RequestEvent $event): void{
+
+        $request = $event->getRequest();
+        $rutaActual = $request->attributes->get('_route');
+
+        // Si la ruta actual es una ruta excluidas, no hace la verificación
+        if (in_array($rutaActual, $this->rutasExcluidas, true)) {
+            return;
+        }
+
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -38,7 +60,7 @@ class SessionTimeoutListener {
             return;
         }
 
-        // Actualiza la última solicitud y regenera el ID de sesión
+        // Actualiza la última solicitud y regenera el ID de sesion
         $_SESSION["ultima_solicitud"] = time();
         session_regenerate_id(true);
     }
