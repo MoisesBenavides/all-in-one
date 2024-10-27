@@ -171,8 +171,12 @@ class ControladorTaller extends AbstractController{
         // Imprimir los datos en pagina de confirmacion
         return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
     }
+    
+    public function getServicesSchedule(): JsonResponse {
+        return new JsonResponse(['horariosTaller' => (!empty($this->horarios)) ? $this->horarios : null]);
+    }
 
-    function estimarFechaFinal($fecha, $minutos) {
+    private function estimarFechaFinal($fecha, $minutos) {
         $formato = 'Y-m-d\TH:i';
         $dt = DateTime::createFromFormat($formato, $fecha);
         
@@ -249,9 +253,4 @@ class ControladorTaller extends AbstractController{
         } else    
             $this->horarios = $horarios;
     }
-    
-    public function getServicesSchedule(): JsonResponse {
-        return new JsonResponse(['horariosTaller' => (!empty($this->horarios)) ? $this->horarios : null]);
-    }
-
 }

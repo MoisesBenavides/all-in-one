@@ -360,7 +360,7 @@ class ControladorCliente extends AbstractController {
         return $this->render('client/homeCliente.html.twig');
     }
 
-    function getClientSession(): ?JsonResponse {
+    public function getClientSession(): ?JsonResponse {
         session_start();
         return new JsonResponse([
             'ultima_solicitud' => $_SESSION['ultima_solicitud'],
@@ -373,13 +373,13 @@ class ControladorCliente extends AbstractController {
             'fotoPerfil' => $_SESSION['fotoPerfil'] ?? null]);
     }
 
-    function getClientProfilePhoto(): ?JsonResponse {
+    public function getClientProfilePhoto(): ?JsonResponse {
         session_start();
         $fotoPerfil = $_SESSION['fotoPerfil'] ?? null;
         return new JsonResponse(['fotoPerfil' => $fotoPerfil]);
     }
 
-    function getClientVehicles(): ?JsonResponse {
+    public function getClientVehicles(): ?JsonResponse {
         session_start();
         $id = $_SESSION['id'];
         $misVehiculos = Cliente::cargarMisVehiculos($id) ?? [];
@@ -391,7 +391,7 @@ class ControladorCliente extends AbstractController {
             'misVehiculos' => $misVehiculos]);
     }
 
-    function getClientEmail(): JsonResponse {
+    public function getClientEmail(): JsonResponse {
         session_start();
         $email = $_SESSION['email'];
         return new JsonResponse(['email' => $email]);
