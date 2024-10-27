@@ -118,10 +118,14 @@ const emailData = {
         fecha_inicio: {{sessionData.reserva.fecha_inicio|json_encode|raw}},
         fecha_final: {{sessionData.reserva.fecha_final|json_encode|raw}},
         estado: {{sessionData.reserva.estado|json_encode|raw}},
-        tipo_plaza: {{sessionData.reserva.tipo_plaza|json_encode|raw}},
-        tipo: {{sessionData.reserva.tipo|json_encode|raw}},
-        descripcion: {{sessionData.reserva.descripcion|json_encode|raw}},
-        tiempo_estimado: {{sessionData.reserva.tiempo_estimado|json_encode|raw}}
+        {% if sessionData.servicio == 'parking' %}
+            largo_plazo: {{sessionData.reserva.largo_plazo|json_encode|raw}},
+            tipo_plaza: {{sessionData.reserva.tipo_plaza|json_encode|raw}},
+        {% else sessionData.servicio == 'taller' %}
+            tipo: {{sessionData.reserva.tipo|json_encode|raw}},
+            descripcion: {{sessionData.reserva.descripcion|json_encode|raw}},
+            tiempo_estimado: {{sessionData.reserva.tiempo_estimado|json_encode|raw}}
+        {% endif %}
     }
 };
 
