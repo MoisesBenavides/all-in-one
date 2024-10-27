@@ -137,7 +137,9 @@ const SESSION_URL = "{{ path('getClientSession') }}";
                 </button>
 
                 <!-- Logo móvil -->
-                <img class="logo-size-mobile transition-all duration-300" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
+                <a href="{{ path('home') }}" class="shrink-0">
+                    <img class="logo-size-mobile transition-all duration-300" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
+                </a>
 
                 <!-- Iconos móviles -->
                 <div class="flex items-center space-x-4">
