@@ -84,117 +84,120 @@
     <script>
         // Variables globales
         const tipoVehiculo = {{ tipoVehiculo|json_encode()|raw }};
-        const plazasLibres = {{ plazasLibres|json_encode()|raw }};
-        let plazasSeleccionadas = [];
-        let currentFloor = 1;
-        const parkingData = {{ parking_data|json_encode()|raw }};
-        console.log('Parking data:', parkingData);
+       const tipoVehiculo = {{ tipoVehiculo|json_encode()|raw }};
+    // Asegurarse de que plazasLibres sea siempre un array
+    const plazasLibres = Array.isArray({{ plazasLibres|json_encode()|raw }}) ? {{ plazasLibres|json_encode()|raw }} : [];
+    let plazasSeleccionadas = [];
+    let currentFloor = 1;
+    const parkingData = {{ parking_data|json_encode()|raw }};
+    console.log('Parking data:', parkingData);
 
-        // Funciones de utilidad
-        function createDiv(className, children = []) {
-            const div = document.createElement('div');
-            div.className = className;
-            children.forEach(child => div.appendChild(child));
-            return div;
+    // Funciones de utilidad
+    function createDiv(className, children = []) {
+        const div = document.createElement('div');
+        div.className = className;
+        children.forEach(child => div.appendChild(child));
+        return div;
+    }
+
+    console.log('Session data:', {
+        tipoVehiculo: tipoVehiculo,
+        plazasLibres: plazasLibres
+    });
+
+    function createParkingSpot(number, prefix) {
+        const spotId = `${prefix}${number}`;
+        const spot = document.createElement('button');
+        
+        spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
+        spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
+        spot.dataset.spot = spotId;
+        spot.type = 'button';
+
+        // Usar Array.isArray para verificar si plazasLibres es un array
+        if (!Array.isArray(plazasLibres) || !plazasLibres.includes(spotId)) {
+            spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
+            spot.disabled = true;
+        } else {
+            spot.addEventListener('click', (e) => {
+                e.preventDefault();
+                handleSpotSelection(spot);
+            });
         }
 
-        console.log('Session data:', {
-            tipoVehiculo: tipoVehiculo,
-            plazasLibres: plazasLibres
-        });
+        return spot;
+    }
 
-        function createParkingSpot(number, prefix) {
-            const spotId = `${prefix}${number}`;
-            const spot = document.createElement('button');
-            
-            spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
-            spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
-            spot.dataset.spot = spotId;
-            spot.type = 'button';
+    function handleSpotSelection(spot) {
+        if (tipoVehiculo === 'camion' || tipoVehiculo === 'utilitario') {
+            handleLargeVehicleSelection(spot);
+        } else {
+            handleRegularSelection(spot);
+        }
+    }
 
-            if (!plazasLibres.includes(spotId)) {
-                spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
-                spot.disabled = true;
+    function handleRegularSelection(spot) {
+        plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
+        plazasSeleccionadas = [spot];
+        spot.classList.add('bg-[#5381c6]', 'text-white');
+    }
+
+    function handleLargeVehicleSelection(spot) {
+        if (plazasSeleccionadas.length === 0) {
+            plazasSeleccionadas.push(spot);
+            spot.classList.add('bg-[#5381c6]', 'text-white');
+        } else if (plazasSeleccionadas.length === 1) {
+            if (isAdjacentSpot(plazasSeleccionadas[0], spot)) {
+                plazasSeleccionadas.push(spot);
+                spot.classList.add('bg-[#5381c6]', 'text-white');
             } else {
-                spot.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    handleSpotSelection(spot);
-                });
+                plazasSeleccionadas[0].classList.remove('bg-[#5381c6]', 'text-white');
+                plazasSeleccionadas = [spot];
+                spot.classList.add('bg-[#5381c6]', 'text-white');
             }
-
-            return spot;
-        }
-
-        function handleSpotSelection(spot) {
-            if (tipoVehiculo === 'camion' || tipoVehiculo === 'utilitario') {
-                handleLargeVehicleSelection(spot);
-            } else {
-                handleRegularSelection(spot);
-            }
-        }
-
-        function handleRegularSelection(spot) {
+        } else {
             plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
             plazasSeleccionadas = [spot];
             spot.classList.add('bg-[#5381c6]', 'text-white');
         }
+    }
 
-        function handleLargeVehicleSelection(spot) {
-            if (plazasSeleccionadas.length === 0) {
-                plazasSeleccionadas.push(spot);
-                spot.classList.add('bg-[#5381c6]', 'text-white');
-            } else if (plazasSeleccionadas.length === 1) {
-                if (isAdjacentSpot(plazasSeleccionadas[0], spot)) {
-                    plazasSeleccionadas.push(spot);
-                    spot.classList.add('bg-[#5381c6]', 'text-white');
-                } else {
-                    plazasSeleccionadas[0].classList.remove('bg-[#5381c6]', 'text-white');
-                    plazasSeleccionadas = [spot];
-                    spot.classList.add('bg-[#5381c6]', 'text-white');
-                }
-            } else {
-                plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
-                plazasSeleccionadas = [spot];
-                spot.classList.add('bg-[#5381c6]', 'text-white');
-            }
-        }
+    function isAdjacentSpot(spot1, spot2) {
+        const num1 = parseInt(spot1.dataset.spot.match(/\d+/)[0]);
+        const num2 = parseInt(spot2.dataset.spot.match(/\d+/)[0]);
+        return Math.abs(num1 - num2) === 1;
+    }
 
-        function isAdjacentSpot(spot1, spot2) {
-            const num1 = parseInt(spot1.dataset.spot.match(/\d+/)[0]);
-            const num2 = parseInt(spot2.dataset.spot.match(/\d+/)[0]);
-            return Math.abs(num1 - num2) === 1;
-        }
+    function generateMotoLayout(container) {
+        const motoSpots = createParkingColumn(1, 20, 'B');
+        container.appendChild(createDiv('flex justify-center', [
+            createDiv('w-1/4', [motoSpots])
+        ]));
+    }
 
-        function generateMotoLayout(container) {
-            const motoSpots = createParkingColumn(1, 20, 'B');
-            container.appendChild(createDiv('flex justify-center', [
-                createDiv('w-1/4', [motoSpots])
-            ]));
-        }
+    function generateAutoLayout(container) {
+        const prefix = currentFloor === 1 ? 'A' : 'C';
+        const leftColumn = createParkingColumn(1, 20, prefix);
+        const middleColumn = createParkingColumn(21, 30, prefix);
+        const rightColumn = createParkingColumn(31, 50, prefix);
 
-        function generateAutoLayout(container) {
-            const prefix = currentFloor === 1 ? 'A' : 'C';
-            const leftColumn = createParkingColumn(1, 20, prefix);
-            const middleColumn = createParkingColumn(21, 30, prefix);
-            const rightColumn = createParkingColumn(31, 50, prefix);
+        container.appendChild(createDiv('flex justify-center gap-[150px] h-full', [
+            createDiv('flex flex-col justify-start overflow-y-auto', [leftColumn]),
+            createDiv('flex flex-col justify-end', [
+                middleColumn,
+                createDiv('w-[45px] h-[108px] border-t border-b border-l border-black')
+            ]),
+            createDiv('flex flex-col justify-start overflow-y-auto', [rightColumn])
+        ]));
+    }
 
-            container.appendChild(createDiv('flex justify-center gap-[150px] h-full', [
-                createDiv('flex flex-col justify-start overflow-y-auto', [leftColumn]),
-                createDiv('flex flex-col justify-end', [
-                    middleColumn,
-                    createDiv('w-[45px] h-[108px] border-t border-b border-l border-black')
-                ]),
-                createDiv('flex flex-col justify-start overflow-y-auto', [rightColumn])
-            ]));
-        }
-
-        function generateLargeVehicleLayout(container) {
-            generateAutoLayout(container);
-            const message = document.createElement('div');
-            message.className = 'absolute top-0 left-0 right-0 text-center text-red-500 p-2';
-            message.textContent = 'Debe seleccionar dos espacios consecutivos';
-            container.insertBefore(message, container.firstChild);
-        }
+    function generateLargeVehicleLayout(container) {
+        generateAutoLayout(container);
+        const message = document.createElement('div');
+        message.className = 'absolute top-0 left-0 right-0 text-center text-red-500 p-2';
+        message.textContent = 'Debe seleccionar dos espacios consecutivos';
+        container.insertBefore(message, container.firstChild);
+    }
 
         function generateParkingLayout() {
             const container = document.getElementById('parkingContainer');
