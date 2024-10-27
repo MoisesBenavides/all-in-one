@@ -162,6 +162,8 @@ class Vehiculo {
                 
             $stmt->execute();
 
+            return true; // Registro de vehículo exitoso
+
         } catch (Exception $e) {
             error_log("Error al registrar el vehículo: " . $e->getMessage());
             return false;
