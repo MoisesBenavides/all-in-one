@@ -157,9 +157,9 @@ class ControladorParking extends AbstractController{
         }
 
         // Validacion de campos vacios
-        if (isset($_POST["fecha_inicio"], $_POST["fecha_final"], $_POST["tipoVehiculo"], $_POST["tipoReserva"]) 
+        if (isset($_POST["fecha_inicio"], $_POST["tipoReserva"], $_POST["tipoVehiculo"]) 
             && (!empty($_POST["matriculaYa"]) || !empty($_POST["matricula"])) &&
-            !empty($_POST["fecha_inicio"]) && !empty($_POST["tipoVehiculo"]) && !empty($_POST["tipoVehiculo"])) {
+            !empty($_POST["fecha_inicio"]) && !empty($_POST["tipoReserva"]) && !empty($_POST["tipoVehiculo"])) {
                 
             $fecha_inicio = $_POST["fecha_inicio"];
             $tipoReserva = $_POST["tipoReserva"];
