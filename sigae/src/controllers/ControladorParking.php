@@ -145,12 +145,10 @@ class ControladorParking extends AbstractController{
                         }
                     } catch(Exception $e){
                         $this->parking->deshacerTransaccion();
-                        $response['errors'][] = "Error al registrar el vehículo: ".$e->getMessage();
+                        $response['errors'][] = $e->getMessage();
                     } finally{
                         $this->parking->cerrarDBConnection();
-                    }                        
-                        
-                    
+                    }                                            
                 }
             }
         } else {
@@ -158,6 +156,7 @@ class ControladorParking extends AbstractController{
         }
         return $this->render('client/reservarParkingSimple.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
+            // TODO: Pasar misVehiculos
         ]);
     }
 
@@ -274,7 +273,7 @@ class ControladorParking extends AbstractController{
                         }
                     } catch(Exception $e){
                         $this->parking->deshacerTransaccion();
-                        $response['errors'][] = "Error al registrar el vehículo: ".$e->getMessage();
+                        $response['errors'][] = $e->getMessage();
                     } finally{
                         $this->parking->cerrarDBConnection();
                     } 
@@ -285,6 +284,7 @@ class ControladorParking extends AbstractController{
         }
         return $this->render('client/reservarParkingLargoPlazo.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
+            // TODO: Pasar misVehiculos
         ]);
     }
 
