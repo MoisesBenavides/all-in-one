@@ -2,11 +2,12 @@
 
 namespace Sigae\Models;
 use function Sigae\Config\conectarDB;
-use Exception;
 use PDO;
+use Exception;
 
-class Vehiculo
-{
+
+class Vehiculo {
+    private ?PDO $conn =null;
     private $matricula;
     private $marca;
     private $modelo;
@@ -19,6 +20,18 @@ class Vehiculo
         $this->modelo = $modelo;
         $this->tipo = $tipo;
         $this->color = $color;
+    }
+
+    public function setDBConnection($user, $password , $hostname){
+        $this->conn = conectarDB($user, $password, $hostname);
+        if($this->conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+        return $this;
+    }
+
+    public function getDBConnection(){
+        return $this->conn;
     }
 
     public function getMatricula()
@@ -71,6 +84,30 @@ class Vehiculo
         $this->color = $color;
     }
 
+    public function comenzarTransaccion() {
+        if ($this->conn) {
+            $this->conn->beginTransaction();
+        }
+    }
+
+    // Método para confirmar una transacción
+    public function confirmarTransaccion() {
+        if ($this->conn) {
+            $this->conn->commit();
+        }
+    }
+
+    // Método para revertir una transacción
+    public function deshacerTransaccion() {
+        if ($this->conn) {
+            $this->conn->rollback();
+        }
+    }
+
+    public function cerrarDBConnection(){
+        $this->conn = null;
+    }
+
     public function create(){
         $matricula = $this->getMatricula();
         $marca = $this->getMarca();
@@ -79,13 +116,7 @@ class Vehiculo
         $color = $this->getColor();
 
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-            
-            if ($conn === false) {
-                throw new Exception("No se pudo conectar a la base de datos.");
-            }
-    
-            $stmt = $conn->prepare('INSERT INTO vehiculo (matricula, marca, modelo, tipo, color) VALUES (:mat, :marca, :mod, :tipo, :color)');
+            $stmt = $this->conn->prepare('INSERT INTO vehiculo (matricula, marca, modelo, tipo, color) VALUES (:mat, :marca, :mod, :tipo, :color)');
             
             $stmt->bindParam(':mat', $matricula);
             $stmt->bindParam(':marca', $marca);
@@ -100,22 +131,13 @@ class Vehiculo
         } catch (Exception $e) {
             error_log("Error al registrar el vehículo: " . $e->getMessage());
             return false;
-            
-        } finally {
-            $conn = null;
         }
     }
 
     public function delete(){
         $matricula = $this->getMatricula();
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-            
-            if ($conn === false) {
-                throw new Exception("No se pudo conectar a la base de datos.");
-            }
-    
-            $stmt = $conn->prepare('DELETE FROM tiene WHERE matricula = :mat');
+            $stmt = $this->conn->prepare('DELETE FROM tiene WHERE matricula = :mat');
             
             $stmt->bindParam(':mat', $matricula);
                 
@@ -124,56 +146,32 @@ class Vehiculo
             return true; // Desvínculo de vehiculo con cliente exitoso
 
         } catch (Exception $e) {
-            error_log($e->getMessage());
             error_log("Error al desvincular el vehículo: " . $e->getMessage());
             return false;
-            
-        } finally {
-            $conn = null;
         }
     }
 
-    public function registrarYa($id_cliente){
+    public function registrarYa(){
         $matricula = $this->getMatricula();
         $tipo = $this->getTipo();
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-            
-            if ($conn === false) {
-                throw new Exception("No se pudo conectar a la base de datos.");
-            }
-    
-            $stmt = $conn->prepare('INSERT INTO vehiculo (matricula, tipo) VALUES (:mat, :tipo)');
+            $stmt = $this->conn->prepare('INSERT INTO vehiculo (matricula, tipo) VALUES (:mat, :tipo)');
             
             $stmt->bindParam(':mat', $matricula);
             $stmt->bindParam(':tipo', $tipo);
                 
             $stmt->execute();
-            
-            return $this->vincularCliente($id_cliente) !== false; // Registrar vínculo con cliente;
 
         } catch (Exception $e) {
-            error_log($e->getMessage());
             error_log("Error al registrar el vehículo: " . $e->getMessage());
             return false;
-            
-        } finally {
-            $conn = null;
         }
-        
-
     }
 
     public function vincularCliente($id_cliente){
         $matricula = $this->getMatricula();
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-            
-            if ($conn === false) {
-                throw new Exception("No se pudo conectar a la base de datos.");
-            }
-    
-            $stmt = $conn->prepare('INSERT INTO tiene (id_cliente, matricula) VALUES (:id_cl, :mat)');
+            $stmt = $this->conn->prepare('INSERT INTO tiene (id_cliente, matricula) VALUES (:id_cl, :mat)');
             
             $stmt->bindParam(':id_cl', $id_cliente);
             $stmt->bindParam(':mat', $matricula);
@@ -181,22 +179,16 @@ class Vehiculo
             $stmt->execute();
 
             return true; // Vinculación con cliente exitosa
-            
-
         } catch (Exception $e) {
-            error_log($e->getMessage());
             error_log("Error al registrar el vehículo: " . $e->getMessage());
             return false;
             
-        } finally {
-            $conn = null;
         }
     }
 
-    public static function existeMatricula($matricula) {
+    public function existeMatricula($matricula) {
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-            $stmt = $conn->prepare('SELECT COUNT(*) FROM vehiculo WHERE matricula = :mat');
+            $stmt = $this->conn->prepare('SELECT COUNT(*) FROM vehiculo WHERE matricula = :mat');
             $stmt->bindParam(':mat', $matricula);
             $stmt->execute();
             
@@ -207,8 +199,6 @@ class Vehiculo
         } catch (Exception $e) {
             error_log($e->getMessage()); // Registro del error en el log
             return false; // Devuelve false si hubo un error de base de datos
-        } finally {
-            $conn = null;
         }
     }
 

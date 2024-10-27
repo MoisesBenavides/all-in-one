@@ -87,22 +87,35 @@ class ControladorTaller extends AbstractController{
                     $id_cliente = $_SESSION['id'];
     
                     $this->taller = new Taller($tipoServicio, $descripcion, null, $tiempo_estimado, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
-                    if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)) {
-                        $response['errors'][] = "Ya existe un vehículo con la matrícula ingresada.";
-                    } elseif (!$this->taller->reservarServicio($matricula)) {
-                        $response['errors'][] = "Error al reservar servicio.";
-                    } else {
-                        $response['success'] = true;
+
+                    // Inicializar una conexión PDO como cliente
+                    $this->taller->setDBConnection("def_cliente", "password_cliente", "localhost");
+                    $this->taller->comenzarTransaccion();
+
+                    try{
+                        if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
+                            throw new Exception($e->getMessage());
+                        } elseif (!$this->taller->reservarServicio($matricula)){
+                            throw new Exception("Fallo al reservar el servicio");
+                        } else{
+                            $response['success'] = true;
     
-                        // TODO: Enviar correo de confirmación
+                            // TODO: Enviar correo de confirmación
     
-                        // Guardar la reserva en la sesión
-                        $_SESSION['reserva'] = $this->taller;
-                        $_SESSION['servicio'] = 'taller';
-                        $_SESSION['matricula'] = $matricula;
+                            // Guardar la reserva en la sesión
+                            $_SESSION['reserva'] = $this->taller;
+                            $_SESSION['servicio'] = 'taller';
+                            $_SESSION['matricula'] = $matricula;
     
-                        // Redireccionar al usuario a la página de confirmación de reserva
-                        return $this->redirectToRoute('serviceConfirmation');
+                            // Redireccionar al usuario a la página de confirmación de reserva
+                            return $this->redirectToRoute('serviceConfirmation');
+                        }
+
+                    } catch(Exception $e){
+                        $this->taller->deshacerTransaccion();
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->taller->cerrarDBConnection();
                     }
                 }
             }

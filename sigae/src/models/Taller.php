@@ -2,9 +2,11 @@
 
 namespace Sigae\Models;
 use function Sigae\Config\conectarDB;
+use PDO;
 use Exception;
 
 class Taller extends Servicio{
+    private ?PDO $conn=null;
     private $tipo;
     private $descripcion;
     private $diagnostico;
@@ -16,6 +18,18 @@ class Taller extends Servicio{
         $this->descripcion = $descripcion;
         $this->diagnostico = $diagnostico;
         $this->tiempo_estimado = $tiempo_estimado;
+    }
+
+    public function setDBConnection($user, $password , $hostname){
+        $this->conn = conectarDB($user, $password, $hostname);
+        if($this->conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+        return $this;
+    }
+
+    public function getDBConnection(){
+        return $this->conn;
     }
 
     public function getTipo(){
@@ -50,6 +64,30 @@ class Taller extends Servicio{
         $this->tiempo_estimado = $tiempo_estimado;
     }
 
+    public function comenzarTransaccion() {
+        if ($this->conn) {
+            $this->conn->beginTransaction();
+        }
+    }
+
+    // Método para confirmar una transacción
+    public function confirmarTransaccion() {
+        if ($this->conn) {
+            $this->conn->commit();
+        }
+    }
+
+    // Método para revertir una transacción
+    public function deshacerTransaccion() {
+        if ($this->conn) {
+            $this->conn->rollback();
+        }
+    }
+
+    public function cerrarDBConnection(){
+        $this->conn = null;
+    }
+
     public function reservarServicio($matricula) {
         $precio = $this->getPrecio();
         $fecha_inicio = $this->getFecha_inicio();
@@ -57,15 +95,7 @@ class Taller extends Servicio{
         $estado = $this->getEstado();
     
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-    
-            if ($conn === false) {
-                throw new Exception("No se pudo conectar a la base de datos.");
-            }
-            // Log de datos a insertar
-            error_log("Datos a insertar en servicio: " . json_encode(compact('matricula', 'precio', 'fecha_inicio', 'fecha_final', 'estado')));
-    
-            $stmt = $conn->prepare('INSERT INTO servicio (matricula, precio, fecha_inicio, fecha_final, estado) 
+            $stmt = $this->conn->prepare('INSERT INTO servicio (matricula, precio, fecha_inicio, fecha_final, estado) 
                                     VALUES (:mat, :precio, :fecha_ini, :fecha_fin, :estado)');
     
             $stmt->bindParam(':mat', $matricula);
@@ -75,18 +105,14 @@ class Taller extends Servicio{
             $stmt->bindParam(':estado', $estado);
                 
             $stmt->execute();
-            $this->setId($conn->lastInsertId());
+            $this->setId($this->conn->lastInsertId());
     
             return $this->reservarTaller() !== false;
     
         } catch (Exception $e) {
             error_log($e->getMessage());
-            echo "Error procesar la reserva: " . $e->getMessage();
             return false;
             
-        } finally {
-            $conn = null;
-
         }
     }
     
@@ -98,16 +124,7 @@ class Taller extends Servicio{
         $tiempo_estimado=$this->getTiempo_estimado();
 
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
-            
-            if ($conn === false) {
-                throw new Exception("No se pudo conectar a la base de datos.");
-            }
-
-            // Log de datos a insertar
-            error_log("Datos a insertar en taller: " . json_encode(compact('id', 'tipo', 'descripcion', 'tiempo_estimado')));
-    
-            $stmt = $conn->prepare('INSERT INTO taller (id_servicio, tipo, descripcion, tiempo_estimado) 
+            $stmt = $this->conn->prepare('INSERT INTO taller (id_servicio, tipo, descripcion, tiempo_estimado) 
                                     VALUES (:id, :tipo, :descr, :tiempo)');
 
             $stmt->bindParam(':id', $id);
@@ -119,8 +136,6 @@ class Taller extends Servicio{
 
         } catch (Exception $e) {
             error_log("Error procesar la reserva: " . $e->getMessage());
-        } finally {
-            $conn = null;
         }
         
     }

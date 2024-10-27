@@ -6,12 +6,17 @@ use Sigae\Models\TipoVehiculo;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 class ControladorVehiculo extends AbstractController{
     private $vehiculo;
+    private const INACTIVIDAD_MAX_SESION = 600;
 
     public function addVehicle(): Response|RedirectResponse{
-        session_start();
+        $redireccion = $this->verificarSesion();
+        if ($redireccion) {
+            return $redireccion;
+        }
 
         $response=['success' => false, 'errors' => []];
 
@@ -48,19 +53,31 @@ class ControladorVehiculo extends AbstractController{
             } elseif (isset($color) && !empty($color) && !$this->validarColorHexa($color)) {
                 $response['errors'][] = "Por favor, ingrese un código de color válido.";
             } else {
-                // Instncia vehiculo con datos ingresados
+                // Instancia vehiculo con datos ingresados
                 $this->vehiculo = new Vehiculo($matricula, $marca, $modelo, $tipo, $color);
 
-                if (!$this->vehiculo->create()) {
-                    $response['errors'][] = "Error al registrar vehículo.";
-                } elseif (!$this->vehiculo->vincularCliente($id_cliente)){
-                    $response['errors'][] = "Error al vincular vehículo.";
-                } else {
+                // Inicializar una conexión PDO como cliente
+                $this->vehiculo->setDBConnection("def_cliente", "password_cliente", "localhost");
+                $this->vehiculo->comenzarTransaccion();
+
+                try{
+                    if (!$this->vehiculo->create()) {
+                        throw new Exception("Error al registrar vehículo.");
+                    } elseif (!$this->vehiculo->vincularCliente($id_cliente)){
+                        throw new Exception("Error al vincular vehículo.");
+                    }
+
                     // Debug: Registro y vinculación exitosa
                     $response['success'] = true;
 
                     // Recargar página
                     return $this->redirectToRoute('myAccount');
+
+                } catch(Exception $e){
+                    $this->vehiculo->deshacerTransaccion();
+                    $response['errors'][] = "Error procesando el vehículo: ". $e->getMessage();
+                } finally{
+                    $this->vehiculo->cerrarDBConnection();
                 }
             }
         } else {
@@ -74,44 +91,123 @@ class ControladorVehiculo extends AbstractController{
         ]);
     }
 
-    public function deleteVehicle($matricula): Response {
+    public function deleteVehicle($matricula): Response|RedirectResponse{
+        $redireccion = $this->verificarSesion();
+        if ($redireccion) {
+            return $redireccion;
+        }
+        
         $response = ['success' => false, 'errors' => [], 'debug' => []];
+
+        $cliente = [
+            'id' => $_SESSION['id'],
+            'email' => $_SESSION['email'],
+            'nombre' => $_SESSION['nombre'],
+            'apellido' => isset($_SESSION['apellido']) ? $_SESSION['apellido'] : null,
+            'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
+            'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
+        ];
+
+        $misVehiculos = Vehiculo::cargarMisVehiculos($_SESSION['id']);
     
-        // Verificar si la matrícula existe en la base de datos
-        if (!Vehiculo::existeMatricula($matricula)) {
-            $response['errors'][] = "La matrícula ingresada no existe.";
-        } elseif (empty($matricula)) {
-            $response['errors'][] = "Debe ingresar una matrícula válida.";
-        } else {
-            // Crear una instancia del vehículo con la matrícula
-            $this->vehiculo = new Vehiculo($matricula, null, null, null, null);
-    
-            // Intentar borrar el vehículo
-            if (!$this->vehiculo->delete()) {
-                $response['errors'][] = "Ocurrió un error al desvincular el vehículo.";
+        if (isset($_POST["matricula"]) && !empty($_POST["matricula"])) {
+
+            $matricula = strtoupper($_POST["matricula"]);
+
+            // Validar email
+            if (!$this->validarMatricula($matricula)) {
+                $response['errors'][] = "Por favor, ingrese una matrícula válida.";
             } else {
-                // Si todo sale bien, indicar éxito
-                $response['success'] = true;
-                return $this->render('client/vistaDeMisVehiculos.html.twig', [
-                    'response' => $response
-                ]);
+                // Crear una instancia del vehículo con la matrícula
+                $this->vehiculo = new Vehiculo($matricula, null, null, null, null);
+
+                // Inicializar una conexión PDO como cliente
+                $this->vehiculo->setDBConnection("def_cliente", "password_cliente", "localhost");
+                $this->vehiculo->comenzarTransaccion();
+
+                try{
+                    if (!$this->vehiculo->existeMatricula($matricula)) {
+                        throw new Exception("La matrícula ingresada no existe.");
+                    }
+                    if (!$this->vehiculo->delete()) {
+                        throw new Exception("Ocurrió un error al desvincular el vehículo");
+                    }
+    
+                    // Debug: Registro y desvinculación exitosa
+                    $response['success'] = true;
+    
+                    // Recargar página
+                    return $this->redirectToRoute('myAccount');
+    
+                } catch (Exception $e) {
+                    $this->vehiculo->deshacerTransaccion();
+                    $response['errors'][] = "Error procesando el vehículo: " . $e->getMessage();
+                } finally{
+                    // Desconectar de la base de datos
+                    $this->vehiculo->cerrarDBConnection();
+                }                
             }
+        } else {
+            $response['errors'][] = "Debe ingresar una matrícula.";
         }
     
         // Si hubo errores, renderizar la vista con los mensajes de error
-        return $this->render('client/vistaDeMisVehiculos.html.twig', [
-            'response' => $response
+        return $this->render('client/myAccount.html.twig', [
+            'cliente' => $cliente, // Pasa variables de sesión de cliente
+            'misVehiculos' => $misVehiculos, // Pasa vehículos actualizados del cliente
+            'response' => $response  // Aquí pasa la respuesta a la vista
         ]);
     }
 
-    function registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente){
-        if (Vehiculo::existeMatricula($matricula)) {
-            return false; // False si la matrícula ya existe
-        } else {
-            $this->vehiculo = new Vehiculo($matricula, null, null, $tipoVehiculo, null);
-            return $this->vehiculo->registrarYa($id_cliente);
+    public function registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente){
+        $this->vehiculo = new Vehiculo($matricula, null, null, $tipoVehiculo, null);
+        $this->vehiculo->setDBConnection("def_cliente", "password_cliente", "localhost");
+        $this->vehiculo->comenzarTransaccion();
+        try{
+            if ($this->vehiculo->existeMatricula($matricula)) {
+                throw new Exception("La matrícula ingresada ya existe.");
+            }elseif (!$this->vehiculo->registrarYa()) {
+                throw new Exception("Error al registrar vehículo.");
+            } elseif (!$this->vehiculo->vincularCliente($id_cliente)){
+                throw new Exception("Error al vincular vehículo.");
+            }
+
+            $this->vehiculo->confirmarTransaccion();
+            return true; // True si la matrícula no existe y se registra correctamente
+        } catch (Exception $e){
+            $this->vehiculo->deshacerTransaccion();
+            throw $e;
+        } finally{
+            // Desconectar de la base de datos
+            $this->vehiculo->cerrarDBConnection();   
+        }
+        
+    }
+
+    private function verificarSesion(): ?RedirectResponse {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
         }
     
+        // Verificar si la variable de tiempo de inactividad está definida
+        if (!isset($_SESSION["ultima_solicitud"])) {
+            return $this->redirectToRoute('logout'); // Si no hay un tiempo definido, se realiza el logout
+        }
+    
+        // Obtiene el tiempo desde la última solicitud
+        $inactividad = time() - $_SESSION["ultima_solicitud"];
+    
+        // Verificación de inactividad de la sesión
+        if ($inactividad > $this::INACTIVIDAD_MAX_SESION) {
+            return $this->redirectToRoute('logout'); // Si ha excedido el tiempo de inactividad, cierra la sesión
+        }
+    
+        // Actualiza el tiempo de la última solicitud y regenera la ID de sesión por seguridad
+        $_SESSION["ultima_solicitud"] = time();
+        session_regenerate_id(true);
+    
+        // Si la sesión es válida, no se realiza ninguna redirección
+        return null;
     }
 
     function validarTipoVehiculo($tipoVehiculo){

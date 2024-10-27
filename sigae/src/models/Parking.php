@@ -100,7 +100,6 @@ class Parking extends Servicio {
         $ocupadas=[];
 
         try {
-            $this->conn->beginTransaction();
             $stmt = $this->conn->prepare('SELECT numero_plaza FROM numero_plaza WHERE id_servicio IN (
                                         SELECT s.id FROM servicio s INNER JOIN parking p ON s.id = p.id_servicio
                                         WHERE   p.tipo_plaza = :tip_plaza AND
@@ -116,7 +115,6 @@ class Parking extends Servicio {
 
             $stmt->execute();
 
-            $this->conn->commit();
             $ocupadas=$stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
             //Debug
@@ -125,11 +123,8 @@ class Parking extends Servicio {
             return $ocupadas;
 
         } catch(Exception $e){
-            $this->conn->rollback();
             error_log($e->getMessage()); // Registro del error en el log
             return false; // False si hubo un error de base de datos
-        } finally {
-            $this->cerrarDBConnection();
         }
     }
 
@@ -157,7 +152,6 @@ class Parking extends Servicio {
     
         } catch (Exception $e) {
             error_log($e->getMessage());
-            echo "Error procesar la reserva: " . $e->getMessage();
             return false; 
         }
     }
@@ -179,7 +173,7 @@ class Parking extends Servicio {
             $stmt->execute();
 
         } catch (Exception $e) {
-            error_log("Error procesar la reserva: " . $e->getMessage());
+            error_log("Error procesando la reserva: " . $e->getMessage());
         }
         
     }

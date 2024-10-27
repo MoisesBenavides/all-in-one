@@ -407,7 +407,7 @@ class ControladorCliente extends AbstractController {
         return $this->render('client/homeCliente.html.twig');
     }
 
-    function verificarSesion(): ?RedirectResponse {
+    private function verificarSesion(): ?RedirectResponse {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
