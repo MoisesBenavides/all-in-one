@@ -20,7 +20,8 @@ class SessionTimeoutListener {
         'doSignupOAuth', 
         'forgotPassword', 
         'loginAioEmployee', 
-        'doLoginAioEmployee'
+        'doLoginAioEmployee',
+        'logout'
     ];
 
     public function __construct(RouterInterface $router){
