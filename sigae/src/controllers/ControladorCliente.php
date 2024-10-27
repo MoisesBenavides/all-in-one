@@ -345,7 +345,7 @@ class ControladorCliente extends AbstractController {
             return $redireccion;
         }
 
-        $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
+        $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
         
         return $this->render('client/reservarParkingSimple.html.twig', [
             'misVehiculos' => $misVehiculos
@@ -358,7 +358,7 @@ class ControladorCliente extends AbstractController {
             return $redireccion;
         }
 
-        $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
+        $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
         
         return $this->render('client/reservarParkingLargoPlazo.html.twig', [
             'misVehiculos' => $misVehiculos
@@ -386,7 +386,7 @@ class ControladorCliente extends AbstractController {
             'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
             'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
         ];
-        $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
+        $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
         return $this->render('client/miCuenta.html.twig', [
             'cliente' => $cliente,
             'misVehiculos' => $misVehiculos
