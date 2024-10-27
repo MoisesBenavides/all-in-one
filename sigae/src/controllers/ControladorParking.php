@@ -62,14 +62,6 @@ class ControladorParking extends AbstractController{
             if (isset($matricula)) { // Verifica que la matrícula se haya definido correctamente
                 $matricula = strtoupper($matricula);
 
-                // Debug: Datos procesados
-                $response['debug']['processed_data'] = [
-                    'fecha_inicio' => $fecha_inicio,
-                    'fecha_final' => $fecha_final,
-                    'tipoVehiculo' => $tipoVehiculo,
-                    'matricula' => $matricula
-                ];
-
                 if (!$this->validarFecha($fecha_inicio)){
                     $response['errors'][] = "Por favor, ingrese una fecha de inicio válida.";
                 } elseif (!$this->validarFecha($fecha_final) && (($this->obtenerMinutos($fecha_final, $fecha_inicio)) < 5)){
@@ -151,11 +143,6 @@ class ControladorParking extends AbstractController{
             }
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
-            // Debug: Log which fields are missing
-            $response['debug']['missing_fields'] = array_diff(
-                ['fecha_inicio', 'fecha_final', 'tipoVehiculo', 'matricula'],
-                array_keys($_POST)
-            );
         }
         return $this->render('client/reservarParkingSimple.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
@@ -164,19 +151,19 @@ class ControladorParking extends AbstractController{
 
     //TODO: Actualizar reservas largo plazo
     function bookParkingLongTerm(): Response|RedirectResponse{
-        session_start();
-        $response=['success' => false, 'errors' => [], 'debug' => []];
-
-        // Debug: Log all received data
-        $response['debug']['received_data']=$_POST;
+        $redireccion = $this->verificarSesion();
+        if ($redireccion) {
+            return $redireccion;
+        }
 
         // Validacion de campos vacios
-        if (isset($_POST["fecha_inicio"], $_POST["fecha_final"], $_POST["tipoVehiculo"]) 
+        if (isset($_POST["fecha_inicio"], $_POST["fecha_final"], $_POST["tipoVehiculo"], $_POST["tipoReserva"]) 
             && (!empty($_POST["matriculaYa"]) || !empty($_POST["matricula"])) &&
-            !empty($_POST["fecha_inicio"]) && !empty($_POST["fecha_final"]) && !empty($_POST["tipoVehiculo"])) {
+            !empty($_POST["fecha_inicio"]) && !empty($_POST["tipoVehiculo"]) && !empty($_POST["tipoVehiculo"])) {
                 
             $fecha_inicio = $_POST["fecha_inicio"];
-            $fecha_final = $_POST["fecha_final"];
+            $tipoReserva = $_POST["tipoReserva"];
+            $fecha_final = $this->obtenerFechaFinal($fecha_inicio, $tipoReserva);
             $tipoVehiculo = strtolower($_POST["tipoVehiculo"]);
 
             try {
@@ -193,18 +180,8 @@ class ControladorParking extends AbstractController{
             if (isset($matricula)) { // Verifica que la matrícula se haya definido correctamente
                 $matricula = strtoupper($matricula);
 
-                // Debug: Datos procesados
-                $response['debug']['processed_data'] = [
-                    'fecha_inicio' => $fecha_inicio,
-                    'fecha_final' => $fecha_final,
-                    'tipoVehiculo' => $tipoVehiculo,
-                    'matricula' => $matricula
-                ];
-
                 if (!$this->validarFecha($fecha_inicio)){
                     $response['errors'][] = "Por favor, ingrese una fecha de inicio válida.";
-                } elseif (!$this->validarFecha($fecha_final) && (($this->obtenerMinutos($fecha_final, $fecha_inicio)) < 5)){
-                    $response['errors'][] = "Por favor, ingrese una fecha final válida. Mínimo 5 minutos después que la de inicio.";
                 } elseif(!$this->controladorVehiculo->validarTipoVehiculo($tipoVehiculo)){
                     $response['errors'][] = "El tipo de vehículo seleccionado no está disponible.";
                 } elseif(!$this->controladorVehiculo->validarMatricula($matricula)){
@@ -221,37 +198,71 @@ class ControladorParking extends AbstractController{
                 
                     $id_cliente = $_SESSION['id'];
 
-                    $this->parking = new Parking(true, $tipo_plaza, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
+                    $datos_parking = [
+                        'largo_plazo' => true,
+                        'tipo_plaza' => $tipo_plaza,
+                        'precio' => $precio,
+                        'fecha_inicio' => $fecha_inicioParsed,
+                        'fecha_final' => $fecha_finalParsed,
+                        'matricula' => $matricula,
+                        'tipoVehiculo' => $tipoVehiculo
+                    ];
+
+                    // Guardar variables de sesión para reservar posteriormente a la elección de plazas
+                    $_SESSION['parking'] = $datos_parking;
+                    
                     if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                         $response['errors'][] = "Ya existe un vehiculo con la matricula ingresada.";
-                    } elseif (!$this->parking->reservarServicio($matricula)){
-                        $response['errors'][] = "Error al reservar servicio.";
-                    } else {
-                        $response['success'] = true;
+                    } else{
+                        $this->parking = new Parking(true, $tipo_plaza, null, null, $fecha_inicioParsed, $fecha_finalParsed);
+                        // Conectar con una reserva de Parking
+                        $this->parking->setDBConnection("def_cliente", "password_cliente", "localhost");
+                        //Debug
+                        error_log(print_r($this->parking->getDBConnection(), true));
 
-                        // TODO: Enviar correo de confirmación
-                        error_log(print_r($this->parking, true)); // Esto mostrará los datos de la reserva.
-                        // Guardar la reserva en la sesión
-                        $_SESSION['reserva'] = $this->parking;
-                        $_SESSION['servicio'] = 'parking';
-                        $_SESSION['matricula'] = $matricula;
+                        $plazasOcupadas = $this->parking->obtenerPlazasOcupadas();
+                        
+                        
+                        if ($tipoVehiculo == "moto"){
+                            // Obtiene las plazas de moto para parking simple que no están ocupadas
+                            $plazasLibres = array_diff($this->plazasMotoLargoPlazo, $plazasOcupadas);
+                            // Si hay al menos una plaza libre, hay disponibilidad
+                            $disponible = !empty($plazasLibres);
 
-                        // Redireccionar al usuario a la página de confirmación de reserva
-                        return $this->redirectToRoute('parkingConfirmation');
+                        } elseif ($tipoVehiculo == "auto") {
+                            // Obtiene las plazas de auto para parking simple que no están ocupadas
+                            $plazasLibres = array_diff($this->plazasAutoLargoPlazo, $plazasOcupadas);
+                            // Si hay al menos una plaza libre, hay disponibilidad
+                            $disponible = !empty($plazasLibres);
+                        } else {
+                            // Obtiene las plazas de auto para parking simple que no están ocupadas
+                            $plazasLibres = array_diff($this->plazasAutoLargoPlazo, $plazasOcupadas);
+                            // Si hay al menos dos plazas disponibles, hay disponibilidad
+                            $disponible = array_count_values($plazasLibres) >= 2;
+                        }
+
+                        if (!$disponible){
+                            $response['errors'][] = "No hay plazas disponibles en este horario.";
+                        } else {
+                            $response['success'] = true;
+                            $_SESSION['eleccionPlazaComienzo'] = time();
+                            $_SESSION['plazasLibres'] = $plazasLibres;
+
+                            // Redireccionar al usuario a la página de eleccion de plaza
+                            return $this->render('client/eleccionPlazaParking.html.twig', [
+                                'plazasLibres' => $_SESSION['plazasLibres'],
+                                'tipoVehiculo' => $tipoVehiculo
+                            ]);                        
+                        }                       
                     }      
                 }
             }
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
-            // Debug: Log which fields are missing
-            $response['debug']['missing_fields'] = array_diff(
-                ['fecha_inicio', 'fecha_final', 'tipoVehiculo', 'matricula'],
-                array_keys($_POST)
-            );
         }
         return $this->render('client/reservarParkingLargoPlazo.html.twig', [
-            'response' => $response
-        ]); // Pasa la respuesta a la vista
+            'response' => $response  // Aquí pasa la respuesta a la vista
+        ]);
     }
 
     function submitParking(): Response|RedirectResponse{
@@ -404,8 +415,6 @@ class ControladorParking extends AbstractController{
 
     function parkingConfirmation(): Response{
         session_start();
-        error_log($_SESSION['email']. " reservó un servicio de parking");
-        error_log(print_r($_SESSION, true));
 
         $sessionData = [
             'email' => $_SESSION['email'],
@@ -427,6 +436,36 @@ class ControladorParking extends AbstractController{
         ];
         // Imprimir los datos en pagina de confirmacion
         return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
+    }
+
+    private function obtenerFechaFinal($inicio, $tipoReserva){
+        $formato = 'Y-m-d\TH:i';
+        $dt = DateTime::createFromFormat($formato, $inicio);
+
+        if ($dt){
+            switch($tipoReserva){
+                case 'semanal':
+                    $dt->modify("+7 day");
+                    return $dt->format($formato); // Devolver la fecha modificada
+                    break;
+                case 'quincenal':
+                    $dt->modify("+15 day");
+                    return $dt->format($formato);
+                    break;
+                case 'mensual':
+                    $dt->modify("+1 month");
+                    return $dt->format($formato);
+                    break;
+                case 'anual':
+                    $dt->modify("+1 year");
+                    return $dt->format($formato);
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        return false;
     }
 
     private function calcularPrecio($difFechas, $tipoVehiculo) {
