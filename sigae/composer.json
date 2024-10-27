@@ -30,6 +30,7 @@
         "psr-4": {
             "Sigae\\": "src/",
             "Sigae\\Controllers\\": "src/controllers",
+            "Sigae\\EventListeners\\": "src/eventListeners",
             "Sigae\\Models\\": "src/models",
             "Sigae\\Config\\": "config/"
         },

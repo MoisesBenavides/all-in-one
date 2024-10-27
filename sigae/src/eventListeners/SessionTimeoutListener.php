@@ -1,6 +1,6 @@
 <?php
 
-namespace Sigae\EventListener;
+namespace Sigae\EventListeners;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
