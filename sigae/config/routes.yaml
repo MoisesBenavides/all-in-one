@@ -102,9 +102,9 @@ bookParkingLongTerm:
   controller: Sigae\Controllers\ControladorParking::bookParkingLongTerm
   methods: POST
 
-submitParkingSimple:
-  path: /submitParkingSimple
-  controller: Sigae\Controllers\ControladorParking::submitParkingSimple
+submitParking:
+  path: /submitParking
+  controller: Sigae\Controllers\ControladorParking::submitParking
   methods: POST
 
 parkingConfirmation:
