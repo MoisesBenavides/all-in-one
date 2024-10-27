@@ -162,3 +162,8 @@ getClientVehicles:
   path: /api/getClientVehicles
   controller: Sigae\Controllers\ControladorCliente::getClientVehicles
   methods: GET
+
+getServicesSchedule:
+  path: /api/getClientVehicles
+  controller: Sigae\Controllers\ControladorTaller::getServicesSchedule
+  methods: GET
