@@ -20,8 +20,8 @@ services:
     # Configuración para el SessionTimeoutListener en cada solicitud
     # Hace que el listener se ejecute con cada solicitud (event: kernel.request)
     # Define la prioridad de ejecucion(priority: 10)
-    Sigae\EventListener\SessionTimeoutListener:
-        class: Sigae\EventListener\SessionTimeoutListener
+    Sigae\eventListener\SessionTimeoutListener:
+        class: Sigae\eventListener\SessionTimeoutListener
         arguments:
             - '@router'
         tags:
