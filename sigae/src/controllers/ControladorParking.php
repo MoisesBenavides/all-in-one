@@ -163,6 +163,7 @@ class ControladorParking extends AbstractController{
                 
             $fecha_inicio = $_POST["fecha_inicio"];
             $tipoReserva = $_POST["tipoReserva"];
+            // Obtiene la fecha final por el tipo de reserva de largo plazo (semanal, quincenal, mensual, anual)
             $fecha_final = $this->obtenerFechaFinal($fecha_inicio, $tipoReserva);
             $tipoVehiculo = strtolower($_POST["tipoVehiculo"]);
 
