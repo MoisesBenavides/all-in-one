@@ -95,8 +95,6 @@ class ControladorParking extends AbstractController{
                     $this->parking->setDBConnection("def_cliente", "password_cliente", "localhost");
                     $this->parking->comenzarTransaccion();
 
-                    $plazasOcupadas=[];
-
                     try{
                         if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                             throw new Exception($e->getMessage());
@@ -217,8 +215,6 @@ class ControladorParking extends AbstractController{
                     // Hacer una conexión de base de datos como cliente
                     $this->parking->setDBConnection("def_cliente", "password_cliente", "localhost");
                     $this->parking->comenzarTransaccion();
-
-                    $plazasOcupadas=[];
 
                     try{
                         if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
