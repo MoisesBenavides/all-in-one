@@ -156,7 +156,7 @@ class ControladorVehiculo extends AbstractController{
             if ($this->vehiculo->existeMatricula($matricula)) {
                 throw new Exception("La matrícula ingresada ya existe.");
             }elseif (!$this->vehiculo->registrarYa()) {
-                throw new Exception("Error al registrar vehículo.");
+                throw new Exception("Error al registrar vehículo aaaaaa.");
             } elseif (!$this->vehiculo->vincularCliente($id_cliente)){
                 throw new Exception("Error al vincular vehículo.");
             }
