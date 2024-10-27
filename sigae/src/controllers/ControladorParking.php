@@ -267,7 +267,7 @@ class ControladorParking extends AbstractController{
         if ($difTiempo > $this::INACTIVIDAD_MAX_TRANSACCION) {
             //Debug
             error_log("Tiempo de transaccion de parking expirado");
-            return $this->redirectToRoute('bookParkingSimple');
+            return $this->redirectToRoute('aioParking');
         } elseif (isset($_SESSION['parking'], $_POST["plazasSeleccionadas"])
             && !empty($_SESSION['parking']) && !empty($_POST["plazasSeleccionadas"])){
 
