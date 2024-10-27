@@ -56,12 +56,13 @@ class SessionTimeoutListener {
 
         // Calcula el tiempo de inactividad
         $inactividad = time() - $_SESSION["ultima_solicitud"];
+        
         if ($inactividad > self::INACTIVIDAD_MAX_SESION) {
             $this->logout($event);
             return;
         }
 
-        // Actualiza la última solicitud y regenera el ID de sesion
+        // Actualiza la última solicitud
         $_SESSION["ultima_solicitud"] = time();
     }
 
