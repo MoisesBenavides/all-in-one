@@ -145,10 +145,6 @@ class ControladorTaller extends AbstractController{
     }
 
     function serviceConfirmation(): Response{
-        session_start();
-        error_log($_SESSION['email']. " reservó un servicio de taller");
-        error_log(print_r($_SESSION, true));
-
         $sessionData = [
             'email' => $_SESSION['email'],
             'id' => $_SESSION['id'],

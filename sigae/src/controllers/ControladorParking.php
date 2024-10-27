@@ -358,8 +358,6 @@ class ControladorParking extends AbstractController{
     }
 
     function parkingConfirmation(): Response{
-        session_start();
-
         $sessionData = [
             'email' => $_SESSION['email'],
             'id' => $_SESSION['id'],
