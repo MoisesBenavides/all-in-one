@@ -52,7 +52,7 @@
         </div>
 
         <!-- Parking Form -->
-        <form id="parkingForm" action="{{ path('submitParkingSimple') }}" method="POST" class="w-full max-w-[600px]">
+        <form id="parkingForm" action="{{ path('submitParking') }}" method="POST" class="w-full max-w-[600px]">
              {% if response.errors is defined and response.errors is not empty %}
                     <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
                         <ul id="error-list">

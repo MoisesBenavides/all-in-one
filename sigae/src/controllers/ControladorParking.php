@@ -254,7 +254,7 @@ class ControladorParking extends AbstractController{
         ]); // Pasa la respuesta a la vista
     }
 
-    function submitParkingSimple(): Response|RedirectResponse{
+    function submitParking(): Response|RedirectResponse{
         $redireccion = $this->verificarSesion();
         if ($redireccion) {
             return $redireccion;
