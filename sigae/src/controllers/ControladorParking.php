@@ -110,6 +110,38 @@ class ControladorParking extends AbstractController{
                             // Consultar plazas ocupadas
                             $plazasOcupadas = $this->parking->obtenerPlazasOcupadas();
                             $this->parking->confirmarTransaccion();
+
+                            if ($tipoVehiculo == "moto"){
+                                // Obtiene las plazas de moto para parking simple que no están ocupadas
+                                $plazasLibres = array_diff($this->plazasMotoSimple, $plazasOcupadas);
+                                // Si hay al menos una plaza libre, hay disponibilidad
+                                $disponible = !empty($plazasLibres);
+        
+                            } elseif ($tipoVehiculo == "auto") {
+                                // Obtiene las plazas de auto para parking simple que no están ocupadas
+                                $plazasLibres = array_diff($this->plazasAutoSimple, $plazasOcupadas);
+                                // Si hay al menos una plaza libre, hay disponibilidad
+                                $disponible = !empty($plazasLibres);
+                            } else {
+                                // Obtiene las plazas de auto para parking simple que no están ocupadas
+                                $plazasLibres = array_diff($this->plazasAutoSimple, $plazasOcupadas);
+                                // Si hay al menos dos plazas disponibles, hay disponibilidad
+                                $disponible = array_count_values($plazasLibres) >= 2;
+                            }
+        
+                            if (!$disponible){
+                                $response['errors'][] = "No hay plazas disponibles en este horario.";
+                            } else {
+                                $response['success'] = true;
+                                $_SESSION['eleccionPlazaComienzo'] = time();
+                                $_SESSION['plazasLibres'] = $plazasLibres;
+        
+                                // Redireccionar al usuario a la página de eleccion de plaza
+                                return $this->render('client/eleccionPlazaParking.html.twig', [
+                                    'plazasLibres' => $_SESSION['plazasLibres'],
+                                    'tipoVehiculo' => $tipoVehiculo
+                                ]);                        
+                            }                       
                         }
                     } catch(Exception $e){
                         $this->parking->deshacerTransaccion();
@@ -118,37 +150,7 @@ class ControladorParking extends AbstractController{
                         $this->parking->cerrarDBConnection();
                     }                        
                         
-                    if ($tipoVehiculo == "moto"){
-                        // Obtiene las plazas de moto para parking simple que no están ocupadas
-                        $plazasLibres = array_diff($this->plazasMotoSimple, $plazasOcupadas);
-                        // Si hay al menos una plaza libre, hay disponibilidad
-                        $disponible = !empty($plazasLibres);
-
-                    } elseif ($tipoVehiculo == "auto") {
-                        // Obtiene las plazas de auto para parking simple que no están ocupadas
-                        $plazasLibres = array_diff($this->plazasAutoSimple, $plazasOcupadas);
-                        // Si hay al menos una plaza libre, hay disponibilidad
-                        $disponible = !empty($plazasLibres);
-                    } else {
-                        // Obtiene las plazas de auto para parking simple que no están ocupadas
-                        $plazasLibres = array_diff($this->plazasAutoSimple, $plazasOcupadas);
-                        // Si hay al menos dos plazas disponibles, hay disponibilidad
-                        $disponible = array_count_values($plazasLibres) >= 2;
-                    }
-
-                    if (!$disponible){
-                        $response['errors'][] = "No hay plazas disponibles en este horario.";
-                    } else {
-                        $response['success'] = true;
-                        $_SESSION['eleccionPlazaComienzo'] = time();
-                        $_SESSION['plazasLibres'] = $plazasLibres;
-
-                        // Redireccionar al usuario a la página de eleccion de plaza
-                        return $this->render('client/eleccionPlazaParking.html.twig', [
-                            'plazasLibres' => $_SESSION['plazasLibres'],
-                            'tipoVehiculo' => $tipoVehiculo
-                        ]);                        
-                    }                       
+                    
                 }
             }
         } else {
@@ -237,45 +239,45 @@ class ControladorParking extends AbstractController{
                             // Consultar plazas ocupadas
                             $plazasOcupadas = $this->parking->obtenerPlazasOcupadas();
                             $this->parking->confirmarTransaccion();
+
+                            if ($tipoVehiculo == "moto"){
+                                // Obtiene las plazas de moto para parking simple que no están ocupadas
+                                $plazasLibres = array_diff($this->plazasMotoLargoPlazo, $plazasOcupadas);
+                                // Si hay al menos una plaza libre, hay disponibilidad
+                                $disponible = !empty($plazasLibres);
+                
+                            } elseif ($tipoVehiculo == "auto") {
+                                // Obtiene las plazas de auto para parking simple que no están ocupadas
+                                $plazasLibres = array_diff($this->plazasAutoLargoPlazo, $plazasOcupadas);
+                                // Si hay al menos una plaza libre, hay disponibilidad
+                                $disponible = !empty($plazasLibres);
+                            } else {
+                                // Obtiene las plazas de auto para parking simple que no están ocupadas
+                                $plazasLibres = array_diff($this->plazasAutoLargoPlazo, $plazasOcupadas);
+                                // Si hay al menos dos plazas disponibles, hay disponibilidad
+                                $disponible = array_count_values($plazasLibres) >= 2;
+                            }
+                
+                            if (!$disponible){
+                                $response['errors'][] = "No hay plazas disponibles en este horario.";
+                            } else {
+                                $response['success'] = true;
+                                $_SESSION['eleccionPlazaComienzo'] = time();
+                                $_SESSION['plazasLibres'] = $plazasLibres;
+
+                                // Redireccionar al usuario a la página de eleccion de plaza
+                                return $this->render('client/eleccionPlazaParking.html.twig', [
+                                    'plazasLibres' => $_SESSION['plazasLibres'],
+                                    'tipoVehiculo' => $tipoVehiculo
+                                ]);                        
+                            }              
                         }
                     } catch(Exception $e){
                         $this->parking->deshacerTransaccion();
                         $response['errors'][] = "Error al registrar el vehículo: ".$e->getMessage();
                     } finally{
                         $this->parking->cerrarDBConnection();
-                    }
-
-                    if ($tipoVehiculo == "moto"){
-                        // Obtiene las plazas de moto para parking simple que no están ocupadas
-                        $plazasLibres = array_diff($this->plazasMotoLargoPlazo, $plazasOcupadas);
-                        // Si hay al menos una plaza libre, hay disponibilidad
-                        $disponible = !empty($plazasLibres);
-        
-                    } elseif ($tipoVehiculo == "auto") {
-                        // Obtiene las plazas de auto para parking simple que no están ocupadas
-                        $plazasLibres = array_diff($this->plazasAutoLargoPlazo, $plazasOcupadas);
-                        // Si hay al menos una plaza libre, hay disponibilidad
-                        $disponible = !empty($plazasLibres);
-                    } else {
-                        // Obtiene las plazas de auto para parking simple que no están ocupadas
-                        $plazasLibres = array_diff($this->plazasAutoLargoPlazo, $plazasOcupadas);
-                        // Si hay al menos dos plazas disponibles, hay disponibilidad
-                        $disponible = array_count_values($plazasLibres) >= 2;
-                    }
-        
-                    if (!$disponible){
-                        $response['errors'][] = "No hay plazas disponibles en este horario.";
-                    } else {
-                        $response['success'] = true;
-                        $_SESSION['eleccionPlazaComienzo'] = time();
-                        $_SESSION['plazasLibres'] = $plazasLibres;
-
-                        // Redireccionar al usuario a la página de eleccion de plaza
-                        return $this->render('client/eleccionPlazaParking.html.twig', [
-                            'plazasLibres' => $_SESSION['plazasLibres'],
-                            'tipoVehiculo' => $tipoVehiculo
-                        ]);                        
-                    }               
+                    } 
                 }   
             }
         } else {
