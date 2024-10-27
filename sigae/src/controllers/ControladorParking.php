@@ -34,11 +34,10 @@ class ControladorParking extends AbstractController{
     }
 
     function bookParkingSimple(): Response|RedirectResponse{
-        session_start();
-        $response=['success' => false, 'errors' => [], 'debug' => []];
-
-        // Debug: Log all received data
-        $response['debug']['received_data']=$_POST;
+        $redireccion = $this->verificarSesion();
+        if ($redireccion) {
+            return $redireccion;
+        }
 
         // Validacion de campos vacios
         if (isset($_POST["fecha_inicio"], $_POST["fecha_final"], $_POST["tipoVehiculo"]) 
@@ -354,7 +353,7 @@ class ControladorParking extends AbstractController{
     
         // Verificar si la variable de tiempo de inactividad está definida
         if (!isset($_SESSION["ultima_solicitud"])) {
-            return $this->logout(); // Si no hay un tiempo definido, se realiza el logout
+            return $this->redirectToRoute('logout'); // Si no hay un tiempo definido, se realiza el logout
         }
     
         // Obtiene el tiempo desde la última solicitud
@@ -362,7 +361,7 @@ class ControladorParking extends AbstractController{
     
         // Verificación de inactividad de la sesión
         if ($inactividad > $this::INACTIVIDAD_MAX_SESION) {
-            return $this->logout(); // Si ha excedido el tiempo de inactividad, cierra la sesión
+            return $this->redirectToRoute('logout'); // Si ha excedido el tiempo de inactividad, cierra la sesión
         }
     
         // Actualiza el tiempo de la última solicitud y regenera la ID de sesión por seguridad
