@@ -313,13 +313,6 @@ class ControladorCliente extends AbstractController {
     function services(): Response{
         return $this->render('client/serviciosMecanicos.html.twig');
     }
-    function bookService(): Response{
-        $misVehiculos = $this->cliente->cargarMisVehiculos($_SESSION['id']);
-
-        return $this->render('client/reservarServicio.html.twig', [
-           'misVehiculos' => $misVehiculos
-        ]);
-    }
     
     function parking(): Response{
         return $this->render('client/aioParking.html.twig');
