@@ -36,7 +36,6 @@ class ControladorTaller extends AbstractController{
     }
     
     function doBookService(): Response|RedirectResponse{
-        session_start();
         $response = ['success' => false, 'errors' => [], 'debug' => []];
     
         // Debug: Log all received data
