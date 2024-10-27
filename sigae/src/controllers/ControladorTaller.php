@@ -2,6 +2,7 @@
 
 namespace Sigae\Controllers;
 use Sigae\Models\Taller;
+use Sigae\Models\Cliente;
 use Sigae\Controllers\ControladorVehiculo;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,14 +14,25 @@ use InvalidArgumentException;
 
 class ControladorTaller extends AbstractController{
     private const PATH_SERVICIOS_JSON = __DIR__ . '/../data/serviciosTaller.json';
+    private const PATH_HORARIOS_JSON = __DIR__ . '/../data/horariosTaller.json';
     private $taller;
+    private $horarios;
     private $serviciosDisp;
     private $controladorVehiculo;
     private $registrarYa;
 
     public function __construct(){
         $this->cargarServicios(self::PATH_SERVICIOS_JSON);
+        $this->cargarHorarios(self::PATH_HORARIOS_JSON);
         $this->controladorVehiculo = new ControladorVehiculo();
+    }
+
+    function bookService(): Response{
+        $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
+
+        return $this->render('client/reservarServicio.html.twig', [
+           'misVehiculos' => $misVehiculos
+        ]);
     }
     
     function doBookService(): Response|RedirectResponse{
@@ -220,6 +232,26 @@ class ControladorTaller extends AbstractController{
             throw new Exception('Error al decodificar el JSON: ' . json_last_error_msg());
         } else
             $this->serviciosDisp = $servicios;
+    }
+
+    private function cargarHorarios($pathHorariosJson) {
+        // Verificar si el archivo existe
+        if (!file_exists($pathHorariosJson)) {
+            throw $this->createNotFoundException('El archivo de horarios no existe.');
+        }
+    
+        $contenidoJson = file_get_contents($pathHorariosJson);
+        $horarios = json_decode($contenidoJson, true);
+    
+        // Verificar si json_decode falló
+        if ($horarios === null && json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('Error al decodificar el JSON de horarios: ' . json_last_error_msg());
+        } else    
+            $this->horarios = $horarios;
+    }
+    
+    public function getServicesSchedule(): JsonResponse {
+        return new JsonResponse(['horariosTaller' => (!empty($this->horarios)) ? $this->horarios : null]);
     }
 
 }
