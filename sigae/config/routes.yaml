@@ -50,7 +50,7 @@ services:
 
 bookService:
   path: /bookService
-  controller: Sigae\Controllers\ControladorCliente::bookService
+  controller: Sigae\Controllers\ControladorTaller::bookService
   methods: GET
 
 doBookService:
