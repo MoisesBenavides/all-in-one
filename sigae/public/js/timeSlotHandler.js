@@ -1,6 +1,6 @@
 const TimeSlotHandler = {
-    servicioSeleccionadoDuracion: 0,    // Duración del servicio seleccionado
-    primerHorarioSeleccionado: null,    // Almacena el primer horario en servicios largos
+    servicioSeleccionadoDuracion: 0,
+    primerHorarioSeleccionado: null,
 
     generateTimeSlots() {
         const slots = [];
@@ -20,6 +20,9 @@ const TimeSlotHandler = {
         timeSlotsContainer.classList.add('hidden');
     
         try {
+            console.log('Fetching blocked times for date:', selectedDate);
+            console.log('URL:', GET_BLOCKED_TIMES_URL);
+
             const response = await fetch(`${GET_BLOCKED_TIMES_URL}?date=${selectedDate}`);
             
             if (!response.ok) {
@@ -27,17 +30,21 @@ const TimeSlotHandler = {
             }
     
             const data = await response.json();
-            return data.horariosTaller || [];
+            console.log('Response data:', data);
+
+            const horarios = data.horariosTaller || [];
+            console.log('Processed blocked times:', horarios);
+            
+            return horarios;
         } catch (error) {
             console.error('Error al obtener horarios:', error);
-            throw error;
+            return [];
         } finally {
             loadingIndicator.classList.add('hidden');
             timeSlotsContainer.classList.remove('hidden');
         }
     },
 
-    // Manejo de selección de horarios
     handleTimeSelection(time, button) {
         const horaInput = document.getElementById('hora_inicio');
         
@@ -58,7 +65,7 @@ const TimeSlotHandler = {
             // Muestra confirmación
             this.showConfirmation(`Horario seleccionado: ${time}`);
         } else {
-            // Para servicios que requieren dos palzos
+            // Para servicios que requieren dos plazoss
             if (!this.primerHorarioSeleccionado) {
                 // Primera selección
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
@@ -116,8 +123,21 @@ const TimeSlotHandler = {
         }
 
         try {
-            const blockedTimes = await this.fetchBlockedTimes(selectedDate) || [];
+            let blockedTimes = [];
+            try {
+                blockedTimes = await this.fetchBlockedTimes(selectedDate);
+                if (!Array.isArray(blockedTimes)) {
+                    console.warn('blockedTimes no es un array:', blockedTimes);
+                    blockedTimes = [];
+                }
+            } catch (error) {
+                console.error('Error fetching blocked times:', error);
+                blockedTimes = [];
+            }
+
             const allTimeSlots = this.generateTimeSlots();
+            console.log('All time slots:', allTimeSlots);
+            console.log('Blocked times:', blockedTimes);
             
             timeSlotsContainer.innerHTML = '';
             serviceDurationMessage.classList.toggle('hidden', this.servicioSeleccionadoDuracion <= 30);
@@ -127,15 +147,14 @@ const TimeSlotHandler = {
                 button.type = 'button';
                 button.textContent = time;
                 
-                const isBlocked = Array.isArray(blockedTimes) ? blockedTimes.includes(time) : false;
+                const isBlocked = blockedTimes.includes(time);
                 let isAdjacentBlocked = false;
 
                 if (this.servicioSeleccionadoDuracion > 30) {
                     const timeIndex = allTimeSlots.indexOf(time);
                     const nextTime = allTimeSlots[timeIndex + 1];
                     const prevTime = allTimeSlots[timeIndex - 1];
-                    isAdjacentBlocked = Array.isArray(blockedTimes) ? 
-                        (blockedTimes.includes(nextTime) && blockedTimes.includes(prevTime)) : false;
+                    isAdjacentBlocked = blockedTimes.includes(nextTime) || blockedTimes.includes(prevTime);
                 }
 
                 const isDisabled = isBlocked || isAdjacentBlocked;
@@ -152,7 +171,7 @@ const TimeSlotHandler = {
                 timeSlotsContainer.appendChild(button);
             });
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error en updateTimeSlots:', error);
             this.showError('Error al actualizar los horarios.');
         }
     },
