@@ -127,6 +127,7 @@
         },
 
     
+    
         async updateTimeSlots(selectedDate) {
             console.log('Iniciando updateTimeSlots con fecha:', selectedDate);
             
@@ -145,43 +146,40 @@
             }
         
             try {
-                // Inicializar blockedTimes como array vacío
-                let blockedTimes = [];
+                // Inicializar blockedTimes como objeto para búsqueda más rápida
+                let blockedTimesMap = {};
                 
                 try {
                     const response = await this.fetchBlockedTimes(selectedDate);
                     console.log('Respuesta de fetchBlockedTimes:', response);
                     
-                    // Asegurarnos de que blockedTimes sea siempre un array
+                    // Convertir la respuesta en un objeto map
                     if (Array.isArray(response)) {
-                        blockedTimes = response;
-                    } else {
-                        console.warn('fetchBlockedTimes no devolvió un array:', response);
+                        response.forEach(time => {
+                            blockedTimesMap[time] = true;
+                        });
+                    } else if (response && typeof response === 'object') {
+                        blockedTimesMap = response;
                     }
+                    
+                    console.log('BlockedTimesMap creado:', blockedTimesMap);
                 } catch (error) {
                     console.error('Error fetching blocked times:', error);
                 }
     
-                console.log('BlockedTimes después de fetch:', blockedTimes);
                 const allTimeSlots = this.generateTimeSlots();
                 console.log('AllTimeSlots generados:', allTimeSlots);
                 
                 timeSlotsContainer.innerHTML = '';
                 serviceDurationMessage.classList.toggle('hidden', this.servicioSeleccionadoDuracion <= 30);
-                
-                // Verificar que blockedTimes sea un array antes de usarlo
-                if (!Array.isArray(blockedTimes)) {
-                    console.warn('BlockedTimes no es un array, inicializando como vacío');
-                    blockedTimes = [];
-                }
     
                 allTimeSlots.forEach(time => {
                     const button = document.createElement('button');
                     button.type = 'button';
                     button.textContent = time;
                     
-                    // Verificación segura de includes
-                    const isBlocked = blockedTimes.includes?.(time) ?? false;
+                    // Verificar si el tiempo está bloqueado usando el objeto map
+                    const isBlocked = !!blockedTimesMap[time];
                     let isAdjacentBlocked = false;
     
                     if (this.servicioSeleccionadoDuracion > 30) {
@@ -189,11 +187,10 @@
                         const nextTime = allTimeSlots[timeIndex + 1];
                         const prevTime = allTimeSlots[timeIndex - 1];
                         
-                        // Verificación segura para horarios adyacentes
+                        // Verificar horarios adyacentes usando el objeto map
                         isAdjacentBlocked = 
-                            (nextTime && blockedTimes.includes?.(nextTime)) || 
-                            (prevTime && blockedTimes.includes?.(prevTime)) || 
-                            false;
+                            (nextTime && !!blockedTimesMap[nextTime]) || 
+                            (prevTime && !!blockedTimesMap[prevTime]);
                     }
     
                     const isDisabled = isBlocked || isAdjacentBlocked;
@@ -209,6 +206,8 @@
                     button.disabled = isDisabled;
                     timeSlotsContainer.appendChild(button);
                 });
+    
+                console.log('Actualización de slots completada');
             } catch (error) {
                 console.error('Error en updateTimeSlots:', error);
                 this.showError('Error al actualizar los horarios.');
