@@ -98,16 +98,21 @@ class ControladorFuncionario extends AbstractController {
     }
 
     private function validarUsuario($str, $max) {
-        /* Verifica si la cadena $str cumple con ciertos criterios de caracteres y contiene un dominio de correo valido
-        y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */ 
-        return (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9_%$@]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $str) && strlen($str) <= $max);
+        /* Verifica si el nombre de usuario $str cumple con ciertos criterios como:
+            - El primer carácter debe ser una letra o un número.
+            - Permite guiones bajos o guiones opcionales entre letras o números, sin comenzar ni terminar con ellos.
+            - Máximo por el especificado
+        */ 
+        return (preg_match("/^[a-zA-Z0-9]+(?:[-_]?[a-zA-Z0-9]+)*$/", $str) && strlen($str) <= $max);
     }
 
     private function validarContrasena($str, $min, $max) {
-        /* Verifica si la contraseña contiene mayusculas, minusculas y numeros
-        y si la extension de la cadena se ncuentra en el rango especificado por las variables $min y $max. */ 
-        return ((preg_match('/[A-Z]/', $str) && preg_match('/[a-z]/', $str) && preg_match('/[0-9]/', $str) 
-                && strlen($str) <= $max && strlen($str) >= $min));
-
+        /* Verifica si la contraseña:
+            - Contiene al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.
+            - Su longitud está en el rango especificado por $min y $max.
+        */
+        $pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{" . $min . "," . $max . "}$/";
+    
+        return preg_match($pattern, $str);
     }
 }
