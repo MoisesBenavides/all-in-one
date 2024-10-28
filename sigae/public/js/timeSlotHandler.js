@@ -240,3 +240,5 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('URL configurada:', GET_BLOCKED_TIMES_URL);
     console.log('TimeSlotHandler disponible:', !!window.TimeSlotHandler);
 });
+
+console.log("estoy debugginggggg");
