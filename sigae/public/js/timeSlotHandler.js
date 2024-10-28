@@ -130,10 +130,9 @@
         async updateTimeSlots(selectedDate) {
             console.log('Iniciando updateTimeSlots con fecha:', selectedDate);
             
-            // Verificar elementos del DOM
             const timeSlotsContainer = document.getElementById('timeSlots');
             const serviceDurationMessage = document.getElementById('serviceDurationMessage');
-
+    
             if (!timeSlotsContainer || !serviceDurationMessage) {
                 console.error('Elementos DOM no encontrados');
                 return;
@@ -146,63 +145,59 @@
             }
         
             try {
-                // Garantizar que blockedTimes sea un array
-                let blockedTimes;
+                // Inicializar blockedTimes como array vacío
+                let blockedTimes = [];
+                
                 try {
-                    blockedTimes = await this.fetchBlockedTimes(selectedDate);
-                    console.log('Horarios bloqueados sin procesar:', blockedTimes);
+                    const response = await this.fetchBlockedTimes(selectedDate);
+                    console.log('Respuesta de fetchBlockedTimes:', response);
                     
-                    // Asegurar que blockedTimes sea un array
-                    if (!Array.isArray(blockedTimes)) {
-                        console.warn('blockedTimes no es un array, inicializando como array vacío');
-                        blockedTimes = [];
+                    // Asegurarnos de que blockedTimes sea siempre un array
+                    if (Array.isArray(response)) {
+                        blockedTimes = response;
+                    } else {
+                        console.warn('fetchBlockedTimes no devolvió un array:', response);
                     }
                 } catch (error) {
-                    console.error('Error obteniendo horarios bloqueados:', error);
-                    blockedTimes = [];
+                    console.error('Error fetching blocked times:', error);
                 }
-
+    
+                console.log('BlockedTimes después de fetch:', blockedTimes);
                 const allTimeSlots = this.generateTimeSlots();
-                console.log('Slots de tiempo generados:', allTimeSlots);
+                console.log('AllTimeSlots generados:', allTimeSlots);
                 
-                // Limpiar container
                 timeSlotsContainer.innerHTML = '';
                 serviceDurationMessage.classList.toggle('hidden', this.servicioSeleccionadoDuracion <= 30);
                 
-                // Crear botones de manera segura
+                // Verificar que blockedTimes sea un array antes de usarlo
+                if (!Array.isArray(blockedTimes)) {
+                    console.warn('BlockedTimes no es un array, inicializando como vacío');
+                    blockedTimes = [];
+                }
+    
                 allTimeSlots.forEach(time => {
                     const button = document.createElement('button');
                     button.type = 'button';
                     button.textContent = time;
                     
-                    // Verificación segura de horarios bloqueados
-                    let isBlocked = false;
-                    try {
-                        isBlocked = blockedTimes.includes(time);
-                    } catch (error) {
-                        console.error('Error verificando horario bloqueado:', error);
-                        isBlocked = false;
-                    }
-
+                    // Verificación segura de includes
+                    const isBlocked = blockedTimes.includes?.(time) ?? false;
                     let isAdjacentBlocked = false;
-                    
+    
                     if (this.servicioSeleccionadoDuracion > 30) {
-                        try {
-                            const timeIndex = allTimeSlots.indexOf(time);
-                            const nextTime = allTimeSlots[timeIndex + 1];
-                            const prevTime = allTimeSlots[timeIndex - 1];
-                            
-                            isAdjacentBlocked = (nextTime && blockedTimes.includes(nextTime)) || 
-                                            (prevTime && blockedTimes.includes(prevTime));
-                        } catch (error) {
-                            console.error('Error verificando horarios adyacentes:', error);
-                            isAdjacentBlocked = false;
-                        }
+                        const timeIndex = allTimeSlots.indexOf(time);
+                        const nextTime = allTimeSlots[timeIndex + 1];
+                        const prevTime = allTimeSlots[timeIndex - 1];
+                        
+                        // Verificación segura para horarios adyacentes
+                        isAdjacentBlocked = 
+                            (nextTime && blockedTimes.includes?.(nextTime)) || 
+                            (prevTime && blockedTimes.includes?.(prevTime)) || 
+                            false;
                     }
-
+    
                     const isDisabled = isBlocked || isAdjacentBlocked;
                     
-                    // Aplicar clases y estado
                     button.className = isDisabled 
                         ? 'p-2 rounded-md text-center bg-red-100 text-red-800 cursor-not-allowed'
                         : 'p-2 rounded-md text-center bg-green-100 text-green-800 hover:bg-green-200';
@@ -214,11 +209,8 @@
                     button.disabled = isDisabled;
                     timeSlotsContainer.appendChild(button);
                 });
-
-                console.log('Actualización de slots completada');
-
             } catch (error) {
-                console.error('Error detallado en updateTimeSlots:', error);
+                console.error('Error en updateTimeSlots:', error);
                 this.showError('Error al actualizar los horarios.');
             }
         },
