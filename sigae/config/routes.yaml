@@ -143,6 +143,11 @@ doLoginAioEmployee:
   controller: Sigae\Controllers\ControladorFuncionario::doLoginAioEmployee
   methods: POST
 
+showDashboard:
+  path: /dashboard
+  controller: Sigae\Controllers\ControladorFuncionario::showDashboard
+  methods: POST
+
 getClientProfilePhoto:
   path: /api/getClientProfilePhoto
   controller: Sigae\Controllers\ControladorCliente::getClientProfilePhoto
