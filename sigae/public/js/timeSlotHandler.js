@@ -1,4 +1,5 @@
-    // Verificar que la URL esté definida
+console.log("estoy debugginggggg");
+
     if (typeof GET_BLOCKED_TIMES_URL === 'undefined') {
         console.error('GET_BLOCKED_TIMES_URL no está definida');
     }
@@ -241,4 +242,3 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('TimeSlotHandler disponible:', !!window.TimeSlotHandler);
 });
 
-console.log("estoy debugginggggg");
