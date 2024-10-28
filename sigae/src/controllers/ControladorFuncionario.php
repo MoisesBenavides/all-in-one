@@ -47,8 +47,10 @@ class ControladorFuncionario extends AbstractController {
 
             // Validar credenciales
             if (!$this->validarUsuario($usuario, 63)) {
+                error_log("Error con el usuario: ".$usuario." ".$contrasena);
                 $response['errors'][] = "Por favor, ingrese un usuario válido.";
             } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
+                error_log("Error con la constasena de: ".$usuario." ".$contrasena);
                 $response['errors'][] = "Por favor, ingrese una contraseña válida.";
             } else {
                 try {
@@ -56,6 +58,7 @@ class ControladorFuncionario extends AbstractController {
                         error_log("Error con las credenciales: ".$usuario." ".$contrasena);
                         throw new PDOException("Credenciales incorrectas.");
                     }
+                    error_log("Iniciando sesión...");
                     
                     // Intenta iniciar el funcionario y obtener el rol
                     $this->funcionario->iniciarFuncionario($usuario);
