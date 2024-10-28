@@ -48,16 +48,15 @@ class Funcionario{
         return $this->conn;
     }
 
-    public function verificarCredenciales($usuario, $contrasena) {
+    public function verificarCredenciales($contrasena) {
         try {
             // Conectar sin especificar base de datos
             $dsn = 'mysql:host=localhost';
+            $usuario = $this->getUsuario();
             $pdo = new PDO($dsn, $usuario, $contrasena, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ]);
-    
-            // Si la conexión es exitosa, las credenciales son correctas
-            $this->setUsuario($usuario);
+
             return true;
     
         } catch (PDOException $e) {

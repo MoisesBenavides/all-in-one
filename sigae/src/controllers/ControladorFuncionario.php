@@ -53,8 +53,9 @@ class ControladorFuncionario extends AbstractController {
                 error_log("Error con la constasena de: ".$usuario." ".$contrasena);
                 $response['errors'][] = "Por favor, ingrese una contraseña válida.";
             } else {
+                $this->funcionario=new Funcionario($usuario, null);
                 try {
-                    if (!$this->funcionario->verificarCredenciales($usuario, $contrasena)) {
+                    if (!$this->funcionario->verificarCredenciales($contrasena)) {
                         error_log("Error con las credenciales: ".$usuario." ".$contrasena);
                         throw new PDOException("Credenciales incorrectas.");
                     }
