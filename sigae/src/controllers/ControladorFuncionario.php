@@ -95,6 +95,14 @@ class ControladorFuncionario extends AbstractController {
         ]);
     }
 
+    function showReports(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/consultas.html.twig');
+        }
+    }
+
     private function validarUsuario($str, $max) {
         /* Verifica si el nombre de usuario $str cumple con ciertos criterios como:
             - El primer carácter debe ser una letra o un número.

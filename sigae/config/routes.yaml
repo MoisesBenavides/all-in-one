@@ -148,6 +148,26 @@ showDashboard:
   controller: Sigae\Controllers\ControladorFuncionario::showDashboard
   methods: GET
 
+showReports:
+  path: /reports
+  controller: Sigae\Controllers\ControladorFuncionario::showReports
+  methods: GET
+
+stockManagement:
+  path: /stockManagement
+  controller: Sigae\Controllers\ControladorFuncionario::stockManagement
+  methods: GET
+
+inventory:
+  path: /inventory
+  controller: Sigae\Controllers\ControladorFuncionario::showInventory
+  methods: GET
+
+userManagement:
+  path: /userManagement
+  controller: Sigae\Controllers\ControladorFuncionario::userManagement
+  methods: GET
+
 getClientProfilePhoto:
   path: /api/getClientProfilePhoto
   controller: Sigae\Controllers\ControladorCliente::getClientProfilePhoto
