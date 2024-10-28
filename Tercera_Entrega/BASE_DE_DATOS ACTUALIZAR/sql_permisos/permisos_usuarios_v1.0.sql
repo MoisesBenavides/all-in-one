@@ -80,7 +80,8 @@ GRANT SELECT, INSERT, UPDATE ON aio_db.parking TO 'valet_parking';
 GRANT SELECT, INSERT, UPDATE ON aio_db.numero_plaza TO 'valet_parking';
 
 -- verificador de credenciales
-GRANT SELECT ON mysql.role_edges TO verificador_credenciales;
+GRANT SELECT ON mysql.role_edges TO 'verificador_credenciales';
+GRANT SELECT ON aio_db.* TO 'verificador_credenciales';
 
 -- CREACIÓN DE USUARIOS
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password_admin' DEFAULT ROLE 'admin_rol';
