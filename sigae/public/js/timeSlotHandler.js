@@ -32,7 +32,14 @@ const TimeSlotHandler = {
             const data = await response.json();
             console.log('Response data:', data);
 
-            const horarios = data.horariosTaller || [];
+            // Manejar específicamente la estructura del backend
+            if (!data || !data.horariosTaller) {
+                console.log('No hay horarios bloqueados');
+                return [];
+            }
+
+            // Asegurarse de que horariosTaller sea un array
+            const horarios = Array.isArray(data.horariosTaller) ? data.horariosTaller : [];
             console.log('Processed blocked times:', horarios);
             
             return horarios;
@@ -44,6 +51,8 @@ const TimeSlotHandler = {
             timeSlotsContainer.classList.remove('hidden');
         }
     },
+
+    
 
     handleTimeSelection(time, button) {
         const horaInput = document.getElementById('hora_inicio');
@@ -123,38 +132,32 @@ const TimeSlotHandler = {
         }
 
         try {
-            let blockedTimes = [];
-            try {
-                blockedTimes = await this.fetchBlockedTimes(selectedDate);
-                if (!Array.isArray(blockedTimes)) {
-                    console.warn('blockedTimes no es un array:', blockedTimes);
-                    blockedTimes = [];
-                }
-            } catch (error) {
-                console.error('Error fetching blocked times:', error);
-                blockedTimes = [];
-            }
+            // Intentar obtener los horarios bloqueados
+            const blockedTimes = await this.fetchBlockedTimes(selectedDate);
+            console.log('Received blocked times:', blockedTimes);
 
             const allTimeSlots = this.generateTimeSlots();
-            console.log('All time slots:', allTimeSlots);
-            console.log('Blocked times:', blockedTimes);
+            console.log('Generated time slots:', allTimeSlots);
             
             timeSlotsContainer.innerHTML = '';
             serviceDurationMessage.classList.toggle('hidden', this.servicioSeleccionadoDuracion <= 30);
+            
+            // Asegurarse de que blockedTimes sea un array antes de usarlo
+            const validBlockedTimes = Array.isArray(blockedTimes) ? blockedTimes : [];
             
             allTimeSlots.forEach(time => {
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.textContent = time;
                 
-                const isBlocked = blockedTimes.includes(time);
+                const isBlocked = validBlockedTimes.includes(time);
                 let isAdjacentBlocked = false;
 
                 if (this.servicioSeleccionadoDuracion > 30) {
                     const timeIndex = allTimeSlots.indexOf(time);
                     const nextTime = allTimeSlots[timeIndex + 1];
                     const prevTime = allTimeSlots[timeIndex - 1];
-                    isAdjacentBlocked = blockedTimes.includes(nextTime) || blockedTimes.includes(prevTime);
+                    isAdjacentBlocked = validBlockedTimes.includes(nextTime) || validBlockedTimes.includes(prevTime);
                 }
 
                 const isDisabled = isBlocked || isAdjacentBlocked;
