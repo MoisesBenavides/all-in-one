@@ -33,6 +33,12 @@ GRANT SELECT ON aio_db.otro_producto TO 'cliente';
 -- gerente
 GRANT SELECT, INSERT, UPDATE, DELETE ON aio_db.* TO 'gerente';
 
+GRANT CREATE USER ON *.* TO 'gerente';
+GRANT GRANT OPTION ON *.* TO 'gerente';
+GRANT DROP USER ON *.* TO 'gerente';
+GRANT ALTER USER ON *.* TO 'gerente';
+GRANT SELECT ON mysql.user TO 'gerente';
+
 -- ejecutivo
 GRANT SELECT, UPDATE ON aio_db.vehiculo TO 'ejecutivo';
 GRANT SELECT, UPDATE ON aio_db.servicio TO 'ejecutivo';
@@ -59,6 +65,12 @@ GRANT SELECT, UPDATE ON aio_db.taller TO 'jefe_diagnostico';
 -- jefe de taller
 GRANT SELECT ON aio_db.servicio TO 'jefe_taller';
 GRANT SELECT ON aio_db.taller TO 'jefe_taller';
+
+GRANT CREATE USER ON *.* TO 'jefe_taller';
+GRANT GRANT OPTION ON *.* TO 'jefe_taller';
+GRANT DROP USER ON *.* TO 'jefe_taller';
+GRANT ALTER USER ON *.* TO 'jefe_taller';
+GRANT SELECT ON mysql.user TO 'jefe_taller';
 
 -- valet parking
 GRANT SELECT, INSERT, UPDATE ON aio_db.vehiculo TO 'valet_parking';
