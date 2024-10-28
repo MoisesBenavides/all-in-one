@@ -7,6 +7,7 @@ CREATE ROLE 'cajero';
 CREATE ROLE 'jefe_diagnostico';
 CREATE ROLE 'jefe_taller';
 CREATE ROLE 'valet_parking';
+CREATE ROLE 'verificador_credenciales';
 
 -- PERMISOS
 -- admin
@@ -78,6 +79,9 @@ GRANT SELECT, INSERT, UPDATE ON aio_db.servicio TO 'valet_parking';
 GRANT SELECT, INSERT, UPDATE ON aio_db.parking TO 'valet_parking';
 GRANT SELECT, INSERT, UPDATE ON aio_db.numero_plaza TO 'valet_parking';
 
+-- verificador de credenciales
+GRANT SELECT ON mysql.user TO verificador_credenciales;
+
 -- CREACIÓN DE USUARIOS
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password_admin' DEFAULT ROLE 'admin_rol';
 CREATE USER 'def_cliente'@'localhost' IDENTIFIED BY 'password_cliente' DEFAULT ROLE 'cliente';
@@ -87,3 +91,4 @@ CREATE USER 'def_cajero'@'localhost' IDENTIFIED BY 'password_cajero' DEFAULT ROL
 CREATE USER 'def_jefe_diagnostico'@'localhost' IDENTIFIED BY 'password_jefe_diagnostico' DEFAULT ROLE 'jefe_diagnostico';
 CREATE USER 'def_jefe_taller'@'localhost' IDENTIFIED BY 'password_jefe_taller' DEFAULT ROLE 'jefe_taller';
 CREATE USER 'def_valet_parking'@'localhost' IDENTIFIED BY 'password_valet_parking' DEFAULT ROLE 'valet_parking';
+CREATE USER 'def_app_user'@'localhost' IDENTIFIED BY 'password_app_user' DEFAULT ROLE 'verificador_credenciales';
