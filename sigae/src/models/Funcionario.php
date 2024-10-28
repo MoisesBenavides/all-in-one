@@ -100,7 +100,6 @@ class Funcionario{
     
         } catch (PDOException $e) {
             // Debug error
-            error_log($e->getMessage());
             throw $e;
         } finally {
             $conn = null; // Cierra la conexión
