@@ -108,11 +108,9 @@ class ControladorFuncionario extends AbstractController {
 
     private function validarContrasena($str, $min, $max) {
         /* Verifica si la contraseña:
-            - Contiene al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.
+            - ...
             - Su longitud está en el rango especificado por $min y $max.
         */
-        $pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{" . $min . "," . $max . "}$/";
-    
-        return preg_match($pattern, $str);
+        return strlen($str) >= $min && strlen($str) <= $max;
     }
 }
