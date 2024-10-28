@@ -152,8 +152,17 @@
                 </div>
 
                 <!-- Contenedor de errores -->
-                <div id="error-container" class="hidden bg-[#ffcccc] text-[#ff0000] p-4 mb-6 rounded-lg"></div>
-
+    <!--             <div id="error-container" class="hidden bg-[#ffcccc] text-[#ff0000] p-4 mb-6 rounded-lg"></div>-->
+     <!-- Sección de errores -->
+                {% if response is defined and response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" class="text-red-600 mt-4">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
                 <div class="w-full max-w-[340px] mx-auto">
                     <button type="submit" class="w-full h-[62px] px-7 py-2.5 duration-300 btn rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
                 </div>
