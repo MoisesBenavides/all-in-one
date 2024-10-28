@@ -43,7 +43,7 @@ class ControladorFuncionario extends AbstractController {
             $contrasena = $_POST["contrasena"];
 
             //Debug
-            error_log($usuario." ".$contrasena);
+            error_log("Datos recibidos: ".$usuario." ".$contrasena);
 
             // Validar credenciales
             if (!$this->validarUsuario($usuario, 63)) {
@@ -53,6 +53,7 @@ class ControladorFuncionario extends AbstractController {
             } else {
                 try {
                     if (!$this->funcionario->verificarCredenciales($usuario, $contrasena)) {
+                        error_log("Error con las credenciales: ".$usuario." ".$contrasena);
                         throw new PDOException("Credenciales incorrectas.");
                     }
                     
