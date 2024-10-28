@@ -138,9 +138,11 @@ class ControladorTaller extends AbstractController{
                 ['fecha_inicio', 'categoriaServicio', 'tipoServicio', 'tipoVehiculo', 'matricula'],
                 array_keys($_POST)
             );
-        }    
+        }
+        $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
         return $this->render('client/reservarServicio.html.twig', [
-            'response' => $response
+            'response' => $response,
+            'misVehiculos' => $misVehiculos
         ]); // Pasa la respuesta a la vista
     }
 

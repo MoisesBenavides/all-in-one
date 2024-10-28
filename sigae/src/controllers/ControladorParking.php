@@ -2,6 +2,7 @@
 
 namespace Sigae\Controllers;
 use Sigae\Models\Parking;
+use Sigae\Models\Cliente;
 use Sigae\Models\TipoPlazaParking;
 use Sigae\Controllers\ControladorVehiculo;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -146,9 +147,10 @@ class ControladorParking extends AbstractController{
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
         }
+        $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
         return $this->render('client/reservarParkingSimple.html.twig', [
-            'response' => $response  // Aquí pasa la respuesta a la vista
-            // TODO: Pasar misVehiculos
+            'response' => $response,
+            'misVehiculos' => $misVehiculos
         ]);
     }
 
@@ -267,9 +269,10 @@ class ControladorParking extends AbstractController{
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
         }
+        $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
         return $this->render('client/reservarParkingLargoPlazo.html.twig', [
-            'response' => $response  // Aquí pasa la respuesta a la vista
-            // TODO: Pasar misVehiculos
+            'response' => $response,
+            'misVehiculos' => $misVehiculos
         ]);
     }
 
