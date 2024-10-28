@@ -77,6 +77,7 @@ class ControladorFuncionario extends AbstractController {
                 
                 } catch (PDOException $e) {
                     // Añade el mensaje de error al array de errores
+                    error_log($e->getMessage());
                     $response['errors'][] = $e->getMessage();
                 }
                 
