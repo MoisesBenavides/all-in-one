@@ -42,6 +42,9 @@ class ControladorFuncionario extends AbstractController {
             $usuario = $_POST["usuario"];
             $contrasena = $_POST["contrasena"];
 
+            //Debug
+            error_log($usuario." ".$contrasena);
+
             // Validar credenciales
             if (!$this->validarUsuario($usuario, 63)) {
                 $response['errors'][] = "Por favor, ingrese un usuario válido.";
@@ -77,7 +80,7 @@ class ControladorFuncionario extends AbstractController {
                 
                 } catch (PDOException $e) {
                     // Añade el mensaje de error al array de errores
-                    error_log($e->getMessage());
+                    error_log($e->getMessage(), true);
                     $response['errors'][] = $e->getMessage();
                 }
                 
