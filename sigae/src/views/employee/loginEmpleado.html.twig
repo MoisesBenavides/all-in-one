@@ -39,20 +39,10 @@
                        class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                 <p id="password-error" class="mt-1 text-red-500 text-sm hidden"></p>
               </div>
-              <div class="mb-2">
-                <p>
-                  <a traducir="olvidaste_contrasena" href="{{ path('forgotPassword') }}" class="text-sm text-gray-600 hover:underline">¿Olvidaste tu contraseña?</a>
-                </p>
-              </div>
               <button traducir="ingresar" type="submit" class="w-full duration-300 bg-botonAIO hover:bg-botonAIO-hover text-white py-2 rounded-md  transition">
                 Ingresar
               </button>
             </form>
-            <!-- NOTA: Agregar separador entre boton ingresar y continuar con Google (O ) -->
-            <button class="w-full mt-4 flex justify-center items-center bg-[#ffffff] px-4 py-2 border rounded-md hover:bg-[#e5e5e5] transition">
-              <img class="w-6 h-6 mr-4" src="{{ asset('svg/google-icon-logo.svg') }}" alt="Google"/>
-              <a traducir="continuar_google" href="{{ path('doLoginOAuth') }}" class="text-gray-600">Continuar con Google</a>
-            </button>
           </div>
         </div>
 </body>
