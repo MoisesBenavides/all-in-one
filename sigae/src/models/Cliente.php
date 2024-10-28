@@ -160,6 +160,33 @@ class Cliente{
         }
     }
 
+    public function modificarCliente($id, $nombre, $apellido, $telefono) {
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+            
+            $stmt = $conn->prepare('UPDATE cliente SET nombre = :nom, apellido = :ape, telefono = :tel 
+                                    WHERE id = :id');
+            
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':nom', $nombre);
+            $stmt->bindParam(':ape', $apellido);
+            $stmt->bindParam(':tel', $telefono);
+                
+            $stmt->execute();
+            return true; // Modificado exitosamente;
+
+        } catch (PDOException $e) {
+            error_log("Error al intentar modificar al cliente: " . $e->getMessage());
+            return false;
+        } finally {
+            $conn = null;
+        }
+    }
+
     public static function cargarMisVehiculos($id){
         try {
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");

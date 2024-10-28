@@ -95,7 +95,7 @@ class ControladorCliente extends AbstractController {
         // Configurar cliente Google
         $client= new Google_Client();
         $client->setAuthConfig('/var/www/html/private/credencialesOAuth.json');
-        $client->setRedirectUri('"https://16fd-167-56-5-207.ngrok-free.app/doLoginOAuth"');
+        $client->setRedirectUri('"https://aio.ngrok.app/doLoginOAuth"');
         $client->addScope('email');
         $client->addScope('profile');
 
@@ -154,9 +154,6 @@ class ControladorCliente extends AbstractController {
     function doSignUpOAuth(){
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
-        // Debug: Log all received data
-        $response['debug']['received_data']=$_POST;
-
         // Validacion de campos vacios
         if (isset($_POST["email"], $_POST["nombre"], $_POST["apellido"], $_POST["contrasena"], $_POST["repContrasena"]) && 
             !empty($_POST["email"]) && !empty($_POST["nombre"]) && !empty($_POST["apellido"]) && !empty($_POST["contrasena"]) && !empty($_POST["repContrasena"])) {
@@ -166,15 +163,6 @@ class ControladorCliente extends AbstractController {
             $apellido = $_POST["apellido"];
             $contrasena = $_POST["contrasena"];
             $repContrasena = $_POST["repContrasena"];
-
-            // Debug: Datos procesados
-            $response['debug']['processed_data'] = [
-                'email' => $email,
-                'nombre' => $nombre,
-                'apellido' => $apellido,
-                'contrasena' => 'REDACTED',
-                'repContrasena' => 'REDACTED'
-            ];
 
             if (!$this->validarEmail($email, 63)) {
                 $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
@@ -203,11 +191,6 @@ class ControladorCliente extends AbstractController {
             
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
-            // Debug: Log which fields are missing
-            $response['debug']['missing_fields'] = array_diff(
-                ['email', 'nombre', 'apellido', 'contrasena', 'repContrasena'],
-                array_keys($_POST)
-            );
         }
         return $this->render('client/account/signUp.html.twig', [
             'response' => $response
@@ -219,9 +202,6 @@ class ControladorCliente extends AbstractController {
     function doSignup(): Response|RedirectResponse{
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
-        // Debug: Log all received data
-        $response['debug']['received_data']=$_POST;
-
         // Validacion de campos vacios
         if (isset($_POST["email"], $_POST["nombre"], $_POST["apellido"], $_POST["contrasena"], $_POST["repContrasena"]) && 
             !empty($_POST["email"]) && !empty($_POST["nombre"]) && !empty($_POST["apellido"]) && !empty($_POST["contrasena"]) && !empty($_POST["repContrasena"])) {
@@ -231,15 +211,6 @@ class ControladorCliente extends AbstractController {
             $apellido = $_POST["apellido"];
             $contrasena = $_POST["contrasena"];
             $repContrasena = $_POST["repContrasena"];
-
-            // Debug: Datos procesados
-            $response['debug']['processed_data'] = [
-                'email' => $email,
-                'nombre' => $nombre,
-                'apellido' => $apellido,
-                'contrasena' => 'REDACTED',
-                'repContrasena' => 'REDACTED'
-            ];
 
             if (!$this->validarEmail($email, 63)) {
                 $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
@@ -268,11 +239,6 @@ class ControladorCliente extends AbstractController {
             
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
-            // Debug: Log which fields are missing
-            $response['debug']['missing_fields'] = array_diff(
-                ['email', 'nombre', 'apellido', 'contrasena', 'repContrasena'],
-                array_keys($_POST)
-            );
         }
         return $this->render('client/account/signUp.html.twig', [
             'response' => $response
@@ -353,6 +319,52 @@ class ControladorCliente extends AbstractController {
             'misVehiculos' => $misVehiculos
         ]);
     }
+
+    function editMyAccount(): Response{
+        $response=['success' => false, 'errors' => [], 'debug' => []];
+        // Validacion de campos vacios
+        if (isset($_POST["nombre"]) && !empty($_POST["nombre"])) {
+
+            $id = $_SESSION["id"];
+            $email = $_POST["nombre"];
+            $nombre = $_POST["email"];
+            $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : null;
+            $telefono = isset($_POST['telefono']) ? $_POST['telefono'] : null;
+
+            if (!$this->validarNombreApellido($nombre, 23)) {
+                $response['errors'][] = "Por favor, ingrese un nombre válido.";
+            } elseif ($apellido !== null && !$this->validarNombreApellido($apellido, 23)) {
+                $response['errors'][] = "Por favor, ingrese un apellido válido.";
+            } elseif ($telefono !== null && !$this->validarTelefono($telefono)) {
+                $response['errors'][] = "Por favor, ingrese un apellido válido.";
+            }elseif(!Cliente::existeEmail($email)) {
+                $response['errors'][]= "No existe un usuario con el correo ingresado.";
+            } elseif(!$this->cliente->modificarCliente($id, $nombre, $apellido, $telefono)){
+                $response['errors'][] = "Error al hacer los cambios.";
+            } else {
+                $response['success'] = true;
+                // Recargar la página
+                return $this->redirectToRoute('myAccount');
+            }
+        } else {
+            $response['errors'][] = "Debe llenar todos los campos.";
+        }
+        $cliente = [
+            'id' => $_SESSION['id'],
+            'email' => $_SESSION['email'],
+            'nombre' => $_SESSION['nombre'],
+            'apellido' => isset($_SESSION['apellido']) ? $_SESSION['apellido'] : null,
+            'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
+            'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
+        ];
+        $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
+        return $this->render('client/miCuenta.html.twig', [
+            'cliente' => $cliente,
+            'misVehiculos' => $misVehiculos,
+            'response' => $response
+        ]);
+    }
+
     function faq(): Response{
         return $this->render('client/FAQ.html.twig');
     }
@@ -409,6 +421,11 @@ class ControladorCliente extends AbstractController {
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres y contiene un dominio de correo valido
         y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */ 
         return (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $str) && strlen($str) <= $max);
+    }
+
+    // TODO: Implementar validacion
+    private function validarTelefono($str) {
+        return true;
     }
 
     private function validarNombreApellido($str, $max) {
