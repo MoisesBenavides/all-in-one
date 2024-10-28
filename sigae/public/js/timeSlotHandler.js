@@ -21,8 +21,7 @@ const TimeSlotHandler = {
     
         try {
             console.log('Fetching blocked times for date:', selectedDate);
-            console.log('URL:', GET_BLOCKED_TIMES_URL);
-
+            
             const response = await fetch(`${GET_BLOCKED_TIMES_URL}?date=${selectedDate}`);
             
             if (!response.ok) {
@@ -30,28 +29,27 @@ const TimeSlotHandler = {
             }
     
             const data = await response.json();
-            console.log('Response data:', data);
-
-            // Manejar específicamente la estructura del backend
+            console.log('Raw response:', data);
+    
+            // Si no hay datos o no hay horariosTaller, devolver array vacío
             if (!data || !data.horariosTaller) {
-                console.log('No hay horarios bloqueados');
+                console.log('No blocked times found, returning empty array');
                 return [];
             }
-
-            // Asegurarse de que horariosTaller sea un array
+    
+            // Asegurar que horariosTaller sea un array
             const horarios = Array.isArray(data.horariosTaller) ? data.horariosTaller : [];
             console.log('Processed blocked times:', horarios);
             
             return horarios;
         } catch (error) {
-            console.error('Error al obtener horarios:', error);
+            console.error('Error fetching blocked times:', error);
             return [];
         } finally {
             loadingIndicator.classList.add('hidden');
             timeSlotsContainer.classList.remove('hidden');
         }
     },
-
     
 
     handleTimeSelection(time, button) {
@@ -125,41 +123,53 @@ const TimeSlotHandler = {
     async updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
-
+    
         if (!this.servicioSeleccionadoDuracion) {
             this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
             return;
         }
-
+    
         try {
-            // Intentar obtener los horarios bloqueados
-            const blockedTimes = await this.fetchBlockedTimes(selectedDate);
-            console.log('Received blocked times:', blockedTimes);
-
+            // Inicializar blockedTimes como array vacío
+            let blockedTimes = [];
+            
+            try {
+                // Obtener horarios bloqueados con manejo de errores
+                const fetchedTimes = await this.fetchBlockedTimes(selectedDate);
+                // Asegurar que es un array
+                blockedTimes = Array.isArray(fetchedTimes) ? fetchedTimes : [];
+                console.log('Blocked times after fetch:', blockedTimes);
+            } catch (error) {
+                console.error('Error fetching blocked times:', error);
+                // Mantener blockedTimes como array vacío en caso de error
+            }
+    
             const allTimeSlots = this.generateTimeSlots();
-            console.log('Generated time slots:', allTimeSlots);
+            console.log('All time slots:', allTimeSlots);
             
             timeSlotsContainer.innerHTML = '';
             serviceDurationMessage.classList.toggle('hidden', this.servicioSeleccionadoDuracion <= 30);
-            
-            // Asegurarse de que blockedTimes sea un array antes de usarlo
-            const validBlockedTimes = Array.isArray(blockedTimes) ? blockedTimes : [];
             
             allTimeSlots.forEach(time => {
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.textContent = time;
                 
-                const isBlocked = validBlockedTimes.includes(time);
+                // Verificación segura usando Array.prototype.includes
+                const isBlocked = Array.isArray(blockedTimes) && blockedTimes.includes(time);
                 let isAdjacentBlocked = false;
-
+    
                 if (this.servicioSeleccionadoDuracion > 30) {
                     const timeIndex = allTimeSlots.indexOf(time);
                     const nextTime = allTimeSlots[timeIndex + 1];
                     const prevTime = allTimeSlots[timeIndex - 1];
-                    isAdjacentBlocked = validBlockedTimes.includes(nextTime) || validBlockedTimes.includes(prevTime);
+                    
+                    // Verificación segura para horarios adyacentes
+                    isAdjacentBlocked = Array.isArray(blockedTimes) && 
+                        (nextTime && blockedTimes.includes(nextTime)) || 
+                        (prevTime && blockedTimes.includes(prevTime));
                 }
-
+    
                 const isDisabled = isBlocked || isAdjacentBlocked;
                 
                 button.className = isDisabled 
