@@ -50,7 +50,7 @@ class ControladorFuncionario extends AbstractController {
                 error_log("Error con el usuario: ".$usuario." ".$contrasena);
                 $response['errors'][] = "Por favor, ingrese un usuario válido.";
             } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
-                error_log("Error con la constasena de: ".$usuario." ".$contrasena);
+                error_log("Error con la contraseña de: ".$usuario." ".$contrasena);
                 $response['errors'][] = "Por favor, ingrese una contraseña válida.";
             } else {
                 $this->funcionario=new Funcionario($usuario, null);
