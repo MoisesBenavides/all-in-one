@@ -146,7 +146,7 @@ doLoginAioEmployee:
 showDashboard:
   path: /dashboard
   controller: Sigae\Controllers\ControladorFuncionario::showDashboard
-  methods: POST
+  methods: GET
 
 getClientProfilePhoto:
   path: /api/getClientProfilePhoto
