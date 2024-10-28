@@ -2,8 +2,6 @@ const TimeSlotHandler = {
     servicioSeleccionadoDuracion: 0,    // Duración del servicio seleccionado
     primerHorarioSeleccionado: null,    // Almacena el primer horario en servicios largos
 
-    // Genera los slots de tiempo disponibles del díaArray de strings con horarios en formato HH:mm
-    
     generateTimeSlots() {
         const slots = [];
         // Genera horarios desde 5 AM hasta 5 PM en intervalos de 30 minutos
@@ -14,8 +12,6 @@ const TimeSlotHandler = {
         return slots;
     },
 
-    // Obtiene los horarios bloqueados del servidor
-   
     async fetchBlockedTimes(selectedDate) {
         const loadingIndicator = document.getElementById('loadingIndicator');
         const timeSlotsContainer = document.getElementById('timeSlots');
@@ -31,7 +27,7 @@ const TimeSlotHandler = {
             }
     
             const data = await response.json();
-            return data.horariosOcupados;
+            return data.horariosTaller || [];
         } catch (error) {
             console.error('Error al obtener horarios:', error);
             throw error;
@@ -40,8 +36,8 @@ const TimeSlotHandler = {
             timeSlotsContainer.classList.remove('hidden');
         }
     },
-    // Maneja la selección de horarios
-     
+
+    // Manejo de selección de horarios
     handleTimeSelection(time, button) {
         const horaInput = document.getElementById('hora_inicio');
         
@@ -55,16 +51,14 @@ const TimeSlotHandler = {
             // Marca el horario seleccionado
             button.classList.add('ring-2', 'ring-green-500');
             
-            //Guarda el horario como array [hora seleccionada, null]
-            const horarioSeleccionado = [time, null];
-            horaInput.value = JSON.stringify(horarioSeleccionado);
-            
+            // Guarda el horario
+            horaInput.value = time;
             this.primerHorarioSeleccionado = null;
             
             // Muestra confirmación
             this.showConfirmation(`Horario seleccionado: ${time}`);
         } else {
-            // Para servicios que requieren dos slots
+            // Para servicios que requieren dos palzos
             if (!this.primerHorarioSeleccionado) {
                 // Primera selección
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
@@ -77,11 +71,9 @@ const TimeSlotHandler = {
                 const timeIndex = this.generateTimeSlots().indexOf(time);
                 const buttons = document.querySelectorAll('#timeSlots button');
                 
-                // Resalta horario anterior si está disponible
                 if (timeIndex > 0 && !buttons[timeIndex - 1].disabled) {
                     buttons[timeIndex - 1].classList.add('ring-2', 'ring-yellow-500');
                 }
-                // Resalta horario siguiente si está disponible
                 if (timeIndex < buttons.length - 1 && !buttons[timeIndex + 1].disabled) {
                     buttons[timeIndex + 1].classList.add('ring-2', 'ring-yellow-500');
                 }
@@ -90,29 +82,22 @@ const TimeSlotHandler = {
                 const firstIndex = this.generateTimeSlots().indexOf(this.primerHorarioSeleccionado);
                 const secondIndex = this.generateTimeSlots().indexOf(time);
                 
-                // Verifica que los horarios sean consecutivos
                 if (Math.abs(firstIndex - secondIndex) === 1) {
-                    // Limpia selecciones previas
                     document.querySelectorAll('#timeSlots button').forEach(btn => {
                         btn.classList.remove('ring-2', 'ring-green-500', 'ring-yellow-500');
                     });
 
-                    // Marca ambos horarios seleccionados
                     const buttons = document.querySelectorAll('#timeSlots button');
                     buttons[Math.min(firstIndex, secondIndex)].classList.add('ring-2', 'ring-green-500');
                     buttons[Math.max(firstIndex, secondIndex)].classList.add('ring-2', 'ring-green-500');
                     
-                    const tiempoInicio = Math.min(this.primerHorarioSeleccionado, time);
-                    const tiempoFin = Math.max(this.primerHorarioSeleccionado, time);
-                    
-                    //Guarda los horarios como array [primera hora, segunda hora]
-                    const horarioSeleccionado = [tiempoInicio, tiempoFin];
-                    horaInput.value = JSON.stringify(horarioSeleccionado);
+                    // Guarda el rango de horarios
+                    horaInput.value = JSON.stringify([
+                        Math.min(this.primerHorarioSeleccionado, time),
+                        Math.max(this.primerHorarioSeleccionado, time)
+                    ]);
                     
                     this.primerHorarioSeleccionado = null;
-                    
-                    // Muestra confirmación con rango de horarios
-                    this.showConfirmation(`Horario seleccionado: ${tiempoInicio} a ${tiempoFin}`);
                 } else {
                     this.showError('Por favor, seleccione dos horarios consecutivos');
                     return;
@@ -121,7 +106,6 @@ const TimeSlotHandler = {
         }
     },
 
-    // Actualiza la visualización de horarios en ela UI
     async updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
@@ -132,7 +116,7 @@ const TimeSlotHandler = {
         }
 
         try {
-            const blockedTimes = await this.fetchBlockedTimes(selectedDate);
+            const blockedTimes = await this.fetchBlockedTimes(selectedDate) || [];
             const allTimeSlots = this.generateTimeSlots();
             
             timeSlotsContainer.innerHTML = '';
@@ -143,15 +127,15 @@ const TimeSlotHandler = {
                 button.type = 'button';
                 button.textContent = time;
                 
-                const isBlocked = blockedTimes.includes(time);
+                const isBlocked = Array.isArray(blockedTimes) ? blockedTimes.includes(time) : false;
                 let isAdjacentBlocked = false;
 
-                // Verifica horarios adyacentes (osea que estan al lado) para servicios largos
                 if (this.servicioSeleccionadoDuracion > 30) {
                     const timeIndex = allTimeSlots.indexOf(time);
                     const nextTime = allTimeSlots[timeIndex + 1];
                     const prevTime = allTimeSlots[timeIndex - 1];
-                    isAdjacentBlocked = (blockedTimes.includes(nextTime) && blockedTimes.includes(prevTime));
+                    isAdjacentBlocked = Array.isArray(blockedTimes) ? 
+                        (blockedTimes.includes(nextTime) && blockedTimes.includes(prevTime)) : false;
                 }
 
                 const isDisabled = isBlocked || isAdjacentBlocked;
@@ -173,8 +157,6 @@ const TimeSlotHandler = {
         }
     },
 
-    // Muestra mensajes de error
-
     showError(message) {
         const errorContainer = document.getElementById('error-container');
         errorContainer.textContent = message;
@@ -184,8 +166,9 @@ const TimeSlotHandler = {
         }, 5000);
     },
 
-
+    showConfirmation(message) {
+        console.log(message);
+    }
 };
 
-// Hacer disponible el objeto globalmente
 window.TimeSlotHandler = TimeSlotHandler;
