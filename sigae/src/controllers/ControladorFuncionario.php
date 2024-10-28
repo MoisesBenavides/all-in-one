@@ -58,31 +58,28 @@ class ControladorFuncionario extends AbstractController {
                     if (!$this->funcionario->verificarCredenciales($contrasena)) {
                         error_log("Error con las credenciales: ".$usuario." ".$contrasena);
                         throw new PDOException("Credenciales incorrectas.");
-                    }
-                    error_log("Iniciando sesión...");
+                    }elseif(!$this->funcionario->iniciarFuncionario($usuario)){
+                        throw new PDOException("No se pudo iniciar el usuario.");
+                    } else{
+                        // Configuración y manejo de la sesión segura
+                        session_set_cookie_params([
+                            'lifetime' => 0,
+                            'path' => '/',
+                            'secure' => true,
+                            'httponly' => true,
+                            'samesite' => 'Lax'
+                        ]);
+                        session_start();
+                        session_regenerate_id(true);
                     
-                    // Intenta iniciar el funcionario y obtener el rol
-                    $this->funcionario->iniciarFuncionario($usuario);
-                
-                    // Configuración y manejo de la sesión segura
-                    session_set_cookie_params([
-                        'lifetime' => 0,
-                        'path' => '/',
-                        'secure' => true,
-                        'httponly' => true,
-                        'samesite' => 'Lax'
-                    ]);
-                    session_start();
-                    session_regenerate_id(true);
-                
-                    // Guarda los datos de la sesión
-                    $_SESSION['ultima_solicitud'] = time();
-                    $_SESSION['usuario'] = $this->funcionario->getUsuario();
-                    $_SESSION['rol'] = $this->funcionario->getRol();
-                
-                    // Redirigir al dashboard
-                    return $this->redirectToRoute('showDashboard');
-                
+                        // Guarda los datos de la sesión
+                        $_SESSION['ultima_solicitud'] = time();
+                        $_SESSION['usuario'] = $this->funcionario->getUsuario();
+                        $_SESSION['rol'] = $this->funcionario->getRol();
+                    
+                        // Redirigir al dashboard
+                        return $this->redirectToRoute('showDashboard');
+                    }               
                 } catch (PDOException $e) {
                     // Añade el mensaje de error al array de errores
                     error_log($e->getMessage(), true);
