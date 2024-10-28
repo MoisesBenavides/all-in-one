@@ -106,7 +106,7 @@ class ControladorFuncionario extends AbstractController {
     function stockManagement(): Response{
         $rol=$_SESSION['rol'];
         if ($rol=='gerente'){
-            return $this->render('employee/manager/transaccionesStock.html,twig');
+            return $this->render('employee/manager/transaccionesStock.html.twig');
         } else{
             return $this->render('errors/errorAcceso.html.twig');
         }
