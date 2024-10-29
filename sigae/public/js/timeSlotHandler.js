@@ -30,18 +30,27 @@ const TimeSlotHandler = {
         }
     },
 
+    combineDateAndTime(date, time) {
+        // Asegurarse de que la fecha esté en el formato correcto
+        const formattedDate = date.split('T')[0]; // En caso de que la fecha tenga una parte de tiempo
+        return `${formattedDate}T${time}`;
+    },
+
     handleTimeSelection(time, button) {
-        const horaInput = document.getElementById('hora_inicio');
+        const fechaInicioInput = document.getElementById('fecha_inicio');
+        const selectedDate = fechaInicioInput.value;
         
         if (this.servicioSeleccionadoDuracion <= 30) {
+            // Para servicios de 30 minutos o menos
             document.querySelectorAll('#timeSlots button').forEach(btn => {
                 btn.classList.remove('bg-red-600', 'text-white');
             });
             
             button.classList.add('bg-red-600', 'text-white');
-            horaInput.value = time;
+            fechaInicioInput.value = this.combineDateAndTime(selectedDate, time);
             this.primerHorarioSeleccionado = null;
         } else {
+            // Para servicios que requieren más de 30 minutos
             if (!this.primerHorarioSeleccionado) {
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
                     btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
@@ -71,10 +80,9 @@ const TimeSlotHandler = {
                     buttons[Math.min(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     buttons[Math.max(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     
-                    horaInput.value = JSON.stringify([
-                        Math.min(this.primerHorarioSeleccionado, time),
-                        Math.max(this.primerHorarioSeleccionado, time)
-                    ]);
+                    // Usar el primer horario para la fecha de inicio
+                    const primerHorario = Math.min(this.primerHorarioSeleccionado, time);
+                    fechaInicioInput.value = this.combineDateAndTime(selectedDate, primerHorario);
                     
                     this.primerHorarioSeleccionado = null;
                 } else {
