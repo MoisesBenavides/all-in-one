@@ -87,7 +87,7 @@ class ControladorVehiculo extends AbstractController{
     }
 
     public function unlinkVehicle(): Response|RedirectResponse{
-        $response = ['success' => false, 'errors' => [], 'debug' => []];
+        $response = ['success' => false, 'errors' => []];
 
         $cliente = [
             'id' => $_SESSION['id'],
@@ -122,11 +122,28 @@ class ControladorVehiculo extends AbstractController{
 
                     // Obtiene servicios asociados a la matrícula no cancelados ni realizados
                     $serviciosPendientes=$this->vehiculo->obtenerServiciosPendientesVinculados($matricula);
-                    //Debug
-                    error_log(print_r($serviciosPendientes, true));
-
-                    if($serviciosPendientes){
-                        throw new Exception("Existe un servicio vinculado a la matrícula. Cancela el servicio o espera a su realización.");
+                    $cantServicios=count($serviciosPendientes);
+                    if($cantServicios != 0){
+                        // Mostrar mensaje si hay uno o varios servicios pendientes vinculados
+                        if($cantServicios == 1){
+                            $notaUnServicio = "ID de servicio: ".$serviciosPendientes['id']." (Fecha de inicio: ".$serviciosPendientes['fecha_inicio'].")";
+                            throw new Exception("Este vehículo está vinculado al siguiente servicio:".$notaUnServicio.
+                                                ". Cancela el servicio en Mis Reservas o espera a su realización.");
+                        } else {
+                            $notaServicios = "";
+                            foreach ($serviciosPendientes as $key => $servicio) {
+                                // Accede a cada valor por servicio
+                                $id = $servicio['id'];
+                                $fecha_inicio = $servicio['fecha_inicio'];
+                                $notaServicios .= "ID".$id." (Fecha de inicio: ".$fecha_inicio.")";
+                                // Agrega un espacion entre servicios
+                                if($key < $cantServicios - 1){
+                                    $notaServicios .= "\n";
+                                }
+                            }
+                            throw new Exception("Este vehículo está vinculado a los siguientes servicios:\n".$notaServicios.
+                                                ". Cancela los servicios en Mis Reservas o espera a su realización.");                            
+                        }  
                     } elseif (!$this->vehiculo->unlink()){
                         throw new Exception("Ocurrió un error al desvincular el vehículo");
                     } else{
