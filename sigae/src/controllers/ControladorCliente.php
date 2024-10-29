@@ -356,7 +356,7 @@ class ControladorCliente extends AbstractController {
                 $response['errors'][] = "Por favor, ingrese un nombre válido.";
             } elseif ($apellido !== null && !$this->validarNombreApellido($apellido, 23)) {
                 $response['errors'][] = "Por favor, ingrese un apellido válido.";
-            } elseif ($telefono !== null && !$this->validarTelefono($telefono)) {
+            } elseif ($telefono !== null && !$this->validarTelefono($telefono, 20)) {
                 $response['errors'][] = "Por favor, ingrese un apellido válido.";
             }elseif(!Cliente::existeEmail($email)) {
                 $response['errors'][]= "No existe un usuario con el correo ingresado.";
@@ -445,8 +445,8 @@ class ControladorCliente extends AbstractController {
     }
 
     // TODO: Implementar validacion
-    private function validarTelefono($str) {
-        return true;
+    private function validarTelefono($str, $max) {
+        return (preg_match("/^[0-9+][0-9 ]+$/", $str) && strlen($str) <= $max);
     }
 
     private function validarNombreApellido($str, $max) {
