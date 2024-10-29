@@ -326,7 +326,7 @@ class ControladorCliente extends AbstractController {
         if (isset($_POST["nombre"]) && !empty($_POST["nombre"])) {
 
             $id = $_SESSION["id"];
-            $email = $_POST["email"];
+            $email = $_SESSION["email"];
             $nombre = $_POST["nombre"];
             $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : null;
             $telefono = isset($_POST['telefono']) ? $_POST['telefono'] : null;
