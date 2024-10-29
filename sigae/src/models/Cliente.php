@@ -262,7 +262,7 @@ class Cliente{
 
             /* Obtener los servicios de taller a partir de vehiículos vinculados al cliente */
             $stmt = $conn->prepare('SELECT s.id, s.matricula, s.precio, 
-                                            s.fecha_inicio, s.fecha_final AS s.fecha_final_estimada, s.estado, 
+                                            s.fecha_inicio, s.fecha_final AS fecha_final_estimada, s.estado, 
                                             t.tipo, t.descripcion, t.tiempo_estimado 
                                     FROM servicio s 
                                     JOIN taller t ON t.id_servicio = s.id 
