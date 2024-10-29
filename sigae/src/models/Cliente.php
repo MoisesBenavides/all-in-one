@@ -238,7 +238,8 @@ class Cliente{
                                     WHERE s.matricula IN (SELECT t.matricula FROM tiene t WHERE t.id_cliente=:id)
                                     GROUP BY s.id, s.matricula, s.precio, 
                                             s.fecha_inicio, s.fecha_final, s.estado, 
-                                            p.largo_plazo, p.tipo_plaza');
+                                            p.largo_plazo, p.tipo_plaza 
+                                    ORDER BY s.id');
 
             $stmt->bindParam(':id', $id);
 
@@ -266,9 +267,8 @@ class Cliente{
                                             t.tipo, t.descripcion, t.tiempo_estimado 
                                     FROM servicio s 
                                     JOIN taller t ON t.id_servicio = s.id 
-                                    WHERE s.matricula IN (SELECT t.matricula 
-                                    FROM tiene t 
-                                    WHERE t.id_cliente=:id)');
+                                    WHERE s.matricula IN (SELECT t.matricula FROM tiene t WHERE t.id_cliente=:id)
+                                    ORDER BY s.id');
 
             $stmt->bindParam(':id', $id);
 
