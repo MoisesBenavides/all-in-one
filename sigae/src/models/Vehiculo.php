@@ -157,7 +157,7 @@ class Vehiculo {
         $color = $this->getColor();
 
         try {
-            $stmt = $this->conn->prepare('UPDATE vehiculo SET marca = :marca, modelo = :mod, tipo = :tipo, color = :color) WHERE maricula = :mat');
+            $stmt = $this->conn->prepare('UPDATE vehiculo SET marca = :marca, modelo = :mod, tipo = :tipo, color = :color WHERE maricula = :mat');
             
             $stmt->bindParam(':mat', $matricula);
             $stmt->bindParam(':marca', $marca);
