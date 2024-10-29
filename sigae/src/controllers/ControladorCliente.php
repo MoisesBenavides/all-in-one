@@ -326,13 +326,12 @@ class ControladorCliente extends AbstractController {
         if (isset($_POST["nombre"]) && !empty($_POST["nombre"])) {
 
             $id = $_SESSION["id"];
-            $email = $_POST["nombre"];
-            $nombre = $_POST["email"];
+            $email = $_POST["email"];
+            $nombre = $_POST["nombr"];
             $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : null;
             $telefono = isset($_POST['telefono']) ? $_POST['telefono'] : null;
 
             if (!$this->validarNombreApellido($nombre, 23)) {
-                error_log("Nombre inválido: ".$nombre);
                 $response['errors'][] = "Por favor, ingrese un nombre válido.";
             } elseif ($apellido !== null && !$this->validarNombreApellido($apellido, 23)) {
                 $response['errors'][] = "Por favor, ingrese un apellido válido.";
