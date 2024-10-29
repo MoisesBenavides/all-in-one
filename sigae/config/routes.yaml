@@ -63,6 +63,11 @@ addVehicle:
   controller: Sigae\Controllers\ControladorVehiculo::addVehicle
   methods: POST
 
+editVehicle:
+  path: /editVehicle
+  controller: Sigae\Controllers\ControladorVehiculo::editVehicle
+  methods: POST
+
 deleteVehicle:
   path: /deleteVehicle
   controller: Sigae\Controllers\ControladorVehiculo::deleteVehicle

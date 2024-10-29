@@ -61,7 +61,8 @@ class ControladorVehiculo extends AbstractController{
                         throw new Exception("Error al vincular vehículo.");
                     }
 
-                    // Debug: Registro y vinculación exitosa
+                    // Confirmar la transacción realizada
+                    $this->vehiculo->confirmarTransaccion();
                     $response['success'] = true;
 
                     // Recargar página
@@ -85,7 +86,7 @@ class ControladorVehiculo extends AbstractController{
         ]);
     }
 
-    public function deleteVehicle($matricula): Response|RedirectResponse{
+    public function deleteVehicle(): Response|RedirectResponse{
         $response = ['success' => false, 'errors' => [], 'debug' => []];
 
         $cliente = [
@@ -122,7 +123,8 @@ class ControladorVehiculo extends AbstractController{
                         throw new Exception("Ocurrió un error al desvincular el vehículo");
                     }
     
-                    // Debug: Registro y desvinculación exitosa
+                    // Confirmar la transacción realizada
+                    $this->vehiculo->confirmarTransaccion();
                     $response['success'] = true;
     
                     // Recargar página
@@ -145,6 +147,77 @@ class ControladorVehiculo extends AbstractController{
             'cliente' => $cliente, // Pasa variables de sesión de cliente
             'misVehiculos' => $misVehiculos, // Pasa vehículos actualizados del cliente
             'response' => $response  // Aquí pasa la respuesta a la vista
+        ]);
+    }
+
+    function editVehicle(): Response{
+        $response=['success' => false, 'errors' => [], 'debug' => []];
+
+        $cliente = [
+            'id' => $_SESSION['id'],
+            'email' => $_SESSION['email'],
+            'nombre' => $_SESSION['nombre'],
+            'apellido' => isset($_SESSION['apellido']) ? $_SESSION['apellido'] : null,
+            'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
+            'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
+        ];
+
+        // Validacion de campos vacios
+        if (isset($_POST["matricula"], $_POST["tipo"]) && !empty($_POST["matricula"]) && !empty($_POST["tipo"])) {
+
+            $id = $_SESSION["id"];
+            $matricula = $_POST["matricula"];
+            $tipo = $_POST["tipo"];
+            $marca = isset($_POST['marca']) ? $_POST['marca'] : null;
+            $modelo = isset($_POST['modelo']) ? $_POST['modelo'] : null;
+            $color = isset($_POST['color']) ? $_POST['color'] : null;
+
+            if (!$this->validarTipoVehiculo($tipo)) {
+                $response['errors'][] = "Por favor, ingrese un tipo válido.";
+            } elseif ($marca !== null && !$this->validarMarcaModelo($marca, 32)) {
+                $response['errors'][] = "Por favor, ingrese una marca válida.";
+            } elseif ($modelo !== null && !$this->validarMarcaModelo($modelo, 32)) {
+                $response['errors'][] = "Por favor, ingrese un modelo válido.";
+            } elseif($color !== null && !$this->validarColorHexa($color)){
+                $response['errors'][] = "Por favor, ingrese un color hexadecimal válido.";
+            } else {
+                // Crear una instancia del vehículo modificado
+                $this->vehiculo = new Vehiculo($matricula, $marca, $modelo, $tipo, $color);
+
+                // Inicializar una conexión PDO como cliente
+                $this->vehiculo->setDBConnection("def_cliente", "password_cliente", "localhost");
+                $this->vehiculo->comenzarTransaccion();
+
+                try{
+                    if (!$this->vehiculo->existeMatricula($matricula)) {
+                        throw new Exception("No existe un vehículo con la matrícula ingresada.");
+                    } elseif (!$this->vehiculo->edit()) {
+                        throw new Exception("Ocurrió un error al modificar el vehículo");
+                    }
+    
+                    // Confirmar la transacción realizada
+                    $this->vehiculo->confirmarTransaccion();
+                    $response['success'] = true;
+    
+                    // Recargar página
+                    return $this->redirectToRoute('myAccount');
+    
+                } catch (Exception $e) {
+                    $this->vehiculo->deshacerTransaccion();
+                    $response['errors'][] = "Error procesando el vehículo: " . $e->getMessage();
+                } finally{
+                    // Desconectar de la base de datos
+                    $this->vehiculo->cerrarDBConnection();
+                }
+            }
+        } else {
+            $response['errors'][] = "Debe llenar los campos obligatorios (*).";
+        }
+        $misVehiculos = Vehiculo::cargarMisVehiculos($_SESSION['id']);
+        return $this->render('client/miCuenta.html.twig', [
+            'cliente' => $cliente,
+            'misVehiculos' => $misVehiculos,
+            'response' => $response
         ]);
     }
 

@@ -90,14 +90,12 @@ class Vehiculo {
         }
     }
 
-    // Método para confirmar una transacción
     public function confirmarTransaccion() {
         if ($this->conn) {
             $this->conn->commit();
         }
     }
 
-    // Método para revertir una transacción
     public function deshacerTransaccion() {
         if ($this->conn) {
             $this->conn->rollback();
@@ -147,6 +145,32 @@ class Vehiculo {
 
         } catch (Exception $e) {
             error_log("Error al desvincular el vehículo: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function edit(){
+        $matricula = $this->getMatricula();
+        $marca = $this->getMarca();
+        $modelo = $this->getModelo();
+        $tipo = $this->getTipo();
+        $color = $this->getColor();
+
+        try {
+            $stmt = $this->conn->prepare('UPDATE vehiculo SET marca = :marca, modelo = :mod, tipo = :tipo, color = :color) WHERE maricula = :mat');
+            
+            $stmt->bindParam(':mat', $matricula);
+            $stmt->bindParam(':marca', $marca);
+            $stmt->bindParam(':mod', $modelo);
+            $stmt->bindParam(':tipo', $tipo);
+            $stmt->bindParam(':color', $color);
+                
+            $stmt->execute();
+            
+            return true; // Registro de vehículo exitoso
+
+        } catch (Exception $e) {
+            error_log("Error al modificar el vehículo: " . $e->getMessage());
             return false;
         }
     }
