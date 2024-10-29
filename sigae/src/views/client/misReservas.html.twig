@@ -1,0 +1,60 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--SEO-->
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo | AIO</title>
+    <!--Es responsivo!!-->
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+
+         .btn{
+            background-color: #dc2626
+        }
+
+        .btn:hover{
+            background-color: #b91c1c
+        }
+
+       
+    </style>
+</head>
+{% include 'partials/header.html.twig' %}
+
+<body>
+<section class="flex overflow-hidden flex-col justify-center items-center px-24 py-40 text-lg font-semibold leading-tight bg-white text-neutral-900 max-md:px-5 max-md:py-24">
+  <h2 class="self-stretch text-4xl font-bold text-center max-md:max-w-full">Tus reservas</h2>
+  <div class="flex flex-col mt-24 max-w-full min-h-[111px] w-[788px] max-md:mt-10">
+    <div class="flex flex-wrap gap-10 justify-between items-center w-full max-md:max-w-full">
+      <p class="self-stretch my-auto">RESERVA</p>
+      <p class="self-stretch my-auto">FECHA Y HORA</p>
+    </div>
+    <div class="flex mt-11 w-full rounded-sm bg-neutral-600 min-h-[6px] max-md:mt-10 max-md:max-w-full"></div>
+  </div>
+  <div class="flex justify-between items-center mt-24 max-w-full min-h-[48px] text-neutral-50 w-[298px] max-md:mt-10">
+    <div class="flex gap-2.5 items-center self-stretch my-auto min-h-[48px] min-w-[240px] w-[298px]">
+      <div class="flex flex-col self-stretch my-auto min-w-[240px] w-[298px]">
+        <button class="gap-1.5 self-stretch px-7 py-3.5 btn rounded-lg min-h-[48px] max-md:px-5">
+          Modificar reserva
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+        {% include 'partials/footer.html.twig' %}
