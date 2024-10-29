@@ -221,6 +221,71 @@ class Cliente{
         }
     }
 
+    public static function cargarMisReservasParking($id){
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            
+            /* Obtener los servicios de parking a partir de vehiículos vinculados al cliente
+            y concatenar números de plaza de cada servicio */
+            $stmt = $conn->prepare('SELECT s.id, s.matricula, s.precio, 
+                                            s.fecha_inicio, s.fecha_final, s.estado, 
+                                            p.largo_plazo, p.tipo_plaza, 
+                                            GROUP_CONCAT(np.numero_plaza ORDER BY np.numero_plaza SEPARATOR ", ") 
+                                            AS plazas 
+                                    FROM servicio s
+                                    JOIN parking p ON p.id_servicio = s.id
+                                    JOIN numero_plaza np ON np.id_servicio = s.id
+                                    WHERE v.matricula IN (SELECT t.matricula FROM tiene t WHERE t.id_cliente=:id)
+                                    GROUP BY s.id, s.matricula, s.precio, 
+                                            s.fecha_inicio, s.fecha_final, s.estado, 
+                                            p.largo_plazo, p.tipo_plaza');
+
+            $stmt->bindParam(':id', $id);
+
+            $stmt->execute();
+            
+            $misReservasParking = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $misReservasParking;
+
+        } catch (Exception $e) {
+            error_log($e->getMessage()); // Registro del error en el log
+            return false; // False si hubo un error de base de datos
+        } finally {
+            $conn = null;
+        }
+    }
+
+    public static function cargarMisReservasTaller($id){
+        try {
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+
+            /* Obtener los servicios de taller a partir de vehiículos vinculados al cliente */
+            $stmt = $conn->prepare('SELECT s.id, s.matricula, s.precio, 
+                                            s.fecha_inicio, s.fecha_final, s.estado, 
+                                            t.tipo, t.descripcion, t.tiempo_estimado 
+                                    FROM servicio s
+                                    JOIN taller t ON t.id_servicio = s.id
+                                    WHERE v.matricula IN (SELECT t.matricula 
+                                    FROM tiene t 
+                                    WHERE t.id_cliente=:id)');
+
+            $stmt->bindParam(':id', $id);
+
+            $stmt->execute();
+            
+            $misReservasTaller = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $misReservasTaller;
+
+        } catch (Exception $e) {
+            error_log($e->getMessage()); // Registro del error en el log
+            return false; // False si hubo un error de base de datos
+        } finally {
+            $conn = null;
+        }
+    }
+
     public static function cargarMisVehiculos($id){
         try {
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");

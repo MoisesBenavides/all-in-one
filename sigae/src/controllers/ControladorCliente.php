@@ -386,6 +386,38 @@ class ControladorCliente extends AbstractController {
         ]);
     }
 
+    function myBookedServices(){
+        $response=['success' => false, 'errors' => []];
+
+        try{
+            $misReservasParking = Cliente::cargarMisReservasParking($_SESSION['id']);
+            // Debug
+            error_log(print_r($misReservasParking, true));
+            // Debug
+            $misReservasTaller = Cliente::cargarMisReservasTaller($_SESSION['id']);
+            error_log(print_r($misReservasTaller, true));
+
+        } catch (Exception $e){
+            $response['errors'][] = $e->getMessage();
+        }
+        
+        $cliente = [
+            'id' => $_SESSION['id'],
+            'email' => $_SESSION['email'],
+            'nombre' => $_SESSION['nombre'],
+            'apellido' => isset($_SESSION['apellido']) ? $_SESSION['apellido'] : null,
+            'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
+            'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
+        ];
+
+        return $this->render('client/miCuenta.html.twig', [
+            'cliente' => $cliente,
+            'misReservasParking' => $misReservasParking,
+            'misReservasTaller' => $misReservasTaller,
+            'response' => $response
+        ]);
+    }
+
     function faq(): Response{
         return $this->render('client/FAQ.html.twig');
     }

@@ -123,6 +123,11 @@ myAccount:
   controller: Sigae\Controllers\ControladorCliente::myAccount
   methods: GET
 
+myBookedServices:
+  path: /myServices
+  controller: Sigae\Controllers\ControladorCliente::myBookedServices
+  methods: GET
+
 editMyAccount:
   path: /editMyAccount
   controller: Sigae\Controllers\ControladorCliente::editMyAccount
