@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 class ControladorCliente extends AbstractController {
     private $cliente;
@@ -305,18 +306,38 @@ class ControladorCliente extends AbstractController {
     }
 
     function myAccount(): Response{
-        $cliente = [
-            'id' => $_SESSION['id'],
-            'email' => $_SESSION['email'],
-            'nombre' => $_SESSION['nombre'],
-            'apellido' => isset($_SESSION['apellido']) ? $_SESSION['apellido'] : null,
-            'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
-            'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
-        ];
-        $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
+        $response=['success' => false, 'errors' => [], 'debug' => []];
+
+        try{
+            if(!$this->cliente->cargarCliente($_SESSION['id'])){
+                throw new Exception("Error actualizando sesión.");
+            } else {
+                $misVehiculos = Cliente::cargarMisVehiculos($_SESSION['id']);
+
+                $_SESSION['id']=$this->cliente->getId();
+                $_SESSION['ci']=$this->cliente->getCi();
+                $_SESSION['email']=$this->cliente->getEmail();
+                $_SESSION['nombre']=$this->cliente->getNombre();
+                $_SESSION['apellido']=$this->cliente->getApellido();
+                $_SESSION['telefono']=$this->cliente->getTelefono();
+
+                $cliente = [
+                    'id' => $_SESSION['id'],
+                    'email' => $_SESSION['email'],
+                    'nombre' => $_SESSION['nombre'],
+                    'apellido' => isset($_SESSION['apellido']) ? $_SESSION['apellido'] : null,
+                    'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
+                    'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
+                ];
+            }
+        } catch (Exception $e){
+            $response['errors'][] = $e->getMessage();
+        }
+        
         return $this->render('client/miCuenta.html.twig', [
             'cliente' => $cliente,
-            'misVehiculos' => $misVehiculos
+            'misVehiculos' => $misVehiculos,
+            'response' => $response
         ]);
     }
 

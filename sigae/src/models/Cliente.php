@@ -85,6 +85,40 @@ class Cliente{
         return $this;
     }
 
+    public function cargarCliente($id){
+        try{
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+
+            $stmt = $conn->prepare('SELECT * FROM cliente WHERE id = :id');
+
+            $stmt->bindParam(':id', $id);
+            
+            $stmt->execute();
+
+            $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $this->setId($cliente['id']);
+            $this->setCi($cliente['ci']);
+            $this->setEmail($cliente['email']);
+            $this->setHash_contrasena($cliente['hash_contrasena']);
+            $this->setNombre($cliente['nombre']);
+            $this->setApellido($cliente['apellido']);
+            $this->setTelefono($cliente['telefono']);
+
+            return true;
+
+        } catch(Exception $e){
+            echo "Error al iniciar sesión: " . $e->getMessage();
+            return false;
+        } finally {
+            $conn = null;
+        }
+    }
+
     public function iniciarCliente($email, $contrasena){
         try{
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");
