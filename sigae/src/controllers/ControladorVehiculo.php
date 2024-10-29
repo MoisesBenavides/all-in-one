@@ -157,7 +157,7 @@ class ControladorVehiculo extends AbstractController{
                     }  
                 } catch (Exception $e) {
                     $this->vehiculo->deshacerTransaccion();
-                    $response['errors'][] = "Error procesando el vehículo: " . $e->getMessage();
+                    $response['errors'][] = $e->getMessage();
                 } finally{
                     // Desconectar de la base de datos
                     $this->vehiculo->cerrarDBConnection();
