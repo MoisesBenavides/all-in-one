@@ -179,6 +179,7 @@ class ControladorVehiculo extends AbstractController{
             } elseif ($modelo !== null && !$this->validarMarcaModelo($modelo, 32)) {
                 $response['errors'][] = "Por favor, ingrese un modelo válido.";
             } elseif($color !== null && !$this->validarColorHexa($color)){
+                error_log($color, true);
                 $response['errors'][] = "Por favor, ingrese un color hexadecimal válido.";
             } else {
                 // Crear una instancia del vehículo modificado
@@ -257,7 +258,7 @@ class ControladorVehiculo extends AbstractController{
     }
 
     private function validarMarcaModelo($str, $max) {
-        /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene letras, espacios, tildes, apostrofes o guiones)
+        /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene alfanumérico, espacios, tildes, apostrofes o guiones)
         y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */
         return (preg_match("/^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $max);
     }
