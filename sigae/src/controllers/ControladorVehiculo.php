@@ -127,8 +127,10 @@ class ControladorVehiculo extends AbstractController{
                         // Mostrar mensaje si hay uno o varios servicios pendientes vinculados
                         if ($cantServicios == 1){
                             $servicio = $serviciosPendientes[0];
-                            $notaUnServicio = "ID de servicio: ".$servicio['id']." (Fecha de inicio: ".$servicio['fecha_inicio'].")";
-                            throw new Exception("El vehículo que intentas borrar está vinculado al servicio:\n".$notaUnServicio. 
+                            $notaUnServicio = "\nID de servicio: ".$servicio['id']." (Fecha de inicio: ".$servicio['fecha_inicio'].")";
+                            // Convierte los saltos de linea a <br>
+                            $notaUnServicio = nl2br($notaUnServicio);
+                            throw new Exception("El vehículo que intentas borrar está vinculado al servicio:".$notaUnServicio. 
                                                 ". Cancela el servicio en Mis Reservas o espera a su realización.");
                         } else {
                             $notaServicios = "";
@@ -142,7 +144,9 @@ class ControladorVehiculo extends AbstractController{
                                     $notaServicios .= "\n";
                                 }
                             }
-                            throw new Exception("El vehículo que intentas borrar está vinculado a los servicios:\n".$notaServicios.
+                            // Convierte los saltos de linea a <br>
+                            $notaServicios = nl2br($notaServicios);
+                            throw new Exception("El vehículo que intentas borrar está vinculado a los servicios:<br>".$notaServicios.
                                                 ". Cancela los servicios en Mis Reservas o espera a su realización.");                            
                         }  
                     } elseif (!$this->vehiculo->unlink()){
