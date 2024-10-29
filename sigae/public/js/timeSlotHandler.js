@@ -30,28 +30,30 @@ const TimeSlotHandler = {
         }
     },
 
-    formatDateTime(date, time) {
+    formatDateTime(dateStr, timeStr) {
         try {
-            // Convertir a string y asegurar el formato correcto
-            const timeStr = String(time).trim();
-            const [hours, minutes] = timeStr.includes(':') ? timeStr.split(':') : [timeStr, '00'];
+            // Convertir la fecha a objeto Date
+            const date = new Date(dateStr + 'T00:00:00'); // Añadir tiempo para evitar problemas con zonas horarias
             
-            // Asegurar que la fecha esté en formato YYYY-MM-DD
-            const [year, month, day] = date.split('-').map(part => part.padStart(2, '0'));
-            
-            // Asegurar que las horas y minutos tengan dos dígitos
-            const formattedHours = hours.padStart(2, '0');
-            const formattedMinutes = minutes.padStart(2, '0');
-            
-            // Construir la fecha en el formato exacto que espera el backend
-            return `${year}-${month}-${day}T${formattedHours}:${formattedMinutes}`;
+            // Extraer componentes de la hora
+            const [hours, minutes] = timeStr.split(':');
+
+            // Construir la fecha formateada
+            const formattedDate = date.getFullYear() + '-' +
+                                String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                                String(date.getDate()).padStart(2, '0');
+
+            // Construir la hora formateada
+            const formattedTime = String(hours).padStart(2, '0') + ':' + 
+                                String(minutes).padStart(2, '0');
+
+            // Combinar en el formato requerido
+            return `${formattedDate}T${formattedTime}`;
         } catch (error) {
             console.error('Error formateando fecha y hora:', error);
             return '';
         }
     },
-
-
 
     handleTimeSelection(time, button) {
         const fechaInput = document.getElementById('fecha_inicio');
@@ -61,7 +63,7 @@ const TimeSlotHandler = {
             this.showError('Por favor, seleccione primero una fecha.');
             return;
         }
-
+        
         if (this.servicioSeleccionadoDuracion <= 30) {
             document.querySelectorAll('#timeSlots button').forEach(btn => {
                 btn.classList.remove('bg-red-600', 'text-white');
@@ -69,19 +71,24 @@ const TimeSlotHandler = {
             
             button.classList.add('bg-red-600', 'text-white');
             
+            // Formatear fecha y hora
             const formattedDateTime = this.formatDateTime(datePicker.value, time);
+            console.log('Fecha formateada:', formattedDateTime); // Debug log
+            
             if (!formattedDateTime) {
-                this.showError('Error al formatear la fecha y hora. Por favor, intente nuevamente.');
+                this.showError('Error al formatear la fecha y hora.');
                 return;
             }
-            fechaInput.value = formattedDateTime;
             
+            fechaInput.value = formattedDateTime;
             this.primerHorarioSeleccionado = null;
+            
         } else {
             if (!this.primerHorarioSeleccionado) {
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
                     btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
                 });
+                
                 this.primerHorarioSeleccionado = time;
                 button.classList.add('bg-red-600', 'text-white');
                 
@@ -107,14 +114,20 @@ const TimeSlotHandler = {
                     buttons[Math.min(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     buttons[Math.max(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     
-                    const primerHorario = Math.min(this.primerHorarioSeleccionado, time);
+                    // Usar el primer horario
+                    const slots = this.generateTimeSlots();
+                    const primerHorario = slots[Math.min(firstIndex, secondIndex)];
+                    
+                    // Formatear fecha y hora
                     const formattedDateTime = this.formatDateTime(datePicker.value, primerHorario);
+                    console.log('Fecha formateada (servicio largo):', formattedDateTime); // Debug log
+                    
                     if (!formattedDateTime) {
-                        this.showError('Error al formatear la fecha y hora. Por favor, intente nuevamente.');
+                        this.showError('Error al formatear la fecha y hora.');
                         return;
                     }
-                    fechaInput.value = formattedDateTime;
                     
+                    fechaInput.value = formattedDateTime;
                     this.primerHorarioSeleccionado = null;
                 } else {
                     this.showError('Por favor, seleccione dos horarios consecutivos');
