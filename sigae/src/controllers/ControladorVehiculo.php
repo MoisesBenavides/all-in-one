@@ -86,7 +86,7 @@ class ControladorVehiculo extends AbstractController{
         ]);
     }
 
-    public function deleteVehicle(): Response|RedirectResponse{
+    public function unlinkVehicle(): Response|RedirectResponse{
         $response = ['success' => false, 'errors' => [], 'debug' => []];
 
         $cliente = [

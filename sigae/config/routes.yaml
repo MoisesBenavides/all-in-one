@@ -68,9 +68,9 @@ editVehicle:
   controller: Sigae\Controllers\ControladorVehiculo::editVehicle
   methods: POST
 
-deleteVehicle:
-  path: /deleteVehicle
-  controller: Sigae\Controllers\ControladorVehiculo::deleteVehicle
+unlinkVehicle:
+  path: /unlinkVehicle
+  controller: Sigae\Controllers\ControladorVehiculo::unlinkVehicle
   methods: POST
 
 serviceConfirmation:
