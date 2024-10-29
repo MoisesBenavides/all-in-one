@@ -150,7 +150,7 @@ class ControladorVehiculo extends AbstractController{
         }
     
         // Si hubo errores, renderizar la vista con los mensajes de error
-        return $this->render('client/myAccount.html.twig', [
+        return $this->render('client/miCuenta.html.twig', [
             'cliente' => $cliente, // Pasa variables de sesión de cliente
             'misVehiculos' => $misVehiculos, // Pasa vehículos actualizados del cliente
             'response' => $response  // Aquí pasa la respuesta a la vista
