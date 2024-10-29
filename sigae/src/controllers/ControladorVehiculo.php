@@ -170,17 +170,17 @@ class ControladorVehiculo extends AbstractController{
             $tipo = $_POST["tipo"];
             $marca = isset($_POST['marca']) ? $_POST['marca'] : null;
             $modelo = isset($_POST['modelo']) ? $_POST['modelo'] : null;
-            $color = isset($_POST['color']) ? $_POST['color'] : null;
+            $colorConHash = isset($_POST['color']) ? $_POST['color'] : null;
+            $color = substr($colorConHash, 1);
+            
 
             if (!$this->validarTipoVehiculo($tipo)) {
                 $response['errors'][] = "Por favor, ingrese un tipo válido.";
             } elseif ($marca !== null && !$this->validarMarcaModelo($marca, 32)) {
                 $response['errors'][] = "Por favor, ingrese una marca válida.";
             } elseif ($modelo !== null && !$this->validarMarcaModelo($modelo, 32)) {
-                error_log(print_r($modelo, true));
                 $response['errors'][] = "Por favor, ingrese un modelo válido.";
             } elseif($color !== null && !$this->validarColorHexa($color)){
-                error_log(print_r($color, true));
                 $response['errors'][] = "Por favor, ingrese un color hexadecimal válido.";
             } else {
                 // Crear una instancia del vehículo modificado
