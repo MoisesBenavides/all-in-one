@@ -31,19 +31,37 @@ const TimeSlotHandler = {
     },
 
     formatDateTime(date, time) {
-        // Asegurarse de que la fecha esté en formato YYYY-MM-DD
-        const [year, month, day] = date.split('-');
-        // Asegurarse de que la hora esté en formato HH:mm
-        const [hours, minutes] = time.split(':');
-        
-        // Construir la fecha en el formato exacto que espera el backend
-        return `${year}-${month}-${day}T${hours}:${minutes}`;
+        try {
+            // Convertir a string y asegurar el formato correcto
+            const timeStr = String(time).trim();
+            const [hours, minutes] = timeStr.includes(':') ? timeStr.split(':') : [timeStr, '00'];
+            
+            // Asegurar que la fecha esté en formato YYYY-MM-DD
+            const [year, month, day] = date.split('-').map(part => part.padStart(2, '0'));
+            
+            // Asegurar que las horas y minutos tengan dos dígitos
+            const formattedHours = hours.padStart(2, '0');
+            const formattedMinutes = minutes.padStart(2, '0');
+            
+            // Construir la fecha en el formato exacto que espera el backend
+            return `${year}-${month}-${day}T${formattedHours}:${formattedMinutes}`;
+        } catch (error) {
+            console.error('Error formateando fecha y hora:', error);
+            return '';
+        }
     },
+
+
 
     handleTimeSelection(time, button) {
         const fechaInput = document.getElementById('fecha_inicio');
         const datePicker = document.getElementById('fecha_selector');
         
+        if (!datePicker.value) {
+            this.showError('Por favor, seleccione primero una fecha.');
+            return;
+        }
+
         if (this.servicioSeleccionadoDuracion <= 30) {
             document.querySelectorAll('#timeSlots button').forEach(btn => {
                 btn.classList.remove('bg-red-600', 'text-white');
@@ -51,8 +69,11 @@ const TimeSlotHandler = {
             
             button.classList.add('bg-red-600', 'text-white');
             
-            // Formatear la fecha y hora correctamente
             const formattedDateTime = this.formatDateTime(datePicker.value, time);
+            if (!formattedDateTime) {
+                this.showError('Error al formatear la fecha y hora. Por favor, intente nuevamente.');
+                return;
+            }
             fechaInput.value = formattedDateTime;
             
             this.primerHorarioSeleccionado = null;
@@ -88,6 +109,10 @@ const TimeSlotHandler = {
                     
                     const primerHorario = Math.min(this.primerHorarioSeleccionado, time);
                     const formattedDateTime = this.formatDateTime(datePicker.value, primerHorario);
+                    if (!formattedDateTime) {
+                        this.showError('Error al formatear la fecha y hora. Por favor, intente nuevamente.');
+                        return;
+                    }
                     fechaInput.value = formattedDateTime;
                     
                     this.primerHorarioSeleccionado = null;
@@ -98,6 +123,7 @@ const TimeSlotHandler = {
             }
         }
     },
+
 
     async updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
@@ -159,11 +185,17 @@ const TimeSlotHandler = {
     showError(message) {
         const errorContainer = document.getElementById('error-container');
         if (errorContainer) {
-            errorContainer.textContent = message;
             errorContainer.classList.remove('hidden');
+            const errorList = document.getElementById('error-list');
+            if (errorList) {
+                errorList.innerHTML = `<li>${message}</li>`;
+            } else {
+                errorContainer.textContent = message;
+            }
             setTimeout(() => errorContainer.classList.add('hidden'), 5000);
         }
     }
 };
+
 
 window.TimeSlotHandler = TimeSlotHandler;
