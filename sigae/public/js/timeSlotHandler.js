@@ -30,27 +30,33 @@ const TimeSlotHandler = {
         }
     },
 
-    combineDateAndTime(date, time) {
-        // Asegurarse de que la fecha esté en el formato correcto
-        const formattedDate = date.split('T')[0]; // En caso de que la fecha tenga una parte de tiempo
-        return `${formattedDate}T${time}`;
+    formatDateTime(date, time) {
+        // Asegurarse de que la fecha esté en formato YYYY-MM-DD
+        const [year, month, day] = date.split('-');
+        // Asegurarse de que la hora esté en formato HH:mm
+        const [hours, minutes] = time.split(':');
+        
+        // Construir la fecha en el formato exacto que espera el backend
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
     },
 
     handleTimeSelection(time, button) {
-        const fechaInicioInput = document.getElementById('fecha_inicio');
-        const selectedDate = fechaInicioInput.value;
+        const fechaInput = document.getElementById('fecha_inicio');
+        const datePicker = document.getElementById('fecha_selector');
         
         if (this.servicioSeleccionadoDuracion <= 30) {
-            // Para servicios de 30 minutos o menos
             document.querySelectorAll('#timeSlots button').forEach(btn => {
                 btn.classList.remove('bg-red-600', 'text-white');
             });
             
             button.classList.add('bg-red-600', 'text-white');
-            fechaInicioInput.value = this.combineDateAndTime(selectedDate, time);
+            
+            // Formatear la fecha y hora correctamente
+            const formattedDateTime = this.formatDateTime(datePicker.value, time);
+            fechaInput.value = formattedDateTime;
+            
             this.primerHorarioSeleccionado = null;
         } else {
-            // Para servicios que requieren más de 30 minutos
             if (!this.primerHorarioSeleccionado) {
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
                     btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
@@ -80,9 +86,9 @@ const TimeSlotHandler = {
                     buttons[Math.min(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     buttons[Math.max(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     
-                    // Usar el primer horario para la fecha de inicio
                     const primerHorario = Math.min(this.primerHorarioSeleccionado, time);
-                    fechaInicioInput.value = this.combineDateAndTime(selectedDate, primerHorario);
+                    const formattedDateTime = this.formatDateTime(datePicker.value, primerHorario);
+                    fechaInput.value = formattedDateTime;
                     
                     this.primerHorarioSeleccionado = null;
                 } else {

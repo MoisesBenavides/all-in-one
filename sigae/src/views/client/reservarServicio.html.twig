@@ -81,35 +81,37 @@
                 </section>
 
                 <!-- Sección de Fecha y Hora -->
-                <section class="mb-6">
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha y Hora</h2>
-                    <div class="w-full max-w-[340px] mx-auto">
-                        <!-- Campo oculto que contendrá la fecha y hora combinadas -->
-                        <input type="hidden" 
-                            id="fecha_inicio" 
-                            name="fecha_inicio" 
-                            value="">
-                        
-                        <!-- Campo de fecha visible para el usuario -->
-                        <input type="date" 
-                            id="fecha_selector" 
-                            class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold mb-4">
-                        
-                        <div id="loadingIndicator" class="hidden">
-                            <div class="flex items-center justify-center py-4">
-                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+               <!-- Sección de Fecha y Hora -->
+                    <section class="mb-6">
+                        <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha y Hora</h2>
+                        <div class="w-full max-w-[340px] mx-auto">
+                            <!-- Campo oculto para la fecha y hora combinadas -->
+                            <input type="hidden" 
+                                id="fecha_inicio" 
+                                name="fecha_inicio" 
+                                value="">
+                            
+                            <!-- Selector de fecha visible -->
+                            <input type="date" 
+                                id="fecha_selector" 
+                                class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold mb-4"
+                                required>
+                            
+                            <div id="loadingIndicator" class="hidden">
+                                <div class="flex items-center justify-center py-4">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+                                </div>
+                            </div>
+
+                            <div id="timeSlots" class="grid grid-cols-3 gap-2 mt-4"></div>
+
+                            <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm mt-4">
+                                <p>Los horarios están disponibles en intervalos de 30 minutos</p>
+                                <p>Horario de atención: 5:00 AM - 5:00 PM</p>
+                                <p id="serviceDurationMessage" class="text-red-600 hidden">Este servicio requiere seleccionar dos horarios consecutivos</p>
                             </div>
                         </div>
-
-                        <div id="timeSlots" class="grid grid-cols-3 gap-2 mt-4"></div>
-
-                        <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm mt-4">
-                            <p>Los horarios están disponibles en intervalos de 30 minutos</p>
-                            <p>Horario de atención: 5:00 AM - 5:00 PM</p>
-                            <p id="serviceDurationMessage" class="text-red-600 hidden">Este servicio requiere seleccionar dos horarios consecutivos</p>
-                        </div>
-                    </div>
-                </section>
+                    </section>
             <!-- Sección de Tipo de Vehículo -->
             <section id="tipoVehiculoSection" class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
