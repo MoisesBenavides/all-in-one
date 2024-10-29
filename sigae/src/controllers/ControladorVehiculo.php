@@ -259,7 +259,7 @@ class ControladorVehiculo extends AbstractController{
     private function validarMarcaModelo($str, $max) {
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene letras, espacios, tildes, apostrofes o guiones)
         y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */
-        return (preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $max);
+        return (preg_match("/^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $max);
     }
 
     function validarMatricula($str){
