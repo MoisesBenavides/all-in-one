@@ -139,7 +139,7 @@
             <div class="space-y-6">
                 {% for vehiculo in misVehiculos %}
                     <div class="bg-white rounded-md border border-slate-300 p-4">
-                        <form class="vehicle-form" id="vehicle-form-{{ loop.index }}">
+                        <form class="vehicle-form" id="vehicle-form-{{ loop.index }}" action="{{ path('editVehicle') }}" method="POST">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label class="block text-lg font-medium text-neutral-900 mb-2">Matrícula*</label>
