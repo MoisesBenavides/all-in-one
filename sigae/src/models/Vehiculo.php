@@ -250,7 +250,7 @@ class Vehiculo {
             $stmt->bindParam(':mat', $matricula);
             $stmt->execute();
             
-            $serviciosPend = $stmt->fetch(PDO::FETCH_ASSOC);
+            $serviciosPend = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $serviciosPend;
 
