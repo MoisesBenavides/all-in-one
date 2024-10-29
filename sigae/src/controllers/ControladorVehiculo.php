@@ -121,13 +121,14 @@ class ControladorVehiculo extends AbstractController{
                     }
 
                     // Obtiene servicios asociados a la matrícula no cancelados ni realizados
-                    $serviciosPendientes=$this->vehiculo->obtenerServiciosPendientesVinculados($matricula);
-                    $cantServicios=count($serviciosPendientes);
-                    if($cantServicios != 0){
+                    $serviciosPendientes = $this->vehiculo->obtenerServiciosPendientesVinculados($matricula);
+                    $cantServicios = count($serviciosPendientes);
+                    if ($cantServicios > 0){
                         // Mostrar mensaje si hay uno o varios servicios pendientes vinculados
-                        if($cantServicios == 1){
-                            $notaUnServicio = "ID de servicio: ".$serviciosPendientes['id']." (Fecha de inicio: ".$serviciosPendientes['fecha_inicio'].")";
-                            throw new Exception("Este vehículo está vinculado al siguiente servicio:".$notaUnServicio.
+                        if ($cantServicios == 1){
+                            $servicio = $serviciosPendientes[0];
+                            $notaUnServicio = "ID de servicio: ".$servicio['id']." (Fecha de inicio: ".$servicio['fecha_inicio'].")";
+                            throw new Exception("Este vehículo está vinculado al siguiente servicio: ".$notaUnServicio. 
                                                 ". Cancela el servicio en Mis Reservas o espera a su realización.");
                         } else {
                             $notaServicios = "";
@@ -136,7 +137,7 @@ class ControladorVehiculo extends AbstractController{
                                 $id = $servicio['id'];
                                 $fecha_inicio = $servicio['fecha_inicio'];
                                 $notaServicios .= "ID".$id." (Fecha de inicio: ".$fecha_inicio.")";
-                                // Agrega un espacion entre servicios
+                                // Agrega un espacio entre servicios
                                 if($key < $cantServicios - 1){
                                     $notaServicios .= "\n";
                                 }
@@ -150,7 +151,7 @@ class ControladorVehiculo extends AbstractController{
                         // Confirmar la transacción realizada
                         $this->vehiculo->confirmarTransaccion();
                         $response['success'] = true;
-        
+
                         // Recargar página
                         return $this->redirectToRoute('myAccount');
                     }  
