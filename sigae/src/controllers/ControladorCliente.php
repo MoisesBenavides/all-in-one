@@ -368,7 +368,7 @@ class ControladorCliente extends AbstractController {
                 return $this->redirectToRoute('myAccount');
             }
         } else {
-            $response['errors'][] = "Debe llenar todos los campos.";
+            $response['errors'][] = "Debe llenar los campos obligatorios (*).";
         }
         $cliente = [
             'id' => $_SESSION['id'],

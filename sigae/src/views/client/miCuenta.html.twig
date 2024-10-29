@@ -99,13 +99,13 @@
 
         <form id="edit-account-form" action="{{ path('editMyAccount') }}" method="POST">
             <div class="mb-6">
-                <label for="email" class="block text-lg font-medium text-neutral-900 mb-2">Correo</label>
+                <label for="email" class="block text-lg font-medium text-neutral-900 mb-2">Correo*</label>
                 <input type="email" id="email" name="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
                     value="{{ cliente.email|slice(0, 1) ~ '****' ~ cliente.email|slice(-2) ~ cliente.email|split('@')[1] }}" readonly aria-label="Email address" />
             </div>
 
             <div class="mb-6 relative">
-                <label for="nombre" class="block text-lg font-medium text-neutral-900 mb-2">Nombre</label>
+                <label for="nombre" class="block text-lg font-medium text-neutral-900 mb-2">Nombre*</label>
                 <input type="text" id="nombre" name="nombre" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
                     value="{{ cliente.nombre }}" aria-label="Nombre" />
             </div>
