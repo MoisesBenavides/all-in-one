@@ -101,7 +101,7 @@
             <div class="mb-6">
                 <label for="email" class="block text-lg font-medium text-neutral-900 mb-2">Correo*</label>
                 <input type="email" id="email" name="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
-                    value="{{ cliente.email|slice(0, 1) ~ '****' ~ cliente.email|slice(-2) ~ cliente.email|split('@')[1] }}" readonly aria-label="Email address" />
+                    value="{{ cliente.email}}" readonly aria-label="Email address" />
             </div>
 
             <div class="mb-6 relative">
