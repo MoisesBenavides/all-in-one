@@ -177,9 +177,10 @@ class ControladorVehiculo extends AbstractController{
             } elseif ($marca !== null && !$this->validarMarcaModelo($marca, 32)) {
                 $response['errors'][] = "Por favor, ingrese una marca válida.";
             } elseif ($modelo !== null && !$this->validarMarcaModelo($modelo, 32)) {
+                error_log(print_r($modelo, true));
                 $response['errors'][] = "Por favor, ingrese un modelo válido.";
             } elseif($color !== null && !$this->validarColorHexa($color)){
-                error_log($color, true);
+                error_log(print_r($color, true));
                 $response['errors'][] = "Por favor, ingrese un color hexadecimal válido.";
             } else {
                 // Crear una instancia del vehículo modificado
