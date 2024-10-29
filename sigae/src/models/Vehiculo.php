@@ -132,7 +132,7 @@ class Vehiculo {
         }
     }
 
-    public function delete(){
+    public function unlink(){
         $matricula = $this->getMatricula();
         try {
             $stmt = $this->conn->prepare('DELETE FROM tiene WHERE matricula = :mat');
@@ -221,6 +221,38 @@ class Vehiculo {
             $count = $stmt->fetchColumn();
 
             return $count != 0;
+
+        } catch (Exception $e) {
+            error_log($e->getMessage()); // Registro del error en el log
+            return false; // Devuelve false si hubo un error de base de datos
+        }
+    }
+
+    public function tieneServiciosVinculados($matricula) {
+        try {
+            $stmt = $this->conn->prepare('SELECT COUNT(*) FROM servicio WHERE matricula = :mat');
+            $stmt->bindParam(':mat', $matricula);
+            $stmt->execute();
+            
+            $count = $stmt->fetchColumn();
+
+            return $count != 0;
+
+        } catch (Exception $e) {
+            error_log($e->getMessage()); // Registro del error en el log
+            return false; // Devuelve false si hubo un error de base de datos
+        }
+    }
+
+    public function obtenerServiciosPendientesVinculados($matricula) {
+        try {
+            $stmt = $this->conn->prepare('SELECT * FROM servicio WHERE matricula = :mat AND estado = "pendiente"');
+            $stmt->bindParam(':mat', $matricula);
+            $stmt->execute();
+            
+            $serviciosPend = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $serviciosPend;
 
         } catch (Exception $e) {
             error_log($e->getMessage()); // Registro del error en el log

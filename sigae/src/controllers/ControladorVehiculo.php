@@ -119,17 +119,24 @@ class ControladorVehiculo extends AbstractController{
                     if (!$this->vehiculo->existeMatricula($matricula)) {
                         throw new Exception("La matrícula ingresada no existe.");
                     }
-                    if (!$this->vehiculo->delete()) {
+
+                    // Obtiene servicios asociados a la matrícula no cancelados ni realizados
+                    $serviciosPendientes=$this->vehiculo->obtenerServiciosPendientesVinculados($matricula);
+                    //Debug
+                    error_log(print_r($serviciosPendientes, true));
+
+                    if($serviciosPendientes){
+                        throw new Exception("Existe un servicio vinculado a la matrícula. Cancela el servicio o espera a su realización.");
+                    } elseif (!$this->vehiculo->unlink()){
                         throw new Exception("Ocurrió un error al desvincular el vehículo");
-                    }
-    
-                    // Confirmar la transacción realizada
-                    $this->vehiculo->confirmarTransaccion();
-                    $response['success'] = true;
-    
-                    // Recargar página
-                    return $this->redirectToRoute('myAccount');
-    
+                    } else{
+                        // Confirmar la transacción realizada
+                        $this->vehiculo->confirmarTransaccion();
+                        $response['success'] = true;
+        
+                        // Recargar página
+                        return $this->redirectToRoute('myAccount');
+                    }  
                 } catch (Exception $e) {
                     $this->vehiculo->deshacerTransaccion();
                     $response['errors'][] = "Error procesando el vehículo: " . $e->getMessage();
