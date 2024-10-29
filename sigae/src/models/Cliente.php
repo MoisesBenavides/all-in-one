@@ -235,7 +235,7 @@ class Cliente{
                                     FROM servicio s
                                     JOIN parking p ON p.id_servicio = s.id
                                     JOIN numero_plaza np ON np.id_servicio = s.id
-                                    WHERE v.matricula IN (SELECT t.matricula FROM tiene t WHERE t.id_cliente=:id)
+                                    WHERE s.matricula IN (SELECT t.matricula FROM tiene t WHERE t.id_cliente=:id)
                                     GROUP BY s.id, s.matricula, s.precio, 
                                             s.fecha_inicio, s.fecha_final, s.estado, 
                                             p.largo_plazo, p.tipo_plaza');
@@ -266,7 +266,7 @@ class Cliente{
                                             t.tipo, t.descripcion, t.tiempo_estimado 
                                     FROM servicio s
                                     JOIN taller t ON t.id_servicio = s.id
-                                    WHERE v.matricula IN (SELECT t.matricula 
+                                    WHERE s.matricula IN (SELECT t.matricula 
                                     FROM tiene t 
                                     WHERE t.id_cliente=:id)');
 
