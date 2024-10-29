@@ -183,7 +183,7 @@
     <script src="{{ asset('js/serviceHandler.js') }}"></script>
     <script src="{{ asset('js/timeSlotHandler.js') }}"></script>
     <script>
-document.addEventListener('DOMContentLoaded', async function() {
+   document.addEventListener('DOMContentLoaded', async function() {
     // Configurar URLs
     ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
 
@@ -199,16 +199,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     fechaSelector.value = formattedToday;
     fechaSelector.disabled = true;
 
-    // Referencias a elementos del DOM para manejo de vehículos
-    const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-    const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
-    const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
-    const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
-    const selectedOptionAuto = document.getElementById('selectedOptionAuto');
-    const tipoVehiculo = document.getElementById('tipoVehiculo');
-    const matriculaYaContainer = document.getElementById('matriculaYaContainer');
-    const matriculaYa = document.getElementById('matriculaYa');
-
     try {
         // Cargar servicios
         servicios = await ServiceHandler.cargarServicios();
@@ -218,139 +208,71 @@ document.addEventListener('DOMContentLoaded', async function() {
         ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
         ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
 
-        // Event listener para el dropdown de vehículos
-        vehiculosDropdown.addEventListener('change', function() {
-            if (this.value !== "") {
-                // Si se seleccionó un vehículo existente
-                const selectedOption = this.options[this.selectedIndex];
-                const tipo = selectedOption.getAttribute('data-tipo');
-                
-                // Actualizar y deshabilitar la sección de tipo de vehículo
-                selectedOptionAuto.textContent = tipo;
-                tipoVehiculo.value = tipo.toLowerCase();
-                tipoVehiculoSection.classList.add('disabled-section');
-                
-                // Limpiar y ocultar matrícula manual
-                matriculaYa.value = '';
-                matriculaYa.removeAttribute('name');
-                matriculaYaContainer.style.display = 'none';
-                
-                // Establecer el name para el vehículo seleccionado
-                this.setAttribute('name', 'matricula');
-            } else {
-                // Si se deseleccionó el vehículo
-                tipoVehiculoSection.classList.remove('disabled-section');
-                matriculaYaContainer.style.display = 'block';
-                selectedOptionAuto.textContent = 'Tipo de Vehículo';
-                tipoVehiculo.value = '';
-                
-                // Quitar el name del dropdown
-                this.removeAttribute('name');
-                // Establecer el name para matrícula manual
-                matriculaYa.setAttribute('name', 'matriculaYa');
-            }
-        });
-
-        // Event listener para matrícula manual
-        matriculaYa.addEventListener('input', function() {
-            if (this.value !== "") {
-                vehiculosDropdown.value = "";
-                vehiculosDropdown.removeAttribute('name');
-                this.setAttribute('name', 'matriculaYa');
-                tipoVehiculoSection.classList.remove('disabled-section');
-            } else {
-                this.removeAttribute('name');
-            }
-        });
-
         // Evento para actualizar subtipos
-        document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
-            option.addEventListener('click', () => {
-                ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
-                    document.getElementById('selectedOption2').textContent = servicioData.descripcion;
-                    document.getElementById('selectedServiceSubtype').value = subtype;
-                    TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
-                    document.getElementById('dropdownMenu2').classList.add('hidden');
-                    
-                    fechaSelector.disabled = false;
-                    
-                    if (fechaSelector.value) {
-                        TimeSlotHandler.updateTimeSlots(fechaSelector.value);
-                    }
+            document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
+                option.addEventListener('click', () => {
+                    ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
+                        document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                        document.getElementById('selectedServiceSubtype').value = subtype;
+                        TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
+                        document.getElementById('dropdownMenu2').classList.add('hidden');
+                        
+                        fechaSelector.disabled = false;
+                        
+                        if (fechaSelector.value) {
+                            TimeSlotHandler.updateTimeSlots(fechaSelector.value);
+                        }
+                    });
                 });
             });
-        });
 
-        // Event listener para cambio de fecha
-        fechaSelector.addEventListener('change', function() {
-            TimeSlotHandler.updateTimeSlots(this.value);
-            fechaInicio.value = '';
-        });
+            // Event listener para cambio de fecha
+            fechaSelector.addEventListener('change', function() {
+                TimeSlotHandler.updateTimeSlots(this.value);
+                // Limpiar la selección de hora cuando cambia la fecha
+                fechaInicio.value = '';
+            });
 
-        // Event listener para el formulario
-        document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
+            // Event listener para el formulario
+            document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
 
-    } catch (error) {
-        console.error('Error en la inicialización:', error);
-        TimeSlotHandler.showError('Error al inicializar el formulario');
+        } catch (error) {
+            console.error('Error en la inicialización:', error);
+            TimeSlotHandler.showError('Error al inicializar el formulario');
+        }
+    });
+
+    // Función de validación del formulario
+    function validarFormulario(event) {
+        let isValid = true;
+        let errorMessage = '';
+
+        if (!document.getElementById('selectedServiceType').value) {
+            isValid = false;
+            errorMessage += 'Por favor, seleccione un tipo de servicio. ';
+        }
+
+        if (!document.getElementById('selectedServiceSubtype').value) {
+            isValid = false;
+            errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
+        }
+
+        if (!document.getElementById('fecha_inicio').value) {
+            isValid = false;
+            errorMessage += 'Por favor, seleccione fecha y hora. ';
+        }
+
+        if (!document.getElementById('tipoVehiculo').value && 
+            document.getElementById('vehiculosDropdown').value === "") {
+            isValid = false;
+            errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+            TimeSlotHandler.showError(errorMessage);
+        }
     }
-});
-
-// Función de validación del formulario
-function validarFormulario(event) {
-    event.preventDefault();
-    let isValid = true;
-    let errorMessage = '';
-
-    // Validación de tipo de servicio
-    if (!document.getElementById('selectedServiceType').value) {
-        isValid = false;
-        errorMessage += 'Por favor, seleccione un tipo de servicio. ';
-    }
-
-    // Validación de subtipo de servicio
-    if (!document.getElementById('selectedServiceSubtype').value) {
-        isValid = false;
-        errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
-    }
-
-    // Validación de fecha
-    if (!document.getElementById('fecha_inicio').value) {
-        isValid = false;
-        errorMessage += 'Por favor, seleccione fecha y hora. ';
-    }
-
-    // Validación de vehículo
-    const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-    const matriculaYa = document.getElementById('matriculaYa');
-    const tipoVehiculo = document.getElementById('tipoVehiculo');
-
-    if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
-        isValid = false;
-        errorMessage += 'Por favor, seleccione un vehículo o ingrese una matrícula. ';
-    }
-
-    // Validación de tipo de vehículo para matrícula manual
-    if (matriculaYa.value !== "" && tipoVehiculo.value === "") {
-        isValid = false;
-        errorMessage += 'Por favor, seleccione un tipo de vehículo. ';
-    }
-
-    // Asegurar que solo un campo de matrícula tenga name
-    if (matriculaYa.value) {
-        matriculaYa.setAttribute('name', 'matriculaYa');
-        vehiculosDropdown.removeAttribute('name');
-    } else if (vehiculosDropdown.value) {
-        vehiculosDropdown.setAttribute('name', 'matricula');
-        matriculaYa.removeAttribute('name');
-    }
-
-    if (!isValid) {
-        TimeSlotHandler.showError(errorMessage);
-    } else {
-        event.target.submit();
-    }
-}
     </script>
 </body>
 </html>
