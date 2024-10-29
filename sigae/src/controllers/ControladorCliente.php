@@ -356,7 +356,7 @@ class ControladorCliente extends AbstractController {
                 $response['errors'][] = "Por favor, ingrese un nombre válido.";
             } elseif ($apellido !== null && !$this->validarNombreApellido($apellido, 23)) {
                 $response['errors'][] = "Por favor, ingrese un apellido válido.";
-            } elseif ($telefono !== null && !$this->validarTelefono($telefono, 6, 20)) {
+            } elseif ($telefono !== null && !$this->validarTelefono($telefono, 8, 20)) {
                 $response['errors'][] = "Por favor, ingrese un teléfono válido. Evite usar caracteres especiales (guiones, paréntesis).";
             }elseif(!Cliente::existeEmail($email)) {
                 $response['errors'][]= "No existe un usuario con el correo ingresado.";
@@ -447,7 +447,12 @@ class ControladorCliente extends AbstractController {
     private function validarTelefono($str, $min, $max) {
         /* Verifica si el número contiene minimo de $min sólo dígitos y máximo $max caracteres
         puede contener el símbolo de más (+) al principio, y espacios luego del primer número, debe terminar en número */ 
-        return (preg_match("/^\+?[0-9][0-9 ]+[0-9]$/", $str) && filter_var($str, FILTER_SANITIZE_NUMBER_INT) >= $min && strlen($str) <= $max);
+        if (preg_match("/^\+?\d(?:[0-9 ]*\d)?$/", $str) && strlen($str) <= $max) {
+            // Verifica que haya al menos $min dígitos
+            $digitos = preg_replace('/\D/', '', $str);
+            return strlen($digitos) >= $min;
+        }
+        return false;
     }
 
     private function validarNombreApellido($str, $max) {
