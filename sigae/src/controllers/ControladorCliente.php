@@ -356,7 +356,7 @@ class ControladorCliente extends AbstractController {
                 $response['errors'][] = "Por favor, ingrese un nombre válido.";
             } elseif ($apellido !== null && !$this->validarNombreApellido($apellido, 23)) {
                 $response['errors'][] = "Por favor, ingrese un apellido válido.";
-            } elseif ($telefono !== null && !$this->validarTelefono($telefono, 20)) {
+            } elseif ($telefono !== null && !$this->validarTelefono($telefono, 6, 20)) {
                 $response['errors'][] = "Por favor, ingrese un teléfono válido. Evite usar caracteres especiales (guiones o paréntesis)";
             }elseif(!Cliente::existeEmail($email)) {
                 $response['errors'][]= "No existe un usuario con el correo ingresado.";
