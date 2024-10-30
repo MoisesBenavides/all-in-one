@@ -146,6 +146,6 @@ class Taller extends Servicio{
     public function cancelarServicio(){
     }
 
-    public function getServiciosTaller(){
+    public function getServicios(){
     }
 }

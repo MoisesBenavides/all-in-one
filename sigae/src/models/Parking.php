@@ -184,7 +184,7 @@ class Parking extends Servicio {
     public function cancelarServicio(){
     }
 
-    public function getServiciosParking(){
+    public function getServicios(){
     }
 
 }
