@@ -37,11 +37,9 @@
         <!-- Desktop View -->
         <div class="hidden md:flex items-center justify-between">
             <!-- Logo -->
-            {% if (cliente.fotoPerfil) %}
-                    <img class="logo-size transition-all duration-300" src="{{ cliente.fotoPerfil }}" alt="AIO Logo" />
-            {% else %}
-                    <img class="logo-size transition-all duration-300" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
-            {% endif %}
+            <a href="{{ path('aioParking') }}" class="shrink-0">
+                <img class="logo-size transition-all duration-300" src="{{ asset('img/AIO Parking positivo.png') }}" alt="AIO Logo" />
+            </a>
 
             <!-- Navegación Principal -->
             <nav class="flex justify-center space-x-6 mx-4 flex-grow">
@@ -65,7 +63,7 @@
 
                 <!-- User icon Desktop -->
                 <a href="{{ path('myAccount') }}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                    <img class="icon-size" src="{{ asset('img/user.png') }}" alt="User">
+                    <img id="profile-photo" class="icon-size" src="{{ fotoPerfil ?? asset('img/user.png') }}" alt="User">
                     <span class="text-base font-medium">Mi Cuenta</span>
                 </a>
             </div>
@@ -97,7 +95,7 @@
 
                     <!-- User icon móvil -->
                     <a href="{{ path('myAccount') }}" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                        <img class="icon-size" src="{{ asset('img/user.png') }}" alt="User">
+                        <img id="profile-photo" class="icon-size" src="{{ fotoPerfil ?? asset('img/user.png') }}" alt="User">
                     </a>
                 </div>
             </div>
@@ -156,6 +154,19 @@
             </div>
         </nav>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        fetch("{{ path('getClientProfilePhoto') }}")
+            .then(response => response.json())
+            .then(data => {
+                if (data.fotoPerfil) {
+                    // Actualiza el src de la imagen con el ID 'profile-photo'
+                    document.getElementById("profile-photo").src = data.fotoPerfil;
+                }
+            })
+            .catch(error => console.error("Error al cargar la foto de perfil:", error));
+        });
+    </script>
     <script src="{{ asset('js/traduccion.js') }}"></script>
     <script>
    // Elementos del DOM
