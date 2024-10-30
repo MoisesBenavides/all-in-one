@@ -490,7 +490,7 @@ class ControladorCliente extends AbstractController {
         // Por defecto, convierte el email a un nombre válido
         $nombre = $this->convertirAFormatoNombre($email, 23);
     
-        // Si el nombre de Google es válido, úsalo
+        // Asignar nombre de Google si es válido, si no, intenta asignar nombre completo
         if ($this->validarNombreApellido($nombreOAuth, 23)) {
             return $nombreOAuth;
         } elseif ($this->validarNombreApellido($nombreCompletoOAuth, 23)) {
@@ -501,12 +501,15 @@ class ControladorCliente extends AbstractController {
     }
 
     private function convertirAFormatoNombre($str, $max) {
-        // Filtra solo los caracteres válidos según la expresión regular proporcionada
-        $strFiltrado = preg_replace("/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+/", '', $str);
-    
-        // Recorta la cadena a un máximo de $max caracteres
-        return mb_substr($strFiltrado, 0, $max);
-    }
+    // Divide el string, cuando es email, en la parte local y el dominio
+    $nombreParte = explode('@', $str)[0];
+
+    // Remueve caracteres no válidos
+    $nombreFiltrado = preg_replace("/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]/", '', $nombreParte);
+
+    // Recorta el nombre al máximo de caracteres a $max
+    return mb_substr($nombreFiltrado, 0, $max);
+}
     
     private function validarEmail($str, $max) {
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres y contiene un dominio de correo valido
