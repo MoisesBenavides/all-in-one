@@ -40,12 +40,8 @@ const SESSION_URL = "{{ path('getClientSession') }}";
         <!-- Desktop View -->
         <div class="hidden md:flex items-center justify-between">
             <!-- Logo -->
-            <a href="{{ path('home') }}" class="shrink-0">
-                {% if (cliente.fotoPerfil) %}
-                    <img class="logo-size transition-all duration-300" src="{{ cliente.fotoPerfil }}" alt="AIO Logo" />
-                {% else %}
-                    <img class="logo-size transition-all duration-300" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
-                {% endif %}
+            <a href="{{ path('myAccount') }}" class="shrink-0">
+                <img id="profile-photo" class="logo-size transition-all duration-300" src="{{ fotoPerfil ?? asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
             </a>
 
             <!-- Navegación Principal -->
@@ -159,6 +155,19 @@ const SESSION_URL = "{{ path('getClientSession') }}";
             </div>
         </nav>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        fetch("{{ path('getClientProfilePhoto') }}")
+            .then(response => response.json())
+            .then(data => {
+                if (data.fotoPerfil) {
+                    // Actualiza el src de la imagen con el ID 'profile-photo'
+                    document.getElementById("profile-photo").src = data.fotoPerfil;
+                }
+            })
+            .catch(error => console.error("Error al cargar la foto de perfil:", error));
+        });
+    </script>
     <script src="{{ asset('js/traduccionDebug.js') }}"></script>
     <script>
    // Elementos del DOM
