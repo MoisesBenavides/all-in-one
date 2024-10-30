@@ -429,7 +429,7 @@ class ControladorCliente extends AbstractController {
             'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
         ];
 
-        return $this->render('client/miCuenta.html.twig', [
+        return $this->render('client/misReservas.html.twig', [
             'cliente' => $cliente,
             'misReservasParking' => $misReservasParking,
             'misReservasTaller' => $misReservasTaller,
