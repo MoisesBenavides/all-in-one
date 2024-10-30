@@ -326,7 +326,7 @@ class ControladorCliente extends AbstractController {
 
         
                 // Debug
-                error_log(print_r($_SESSION['fotoPerfil']), true);
+                error_log($_SESSION['fotoPerfil']);
 
         try{
             if(!$this->cliente->cargarCliente($_SESSION['id'])){
