@@ -118,6 +118,11 @@ products:
   controller: Sigae\Controllers\ControladorCliente::products
   methods: GET
 
+filterProducts:
+  path: /filterProducts
+  controller: Sigae\Controllers\ControladorCliente::filterProducts
+  methods: GET
+
 myAccount:
   path: /myAccount
   controller: Sigae\Controllers\ControladorCliente::myAccount
