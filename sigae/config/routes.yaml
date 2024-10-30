@@ -33,11 +33,6 @@ doSignup:
   controller: Sigae\Controllers\ControladorCliente::doSignup
   methods: POST
 
-doSignupOAuth:
-  path: /doSignupOAuth
-  controller: Sigae\Controllers\ControladorCliente::doSignupOAuth
-  methods: POST
-
 forgotPassword:
   path: /forgotPassword
   controller: Sigae\Controllers\ControladorCliente::forgotPassword

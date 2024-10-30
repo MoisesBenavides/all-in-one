@@ -18,7 +18,6 @@ class SessionTimeoutListener {
         'signup', 
         'doSignup', 
         'doLoginOAuth', 
-        'doSignupOAuth', 
         'forgotPassword', 
         'loginAioEmployee', 
         'doLoginAioEmployee',
