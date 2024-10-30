@@ -110,8 +110,8 @@ class Parking extends Servicio {
                                     )');
             $stmt->bindParam(':tip_plaza', $tipo_plaza);
             $stmt->bindParam(':lrg_plazo', $largo_plazo);
-            $stmt->bindParam('fecha_fin', $fecha_final);
-            $stmt->bindParam('fecha_ini', $fecha_inicio);
+            $stmt->bindParam(':fecha_fin', $fecha_final);
+            $stmt->bindParam(':fecha_ini', $fecha_inicio);
 
             $stmt->execute();
 
@@ -124,7 +124,8 @@ class Parking extends Servicio {
 
         } catch(Exception $e){
             error_log($e->getMessage()); // Registro del error en el log
-            return false; // False si hubo un error de base de datos
+            throw $e;
+            return; // False si hubo un error de base de datos
         }
     }
 
