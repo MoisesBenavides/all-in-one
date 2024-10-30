@@ -250,19 +250,13 @@
         if (!document.getElementById('selectedServiceType').value) {
             isValid = false;
             errorMessage += 'Por favor, seleccione un tipo de servicio. ';
-        }
-
-        if (!document.getElementById('selectedServiceSubtype').value) {
+        }else if (!document.getElementById('selectedServiceSubtype').value) {
             isValid = false;
             errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
-        }
-
-        if (!document.getElementById('fecha_inicio').value) {
+        }else if (!document.getElementById('fecha_inicio').value) {
             isValid = false;
             errorMessage += 'Por favor, seleccione fecha y hora. ';
-        }
-
-        if (!document.getElementById('tipoVehiculo').value && 
+        }else if (!document.getElementById('tipoVehiculo').value && 
             document.getElementById('vehiculosDropdown').value === "") {
             isValid = false;
             errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
