@@ -87,8 +87,8 @@
                 {% endif %}
         <!-- Placeholder para foto de perfil -->
         <div class="w-32 h-32 mx-auto mb-8 bg-gray-200 rounded-full flex items-center justify-center">
-            {% if fotoPerfil %}
-                <img src="{{ fotoPerfil }}" alt="Foto de perfil" class="w-full h-full object-cover rounded-full">
+            {% if (cliente.fotoPerfil) %}
+                <img src="{{ cliente.fotoPerfil }}" alt="Foto de perfil" class="w-full h-full object-cover rounded-full">
             {% else %}
                 <span class="text-4xl text-gray-500">📷</span>
             {% endif %}

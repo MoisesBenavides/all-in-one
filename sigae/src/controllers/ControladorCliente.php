@@ -324,10 +324,6 @@ class ControladorCliente extends AbstractController {
     function myAccount(): Response{
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
-        
-                // Debug
-                error_log($_SESSION['fotoPerfil']);
-
         try{
             if(!$this->cliente->cargarCliente($_SESSION['id'])){
                 throw new Exception("Error actualizando sesión.");
