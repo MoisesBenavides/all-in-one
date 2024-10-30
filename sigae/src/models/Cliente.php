@@ -194,8 +194,12 @@ class Cliente{
     }
 
     public function guardarCliente($ci, $email, $contrasena, $nombre, $apellido, $telefono) {
-        // Encriptar contraseña (bcrypt)
-        $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
+        if ($contrasena === null) {
+            $hash_contrasena = null;
+        } else {
+            // Encriptar contraseña (bcrypt)
+            $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
+        }
         try {
             $conn = conectarDB("def_cliente", "password_cliente", "localhost");
             
