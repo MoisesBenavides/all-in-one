@@ -86,131 +86,91 @@ class ControladorCliente extends AbstractController {
             }
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
-            // Debug: Log which fields are missing
-            $response['debug']['missing_fields'] = array_diff(
-                ['email', 'contrasena'],
-                array_keys($_POST)
-            );
         }
         return $this->render('client/account/login.html.twig', [
             'response' => $response  // Aquí pasa la respuesta a la vista
         ]);
     }
-    function doLoginOAuth(): Response|RedirectResponse{
+    function doLoginOAuth(): Response|RedirectResponse {
+        $response = ['success' => false, 'errors' => [], 'debug' => []];
+    
         // Configurar cliente Google
-        $client= new Google_Client();
+        $client = new Google_Client();
         $client->setAuthConfig('/var/www/private/credencialesOAuth.json');
         $client->setRedirectUri('https://aio.ngrok.app/doLoginOAuth');
-        $client->addScope('email');
-        $client->addScope('profile');
+        $client->addScope(['email', 'profile']);
 
         if (!isset($_GET['code'])) {
-            // Redirige a la URL de autenticación de Google
-            $auth_url = $client->createAuthUrl();
-            return new RedirectResponse(filter_var($auth_url, FILTER_SANITIZE_URL));
-        } else {
-            // Procesa la respuesta de Google y obtiene el token de acceso
-            $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-            if (isset($token['error'])) {
-                // Manejar el error de autenticación
-                return $this->render('client/account/login.html.twig', [
-                    'response' => ['errors' => ["Error de autenticación: " . $token['error']]]
-                ]);
-            }
-
-            // Guardar token en la sesión
-            $_SESSION['access_token'] = $token;
-            $client->setAccessToken($token);
-
-            // Obtén la información del perfil del usuario
-            $oauth2 = new Google_Service_Oauth2($client);
-            $userInfo = $oauth2->userinfo->get();
-
-            $fotoPerfil = $userInfo->picture;
-            $email = $userInfo->email;
-
-            if ($this->cliente->iniciarCliente($email, null)) {
-                $response['success'] = true;
-
-                // Parámetros de cookie de sesión
-                session_set_cookie_params([
-                    'lifetime' => 0,          // La cookie se elimina al salir del navegador
-                    'path' => '/',            // Accesible en toda la aplicación
-                    'secure' => true,         // Solo se envía por HTTPS
-                    'httponly' => true,       // Protege que no sea accesible desde JavaScript
-                    'samesite' => 'Lax'       // Se envía en la mayoría de las solicitudes siempre que sean "seguras", evitando ataques CSRF
-                ]);
-                
-                // Inicia sesión del cliente
-                session_start();
-
-                // Regenera el ID de sesión para prevenir fijación de sesión
-                session_regenerate_id(true);
+            return new RedirectResponse(filter_var($client->createAuthUrl(), FILTER_SANITIZE_URL));
+        }
     
-                $_SESSION['ultima_solicitud'] = time();
-                $_SESSION['id']=$this->cliente->getId();
-                $_SESSION['ci']=$this->cliente->getCi();
-                $_SESSION['email']=$this->cliente->getEmail();
-                $_SESSION['nombre']=$this->cliente->getNombre();
-                $_SESSION['apellido']=$this->cliente->getApellido();
-                $_SESSION['telefono']=$this->cliente->getTelefono();
-                $_SESSION['fotoPerfil']=$fotoPerfil;
-
-                // Redirigir a la página principal
-                return $this->redirectToRoute('home');
-            } else {
-                $response['errors'][] = "Error al iniciar sesión.";
-            }
+        // Obtiene el token de acceso y maneja errores de autenticación
+        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+        if (isset($token['error'])) {
+            $response['errors'][] = "Error de autenticación: " . $token['error'];
+            return $this->render('client/account/login.html.twig', ['response' => $response]);
         }
-        return $this->render('client/account/login.html.twig', [
-            'response' => $response
-        ]);
-    }
-    function doSignUpOAuth(){
-        $response=['success' => false, 'errors' => [], 'debug' => []];
+    
+        // Guarda el token en la sesión
+        $_SESSION['access_token'] = $token;
+        $client->setAccessToken($token);
+    
+        // Obtener la información del perfil del usuario
+        $oauth2 = new Google_Service_Oauth2($client);
+        $userInfo = $oauth2->userinfo->get();
+        $email = $userInfo->email;
+        $fotoPerfil = $userInfo->picture;
+    
+        if (!Cliente::existeEmail($email)) {
+            // Si el email no está registrado, intenta crear una cuenta nueva
 
-        // Validacion de campos vacios
-        if (isset($_POST["email"], $_POST["nombre"], $_POST["apellido"], $_POST["contrasena"], $_POST["repContrasena"]) && 
-            !empty($_POST["email"]) && !empty($_POST["nombre"]) && !empty($_POST["apellido"]) && !empty($_POST["contrasena"]) && !empty($_POST["repContrasena"])) {
-
-            $email = $_POST["email"];
-            $nombre = $_POST["nombre"];
-            $apellido = $_POST["apellido"];
-            $contrasena = $_POST["contrasena"];
-            $repContrasena = $_POST["repContrasena"];
-
-            if (!$this->validarEmail($email, 63)) {
-                $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
-
-            } elseif (!$this->validarNombreApellido($nombre, 23) || !$this->validarNombreApellido($apellido, 23)) {
-                $response['errors'][] = "Por favor, ingrese un nombre o apellido válido.";
-
-            } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
-                $response['errors'][] = "Use un mínimo de 6 caracteres con mayúsculas, minúsculas y números.";
-
-            } elseif ($contrasena !== $repContrasena) {
-                $response['errors'][] = "Las contraseñas no coinciden.";
-
-            } elseif(Cliente::existeEmail($email)) {
-                error_log('Email ya existe: ' . $email);
-                $response['errors'][]= "Ya existe un usuario con el correo ingresado.";
-
-            } elseif(!$this->cliente->guardarCliente(null, $email, $contrasena, $nombre, $apellido, null)){
+            // Obtener datos adicionales de registro
+            $nombreCompletoOAuth = $userInfo->name;
+            $nombreOAuth = $userInfo->given_name;
+            $apellidoOAuth = $userInfo->family_name;
+    
+            $nombre = $this->definirNombre($nombreOAuth, $nombreCompletoOAuth, $email);
+            $apellido = $this->validarNombreApellido($apellidoOAuth, 23) ? $apellidoOAuth : null;
+    
+            // Intenta guardar el nuevo cliente y redirige al login si hay error
+            if (!$this->cliente->guardarCliente(null, $email, null, $nombre, $apellido, null)) {
                 $response['errors'][] = "Error al registrarse.";
-
-            } else {
-                $response['success'] = true;
-                // Redirigir al login
-                return $this->redirectToRoute('doLoginOAuth');
+                return $this->render('client/account/login.html.twig', [
+                    'response' => $response
+                ]);
             }
-            
-        } else {
-            $response['errors'][] = "Debe llenar todos los campos.";
         }
-        return $this->render('client/account/signUp.html.twig', [
-            'response' => $response
+    
+        // Iniciar sesión del cliente
+        $this->cliente->iniciarClienteOAuth($email);
+    
+        // Configuración de la sesión y parámetros de cookies
+        session_set_cookie_params([
+            'lifetime' => 0, 
+            'path' => '/', 
+            'secure' => true, 
+            'httponly' => true, 
+            'samesite' => 'Lax'
         ]);
+        
+        session_start();
+        session_regenerate_id(true);
+    
+        // Almacena los datos del cliente en la sesión
+        $_SESSION['ultima_solicitud'] = time();
+        $_SESSION['id'] = $this->cliente->getId();
+        $_SESSION['ci'] = $this->cliente->getCi();
+        $_SESSION['email'] = $this->cliente->getEmail();
+        $_SESSION['nombre'] = $this->cliente->getNombre();
+        $_SESSION['apellido'] = $this->cliente->getApellido();
+        $_SESSION['telefono'] = $this->cliente->getTelefono();
+        $_SESSION['fotoPerfil'] = $fotoPerfil;
+    
+        // Si el registro es correcto, redirige al home
+        $response['success'] = true;
+        return $this->redirectToRoute('home');
     }
+
     function signup(): Response{
         return $this->render('client/account/signUp.html.twig');
     }
@@ -524,6 +484,28 @@ class ControladorCliente extends AbstractController {
         return ((preg_match('/[A-Z]/', $str) && preg_match('/[a-z]/', $str) && preg_match('/[0-9]/', $str) 
                 && strlen($str) <= $max && strlen($str) >= $min));
 
+    }
+
+    private function definirNombre($nombreOAuth, $nombreCompletoOAuth, $email) {
+        // Por defecto, convierte el email a un nombre válido
+        $nombre = $this->convertirAFormatoNombre($email, 23);
+    
+        // Si el nombre de Google es válido, úsalo
+        if ($this->validarNombreApellido($nombreOAuth, 23)) {
+            return $nombreOAuth;
+        } elseif ($this->validarNombreApellido($nombreCompletoOAuth, 23)) {
+            return $nombreCompletoOAuth;
+        }
+    
+        return $nombre;
+    }
+
+    private function convertirAFormatoNombre($str, $max) {
+        // Filtra solo los caracteres válidos según la expresión regular proporcionada
+        $strFiltrado = preg_replace("/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+/", '', $str);
+    
+        // Recorta la cadena a un máximo de $max caracteres
+        return mb_substr($strFiltrado, 0, $max);
     }
     
     private function validarEmail($str, $max) {

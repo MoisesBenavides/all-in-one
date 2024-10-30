@@ -156,6 +156,43 @@ class Cliente{
         }
     }
 
+    public function iniciarClienteOAuth($email){
+        try{
+            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+
+            if ($conn === false) {
+                throw new Exception("No se pudo conectar a la base de datos.");
+            }
+
+            $stmt = $conn->prepare('SELECT * FROM cliente WHERE email = :email');
+
+            $stmt->bindParam(':email', $email);
+            
+            $stmt->execute();
+
+            $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if($cliente){
+                $this->setId($cliente['id']);
+                $this->setCi($cliente['ci']);
+                $this->setEmail($cliente['email']);
+                $this->setHash_contrasena($cliente['hash_contrasena']);
+                $this->setNombre($cliente['nombre']);
+                $this->setApellido($cliente['apellido']);
+                $this->setTelefono($cliente['telefono']);
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch(Exception $e){
+            echo "Error al iniciar sesión: " . $e->getMessage();
+            return false;
+        } finally {
+            $conn = null;
+        }
+    }
+
     public function guardarCliente($ci, $email, $contrasena, $nombre, $apellido, $telefono) {
         // Encriptar contraseña (bcrypt)
         $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
