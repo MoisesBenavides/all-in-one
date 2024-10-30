@@ -345,6 +345,9 @@ class ControladorCliente extends AbstractController {
                     'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
                     'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
                 ];
+
+                // Debug
+                error_log(print_r($_SESSION['fotoPerfil']), true);
             }
         } catch (Exception $e){
             $response['errors'][] = $e->getMessage();
