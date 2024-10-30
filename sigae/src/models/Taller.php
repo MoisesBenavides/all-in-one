@@ -115,7 +115,17 @@ class Taller extends Servicio{
             
         }
     }
-    
+
+    public function obtenerLapsosOcupados(){
+        try{
+            $stmt = $this->conn->prepare();
+
+        } catch(Exception $e){
+            error_log("Error al obtener los lapsos ocupados: ".$e->getMessage());
+            throw $e;
+            return;
+        }
+    }   
 
     private function reservarTaller(){
         $id=$this->getId();

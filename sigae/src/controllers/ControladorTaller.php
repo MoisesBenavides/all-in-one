@@ -173,23 +173,33 @@ class ControladorTaller extends AbstractController{
     
     public function getServicesSchedule1(Request $request): JsonResponse{
         try {
-            $date = $request->query->get('date');
+            $diaSelec = $request->query->get('date');
             
-            if (!$date) {
-                throw new InvalidArgumentException('Date parameter is required');
+            // Debug
+            error_log("Dia recibido: ".$diaSelec);
+            
+            if (!$diaSelec) {
+                throw new InvalidArgumentException('El día de reserva es requerido.');
             }
 
-            $dateTime = new DateTime($date);
+            $dia = new DateTime($diaSelec);
+
+             // Debug
+             error_log("Dia formato DateTime: ".$diaSelec);
             
-            // Obtener plazos ocupados de bd
-            $bookedSlots = [1,2];
+            // Obtener lapsos ocupados del modelo
+            $bookedSlots = $this->taller->obtenerLapsosOcupados($dia);
+
+            // Filtrar lapsos disponibles por hora actual (bloquar lapsos pasados del dia)
+
+            // Formatear respuesta con json horariosTaller comparando
+            // horarios con lapsos ocupados obtenidos
             
             // Format the response
             $horariosTaller = array_map(function($slot) {
                 return $slot['hora_inicio']->format('H:i');
             }, $bookedSlots);
 
-            // TODO: comparar horarios taller con horarios disponibles (u ocupados) obtenidos
 
             return new JsonResponse([
                 'success' => true,
@@ -203,7 +213,7 @@ class ControladorTaller extends AbstractController{
             ], 400);
         }
     }
-    public function getServicesSchedule($dia): JsonResponse {
+    public function getServicesSchedule(): JsonResponse {
         return new JsonResponse(['horariosTaller' => (!empty($this->horarios)) ? $this->horarios : null]);
     }
 
