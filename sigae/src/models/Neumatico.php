@@ -111,7 +111,6 @@ class Neumatico extends Producto{
                                         FROM producto p 
                                         JOIN neumatico n ON p.id=n.id_producto');
             $stmt->execute();
-
             $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $neumaticos;
