@@ -145,125 +145,138 @@
 </script>
 
   <script>
-    // Obtener referencias a los elementos del formulario
-    const form = document.getElementById('signup-form');
-    const email = document.getElementById('email');
-    const nombre = document.getElementById('nombre');
-    const apellido = document.getElementById('apellido');
-    const contrasena = document.getElementById('contrasena');
-    const repContrasena = document.getElementById('repContrasena');
+   // Get form elements
+const form = document.getElementById('signup-form');
+const email = document.getElementById('email');
+const nombre = document.getElementById('nombre');
+const apellido = document.getElementById('apellido');
+const contrasena = document.getElementById('contrasena');
+const repContrasena = document.getElementById('repContrasena');
 
-    // Agregar evento de envío al formulario
-    form.addEventListener('submit', (e) => {
-      e.preventDefault(); // Evitar envío por defecto
-      if (validateInputs()) {
-        form.submit(); // Enviar el formulario si es válido
-      }
-    });
+// Form submit handler
+form.addEventListener('submit', (e) => {
+    if (!validateInputs()) {
+        e.preventDefault();
+        return false;
+    }
+    return true;
+});
 
-    // Función para marcar un campo como válido
-   const setSuccess = (element) => {
-    element.classList.remove('border-red-500');
-    const errorDisplay = element.closest('.relative').querySelector('.error-message');
-    errorDisplay.textContent = '';
-    };
-
-    // Función para marcar un campo como inválido y mostrar un mensaje de error
-   const setError = (element, message) => {
+// Display error message
+const setError = (element, message) => {
     element.classList.add('border-red-500');
     const errorDisplay = element.closest('.relative').querySelector('.error-message');
     errorDisplay.textContent = message;
-    };
+};
 
-    // Función para validar el formato del correo electrónico
-    const isValidEmail = (email) => {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    };
+// Clear error message
+const setSuccess = (element) => {
+    element.classList.remove('border-red-500');
+    const errorDisplay = element.closest('.relative').querySelector('.error-message');
+    errorDisplay.textContent = '';
+};
 
-    // Función para validar un campo específico
-    const validateInput = (input) => {
-      const inputValue = input.value.trim();
+// Validate email format and length
+const validarEmail = (email, maxLength = 63) => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email) && email.length <= maxLength;
+};
 
-      switch(input.id) {
+// Validate name format and length
+const validarNombreApellido = (texto, maxLength = 23) => {
+    const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    return regex.test(texto) && texto.length <= maxLength;
+};
+
+// Validate password format and length
+const validarContrasena = (contrasena, minLength = 6, maxLength = 60) => {
+    const hasUpperCase = /[A-Z]/.test(contrasena);
+    const hasLowerCase = /[a-z]/.test(contrasena);
+    const hasNumbers = /\d/.test(contrasena);
+    const validLength = contrasena.length >= minLength && contrasena.length <= maxLength;
+    return hasUpperCase && hasLowerCase && hasNumbers && validLength;
+};
+
+// Validate individual input field
+const validateInput = (input) => {
+    const value = input.value.trim();
+    
+    if (value === '') {
+        setError(input, 'Debe llenar todos los campos.');
+        return false;
+    }
+
+    switch(input.id) {
         case 'email':
-          if (inputValue === '') {
-            setError(input, 'Por favor ingrese su correo electrónico');
-          } else if (!isValidEmail(inputValue)) {
-            setError(input, 'Correo electrónico inválido');
-          } else {
+            if (!validarEmail(value)) {
+                setError(input, 'Por favor, ingrese un correo electrónico válido.');
+                return false;
+            }
             setSuccess(input);
-          }
-          break;
+            break;
         case 'nombre':
         case 'apellido':
-          if (inputValue === '') {
-            setError(input, `Por favor ingrese su ${input.id}`);
-          } else {
+            if (!validarNombreApellido(value)) {
+                setError(input, 'Por favor, ingrese un nombre o apellido válido.');
+                return false;
+            }
             setSuccess(input);
-          }
-          break;
+            break;
         case 'contrasena':
-          if (inputValue === '') {
-            setError(input, 'Por favor ingrese una contraseña');
-          } else if (inputValue.length < 6) {
-            setError(input, 'La contraseña debe tener al menos 6 caracteres');
-          } else if (!/[A-Z]/.test(inputValue) || !/[a-z]/.test(inputValue) || !/\d/.test(inputValue)) {
-            setError(input, 'La contraseña debe incluir mayúsculas, minúsculas y números');
-          } else {
+            if (!validarContrasena(value)) {
+                setError(input, 'Use un mínimo de 6 caracteres con mayúsculas, minúsculas y números.');
+                return false;
+            }
             setSuccess(input);
-          }
-          break;
+            break;
         case 'repContrasena':
-          if (inputValue === '') {
-            setError(input, 'Por favor repita la contraseña');
-          } else if (inputValue !== contrasena.value) {
-            setError(input, 'Las contraseñas no coinciden');
-          } else {
-            setSuccess(input);
-          }
-          break;
-      }
-    };
+            if (value !== contrasena.value) {
+                setError(input, 'Las contraseñas no coinciden.');
+                return false;
+            } else if (validarContrasena(contrasena.value)) {
+                setSuccess(input);
+            }
+            break;
+    }
+    return true;
+};
 
-    // Función para validar todos los campos del formulario
-    const validateInputs = () => {
-      let isValid = true;
-      [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
-        validateInput(input);
-        if (input.classList.contains('border-red-500')) {
-          isValid = false;
-        }
-      });
-      return isValid;
-    };
-
-    // Agregar eventos de validación en tiempo real a los campos
+// Validate all inputs
+const validateInputs = () => {
+    let isValid = true;
     [email, nombre, apellido, contrasena, repContrasena].forEach(input => {
-      input.addEventListener('input', () => validateInput(input));
+        const currentValid = validateInput(input);
+        isValid = isValid && currentValid;
     });
+    return isValid;
+};
 
-    // Función para alternar la visibilidad de la contraseña
-    function togglePasswordVisibility(inputId) {
-      const input = document.getElementById(inputId);
-      const button = input.nextElementSibling;
-      if (input.type === 'password') {
+// Real-time validation
+[email, nombre, apellido, contrasena, repContrasena].forEach(input => {
+    input.addEventListener('input', () => validateInput(input));
+});
+
+// Toggle password visibility
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const button = input.nextElementSibling;
+    if (input.type === 'password') {
         input.type = 'text';
         button.innerHTML = `
-          <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-          </svg>
+            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+            </svg>
         `;
-      } else {
+    } else {
         input.type = 'password';
         button.innerHTML = `
-          <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
+            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
         `;
-      }
     }
+}
   </script>
 </body>
 </html>
