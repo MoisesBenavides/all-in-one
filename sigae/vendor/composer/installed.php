@@ -3,7 +3,7 @@
         'name' => 'aio/sigae',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '683de73a66b1671bf216b9b1f4fdbb03b55e0359',
+        'reference' => 'd94e88af69ca5bc5af9329abeaf1f675050222dc',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'aio/sigae' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '683de73a66b1671bf216b9b1f4fdbb03b55e0359',
+            'reference' => 'd94e88af69ca5bc5af9329abeaf1f675050222dc',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -220,8 +220,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '3.0.0',
+                0 => '3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache-implementation' => array(

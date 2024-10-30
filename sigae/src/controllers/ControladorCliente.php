@@ -99,24 +99,34 @@ class ControladorCliente extends AbstractController {
     function doLoginOAuth(): Response|RedirectResponse{
         // Configurar cliente Google
         $client= new Google_Client();
-        $client->setAuthConfig('/var/www/html/private/credencialesOAuth.json');
-        $client->setRedirectUri('"https://aio.ngrok.app/doLoginOAuth"');
+        $client->setAuthConfig('/var/www/private/credencialesOAuth.json');
+        $client->setRedirectUri('https://aio.ngrok.app/doLoginOAuth');
         $client->addScope('email');
         $client->addScope('profile');
 
         if (!isset($_GET['code'])) {
+            // Redirige a la URL de autenticación de Google
             $auth_url = $client->createAuthUrl();
-            return $this->redirectToRoute(filter_var($auth_url, FILTER_SANITIZE_URL));
+            return new RedirectResponse(filter_var($auth_url, FILTER_SANITIZE_URL));
         } else {
-            // Procesa la respuesta de Google
-            $client->authenticate($_GET['code']);
-            $_SESSION['access_token'] = $client->getAccessToken();
+            // Procesa la respuesta de Google y obtiene el token de acceso
+            $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+            if (isset($token['error'])) {
+                // Manejar el error de autenticación
+                return $this->render('client/account/login.html.twig', [
+                    'response' => ['errors' => ["Error de autenticación: " . $token['error']]]
+                ]);
+            }
+
+            // Guardar token en la sesión
+            $_SESSION['access_token'] = $token;
+            $client->setAccessToken($token);
 
             // Obtén la información del perfil del usuario
             $oauth2 = new Google_Service_Oauth2($client);
             $userInfo = $oauth2->userinfo->get();
 
-            $fotoPerfil = $userInfo->profile;
+            $fotoPerfil = $userInfo->picture;
             $email = $userInfo->email;
 
             if ($this->cliente->iniciarCliente($email, null)) {
@@ -131,13 +141,13 @@ class ControladorCliente extends AbstractController {
                     'samesite' => 'Lax'       // Se envía en la mayoría de las solicitudes siempre que sean "seguras", evitando ataques CSRF
                 ]);
                 
-                // Iniciar sesión del cliente
+                // Inicia sesión del cliente
                 session_start();
 
-                // Regenerar el ID de sesión para prevenir fijación de sesión
+                // Regenera el ID de sesión para prevenir fijación de sesión
                 session_regenerate_id(true);
-
-                $_SESSION['ultima_solicitud']= time();
+    
+                $_SESSION['ultima_solicitud'] = time();
                 $_SESSION['id']=$this->cliente->getId();
                 $_SESSION['ci']=$this->cliente->getCi();
                 $_SESSION['email']=$this->cliente->getEmail();
@@ -146,14 +156,14 @@ class ControladorCliente extends AbstractController {
                 $_SESSION['telefono']=$this->cliente->getTelefono();
                 $_SESSION['fotoPerfil']=$fotoPerfil;
 
-                // Redirigir a la home page
-                return $this->render('client/homeCliente.html.twig');
+                // Redirigir a la página principal
+                return $this->redirectToRoute('home');
             } else {
                 $response['errors'][] = "Error al iniciar sesión.";
             }
         }
         return $this->render('client/account/login.html.twig', [
-            'response' => $response  // Pasa la respuesta a la vista
+            'response' => $response
         ]);
     }
     function doSignUpOAuth(){
@@ -191,7 +201,7 @@ class ControladorCliente extends AbstractController {
             } else {
                 $response['success'] = true;
                 // Redirigir al login
-                return $this->redirectToRoute('login');
+                return $this->redirectToRoute('doLoginOAuth');
             }
             
         } else {
