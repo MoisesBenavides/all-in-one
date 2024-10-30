@@ -77,10 +77,12 @@
         </div>
     </div>
 </body>
-
+<script src="{{asset('js/traduccion.js')}}"></script>
 <script>
-        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
-        const archivoTraduccionHome = "{{ asset('translate/login.json') }}";
-        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+      const archivoTraduccion = "{{ asset('translate/login.json') }}";
+        // Inicializar la traducción
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarTraduccion(archivoTraduccion , 'es');
+        });
 </script>
 </html>

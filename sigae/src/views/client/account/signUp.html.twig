@@ -126,12 +126,13 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
-        const archivoTraduccionHome = "{{ asset('translate/home.json') }}";
-        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
-    });
+  <script src="{{asset('js/traduccion.js')}}"></script>
+<script>
+      const archivoTraduccion = "{{ asset('translate/signup.json') }}";
+        // Inicializar la traducción
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarTraduccion(archivoTraduccion , 'es');
+        });
 </script>
 
   <script>
