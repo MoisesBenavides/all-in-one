@@ -37,9 +37,11 @@
         <!-- Desktop View -->
         <div class="hidden md:flex items-center justify-between">
             <!-- Logo -->
-            <a href="{{ path('aioParking') }}" class="shrink-0">
-                <img class="logo-size transition-all duration-300" src="{{ asset('img/AIO Parking positivo.png') }}" alt="AIO Logo" />
-            </a>
+            {% if (cliente.fotoPerfil) %}
+                    <img class="logo-size transition-all duration-300" src="{{ cliente.fotoPerfil }}" alt="AIO Logo" />
+            {% else %}
+                    <img class="logo-size transition-all duration-300" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
+            {% endif %}
 
             <!-- Navegación Principal -->
             <nav class="flex justify-center space-x-6 mx-4 flex-grow">
