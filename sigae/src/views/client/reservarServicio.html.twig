@@ -269,36 +269,58 @@
     }
     </script>
             <script>
-            document.addEventListener('DOMContentLoaded', function() {
+          document.addEventListener('DOMContentLoaded', function() {
             const vehiculosDropdown = document.getElementById('vehiculosDropdown');
             const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+            const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
             const selectedOptionAuto = document.getElementById('selectedOptionAuto');
             const tipoVehiculo = document.getElementById('tipoVehiculo');
             const matriculaYa = document.getElementById('matriculaYa');
             const matriculaYaContainer = document.getElementById('matriculaYaContainer');
+            const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
 
-            // Event listener para drop down de vehiculo
+            // opcion default para mis vehiculos
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "default";
+            defaultOption.text = "Seleccione un vehículo";
+            vehiculosDropdown.insertBefore(defaultOption, vehiculosDropdown.firstChild);
+            vehiculosDropdown.value = "default";
+
+            // Event listener para el dropdown de vehiculo
             vehiculosDropdown.addEventListener('change', function() {
-                if (this.value !== "") {
-                    // Get tipo de vehiculo elegido
+                if (this.value !== "" && this.value !== "default") {
+                    // Conseguir el tipo de vehiculo
                     const selectedOption = this.options[this.selectedIndex];
                     const tipo = selectedOption.getAttribute('data-tipo');
                     
-                    // update secciond e tipo de vehiculo
+                    // Actualizar secciond e tipo de vehiculo
                     selectedOptionAuto.textContent = tipo;
                     tipoVehiculo.value = tipo.toLowerCase();
-                    tipoVehiculoSection.classList.add('disabled-section');
                     
-                    // esconder matricula ya
+                    // Deshabilitar seccion de tipo de vehiculo
+                    tipoVehiculoSection.classList.add('disabled-section');
+                    dropdownButtonAuto.style.pointerEvents = 'none';
+                    dropdownButtonAuto.style.backgroundColor = '#f3f4f6';
+                    dropTipoVehiculo.classList.add('hidden');
+                    
+                    // esconder matricula yaa
                     matriculaYa.value = '';
                     matriculaYa.removeAttribute('name');
                     matriculaYaContainer.style.display = 'none';
-                } else {
                     
+                
+                    this.setAttribute('name', 'matricula');
+                } else {
+                    // resetear cuando no hay vehiculo
                     tipoVehiculoSection.classList.remove('disabled-section');
+                    dropdownButtonAuto.style.pointerEvents = 'auto';
+                    dropdownButtonAuto.style.backgroundColor = 'white';
                     matriculaYaContainer.style.display = 'block';
                     selectedOptionAuto.textContent = 'Tipo de Vehículo';
                     tipoVehiculo.value = '';
+                    
+                    
+                    this.removeAttribute('name');
                     matriculaYa.setAttribute('name', 'matriculaYa');
                 }
             });
@@ -306,9 +328,12 @@
             // Event listener para matricula ya
             matriculaYa.addEventListener('input', function() {
                 if (this.value !== "") {
-                    vehiculosDropdown.value = "";
+                    vehiculosDropdown.value = "default";
+                    vehiculosDropdown.removeAttribute('name');
                     this.setAttribute('name', 'matriculaYa');
                     tipoVehiculoSection.classList.remove('disabled-section');
+                    dropdownButtonAuto.style.pointerEvents = 'auto';
+                    dropdownButtonAuto.style.backgroundColor = 'white';
                 } else {
                     this.removeAttribute('name');
                 }
