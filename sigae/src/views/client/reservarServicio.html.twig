@@ -268,5 +268,52 @@
         }
     }
     </script>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+            const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+            const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+            const tipoVehiculo = document.getElementById('tipoVehiculo');
+            const matriculaYa = document.getElementById('matriculaYa');
+            const matriculaYaContainer = document.getElementById('matriculaYaContainer');
+
+            // Event listener para drop down de vehiculo
+            vehiculosDropdown.addEventListener('change', function() {
+                if (this.value !== "") {
+                    // Get tipo de vehiculo elegido
+                    const selectedOption = this.options[this.selectedIndex];
+                    const tipo = selectedOption.getAttribute('data-tipo');
+                    
+                    // update secciond e tipo de vehiculo
+                    selectedOptionAuto.textContent = tipo;
+                    tipoVehiculo.value = tipo.toLowerCase();
+                    tipoVehiculoSection.classList.add('disabled-section');
+                    
+                    // esconder matricula ya
+                    matriculaYa.value = '';
+                    matriculaYa.removeAttribute('name');
+                    matriculaYaContainer.style.display = 'none';
+                } else {
+                    
+                    tipoVehiculoSection.classList.remove('disabled-section');
+                    matriculaYaContainer.style.display = 'block';
+                    selectedOptionAuto.textContent = 'Tipo de Vehículo';
+                    tipoVehiculo.value = '';
+                    matriculaYa.setAttribute('name', 'matriculaYa');
+                }
+            });
+
+            // Event listener para matricula ya
+            matriculaYa.addEventListener('input', function() {
+                if (this.value !== "") {
+                    vehiculosDropdown.value = "";
+                    this.setAttribute('name', 'matriculaYa');
+                    tipoVehiculoSection.classList.remove('disabled-section');
+                } else {
+                    this.removeAttribute('name');
+                }
+            });
+        });
+        </script>
 </body>
 </html>
