@@ -1,14 +1,12 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Reservas | AIO</title>
-    <!--Es responsivo!!-->
+    <title>Mis reservas | AIO</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <style>
@@ -23,38 +21,178 @@
             font-family: 'Teachers', sans-serif;
         }
 
-         .btn{
-            background-color: #dc2626
+        .btn {
+            background-color: #dc2626;
         }
 
-        .btn:hover{
-            background-color: #b91c1c
+        .btn:hover {
+            background-color: #b91c1c;
         }
 
-       
+        .parking {
+            border-left: 4px solid #1f3de0;
+        }
+
+        .taller {
+            border-left: 4px solid #dc2626;
+        }
+
+        .reserva-card {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .reserva-card:hover {
+            transform: translateY(-5px);
+        }
     </style>
 </head>
-{% include 'partials/header.html.twig' %}
-
 <body>
-<section class="flex overflow-hidden flex-col justify-center items-center px-24 py-40 text-lg font-semibold leading-tight bg-white text-neutral-900 max-md:px-5 max-md:py-24">
-  <h2 class="self-stretch text-4xl font-bold text-center max-md:max-w-full">Tus reservas</h2>
-  <div class="flex flex-col mt-24 max-w-full min-h-[111px] w-[788px] max-md:mt-10">
-    <div class="flex flex-wrap gap-10 justify-between items-center w-full max-md:max-w-full">
-      <p class="self-stretch my-auto">RESERVA</p>
-      <p class="self-stretch my-auto">FECHA Y HORA</p>
-    </div>
-    <div class="flex mt-11 w-full rounded-sm bg-neutral-600 min-h-[6px] max-md:mt-10 max-md:max-w-full"></div>
-  </div>
-  <div class="flex justify-between items-center mt-24 max-w-full min-h-[48px] text-neutral-50 w-[298px] max-md:mt-10">
-    <div class="flex gap-2.5 items-center self-stretch my-auto min-h-[48px] min-w-[240px] w-[298px]">
-      <div class="flex flex-col self-stretch my-auto min-w-[240px] w-[298px]">
-        <button class="gap-1.5 self-stretch px-7 py-3.5 btn rounded-lg min-h-[48px] max-md:px-5">
-          Modificar reserva
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
+    {% include 'partials/header.html.twig' %}
+
+    <section class="flex overflow-hidden flex-col justify-center items-center px-6 md:px-24 py-20 md:py-40 text-lg font-semibold leading-tight bg-white text-neutral-900">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Tus reservas</h2>
+        
+        <!-- Contenedor de Reservas -->
+        <div class="w-full max-w-4xl">
+            {% if misReservasParking is empty and misReservasTaller is empty %}
+                <div class="flex flex-col items-center justify-center min-h-[400px] text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="text-2xl md:text-3xl font-bold text-gray-700 mb-2">No tienes reservas en este momento</h3>
+                    <p class="text-gray-500 mb-8">Visita aioParking para reservar una plaza en nuestro parking 24hs o reserva un horario en el taller de All In One</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="{{ path('services') }}" class="px-8 py-3 text-white btn rounded-lg hover:bg-red-700 transition-colors text-center">
+                            Reservar Taller
+                        </a>
+                        <a href="{{ path('aioParking') }}" class="px-8 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-center">
+                            Reservar Parking
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+
+            {# Mostrar reservas de parking #}
+            {% for reserva in misReservasParking %}
+                <div class="reserva-card bg-gray-50 rounded-lg shadow-md p-6 parking">
+                    <!-- Datos comunes -->
+                    <div class="flex flex-col md:flex-row justify-between mb-4">
+                        <div class="mb-4 md:mb-0">
+                            <p class="text-sm text-gray-500">ID Reserva</p>
+                            <p class="font-bold">{{ reserva.id }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Matrícula</p>
+                            <p class="font-bold">{{ reserva.matricula }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Estado</p>
+                            <p class="font-bold">{{ reserva.estado }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between mb-4">
+                        <div class="mb-4 md:mb-0">
+                            <p class="text-sm text-gray-500">Fecha Inicio</p>
+                            <p>{{ reserva.fecha_inicio }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Fecha Final</p>
+                            <p>{{ reserva.fecha_final }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Precio</p>
+                            <p class="font-bold">${{ reserva.precio }}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Tipo de Plaza</p>
+                                <p>{{ reserva.tipo_plaza }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Tipo de Reserva</p>
+                                <p>{{ reserva.largo_plazo ? 'Largo plazo' : 'Regular' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Plaza Asignada</p>
+                                <p>{{ reserva.plazas }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+                </div>
+            {% endfor %}
+
+            {# Mostrar reservas de taller #}
+            {% for reserva in misReservasTaller %}
+                <div class="reserva-card bg-gray-50 rounded-lg shadow-md p-6 taller">
+                    <!-- Datos comunes -->
+                    <div class="flex flex-col md:flex-row justify-between mb-4">
+                        <div class="mb-4 md:mb-0">
+                            <p class="text-sm text-gray-500">ID Reserva</p>
+                            <p class="font-bold">{{ reserva.id }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Matrícula</p>
+                            <p class="font-bold">{{ reserva.matricula }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Estado</p>
+                            <p class="font-bold">{{ reserva.estado }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between mb-4">
+                        <div class="mb-4 md:mb-0">
+                            <p class="text-sm text-gray-500">Fecha Inicio</p>
+                            <p>{{ reserva.fecha_inicio }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Fecha Final</p>
+                            <p>{{ reserva.fecha_final }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Precio</p>
+                            <p class="font-bold">${{ reserva.precio }}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Tipo de Servicio</p>
+                                <p>{{ reserva.tipo }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Descripción</p>
+                                <p>{{ reserva.descripcion }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Tiempo Estimado</p>
+                                <p>{{ reserva.tiempo_estimado }} minutos</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            {% endfor %}
+
+            <!-- Mostrar errores si existen -->
+            {% if response.errors is not empty %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
+                    {% for error in response.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    {% include 'partials/footer.html.twig' %}
 </body>
-        {% include 'partials/footer.html.twig' %}
+</html>
