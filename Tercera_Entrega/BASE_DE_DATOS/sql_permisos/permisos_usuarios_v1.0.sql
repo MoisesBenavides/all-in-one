@@ -18,7 +18,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON aio_db.cliente TO 'cliente';
 GRANT SELECT, INSERT, UPDATE, DELETE ON aio_db.tiene TO 'cliente';
 GRANT SELECT, INSERT, UPDATE ON aio_db.vehiculo TO 'cliente';
 
-GRANT SELECT, INSERT ON aio_db.servicio TO 'cliente';
+GRANT SELECT, INSERT, UPDATE ON aio_db.servicio TO 'cliente';
 GRANT SELECT, INSERT ON aio_db.taller TO 'cliente';
 GRANT SELECT, INSERT ON aio_db.parking TO 'cliente';
 GRANT SELECT, INSERT ON aio_db.numero_plaza TO 'cliente';
