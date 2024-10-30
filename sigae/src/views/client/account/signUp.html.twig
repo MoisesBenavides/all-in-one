@@ -162,17 +162,17 @@
     });
 
     // Función para marcar un campo como válido
-    const setSuccess = (element) => {
-      element.classList.remove('border-red-500');
-      const errorDisplay = element.parentElement.nextElementSibling;
-      errorDisplay.textContent = '';
+   const setSuccess = (element) => {
+    element.classList.remove('border-red-500');
+    const errorDisplay = element.closest('.relative').querySelector('.error-message');
+    errorDisplay.textContent = '';
     };
 
     // Función para marcar un campo como inválido y mostrar un mensaje de error
-    const setError = (element, message) => {
-      element.classList.add('border-red-500');
-      const errorDisplay = element.parentElement.nextElementSibling;
-      errorDisplay.textContent = message;
+   const setError = (element, message) => {
+    element.classList.add('border-red-500');
+    const errorDisplay = element.closest('.relative').querySelector('.error-message');
+    errorDisplay.textContent = message;
     };
 
     // Función para validar el formato del correo electrónico
