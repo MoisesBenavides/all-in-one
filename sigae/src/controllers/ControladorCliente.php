@@ -48,7 +48,7 @@ class ControladorCliente extends AbstractController {
             // Validar email
             if (!$this->validarEmail($email, 63)) {
                 $response['errors'][] = "Por favor, ingrese un correo electrónico válido.";
-            } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
+            } elseif (!$this->validarContrasenaLogin($contrasena, 6, 60)) {
                 $response['errors'][] = "Por favor, ingrese una contraseña válida.";
             } else {
                 if ($this->cliente->iniciarCliente($email, $contrasena)) {
@@ -487,6 +487,12 @@ class ControladorCliente extends AbstractController {
         return ((preg_match('/[A-Z]/', $str) && preg_match('/[a-z]/', $str) && preg_match('/[0-9]/', $str) 
                 && strlen($str) <= $max && strlen($str) >= $min));
 
+    }
+
+    private function validarContrasenaLogin($str, $min, $max) {
+        /* Verifica si la contraseña contiene letras y numeros
+        y si la extension de la cadena se encuentra en el rango especificado por las variables $min y $max. */ 
+        return (preg_match('/[a-z]/', $str) && preg_match('/[0-9]/', $str) && strlen($str) <= $max && strlen($str) >= $min);
     }
 
     private function definirNombre($nombreOAuth, $nombreCompletoOAuth, $email) {
