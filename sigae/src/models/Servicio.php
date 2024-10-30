@@ -10,6 +10,7 @@ abstract class Servicio{
     protected EstadoServicio $estado;
 
     public function __construct($id, $precio, $fecha_inicio, $fecha_final){
+        $this->id = $id;
         $this->precio = $precio;
         $this->fecha_inicio = $fecha_inicio;
         $this->fecha_final = $fecha_final;
@@ -70,6 +71,5 @@ abstract class Servicio{
 
     abstract public function cancelarServicio();
 
-    public function getServicios(){
-    }
+    abstract public function getServicios();
 }
