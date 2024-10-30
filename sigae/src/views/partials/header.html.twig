@@ -40,8 +40,8 @@ const SESSION_URL = "{{ path('getClientSession') }}";
         <!-- Desktop View -->
         <div class="hidden md:flex items-center justify-between">
             <!-- Logo -->
-            <a href="{{ path('myAccount') }}" class="shrink-0">
-                <img id="profile-photo" class="logo-size transition-all duration-300" src="{{ fotoPerfil ?? asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
+            <a href="{{ path('home') }}" class="shrink-0">
+                <img class="logo-size transition-all duration-300" src="{{ asset('img/AIO Positivo.png') }}" alt="AIO Logo" />
             </a>
 
             <!-- Navegación Principal -->
@@ -65,7 +65,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
 
                 <!-- User icon Desktop -->
                 <a href="{{ path('myAccount') }}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                    <img class="icon-size" src="{{ asset('img/user.png') }}" alt="User">
+                    <img id="profile-photo" class="icon-size" src="{{ fotoPerfil ?? asset('img/user.png') }}" alt="User">
                     <span class="text-base font-medium">Mi Cuenta</span>
                 </a>
             </div>
@@ -97,7 +97,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
 
                     <!-- User icon móvil -->
                     <a href="{{ path('myAccount') }}" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                        <img class="icon-size" src="{{ asset('img/user.png') }}" alt="User">
+                        <img id="profile-photo" class="icon-size" src="{{ fotoPerfil ?? asset('img/user.png') }}" alt="User">
                     </a>
                 </div>
             </div>
