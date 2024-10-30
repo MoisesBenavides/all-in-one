@@ -9,6 +9,16 @@ abstract class Producto{
     protected $marca;
     protected $fecha_creacion;
     protected $stock;
+
+    public function __construct($id = null, $upc = null, $precio = null, 
+                                $marca = null, $fecha_creacion = null, $stock = null) {
+        $this->id = $id;
+        $this->upc = $upc;
+        $this->precio = $precio;
+        $this->marca = $marca;
+        $this->fecha_creacion = $fecha_creacion;
+        $this->stock = $stock;
+    }
     
     public function getId(){
         return $this->id;
@@ -58,8 +68,7 @@ abstract class Producto{
         $this->stock = $stock;
     }
 
-    public function getProductos(){
-    }
+    abstract public function getProductosDisp();
     abstract public function agregarStock();
     abstract public function restarStock(); 
 

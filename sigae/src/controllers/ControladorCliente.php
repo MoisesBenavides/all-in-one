@@ -2,6 +2,8 @@
 
 namespace Sigae\Controllers;
 use Sigae\Models\Cliente;
+use Sigae\Controllers\ControladorNeumatico;
+use Sigae\Controllers\ControladorOtroProducto;
 use Google_Client;
 use Google_Service_Oauth2;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +14,8 @@ use Exception;
 
 class ControladorCliente extends AbstractController {
     private $cliente;
+    private $controladorNeumatico;
+    private $controladorOtroProducto;
 
     public function __construct(){
         $this->cliente=new Cliente();
@@ -301,8 +305,50 @@ class ControladorCliente extends AbstractController {
         ]);
     }
 
-    function products(): Response{
-        return $this->render('client/catalogo.html.twig');
+    function products(): Response {
+        $response=['success' => false, 'errors' => [], 'debug' => []];
+
+        $filtro = $_SESSION['filtro'] ?? 'todos';
+        $productos = [];
+        
+        try {
+            // Selección de productos según el filtro
+            switch ($filtro) {
+                case 'neumaticos':
+                    $this->controladorNeumatico = new ControladorNeumatico();
+                    $productos = $this->controladorNeumatico->getNeumaticos('cliente');
+                    break;
+                case 'otros':
+                    $this->controladorOtroProducto = new ControladorOtroProducto();
+                    $productos = $this->controladorOtroProducto->getOtrosProductos('cliente');
+                    break;
+                case 'todos':
+                default:
+                    $this->controladorNeumatico = new ControladorNeumatico();
+                    $this->controladorOtroProducto = new ControladorOtroProducto();
+                    // Obtiene neumaticos
+                    $neumaticos = $this->controladorNeumatico->getNeumaticos('cliente');
+                    // Obtiene otros
+                    $otrosProductos = $this->controladorOtroProducto->getOtrosProductos('cliente');
+                    // Combina productos de ambas categorías
+                    $productos = array_merge($neumaticos, $otrosProductos);
+                    break;
+            }
+        } catch (Exception $e) {
+            error_log("Error al obtener productos: " . $e->getMessage());
+            $response['errors'][] = $e->getMessage();
+        }
+    
+        return $this->render('client/catalogo.html.twig', [
+            'filtro' => $filtro,
+            'productos' => $productos,
+        ]);
+    }
+    
+    function filterProducts(): RedirectResponse {
+        $filtroSelec = $_GET['filtro'] ?? 'todos';
+        $_SESSION['filtro'] = $filtroSelec;
+        return $this->redirectToRoute('products');
     }
 
     function myAccount(): Response{
