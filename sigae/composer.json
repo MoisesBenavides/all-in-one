@@ -8,7 +8,7 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "google/apiclient": "^2.0",
+        "google/apiclient": "^2.18",
         "symfony/asset": "7.1.*",
         "symfony/console": "7.1.*",
         "symfony/dotenv": "7.1.*",
