@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Exception;
 use DateTime;
 use InvalidArgumentException;
@@ -170,7 +171,39 @@ class ControladorTaller extends AbstractController{
         return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
     }
     
-    public function getServicesSchedule(): JsonResponse {
+    public function getServicesSchedule1(Request $request): JsonResponse{
+        try {
+            $date = $request->query->get('date');
+            
+            if (!$date) {
+                throw new InvalidArgumentException('Date parameter is required');
+            }
+
+            $dateTime = new DateTime($date);
+            
+            // Obtener plazos ocupados de bd
+            $bookedSlots = [1,2];
+            
+            // Format the response
+            $horariosTaller = array_map(function($slot) {
+                return $slot['hora_inicio']->format('H:i');
+            }, $bookedSlots);
+
+            // TODO: comparar horarios taller con horarios disponibles (u ocupados) obtenidos
+
+            return new JsonResponse([
+                'success' => true,
+                'horariosTaller' => $horariosTaller
+            ]);
+
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
+    public function getServicesSchedule($dia): JsonResponse {
         return new JsonResponse(['horariosTaller' => (!empty($this->horarios)) ? $this->horarios : null]);
     }
 
