@@ -9,7 +9,7 @@ function conectarDB($rol){
 
     try {
         // Cargar json con credenciales
-        $pathCredenciales='/var/www/private/db/credencialesBD.json';
+        $pathCredenciales='/var/www/private/db/credencialesDB.json';
 
         if(!file_exists($pathCredenciales)){
             throw new Exception("Archivo de credenciales no encontrado.");
