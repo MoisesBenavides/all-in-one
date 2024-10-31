@@ -20,8 +20,8 @@ class Taller extends Servicio{
         $this->tiempo_estimado = $tiempo_estimado;
     }
 
-    public function setDBConnection($user, $password , $hostname){
-        $this->conn = conectarDB($user, $password, $hostname);
+    public function setDBConnection($rol){
+        $this->conn = conectarDB($rol);
         if($this->conn === false){
             throw new Exception("No se puede conectar con la base de datos.");
         }
@@ -116,9 +116,25 @@ class Taller extends Servicio{
         }
     }
 
-    public function obtenerLapsosOcupados(){
+    public static function obtenerLapsosOcupados($rol, $dia){
+        $conn = conectarDB($rol);
+        // Obtener fecha en formato Y-m-d
+        $fecha = $dia->format('Y-m-d');
+
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
         try{
-            $stmt = $this->conn->prepare();
+            $stmt = $conn->prepare('SELECT s.fecha_inicio, s.fecha_final 
+                                            FROM servicio s 
+                                            JOIN taller t ON s.id=t.id_servicio
+                                            WHERE s.estado="pendiente" AND DATE(s.fecha_inicio) = :fecha');
+            $stmt->bindParam(':fecha', $fecha);
+            $stmt->execute();
+
+            $lapsosOcupados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $lapsosOcupados;
 
         } catch(Exception $e){
             error_log("Error al obtener los lapsos ocupados: ".$e->getMessage());
