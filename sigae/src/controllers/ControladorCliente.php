@@ -4,6 +4,8 @@ namespace Sigae\Controllers;
 use Sigae\Models\Cliente;
 use Sigae\Controllers\ControladorNeumatico;
 use Sigae\Controllers\ControladorOtroProducto;
+use Sigae\Controllers\ControladorParking;
+use Sigae\Controllers\ControladorTaller;
 use Google_Client;
 use Google_Service_Oauth2;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -435,6 +437,10 @@ class ControladorCliente extends AbstractController {
             'misReservasTaller' => $misReservasTaller,
             'response' => $response
         ]);
+    }
+
+    
+    function cancelService(){
     }
 
     function faq(): Response{
