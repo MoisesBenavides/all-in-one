@@ -55,23 +55,44 @@
                     </div>
                 </section>
 
-                <!-- Fecha final -->
+                <!-- Duración -->
                 <section>
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha final</h2>
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Duración</h2>
                     <div class="w-full max-w-[340px] mx-auto">
-                        <input type="datetime-local" id="fecha_final" name="fecha_final" required
-                            class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
+                        <div class="flex items-center justify-between space-x-4">
+                            <button 
+                                type="button"
+                                id="decreaseDuration"
+                                class="w-12 h-12 rounded-full btnPark text-white flex items-center justify-center text-2xl"
+                            >
+                                -
+                            </button>
+                            
+                            <div class="flex-1 text-center">
+                                <span id="durationDisplay" class="text-2xl font-semibold">30m</span>
+                            </div>
+                            
+                            <button 
+                                type="button"
+                                id="increaseDuration"
+                                class="w-12 h-12 rounded-full btnPark text-white flex items-center justify-center text-2xl"
+                            >
+                                +
+                            </button>
+                        </div>
+                        
+                        <!-- Hidden input for fecha_final -->
+                        <input type="hidden" id="fecha_final" name="fecha_final" value="">
                     </div>
-                    <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
-                        <p>Las fechas van en intervalos de 30 minutos, la fecha que elija se adaptará automáticamente a estos intervalos</p> 
+                    <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm mt-2">
+                        <p>Seleccione la duración de su estacionamiento (máximo 24 horas)</p>
                     </div>
                 </section>
 
                 <!-- Tus vehículos -->
-              <section>
+                <section>
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
                     <div class="relative w-full max-w-[340px] mx-auto">
-                        <!-- Cambiado el name a null inicialmente -->
                         <select id="vehiculosDropdown" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
                             <option value="">Seleccione un vehículo</option>
                             {% if misVehiculos is defined and misVehiculos is not empty %}
@@ -112,7 +133,7 @@
                 </section>
 
                 <!-- Matrícula manual -->
-                   <div id="matriculaManualSection" class="h-[52px] relative mt-4">
+                <div id="matriculaManualSection" class="h-[52px] relative mt-4">
                     <input id="matriculaYa" type="text" 
                         placeholder="O registra ya con Matrícula" 
                         class="space-x-6 p-2 w-[340px] h-[50px] text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
@@ -138,121 +159,176 @@
         </div>
     </main>
 
+    <!-- Script para manejar la fecha de inicio -->
     <script defer src="{{ asset('js/fechaInicioHandler.js') }}"></script>
-    <script defer src="{{ asset('js/fechaFinalHandler.js') }}"></script>
-<script>
- document.addEventListener('DOMContentLoaded', function() {
-      // Inicializar los handler de fechas
-    const startHandler = initializeStartDate('fecha_inicio');
-    const endHandler = initializeEndDate('fecha_final', 'fecha_inicio');
 
-        // Referencias a elementos del DOM
-        const form = document.getElementById('servicioForm');
-        const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-        const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
-        const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
-        const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
-        const selectedOptionAuto = document.getElementById('selectedOptionAuto');
-        const selectedVehicleType = document.getElementById('tipoVehiculo');
-        const matriculaYa = document.getElementById('matriculaYa');
-        const matriculaManualSection = document.getElementById('matriculaManualSection');
-
-        // Control del dropdown de tipo de vehículo
-        dropdownButtonAuto.addEventListener('click', () => {
-            if (!dropdownButtonAuto.classList.contains('disabled-section')) {
-                dropdownMenuAuto.classList.toggle('hidden');
+    <!-- Script para manejar la duración y fecha final -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const decreaseBtn = document.getElementById('decreaseDuration');
+            const increaseBtn = document.getElementById('increaseDuration');
+            const durationDisplay = document.getElementById('durationDisplay');
+            const fechaFinalInput = document.getElementById('fecha_final');
+            const fechaInicioInput = document.getElementById('fecha_inicio');
+            
+            let currentDuration = 30; // Initial duration in minutes
+            const maxDuration = 24 * 60; // 24 hours in minutes
+            
+            function formatDuration(minutes) {
+                if (minutes >= 60) {
+                    const hours = Math.floor(minutes / 60);
+                    const remainingMinutes = minutes % 60;
+                    return remainingMinutes > 0 
+                        ? `${hours}h ${remainingMinutes}m`
+                        : `${hours}h`;
+                }
+                return `${minutes}m`;
             }
+            
+            function updateDuration(minutes) {
+                currentDuration = minutes;
+                durationDisplay.textContent = formatDuration(minutes);
+                updateEndDate();
+            }
+            
+            function updateEndDate() {
+                const startDate = new Date(fechaInicioInput.value);
+                if (!isNaN(startDate.getTime())) {
+                    const endDate = new Date(startDate.getTime() + currentDuration * 60000);
+                    fechaFinalInput.value = endDate.toISOString().slice(0, 16);
+                }
+            }
+            
+            decreaseBtn.addEventListener('click', () => {
+                if (currentDuration > 30) {
+                    updateDuration(currentDuration - 30);
+                }
+            });
+            
+            increaseBtn.addEventListener('click', () => {
+                if (currentDuration < maxDuration) {
+                    updateDuration(currentDuration + 30);
+                }
+            });
+            
+            // Update end date when start date changes
+            fechaInicioInput.addEventListener('change', updateEndDate);
+            
+            // Initial end date calculation
+            updateEndDate();
         });
+    </script>
 
+    <!-- Script para manejar el formulario y la selección de vehículos -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('servicioForm');
+            const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+            const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+            const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+            const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
+            const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+            const selectedVehicleType = document.getElementById('tipoVehiculo');
+            const matriculaYa = document.getElementById('matriculaYa');
+            const matriculaManualSection = document.getElementById('matriculaManualSection');
+        // Control del dropdown de tipo de vehículo
+
+            dropdownButtonAuto.addEventListener('click', () => {
+                if (!dropdownButtonAuto.classList.contains('disabled-section')) {
+                    dropdownMenuAuto.classList.toggle('hidden');
+                }
+            });
         // Selección de tipo de vehículo
-        const optionsAuto = document.querySelectorAll('#dropTipoVehiculo .option');
-        optionsAuto.forEach(option => {
-            option.addEventListener('click', () => {
-                selectedOptionAuto.textContent = option.textContent;
-                selectedVehicleType.value = option.dataset.value;
-                dropdownMenuAuto.classList.add('hidden');
+
+            const optionsAuto = document.querySelectorAll('#dropTipoVehiculo .option');
+            optionsAuto.forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedOptionAuto.textContent = option.textContent;
+                    selectedVehicleType.value = option.dataset.value;
+                    dropdownMenuAuto.classList.add('hidden');
+                });
+            });
+        // Event listener para el dropdown de vehículos
+
+            vehiculosDropdown.addEventListener('change', function() {
+                if (this.value !== "") {
+                // Si se seleccionó un vehículo existente
+                    const selectedOption = this.options[this.selectedIndex];
+                    const tipo = selectedOption.getAttribute('data-tipo');
+                    
+                    selectedOptionAuto.textContent = tipo;
+                    selectedVehicleType.value = tipo.toLowerCase();
+                    tipoVehiculoSection.classList.add('disabled-section');
+                                    // Limpiar y ocultar matrícula manual
+
+                    matriculaYa.value = '';
+                    matriculaYa.removeAttribute('name');
+                    matriculaManualSection.style.display = 'none';
+                                   // Establecer el name para el vehículo seleccionado
+ 
+                    this.setAttribute('name', 'matricula');
+                } else {       
+                 // Si se deseleccionó el vehículo
+
+                    tipoVehiculoSection.classList.remove('disabled-section');
+                    matriculaManualSection.style.display = 'block';
+                    selectedOptionAuto.textContent = 'Tipo';
+                    selectedVehicleType.value = '';
+                                    // Quitar el name del dropdown
+
+                    this.removeAttribute('name');
+                // Establecer el name para matrícula manual
+                    matriculaYa.setAttribute('name', 'matriculaYa');
+                }
+            });
+        // Event listener para matrícula manual
+
+            matriculaYa.addEventListener('input', function() {
+                if (this.value !== "") {
+                    vehiculosDropdown.value = "";
+                    vehiculosDropdown.removeAttribute('name');
+                    this.setAttribute('name', 'matriculaYa');
+                    tipoVehiculoSection.classList.remove('disabled-section');
+                } else {
+                    this.removeAttribute('name');
+                }
+            });
+        // Validación del formulario
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+            // Validar fechas
+
+                if (!document.getElementById('fecha_inicio').value) {
+                    alert("Debe seleccionar la fecha de inicio.");
+                    return;
+                }
+            // Validar selección de vehículo o matrícula manual
+
+                if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
+                    alert("Debe seleccionar un vehículo o ingresar una matrícula.");
+                    return;
+                }
+            // Validar tipo de vehículo para matrícula manual
+
+                if (matriculaYa.value !== "" && selectedVehicleType.value === "") {
+                    alert("Debe seleccionar un tipo de vehículo.");
+                    return;
+                }
+            // Asegurar que solo un campo de matrícula tenga name
+
+                if (matriculaYa.value) {
+                    matriculaYa.setAttribute('name', 'matriculaYa');
+                    vehiculosDropdown.removeAttribute('name');
+                } else if (vehiculosDropdown.value) {
+                    vehiculosDropdown.setAttribute('name', 'matricula');
+                    matriculaYa.removeAttribute('name');
+                }
+
+                this.submit();
             });
         });
-
-        // Event listener para el dropdown de vehículos
-        vehiculosDropdown.addEventListener('change', function() {
-            if (this.value !== "") {
-                // Si se seleccionó un vehículo existente
-                const selectedOption = this.options[this.selectedIndex];
-                const tipo = selectedOption.getAttribute('data-tipo');
-                
-                selectedOptionAuto.textContent = tipo;
-                selectedVehicleType.value = tipo.toLowerCase();
-                tipoVehiculoSection.classList.add('disabled-section');
-                
-                // Limpiar y ocultar matrícula manual
-                matriculaYa.value = '';
-                matriculaYa.removeAttribute('name');
-                matriculaManualSection.style.display = 'none';
-                
-                // Establecer el name para el vehículo seleccionado
-                this.setAttribute('name', 'matricula');
-            } else {
-                // Si se deseleccionó el vehículo
-                tipoVehiculoSection.classList.remove('disabled-section');
-                matriculaManualSection.style.display = 'block';
-                selectedOptionAuto.textContent = 'Tipo';
-                selectedVehicleType.value = '';
-                
-                // Quitar el name del dropdown
-                this.removeAttribute('name');
-                // Establecer el name para matrícula manual
-                matriculaYa.setAttribute('name', 'matriculaYa');
-            }
-        });
-
-        // Event listener para matrícula manual
-        matriculaYa.addEventListener('input', function() {
-            if (this.value !== "") {
-                vehiculosDropdown.value = "";
-                vehiculosDropdown.removeAttribute('name');
-                this.setAttribute('name', 'matriculaYa');
-                tipoVehiculoSection.classList.remove('disabled-section');
-            } else {
-                this.removeAttribute('name');
-            }
-        });
-
-        // Validación del formulario
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Validar fechas
-            if (!document.getElementById('fecha_inicio').value || !document.getElementById('fecha_final').value) {
-                alert("Debe seleccionar las fechas de inicio y fin.");
-                return;
-            }
-
-            // Validar selección de vehículo o matrícula manual
-            if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
-                alert("Debe seleccionar un vehículo o ingresar una matrícula.");
-                return;
-            }
-
-            // Validar tipo de vehículo para matrícula manual
-            if (matriculaYa.value !== "" && selectedVehicleType.value === "") {
-                alert("Debe seleccionar un tipo de vehículo.");
-                return;
-            }
-
-            // Asegurar que solo un campo de matrícula tenga name
-            if (matriculaYa.value) {
-                matriculaYa.setAttribute('name', 'matriculaYa');
-                vehiculosDropdown.removeAttribute('name');
-            } else if (vehiculosDropdown.value) {
-                vehiculosDropdown.setAttribute('name', 'matricula');
-                matriculaYa.removeAttribute('name');
-            }
-
-            this.submit();
-        });
-    });
-</script>
+    </script>
 
     {% include 'partials/footer.html.twig' %}
 </body>
