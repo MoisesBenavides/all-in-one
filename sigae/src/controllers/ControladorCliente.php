@@ -2,10 +2,9 @@
 
 namespace Sigae\Controllers;
 use Sigae\Models\Cliente;
+use Sigae\Models\Servicio;
 use Sigae\Controllers\ControladorNeumatico;
 use Sigae\Controllers\ControladorOtroProducto;
-use Sigae\Controllers\ControladorParking;
-use Sigae\Controllers\ControladorTaller;
 use Google_Client;
 use Google_Service_Oauth2;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -441,6 +440,18 @@ class ControladorCliente extends AbstractController {
 
     
     function cancelService(){
+        $response=['success' => false, 'errors' => []];
+        // Validacion de campos vacios
+        if (isset($_POST['id_servicio'], $_POST['tipo']) 
+            && !empty($_POST["id"]) && !empty($_POST["tipo"])) {
+        
+            $id = $_POST['id'];
+            $tipo = $_POST['tipo'];
+
+            
+
+        }
+
     }
 
     function faq(): Response{
