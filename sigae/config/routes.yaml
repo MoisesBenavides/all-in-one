@@ -3,6 +3,7 @@ showLandingPage:
   controller: Sigae\Controllers\ControladorCliente::showLandingPage
   methods: GET
 
+# Rutas de cliente
 login:
   path: /login
   controller: Sigae\Controllers\ControladorCliente::login
@@ -108,24 +109,14 @@ parkingConfirmation:
   controller: Sigae\Controllers\ControladorParking::parkingConfirmation
   methods: GET
 
-products:
-  path: /products
-  controller: Sigae\Controllers\ControladorCliente::products
-  methods: GET
-
-filterProducts:
-  path: /filterProducts
-  controller: Sigae\Controllers\ControladorCliente::filterProducts
+myBookedServices:
+  path: /myServices
+  controller: Sigae\Controllers\ControladorCliente::myBookedServices
   methods: GET
 
 myAccount:
   path: /myAccount
   controller: Sigae\Controllers\ControladorCliente::myAccount
-  methods: GET
-
-myBookedServices:
-  path: /myServices
-  controller: Sigae\Controllers\ControladorCliente::myBookedServices
   methods: GET
 
 editMyAccount:
@@ -143,6 +134,18 @@ home:
   controller: Sigae\Controllers\ControladorCliente::home
   methods: GET
 
+# Rutas de cliente y gerente
+products:
+  path: /products
+  controller: Sigae\Controllers\ControladorCliente::products
+  methods: GET
+
+filterProducts:
+  path: /filterProducts
+  controller: Sigae\Controllers\ControladorCliente::filterProducts
+  methods: GET
+
+# Rutas de funcionarios
 loginAioEmployee:
   path: /loginAioEmployee
   controller: Sigae\Controllers\ControladorFuncionario::loginAioEmployee
@@ -178,6 +181,8 @@ userManagement:
   controller: Sigae\Controllers\ControladorFuncionario::userManagement
   methods: GET
 
+# Rutas de API
+# Retornar datos de sesion de cliente 
 getClientProfilePhoto:
   path: /api/getClientProfilePhoto
   controller: Sigae\Controllers\ControladorCliente::getClientProfilePhoto
@@ -198,6 +203,7 @@ getClientVehicles:
   controller: Sigae\Controllers\ControladorCliente::getClientVehicles
   methods: GET
 
+# Retornar lapsos ocupados de taller en un dia 
 getServicesSchedule:
   path: /api/getClientVehicles
   controller: Sigae\Controllers\ControladorTaller::getServicesSchedule
