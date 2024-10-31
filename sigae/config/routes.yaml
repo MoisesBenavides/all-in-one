@@ -4,6 +4,18 @@ showLandingPage:
   methods: GET
 
 # Rutas de cliente
+# Home y preguntas frecuentes
+home:
+  path: /home
+  controller: Sigae\Controllers\ControladorCliente::home
+  methods: GET
+
+faq:
+  path: /faq
+  controller: Sigae\Controllers\ControladorCliente::faq
+  methods: GET
+
+# Gestion de cuenta
 login:
   path: /login
   controller: Sigae\Controllers\ControladorCliente::login
@@ -39,6 +51,24 @@ forgotPassword:
   controller: Sigae\Controllers\ControladorCliente::forgotPassword
   methods: GET
 
+myAccount:
+  path: /myAccount
+  controller: Sigae\Controllers\ControladorCliente::myAccount
+  methods: GET
+
+editMyAccount:
+  path: /editMyAccount
+  controller: Sigae\Controllers\ControladorCliente::editMyAccount
+  methods: POST
+
+# Gestion de servicios de taller y parking
+# Mis servicios
+myBookedServices:
+  path: /myServices
+  controller: Sigae\Controllers\ControladorCliente::myBookedServices
+  methods: GET
+
+# Servicios de taller
 services:
   path: /services
   controller: Sigae\Controllers\ControladorCliente::services
@@ -54,26 +84,12 @@ doBookService:
   controller: Sigae\Controllers\ControladorTaller::doBookService
   methods: POST
 
-addVehicle:
-  path: /addVehicle
-  controller: Sigae\Controllers\ControladorVehiculo::addVehicle
-  methods: POST
-
-editVehicle:
-  path: /editVehicle
-  controller: Sigae\Controllers\ControladorVehiculo::editVehicle
-  methods: POST
-
-unlinkVehicle:
-  path: /unlinkVehicle
-  controller: Sigae\Controllers\ControladorVehiculo::unlinkVehicle
-  methods: POST
-
 serviceConfirmation:
   path: /serviceConfirmation
   controller: Sigae\Controllers\ControladorTaller::serviceConfirmation
   methods: GET
 
+# Servicios de parking
 aioParking:
   path: /aioParking
   controller: Sigae\Controllers\ControladorCliente::parking
@@ -109,30 +125,21 @@ parkingConfirmation:
   controller: Sigae\Controllers\ControladorParking::parkingConfirmation
   methods: GET
 
-myBookedServices:
-  path: /myServices
-  controller: Sigae\Controllers\ControladorCliente::myBookedServices
-  methods: GET
-
-myAccount:
-  path: /myAccount
-  controller: Sigae\Controllers\ControladorCliente::myAccount
-  methods: GET
-
-editMyAccount:
-  path: /editMyAccount
-  controller: Sigae\Controllers\ControladorCliente::editMyAccount
+# Gestion de vehiculos
+addVehicle:
+  path: /addVehicle
+  controller: Sigae\Controllers\ControladorVehiculo::addVehicle
   methods: POST
 
-faq:
-  path: /faq
-  controller: Sigae\Controllers\ControladorCliente::faq
-  methods: GET
+editVehicle:
+  path: /editVehicle
+  controller: Sigae\Controllers\ControladorVehiculo::editVehicle
+  methods: POST
 
-home:
-  path: /home
-  controller: Sigae\Controllers\ControladorCliente::home
-  methods: GET
+unlinkVehicle:
+  path: /unlinkVehicle
+  controller: Sigae\Controllers\ControladorVehiculo::unlinkVehicle
+  methods: POST
 
 # Rutas de cliente y gerente
 products:
