@@ -171,39 +171,69 @@ class ControladorTaller extends AbstractController{
         return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
     }
     
-    public function getServicesSchedule1(Request $request): JsonResponse{
+    public function getServicesSchedule(Request $request): JsonResponse{
         try {
+            // 1. Obtener el día seleccionado desde el cliente
             $diaSelec = $request->query->get('date');
-            
-            // Debug
-            error_log("Dia recibido: ".$diaSelec);
-            
             if (!$diaSelec) {
                 throw new InvalidArgumentException('El día de reserva es requerido.');
             }
 
             $dia = new DateTime($diaSelec);
 
-             // Debug
-             error_log("Dia formato DateTime: ".$diaSelec);
+            $fijos = $this->horarios;
             
-            // Obtener lapsos ocupados del modelo
-            $bookedSlots = $this->taller->obtenerLapsosOcupados($dia);
+            // 2. Cargar el arreglo del archivo json con los horarios fijos de lapsos
+            if (!$fijos) {
+                throw new Exception("No se pudo cargar los horarios del taller.");
+            }
 
-            // Filtrar lapsos disponibles por hora actual (bloquar lapsos pasados del dia)
-
-            // Formatear respuesta con json horariosTaller comparando
-            // horarios con lapsos ocupados obtenidos
+            // 3. Obtener lapsos ocupados de la base de datos para el día seleccionado
+            $ocupados = [];
+            try{
+                $conn=[
+                    'user' => 'def_cliente',
+                    'dbname' => 'def_cliente',
+                    'user' => 'password_cliente',
+                    'password' => '',
+                ]
+                $ocupados = Taller::obtenerLapsosOcupados($dia);
+            } catch(Exception $e){
+                error_log($e->getMessage());
+                throw $e;
+            }
             
-            // Format the response
-            $horariosTaller = array_map(function($slot) {
-                return $slot['hora_inicio']->format('H:i');
-            }, $bookedSlots);
+            // 4. Procesar horarios del json, marcando los ocupados
+            $horariosTallerDia = [];
+            foreach ($fijos as $lapso => $detalles) {
+                // Convertir el inicio y fin del lapso a DateTime para comparar
+                $inicioLapso = new DateTime($dia->format('Y-m-d') . ' ' . $detalles['inicio']);
+                $finLapso = new DateTime($dia->format('Y-m-d') . ' ' . $detalles['fin']);
 
+                // Revisar si el lapso está ocupado
+                $ocupado = false;
+                foreach ($ocupados as $oc) {
+                    $inicioOcupado = new DateTime($oc['hora_inicio']);
+                    $finOcupado = new DateTime($oc['hora_fin']);
+
+                    // Comparar si el horario de este lapso está ocupado
+                    if ($inicioLapso < $finOcupado && $finLapso > $inicioOcupado) {
+                        $ocupado = true;
+                        break;
+                    }
+                }
+
+                // Añadir cada lapso con el estado ocupado o no ocupado
+                $horariosTallerDia[$lapso] = [
+                    'ocupado' => $ocupado,
+                    'inicio' => $detalles['inicio'],
+                    'fin' => $detalles['fin']
+                ];
+            }
 
             return new JsonResponse([
                 'success' => true,
-                'horariosTaller' => $horariosTaller
+                'horariosTaller' => $horariosTallerDia
             ]);
 
         } catch (Exception $e) {
@@ -212,9 +242,6 @@ class ControladorTaller extends AbstractController{
                 'error' => $e->getMessage()
             ], 400);
         }
-    }
-    public function getServicesSchedule(): JsonResponse {
-        return new JsonResponse(['horariosTaller' => (!empty($this->horarios)) ? $this->horarios : null]);
     }
 
     private function estimarFechaFinal($fecha, $minutos) {
