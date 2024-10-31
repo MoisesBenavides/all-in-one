@@ -162,62 +162,79 @@
     <!-- Script para manejar la fecha de inicio -->
     <script defer src="{{ asset('js/fechaInicioHandler.js') }}"></script>
 
-    <!-- Script para manejar la duración y fecha final -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const decreaseBtn = document.getElementById('decreaseDuration');
-            const increaseBtn = document.getElementById('increaseDuration');
-            const durationDisplay = document.getElementById('durationDisplay');
-            const fechaFinalInput = document.getElementById('fecha_final');
-            const fechaInicioInput = document.getElementById('fecha_inicio');
-            
-            let currentDuration = 30; // Duracion inicial en minutos
-            const maxDuration = 24 * 60; // 24hs en minutos
-            
-            function formatDuration(minutes) {
-                if (minutes >= 60) {
-                    const hours = Math.floor(minutes / 60);
-                    const remainingMinutes = minutes % 60;
-                    return remainingMinutes > 0 
-                        ? `${hours}h ${remainingMinutes}m`
-                        : `${hours}h`;
-                }
-                return `${minutes}m`;
-            }
-            
-            function updateDuration(minutes) {
-                currentDuration = minutes;
-                durationDisplay.textContent = formatDuration(minutes);
-                updateEndDate();
-            }
-            
-            function updateEndDate() {
-                const startDate = new Date(fechaInicioInput.value);
-                if (!isNaN(startDate.getTime())) {
-                    const endDate = new Date(startDate.getTime() + currentDuration * 60000);
-                    fechaFinalInput.value = endDate.toISOString().slice(0, 16);
-                }
-            }
-            
-            decreaseBtn.addEventListener('click', () => {
-                if (currentDuration > 30) {
-                    updateDuration(currentDuration - 30);
-                }
+
+        <!-- Script para manejar la fecha de inicio y la duración -->
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Esperamos a que el script de fecha inicio esté disponible
+                const initializeHandler = () => {
+                    if (typeof initializeStartDate !== 'function') {
+                        setTimeout(initializeHandler, 100);
+                        return;
+                    }
+                    
+                    // Una vez que está disponible, inicializamos todo
+                    const startHandler = initializeStartDate('fecha_inicio');
+                    
+                    const decreaseBtn = document.getElementById('decreaseDuration');
+                    const increaseBtn = document.getElementById('increaseDuration');
+                    const durationDisplay = document.getElementById('durationDisplay');
+                    const fechaFinalInput = document.getElementById('fecha_final');
+                    
+                    let currentDuration = 30;
+                    const maxDuration = 24 * 60;
+                    
+                    function formatDuration(minutes) {
+                        if (minutes >= 60) {
+                            const hours = Math.floor(minutes / 60);
+                            const remainingMinutes = minutes % 60;
+                            return remainingMinutes > 0 
+                                ? `${hours}h ${remainingMinutes}m`
+                                : `${hours}h`;
+                        }
+                        return `${minutes}m`;
+                    }
+                    
+                    function updateDuration(minutes) {
+                        currentDuration = minutes;
+                        durationDisplay.textContent = formatDuration(minutes);
+                        updateEndDate();
+                    }
+                    
+                    function updateEndDate() {
+                        const startDate = startHandler.getCurrentStartDate();
+                        if (!isNaN(startDate.getTime())) {
+                            const endDate = new Date(startDate.getTime() + currentDuration * 60000);
+                            fechaFinalInput.value = endDate.toISOString().slice(0, 16);
+                        }
+                    }
+                    
+                    decreaseBtn.addEventListener('click', () => {
+                        if (currentDuration > 30) {
+                            updateDuration(currentDuration - 30);
+                        }
+                    });
+                    
+                    increaseBtn.addEventListener('click', () => {
+                        if (currentDuration < maxDuration) {
+                            updateDuration(currentDuration + 30);
+                        }
+                    });
+                    
+                    // Escuchar el evento personalizado del startHandler
+                    document.addEventListener('startDateSelected', function(e) {
+                        updateEndDate();
+                    });
+                    
+                    // Inicialización inicial
+                    updateEndDate();
+                };
+
+                // Iniciamos el proceso de inicialización
+                initializeHandler();
             });
-            
-            increaseBtn.addEventListener('click', () => {
-                if (currentDuration < maxDuration) {
-                    updateDuration(currentDuration + 30);
-                }
-            });
-            
-            // actualizar fecha final cuando se cambia
-            fechaInicioInput.addEventListener('change', updateEndDate);
-            
-            // fecha inicial 
-            updateEndDate();
-        });
-    </script>
+        </script>
+
 
     <!-- Script para manejar el formulario y la selección de vehículos -->
     <script>
