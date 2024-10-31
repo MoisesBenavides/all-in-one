@@ -68,6 +68,11 @@ myBookedServices:
   controller: Sigae\Controllers\ControladorCliente::myBookedServices
   methods: GET
 
+cancelService:
+  path: /cancelService
+  controller: Sigae\Controllers\ControladorCliente::cancelService
+  methods: POST
+
 # Servicios de taller
 services:
   path: /services
