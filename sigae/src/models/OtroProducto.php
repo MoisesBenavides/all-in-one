@@ -15,8 +15,8 @@ class OtroProducto extends Producto{
         $this->nombre = $nombre;
     }
 
-    public function setDBConnection($user, $password , $hostname){
-        $this->conn = conectarDB($user, $password, $hostname);
+    public function setDBConnection($rol){
+        $this->conn = conectarDB($rol);
         if($this->conn === false){
             throw new Exception("No se puede conectar con la base de datos.");
         }

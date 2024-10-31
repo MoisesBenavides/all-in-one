@@ -16,8 +16,8 @@ class Parking extends Servicio {
         $this->tipo_plaza = $tipo_plaza;
     }
 
-    public function setDBConnection($user, $password , $hostname){
-        $this->conn = conectarDB($user, $password, $hostname);
+    public function setDBConnection($rol){
+        $this->conn = conectarDB($rol);
         if($this->conn === false){
             throw new Exception("No se puede conectar con la base de datos.");
         }

@@ -1,8 +1,12 @@
 <?php
 
 namespace Sigae\Models;
+use function Sigae\Config\conectarDB;
+use PDO;
+use Exception;
 
 class Orden{
+    private ?PDO $conn =null;
     private $id;
     private $total;
     private $fecha_orden;

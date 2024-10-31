@@ -22,8 +22,8 @@ class Vehiculo {
         $this->color = $color;
     }
 
-    public function setDBConnection($user, $password , $hostname){
-        $this->conn = conectarDB($user, $password, $hostname);
+    public function setDBConnection($rol){
+        $this->conn = conectarDB($rol);
         if($this->conn === false){
             throw new Exception("No se puede conectar con la base de datos.");
         }
@@ -262,7 +262,7 @@ class Vehiculo {
 
     public static function cargarMisVehiculos($id){
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
             $stmt = $conn->prepare('SELECT * FROM vehiculo v 
                                     WHERE v.matricula IN (SELECT t.matricula 
                                     FROM tiene t 

@@ -93,7 +93,7 @@ class ControladorParking extends AbstractController{
                     $this->parking = new Parking(false, $tipo_plaza, null, null, $fecha_inicioParsed, $fecha_finalParsed);
                     
                     // Hacer una conexión de base de datos como cliente
-                    $this->parking->setDBConnection("def_cliente", "password_cliente", "localhost");
+                    $this->parking->setDBConnection("cliente");
                     $this->parking->comenzarTransaccion();
 
                     try{
@@ -215,7 +215,7 @@ class ControladorParking extends AbstractController{
                     $this->parking = new Parking(true, $tipo_plaza, null, null, $fecha_inicioParsed, $fecha_finalParsed);
 
                     // Hacer una conexión de base de datos como cliente
-                    $this->parking->setDBConnection("def_cliente", "password_cliente", "localhost");
+                    $this->parking->setDBConnection("cliente");
                     $this->parking->comenzarTransaccion();
 
                     try{
@@ -320,7 +320,7 @@ class ControladorParking extends AbstractController{
                 $this->parking = new Parking($largo_plazo, $tipo_plaza, null, $precio, $fecha_inicio, $fecha_final);
 
                 // Inicializar una conexión PDO como cliente
-                $this->parking->setDBConnection("def_cliente", "password_cliente", "localhost");
+                $this->parking->setDBConnection("cliente");
                 $this->parking->comenzarTransaccion();
 
                 try {

@@ -16,6 +16,18 @@ class Funcionario{
         $this->rol = $rol;
     }
 
+    public function setDBConnection($rol){
+        $this->conn = conectarDB($rol);
+        if($this->conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+        return $this;
+    }
+
+    public function getDBConnection(){
+        return $this->conn;
+    }
+
     public function getUsuario(){
         return $this->usuario;
     }
@@ -34,18 +46,6 @@ class Funcionario{
         $this->rol = $rol;
 
         return $this;
-    }
-
-    public function setDBConnection($user, $password , $hostname){
-        $this->conn = conectarDB($user, $password, $hostname);
-        if($this->conn === false){
-            throw new Exception("No se puede conectar con la base de datos.");
-        }
-        return $this;
-    }
-
-    public function getDBConnection(){
-        return $this->conn;
     }
 
     public function verificarCredenciales($contrasena) {

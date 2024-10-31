@@ -15,11 +15,11 @@ class ControladorOtroProducto extends AbstractController{
         $this->otroProducto = new OtroProducto();
         try{
             if($rol == 'cliente'){
-                $this->otroProducto->setDBConnection("def_cliente", "password_cliente", "localhost");
+                $this->otroProducto->setDBConnection("cliente");
                 $otrosProd = $this->otroProducto->getProductosDisp();
             } else {
                 // TODO: Si es funcionario, usar credenciales por rol y accede a más datos
-                $this->otroProducto->setDBConnection("def_cliente", "password_cliente", "localhost");
+                $this->otroProducto->setDBConnection("cliente");
                 $otrosProd = $this->otroProducto->getProductosDetallados();
             }
         } catch(Exception $e){

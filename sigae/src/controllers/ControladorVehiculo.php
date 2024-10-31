@@ -51,7 +51,7 @@ class ControladorVehiculo extends AbstractController{
                 $this->vehiculo = new Vehiculo($matricula, $marca, $modelo, $tipo, $color);
 
                 // Inicializar una conexión PDO como cliente
-                $this->vehiculo->setDBConnection("def_cliente", "password_cliente", "localhost");
+                $this->vehiculo->setDBConnection("cliente");
                 $this->vehiculo->comenzarTransaccion();
 
                 try{
@@ -112,7 +112,7 @@ class ControladorVehiculo extends AbstractController{
                 $this->vehiculo = new Vehiculo($matricula, null, null, null, null);
 
                 // Inicializar una conexión PDO como cliente
-                $this->vehiculo->setDBConnection("def_cliente", "password_cliente", "localhost");
+                $this->vehiculo->setDBConnection("cliente");
                 $this->vehiculo->comenzarTransaccion();
 
                 try{
@@ -212,7 +212,7 @@ class ControladorVehiculo extends AbstractController{
                 $this->vehiculo = new Vehiculo($matricula, $marca, $modelo, $tipo, $color);
 
                 // Inicializar una conexión PDO como cliente
-                $this->vehiculo->setDBConnection("def_cliente", "password_cliente", "localhost");
+                $this->vehiculo->setDBConnection("cliente");
                 $this->vehiculo->comenzarTransaccion();
 
                 try{
@@ -250,7 +250,7 @@ class ControladorVehiculo extends AbstractController{
 
     public function registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente){
         $this->vehiculo = new Vehiculo($matricula, null, null, $tipoVehiculo, null);
-        $this->vehiculo->setDBConnection("def_cliente", "password_cliente", "localhost");
+        $this->vehiculo->setDBConnection("cliente");
         $this->vehiculo->comenzarTransaccion();
         try{
             if ($this->vehiculo->existeMatricula($matricula)) {

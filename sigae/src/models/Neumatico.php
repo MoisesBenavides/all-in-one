@@ -19,8 +19,8 @@ class Neumatico extends Producto{
             $this->tipo = $tipo;
         }
 
-    public function setDBConnection($user, $password , $hostname){
-        $this->conn = conectarDB($user, $password, $hostname);
+    public function setDBConnection($rol){
+        $this->conn = conectarDB($rol);
         if($this->conn === false){
             throw new Exception("No se puede conectar con la base de datos.");
         }

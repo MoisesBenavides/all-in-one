@@ -101,7 +101,7 @@ class ControladorTaller extends AbstractController{
                     $this->taller = new Taller($tipoServicio, $descripcion, null, $tiempo_estimado, null, $precio, $fecha_inicioParsed, $fecha_finalParsed);
 
                     // Inicializar una conexión PDO como cliente
-                    $this->taller->setDBConnection("def_cliente", "password_cliente", "localhost");
+                    $this->taller->setDBConnection("cliente");
                     $this->taller->comenzarTransaccion();
 
                     try{
@@ -173,7 +173,7 @@ class ControladorTaller extends AbstractController{
     
     public function getServicesSchedule(Request $request): JsonResponse{
         try {
-            // 1. Obtener el día seleccionado desde el cliente
+            // Obtener el día seleccionado desde el cliente
             $diaSelec = $request->query->get('date');
             if (!$diaSelec) {
                 throw new InvalidArgumentException('El día de reserva es requerido.');
@@ -183,34 +183,31 @@ class ControladorTaller extends AbstractController{
 
             $fijos = $this->horarios;
             
-            // 2. Cargar el arreglo del archivo json con los horarios fijos de lapsos
+            // Carga el arreglo del archivo json con los horarios fijos de lapsos
             if (!$fijos) {
                 throw new Exception("No se pudo cargar los horarios del taller.");
             }
 
-            // 3. Obtener lapsos ocupados de la base de datos para el día seleccionado
+            // Obtener lapsos ocupados de la base de datos para el día seleccionado
             $ocupados = [];
             try{
-                $conn=[
-                    'user' => 'def_cliente',
-                    'dbname' => 'def_cliente',
-                    'user' => 'password_cliente',
-                    'password' => '',
-                ]
-                $ocupados = Taller::obtenerLapsosOcupados($dia);
+                // Asigna como rol para conexion, cliente
+                // TODO: Implementar asignación dinámica por rol de funcionario
+                $rol='cliente';
+                $ocupados = Taller::obtenerLapsosOcupados($rol, $dia);
             } catch(Exception $e){
                 error_log($e->getMessage());
                 throw $e;
             }
             
-            // 4. Procesar horarios del json, marcando los ocupados
+            // Procesar horarios del json, marcando los ocupados
             $horariosTallerDia = [];
             foreach ($fijos as $lapso => $detalles) {
                 // Convertir el inicio y fin del lapso a DateTime para comparar
                 $inicioLapso = new DateTime($dia->format('Y-m-d') . ' ' . $detalles['inicio']);
                 $finLapso = new DateTime($dia->format('Y-m-d') . ' ' . $detalles['fin']);
 
-                // Revisar si el lapso está ocupado
+                // Revisa si el lapso está ocupado
                 $ocupado = false;
                 foreach ($ocupados as $oc) {
                     $inicioOcupado = new DateTime($oc['hora_inicio']);

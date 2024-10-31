@@ -87,7 +87,7 @@ class Cliente{
 
     public function cargarCliente($id){
         try{
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
 
             if ($conn === false) {
                 throw new Exception("No se pudo conectar a la base de datos.");
@@ -121,7 +121,7 @@ class Cliente{
 
     public function iniciarCliente($email, $contrasena){
         try{
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
 
             if ($conn === false) {
                 throw new Exception("No se pudo conectar a la base de datos.");
@@ -158,7 +158,7 @@ class Cliente{
 
     public function iniciarClienteOAuth($email){
         try{
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
 
             if ($conn === false) {
                 throw new Exception("No se pudo conectar a la base de datos.");
@@ -201,7 +201,7 @@ class Cliente{
             $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
         }
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
             
             if ($conn === false) {
                 throw new Exception("No se pudo conectar a la base de datos.");
@@ -237,7 +237,7 @@ class Cliente{
 
     public function modificarCliente($id, $nombre, $apellido, $telefono) {
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
             
             if ($conn === false) {
                 throw new Exception("No se pudo conectar a la base de datos.");
@@ -264,7 +264,7 @@ class Cliente{
 
     public static function cargarMisReservasParking($id){
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
             
             /* Obtener los servicios de parking a partir de vehiículos vinculados al cliente
             y concatenar números de plaza de cada servicio */
@@ -300,7 +300,7 @@ class Cliente{
 
     public static function cargarMisReservasTaller($id){
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
 
             /* Obtener los servicios de taller a partir de vehiículos vinculados al cliente */
             $stmt = $conn->prepare('SELECT s.id, s.matricula, s.precio, 
@@ -329,7 +329,7 @@ class Cliente{
 
     public static function cargarMisVehiculos($id){
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
             $stmt = $conn->prepare('SELECT * FROM vehiculo v 
                                     WHERE v.matricula IN (SELECT t.matricula 
                                     FROM tiene t 
@@ -353,7 +353,7 @@ class Cliente{
 
     public static function existeEmail($email) {
         try {
-            $conn = conectarDB("def_cliente", "password_cliente", "localhost");
+            $conn = conectarDB("cliente");
             $stmt = $conn->prepare('SELECT COUNT(*) FROM cliente WHERE email = :email');
             $stmt->bindParam(':email', $email);
 
