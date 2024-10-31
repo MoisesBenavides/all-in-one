@@ -171,8 +171,8 @@
             const fechaFinalInput = document.getElementById('fecha_final');
             const fechaInicioInput = document.getElementById('fecha_inicio');
             
-            let currentDuration = 30; // Initial duration in minutes
-            const maxDuration = 24 * 60; // 24 hours in minutes
+            let currentDuration = 30; // Duracion inicial en minutos
+            const maxDuration = 24 * 60; // 24hs en minutos
             
             function formatDuration(minutes) {
                 if (minutes >= 60) {
@@ -211,10 +211,10 @@
                 }
             });
             
-            // Update end date when start date changes
+            // actualizar fecha final cuando se cambia
             fechaInicioInput.addEventListener('change', updateEndDate);
             
-            // Initial end date calculation
+            // fecha inicial 
             updateEndDate();
         });
     </script>
