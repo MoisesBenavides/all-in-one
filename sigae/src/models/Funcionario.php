@@ -79,7 +79,7 @@ class Funcionario{
 
     public function iniciarFuncionario($usuario){
         try {
-            $conn = conectarDB("def_app_user", "password_app_user", "localhost");
+            $conn = conectarDB("app_user");
             $conn->exec("SET ROLE 'verificador_credenciales'");
             $stmt = $conn->prepare('SELECT from_user AS rol FROM mysql.role_edges WHERE to_user = :usuario');
             $stmt->bindParam(':usuario', $usuario);

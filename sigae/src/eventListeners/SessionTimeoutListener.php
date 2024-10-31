@@ -26,7 +26,8 @@ class SessionTimeoutListener {
         'getClientProfilePhoto',
         'getClientSession',
         'getClientEmail',
-        'getClientVehicles'
+        'getClientVehicles',
+        'getServicesSchedule'
     ];
 
     public function __construct(RouterInterface $router){
