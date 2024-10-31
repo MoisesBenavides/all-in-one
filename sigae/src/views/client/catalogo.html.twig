@@ -2,13 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo | AIO</title>
-    <!--Es responsivo!!-->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <style>
@@ -27,80 +25,101 @@
             transition: opacity 0.3s ease;
         }
 
-       
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-details {
+            width: 100%;
+            padding: 1rem;
+        }
     </style>
 </head>
 
+<body class="bg-white">
+    {% include 'partials/header.html.twig' %}
 
-
-    <body class="bg-white">
-            {% include 'partials/header.html.twig' %}
-
-        <div class="container mx-auto px-4 py-8">
-            <div class="max-w-4xl mx-auto flex flex-col items-center gap-8">
-                <div class="w-full bg-white border border-black rounded-md p-4">
-                    <h1 class="text-center text-black text-2xl md:text-3xl font-semibold">Nuestros productos</h1>
-                </div>
-                <div class="w-full max-w-md">
-                    <div class="relative">
-                        <input type="text" id="buscar" placeholder="Buscar" class="w-full h-12 px-4 pr-10 rounded-md border border-black">
-                        <img id="searchIcon" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer" src="{{ asset('svg/search.svg') }}" alt="Search">
-                    </div>
-                </div>
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto flex flex-col items-center gap-8">
+            <div class="w-full bg-white border border-black rounded-md p-4">
+                <h1 class="text-center text-black text-2xl md:text-3xl font-semibold">Nuestros productos</h1>
             </div>
-            <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <div class="product flex flex-col items-center">
-                    <img class="w-full h-auto object-cover" src="{{ asset('img/Cubierta Pirelli1.webp') }}" alt="Cubierta Pirelli" />
-                    <h2 class="mt-4 text-center text-[#161212] text-xl font-bold leading-tight">Cubierta Pirelli 175/70 R14 Scorpion Atr</h2>
-                </div>
-                <div class="product flex flex-col items-center">
-                    <img class="w-full h-auto object-cover" src="{{ asset('img/Neumático Bridgestone1.webp') }}" alt="Neumático Bridgestone" />
-                    <h2 class="mt-4 text-center text-[#161212] text-xl font-bold leading-tight">Neumático Bridgestone Ecopia EP150 P 185/55R16 83 V</h2>
-                </div>
-                <div class="product flex flex-col items-center">
-                    <img class="w-full h-auto object-cover" src="{{ asset('img/Cubierta Pirelli1.webp') }}" alt="Cubierta Pirelli" />
-                    <h2 class="mt-4 text-center text-[#161212] text-xl font-bold leading-tight">Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato</h2>
-                </div>
-                <div class="product flex flex-col items-center">
-                    <img class="w-full h-auto object-cover" src="{{ asset('img/Aceite1.webp') }}" alt="Aceite para motor" />
-                    <h2 class="mt-4 text-center text-[#161212] text-xl font-bold leading-tight">Aceite para motor Motul sintético 5W-40</h2>
+            <div class="w-full max-w-md">
+                <div class="relative">
+                    <input type="text" id="buscar" placeholder="Buscar" class="w-full h-12 px-4 pr-10 rounded-md border border-black">
+                    <img id="searchIcon" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer" src="{{ asset('svg/search.svg') }}" alt="Search">
                 </div>
             </div>
         </div>
-    
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputBuscar = document.getElementById('buscar');
-            const productos = document.querySelectorAll('.product');
-            const searchIcon = document.getElementById('searchIcon');
-    
-            function buscarProductos() {
-                const textoBusqueda = inputBuscar.value.toLowerCase();
-                productos.forEach(producto => {
-                    const textoProducto = producto.textContent.toLowerCase();
-                    if (textoProducto.includes(textoBusqueda) || textoBusqueda === '') {
-                        producto.classList.remove('hidden');
-                    } else {
-                        producto.classList.add('hidden');
-                    }
-                });
-            }
-    
-            inputBuscar.addEventListener('input', buscarProductos);
-            inputBuscar.addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    buscarProductos();
+        
+        <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for producto in productos %}
+                <div class="product flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden">
+                    {# Imagen del producto usando el ID #}
+                    <img 
+                        class="product-image" 
+                        src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" 
+                        alt="{% if producto.tipo == 'neumatico' %}{{ producto.modelo }}{% else %}{{ producto.nombre }}{% endif %}"
+                        onerror="this.src='{{ asset('img/productos/default.webp') }}'"
+                    />
+                    
+                    <div class="product-details">
+                        {# Marca - común para ambos tipos #}
+                        <p class="text-lg font-semibold text-gray-800">{{ producto.marca }}</p>
+                        
+                        {# Campos específicos según el tipo #}
+                        {% if producto.tipo == 'neumatico' %}
+                            <p class="text-md text-gray-600">{{ producto.modelo }}</p>
+                        {% else %}
+                            <p class="text-md text-gray-600">{{ producto.nombre }}</p>
+                        {% endif %}
+                        
+                        {# Precio - común para ambos tipos #}
+                        <p class="mt-2 text-xl font-bold text-gray-900">${{ producto.precio }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-span-full text-center py-8">
+                    <p>No se encontraron productos disponibles.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputBuscar = document.getElementById('buscar');
+        const productos = document.querySelectorAll('.product');
+        const searchIcon = document.getElementById('searchIcon');
+
+        function buscarProductos() {
+            const textoBusqueda = inputBuscar.value.toLowerCase();
+            productos.forEach(producto => {
+                const textoProducto = producto.textContent.toLowerCase();
+                if (textoProducto.includes(textoBusqueda) || textoBusqueda === '') {
+                    producto.classList.remove('hidden');
+                } else {
+                    producto.classList.add('hidden');
                 }
             });
-    
-            searchIcon.addEventListener('click', function() {
-                inputBuscar.focus();
-            });
+        }
+
+        inputBuscar.addEventListener('input', buscarProductos);
+        inputBuscar.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                buscarProductos();
+            }
         });
-        </script>
 
-            {% include 'partials/footer.html.twig' %}
+        searchIcon.addEventListener('click', function() {
+            inputBuscar.focus();
+        });
+    });
+    </script>
 
-    </body>
-    </html>
+    {% include 'partials/footer.html.twig' %}
+</body>
 </html>
