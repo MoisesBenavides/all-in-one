@@ -13,8 +13,22 @@ class ControladorServicio extends AbstractController{
     private $servicio;
 
     public function cancelarServicio($rol, $id){
+        
         try{
-            Servicio::cancelar($rol, $id);
+            if (!Servicio::existeId($rol, $id)){
+                throw new Exception("No existe un servicio registrado con el ID: " . $id);
+            }
+
+            $estadoServicio = Servicio::obtenerEstadoActual($rol, $id);
+
+            if ($estadoServicio == 'realizado'){
+               throw new Exception("El servicio ya fue realizado.");
+            } elseif($estadoServicio == 'cancelado'){
+                throw new Exception("El servicio ya fue cancelado.");
+            } elseif($estadoServicio == 'pendiente'){
+                Servicio::cancelar($rol, $id);
+            }
+            
         } catch(Exception $e){
             error_log("Error cancelando el servicio: ". $e->getMessage());
             throw $e;

@@ -93,5 +93,45 @@ abstract class Servicio{
         }
     }
 
+    public static function existeId($rol, $id){
+        $conn = conectarDB($rol);
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
+        try{
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM servicio WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            
+            $count = $stmt->fetchColumn();
+
+            return $count != 0;
+
+        } catch(Exception $e){
+            throw $e;
+        }
+    }
+
+    public static function obtenerEstadoActual($rol, $id){
+        $conn = conectarDB($rol);
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
+        try{
+            $stmt = $conn->prepare('SELECT estado FROM servicio WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            
+            $estado = $stmt->fetchColumn();
+
+            return $estado;
+
+        } catch(Exception $e){
+            throw $e;
+        }
+    }
+
     abstract public function getServicios();
 }

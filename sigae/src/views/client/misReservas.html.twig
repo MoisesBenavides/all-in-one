@@ -51,7 +51,16 @@
 
     <section class="flex overflow-hidden flex-col justify-center items-center px-6 md:px-24 py-20 md:py-40 text-lg font-semibold leading-tight bg-white text-neutral-900">
         <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Tus reservas</h2>
+
         
+        <!-- Mostrar errores si existen -->
+        {% if response.errors is not empty %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
+                {% for error in response.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
         <!-- Contenedor de Reservas -->
         <div class="w-full max-w-4xl mb-2">
             {% if misReservasParking is empty and misReservasTaller is empty %}
@@ -122,7 +131,7 @@
                                 </div>
                             </div>
                             <form action="{{ path('cancelService') }}" method="POST">
-                                <input type="hidden" name="idAA" value="{{ reserva.id }}">
+                                <input type="hidden" name="idServicio" value="{{ reserva.id }}">
                                 <input type="hidden" name="tipo" value="parking">
                                 <button type="submit" class="p-3 rounded-lg bg-gray-100 hover:bg-red-100 group transition-all duration-200">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400 group-hover:text-red-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -194,17 +203,7 @@
                             </form>
                         </div>
                     </div>
-                {% endfor %}
-
-                <!-- Mostrar errores si existen -->
-                {% if response.errors is not empty %}
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
-                        {% for error in response.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                
+                {% endfor %}                
             {% endif %}
         </div>
     </section>
