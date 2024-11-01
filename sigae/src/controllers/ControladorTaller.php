@@ -107,7 +107,7 @@ class ControladorTaller extends AbstractController{
                     try{
                         if ($this->registrarYa && !$this->controladorVehiculo->registrarYaVehiculo($matricula, $tipoVehiculo, $id_cliente)){
                             throw new Exception($e->getMessage());
-                        } elseif (!$this->taller->reservarServicio($matricula)){
+                        } elseif (!$this->taller->reservar($matricula)){
                             throw new Exception("Fallo al reservar el servicio");
                         } else{
                             $this->taller->confirmarTransaccion();

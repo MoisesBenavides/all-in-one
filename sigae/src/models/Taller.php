@@ -88,7 +88,7 @@ class Taller extends Servicio{
         $this->conn = null;
     }
 
-    public function reservarServicio($matricula) {
+    public function reservar($matricula) {
         $precio = $this->getPrecio();
         $fecha_inicio = $this->getFecha_inicio();
         $fecha_final = $this->getFecha_final();
@@ -166,10 +166,7 @@ class Taller extends Servicio{
         
     }
 
-    public function cambiarServicio(){
-    }
-
-    public function cancelarServicio(){
+    public function modificar(){
     }
 
     public function getServicios(){

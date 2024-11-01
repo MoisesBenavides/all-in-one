@@ -1,6 +1,9 @@
 <?php
 
 namespace Sigae\Models;
+use function Sigae\Config\conectarDB;
+use Exception;
+use PDO;
 
 abstract class Servicio{
     protected $id;
@@ -65,11 +68,30 @@ abstract class Servicio{
         $this->estado = $estado;
     }
 
-    abstract public function reservarServicio($matricula);
+    abstract public function reservar($matricula);
 
-    abstract public function cambiarServicio();
+    abstract public function modificar();
 
-    abstract public function cancelarServicio();
+    public static function cancelar($rol, $id){
+        $conn = conectarDB($rol);
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
+        try{
+            $stmt = $conn->prepare('UPDATE servicio 
+                                    SET estado = "cancelado" 
+                                    WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return true;
+
+        } catch(Exception $e){
+            error_log("Error al cancelar el servicio: ".$e->getMessage());
+            throw $e;
+            return false;
+        }
+    }
 
     abstract public function getServicios();
 }

@@ -137,7 +137,6 @@ class ControladorParking extends AbstractController{
                             }                       
                         }
                     } catch(Exception $e){
-                        $this->parking->deshacerTransaccion();
                         $response['errors'][] = $e->getMessage();
                     } finally{
                         $this->parking->cerrarDBConnection();
@@ -324,7 +323,7 @@ class ControladorParking extends AbstractController{
                 $this->parking->comenzarTransaccion();
 
                 try {
-                    if (!$this->parking->reservarServicio($matricula)) {
+                    if (!$this->parking->reservar($matricula)) {
                         throw new Exception("Fallo al reservar el servicio");
                     }
                     foreach ($plazasValidas as $plaza) {

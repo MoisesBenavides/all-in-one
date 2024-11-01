@@ -2,7 +2,7 @@
 
 namespace Sigae\Controllers;
 use Sigae\Models\Cliente;
-use Sigae\Models\Servicio;
+use Sigae\Controllers\ControladorServicio;
 use Sigae\Controllers\ControladorNeumatico;
 use Sigae\Controllers\ControladorOtroProducto;
 use Google_Client;
@@ -15,6 +15,7 @@ use Exception;
 
 class ControladorCliente extends AbstractController {
     private $cliente;
+    private $controladorServicio;
     private $controladorNeumatico;
     private $controladorOtroProducto;
 
@@ -441,6 +442,28 @@ class ControladorCliente extends AbstractController {
     
     function cancelService(){
         $response=['success' => false, 'errors' => []];
+
+        try{
+            $misReservasParking = Cliente::cargarMisReservasParking($_SESSION['id']);
+            // Debug
+            error_log(print_r($misReservasParking, true));
+            // Debug
+            $misReservasTaller = Cliente::cargarMisReservasTaller($_SESSION['id']);
+            error_log(print_r($misReservasTaller, true));
+
+        } catch (Exception $e){
+            $response['errors'][] = $e->getMessage();
+        }
+
+        $cliente = [
+            'id' => $_SESSION['id'],
+            'email' => $_SESSION['email'],
+            'nombre' => $_SESSION['nombre'],
+            'apellido' => isset($_SESSION['apellido']) ? $_SESSION['apellido'] : null,
+            'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
+            'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
+        ];
+
         // Validacion de campos vacios
         if (isset($_POST['id_servicio'], $_POST['tipo']) 
             && !empty($_POST["id"]) && !empty($_POST["tipo"])) {
@@ -448,9 +471,20 @@ class ControladorCliente extends AbstractController {
             $id = $_POST['id'];
             $tipo = $_POST['tipo'];
 
-            
-
+            try{
+                $this->controladorServicio->cancelarReserva('cliente', $id);
+            }catch(Exception $e){
+                error_log("Error al cancelar la reserva: " . $e->getMessage());
+                $response['errors'][] = $e->getMessage();
+            }
         }
+
+        return $this->render('client/misReservas.html.twig', [
+            'cliente' => $cliente,
+            'misReservasParking' => $misReservasParking,
+            'misReservasTaller' => $misReservasTaller,
+            'response' => $response
+        ]);
 
     }
 
