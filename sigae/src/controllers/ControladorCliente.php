@@ -445,13 +445,13 @@ class ControladorCliente extends AbstractController {
 
         // Validacion de campos vacios
         if (isset($_POST['idServicio']) && !empty($_POST["idServicio"])) {
-            $id = $_POST['idServicio'];
+            $id_servicio = $_POST['idServicio'];
 
             try{
-                $this->controladorServicio->cancelarReserva('cliente', $id);
+                $this->controladorServicio->cancelarReserva('cliente', $id_servicio);
                 $response['success'] = true;
             }catch(Exception $e){
-                $response['errors'][] = "Error al cancelar la reserva: ".$e->getMessage();
+                $response['errors'][] = "Error cancelando la reserva: ".$e->getMessage();
             }
         } else {
             $response['errors'][] = "Debe ingresar el ID del servicio.";
