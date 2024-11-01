@@ -14,9 +14,27 @@ const TimeSlotHandler = {
             console.log('Request URL:', `${GET_BLOCKED_TIMES_URL}?date=${selectedDate}`);
             
             const response = await fetch(`${GET_BLOCKED_TIMES_URL}?date=${selectedDate}`);
+            console.log('Response status:', response.status);
+            console.log('Response headers:', [...response.headers.entries()]);
+
+            // Si no es OK, obtener el texto de la respuesta para diagnóstico
+            if (!response.ok) {
+                const textResponse = await response.text();
+                console.error('Error response text:', textResponse);
+                throw new Error(`HTTP error! status: ${response.status}, body: ${textResponse.substring(0, 200)}...`);
+            }
+
+            // Intentar parsear como JSON solo si la respuesta es OK
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                console.error('Invalid content type:', contentType);
+                const textResponse = await response.text();
+                console.error('Non-JSON response:', textResponse.substring(0, 200));
+                throw new Error('La respuesta del servidor no es JSON válido');
+            }
+
             const data = await response.json();
-            
-            console.log('Backend response:', data);
+            console.log('Parsed response data:', data);
 
             if (!data.success) {
                 throw new Error(data.error || 'Error al obtener los horarios');
@@ -25,6 +43,10 @@ const TimeSlotHandler = {
             return data.horariosTaller || {};
         } catch (error) {
             console.error('Error completo:', error);
+            // Agregar más contexto al error
+            if (error.name === 'SyntaxError') {
+                console.error('Error de parsing JSON - probablemente respuesta HTML en lugar de JSON');
+            }
             throw error;
         } finally {
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
@@ -93,6 +115,7 @@ const TimeSlotHandler = {
         }
     },
 
+ 
     async updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
@@ -106,10 +129,9 @@ const TimeSlotHandler = {
             const timeSlots = await this.fetchTimeSlots(selectedDate);
             console.log('Time slots received:', timeSlots);
             
-            timeSlotsContainer.innerHTML = '';
-            
-            if (serviceDurationMessage) {
-                serviceDurationMessage.classList.toggle('hidden', this.servicioSeleccionadoDuracion <= 30);
+            if (!timeSlots || Object.keys(timeSlots).length === 0) {
+                this.showError('No hay horarios disponibles para la fecha seleccionada.');
+                return;
             }
             
             // Convertir el objeto de lapsos a un array ordenado
@@ -141,8 +163,18 @@ const TimeSlotHandler = {
                 timeSlotsContainer.appendChild(button);
             });
         } catch (error) {
-            console.error('Error actualizando time slots:', error);
-            this.showError('Error al cargar los horarios. Por favor, intente nuevamente.');
+            console.error('Error detallado en updateTimeSlots:', error);
+            let errorMessage = 'Error al cargar los horarios. ';
+            
+            if (error.message.includes('500')) {
+                errorMessage += 'Error interno del servidor. Por favor, contacte al administrador.';
+            } else if (error.message.includes('Invalid JSON')) {
+                errorMessage += 'Respuesta inválida del servidor.';
+            } else {
+                errorMessage += 'Por favor, intente nuevamente.';
+            }
+            
+            this.showError(errorMessage);
         }
     },
 
@@ -156,9 +188,9 @@ const TimeSlotHandler = {
             } else {
                 errorContainer.textContent = message;
             }
+            console.error('Error mostrado:', message);
             setTimeout(() => errorContainer.classList.add('hidden'), 5000);
         }
-        console.error('Error shown:', message);
     }
 };
 
