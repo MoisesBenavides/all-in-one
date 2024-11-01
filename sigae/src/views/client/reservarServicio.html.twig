@@ -81,39 +81,37 @@
                 </section>
 
                 <!-- Sección de Fecha y Hora -->
-               <!-- Sección de Fecha y Hora -->
-                    <section class="mb-6">
-                        <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha y Hora</h2>
-                        <div class="w-full max-w-[340px] mx-auto">
-                            <!-- Campo oculto para la fecha y hora combinadas -->
-                            <input type="hidden" 
-                                id="fecha_inicio" 
-                                name="fecha_inicio" 
-                                value="">
-                            
-                            <!-- Selector de fecha visible -->
-                            <input type="date" 
-                                id="fecha_selector" 
-                                class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold mb-4"
-                                required>
-                            
-                            <div id="loadingIndicator" class="hidden">
-                                <div class="flex items-center justify-center py-4">
-                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
-                                </div>
-                            </div>
-
-                            <div id="timeSlots" class="grid grid-cols-3 gap-2 mt-4"></div>
-
-                            <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm mt-4">
-                                <p>Los horarios están disponibles en intervalos de 30 minutos</p>
-                                <p>Horario de atención: 5:00 AM - 5:00 PM</p>
-                                <p id="serviceDurationMessage" class="text-red-600 hidden">Este servicio requiere seleccionar dos horarios consecutivos</p>
+                <section class="mb-6">
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha y Hora</h2>
+                    <div class="w-full max-w-[340px] mx-auto">
+                        <input type="hidden" 
+                            id="fecha_inicio" 
+                            name="fecha_inicio" 
+                            value="">
+                        
+                        <input type="date" 
+                            id="fecha_selector" 
+                            class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold mb-4"
+                            required>
+                        
+                        <div id="loadingIndicator" class="hidden">
+                            <div class="flex items-center justify-center py-4">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+                                <span class="ml-2">Cargando horarios disponibles...</span>
                             </div>
                         </div>
-                    </section>
-            <!-- Sección de Tipo de Vehículo -->
-            <section id="tipoVehiculoSection" class="mb-6">
+
+                        <div id="timeSlots" class="grid grid-cols-3 gap-2 mt-4"></div>
+
+                        <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm mt-4">
+                            <p>Horario de atención: 5:00 AM - 5:00 PM</p>
+                            <p id="serviceDurationMessage" class="text-red-600 hidden">Este servicio requiere seleccionar dos horarios consecutivos</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección de Tipo de Vehículo -->
+                <section id="tipoVehiculoSection" class="mb-6">
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
                     <div class="relative mb-2">
                         <div id="dropdownButtonAuto" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
@@ -156,9 +154,7 @@
                     <input id="matriculaYa" name="matriculaYa" type="text" placeholder="O registra ya con Matrícula" class="w-full h-[50px] px-[22px] py-3.5 text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
                 </div>
 
-                <!-- Contenedor de errores -->
-    <!--             <div id="error-container" class="hidden bg-[#ffcccc] text-[#ff0000] p-4 mb-6 rounded-lg"></div>-->
-     <!-- Sección de errores -->
+                <!-- Sección de errores -->
                 {% if response is defined and response.errors is defined and response.errors is not empty %}
                     <div id="error-container" class="text-red-600 mt-4">
                         <ul id="error-list">
@@ -168,6 +164,7 @@
                         </ul>
                     </div>
                 {% endif %}
+
                 <div class="w-full max-w-[340px] mx-auto">
                     <button type="submit" class="w-full h-[62px] px-7 py-2.5 duration-300 btn rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px]">Continuar</button>
                 </div>
@@ -176,6 +173,7 @@
     </main>
 
     {% include 'partials/footer.html.twig' %}
+
     <script>
         // Definir la URL antes de cargar los scripts
         const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
@@ -183,93 +181,100 @@
     <script src="{{ asset('js/serviceHandler.js') }}"></script>
     <script src="{{ asset('js/timeSlotHandler.js') }}"></script>
     <script>
-   document.addEventListener('DOMContentLoaded', async function() {
-    // Configurar URLs
-    ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Configurar URLs
+            ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
 
-    let servicios = {};
+            let servicios = {};
 
-    // Configuración inicial de la fecha
-    const fechaSelector = document.getElementById('fecha_selector');
-    const fechaInicio = document.getElementById('fecha_inicio');
-    const today = new Date();
-    const formattedToday = today.toISOString().split('T')[0];
-    
-    fechaSelector.min = formattedToday;
-    fechaSelector.value = formattedToday;
-    fechaSelector.disabled = true;
+            // Configuración inicial de la fecha
+            const fechaSelector = document.getElementById('fecha_selector');
+            const fechaInicio = document.getElementById('fecha_inicio');
+            const today = new Date();
+            const formattedToday = today.toISOString().split('T')[0];
+            
+            fechaSelector.min = formattedToday;
+            fechaSelector.value = formattedToday;
 
-    try {
-        // Cargar servicios
-        servicios = await ServiceHandler.cargarServicios();
+            try {
+                // Cargar servicios
+                servicios = await ServiceHandler.cargarServicios();
 
-        // Configurar dropdowns
-        ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
-        ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
-        ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+                // Configurar dropdowns
+                ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
+                ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
+                ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
 
-        // Evento para actualizar subtipos
-            document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
-                option.addEventListener('click', () => {
-                    ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
-                        document.getElementById('selectedOption2').textContent = servicioData.descripcion;
-                        document.getElementById('selectedServiceSubtype').value = subtype;
-                        TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
-                        document.getElementById('dropdownMenu2').classList.add('hidden');
-                        
-                        fechaSelector.disabled = false;
-                        
-                        if (fechaSelector.value) {
-                            TimeSlotHandler.updateTimeSlots(fechaSelector.value);
-                        }
+                // Evento para actualizar subtipos
+                document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
+                            document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                            document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                            document.getElementById('selectedServiceSubtype').value = subtype;
+                            TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
+                            document.getElementById('dropdownMenu2').classList.add('hidden');
+                            
+                            // Cargar horarios inmediatamente si hay una fecha seleccionada
+                            if (fechaSelector.value) {
+                                TimeSlotHandler.updateTimeSlots(fechaSelector.value);
+                            }
+                        });
                     });
                 });
-            });
 
-            // Event listener para cambio de fecha
-            fechaSelector.addEventListener('change', function() {
-                TimeSlotHandler.updateTimeSlots(this.value);
-                // Limpiar la selección de hora cuando cambia la fecha
-                fechaInicio.value = '';
-            });
+                // Cargar horarios iniciales si hay un servicio seleccionado
+                if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
+                    TimeSlotHandler.updateTimeSlots(fechaSelector.value);
+                }
 
-            // Event listener para el formulario
-            document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
+                // Event listener para cambio de fecha
+                fechaSelector.addEventListener('change', function() {
+                    if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
+                        TimeSlotHandler.updateTimeSlots(this.value);
+                    } else {
+                        TimeSlotHandler.showError('Por favor, seleccione un servicio antes de elegir el horario.');
+                    }
+                    // Limpiar la selección de hora cuando cambia la fecha
+                    fechaInicio.value = '';
+                });
 
-        } catch (error) {
-            console.error('Error en la inicialización:', error);
-            TimeSlotHandler.showError('Error al inicializar el formulario');
+                // Event listener para el formulario
+                document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
+
+            } catch (error) {
+                console.error('Error en la inicialización:', error);
+                TimeSlotHandler.showError('Error al inicializar el formulario');
+            }
+        });
+
+        // Función de validación del formulario
+        function validarFormulario(event) {
+            let isValid = true;
+            let errorMessage = '';
+
+            if (!document.getElementById('selectedServiceType').value) {
+                isValid = false;
+                errorMessage += 'Por favor, seleccione un tipo de servicio. ';
+            } else if (!document.getElementById('selectedServiceSubtype').value) {
+                isValid = false;
+                errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
+            } else if (!document.getElementById('fecha_inicio').value) {
+                isValid = false;
+                errorMessage += 'Por favor, seleccione fecha y hora. ';
+            } else if (!document.getElementById('tipoVehiculo').value && 
+                document.getElementById('vehiculosDropdown').value === "") {
+                isValid = false;
+                errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+                TimeSlotHandler.showError(errorMessage);
+            }
         }
-    });
 
-    // Función de validación del formulario
-    function validarFormulario(event) {
-        let isValid = true;
-        let errorMessage = '';
-
-        if (!document.getElementById('selectedServiceType').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un tipo de servicio. ';
-        }else if (!document.getElementById('selectedServiceSubtype').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
-        }else if (!document.getElementById('fecha_inicio').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione fecha y hora. ';
-        }else if (!document.getElementById('tipoVehiculo').value && 
-            document.getElementById('vehiculosDropdown').value === "") {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
-        }
-
-        if (!isValid) {
-            event.preventDefault();
-            TimeSlotHandler.showError(errorMessage);
-        }
-    }
-    </script>
-            <script>
-          document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             const vehiculosDropdown = document.getElementById('vehiculosDropdown');
             const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
             const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
@@ -293,7 +298,7 @@
                     const selectedOption = this.options[this.selectedIndex];
                     const tipo = selectedOption.getAttribute('data-tipo');
                     
-                    // Actualizar secciond e tipo de vehiculo
+                    // Actualizar seccion de tipo de vehiculo
                     selectedOptionAuto.textContent = tipo;
                     tipoVehiculo.value = tipo.toLowerCase();
                     
@@ -303,12 +308,11 @@
                     dropdownButtonAuto.style.backgroundColor = '#f3f4f6';
                     dropTipoVehiculo.classList.add('hidden');
                     
-                    // esconder matricula yaa
+                    // esconder matricula ya
                     matriculaYa.value = '';
                     matriculaYa.removeAttribute('name');
                     matriculaYaContainer.style.display = 'none';
                     
-                
                     this.setAttribute('name', 'matricula');
                 } else {
                     // resetear cuando no hay vehiculo
@@ -318,7 +322,6 @@
                     matriculaYaContainer.style.display = 'block';
                     selectedOptionAuto.textContent = 'Tipo de Vehículo';
                     tipoVehiculo.value = '';
-                    
                     
                     this.removeAttribute('name');
                     matriculaYa.setAttribute('name', 'matriculaYa');
@@ -339,6 +342,6 @@
                 }
             });
         });
-        </script>
+    </script>
 </body>
 </html>
