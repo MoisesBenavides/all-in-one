@@ -2,18 +2,21 @@
     "es": {
       "services": "Servicios",
       "aioParking": "AIO Parking",
+      "misReservas": "mis Reservas",
       "products": "Repuestos y accesorios",
       "faq": "FAQ"
     },
     "it": {
       "services": "Servizi",
       "aioParking": "AIO Parcheggio",
+      "misReservas": "Miei Prenotazioni",
       "products": "Ricambi e accessori",
       "faq": "FAQ"
     },
     "en": {
       "services": "Services",
       "aioParking": "AIO Parking",
+      "misReservas": "My Bookings",
       "products": "Parts and accessories",
       "faq": "FAQ"
     }
