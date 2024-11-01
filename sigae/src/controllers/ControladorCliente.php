@@ -448,7 +448,7 @@ class ControladorCliente extends AbstractController {
             $id_servicio = $_POST['idServicio'];
 
             try{
-                $this->controladorServicio->cancelarReserva('cliente', $id_servicio);
+                $this->controladorServicio->cancelarServicio('cliente', $id_servicio);
                 $response['success'] = true;
             }catch(Exception $e){
                 $response['errors'][] = "Error cancelando la reserva: ".$e->getMessage();
