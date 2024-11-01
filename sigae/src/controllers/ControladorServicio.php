@@ -10,10 +10,8 @@ use PDOException;
 use Exception;
 
 class ControladorServicio extends AbstractController{
-    private $servicio;
 
     public function cancelarServicio($rol, $id){
-        
         try{
             if (!Servicio::existeId($rol, $id)){
                 throw new Exception("No existe un servicio registrado con el ID: " . $id);
@@ -27,10 +25,8 @@ class ControladorServicio extends AbstractController{
                 throw new Exception("El servicio ya fue cancelado.");
             } elseif($estadoServicio == 'pendiente'){
                 Servicio::cancelar($rol, $id);
-            }
-            
+            }    
         } catch(Exception $e){
-            error_log("Error cancelando el servicio: ". $e->getMessage());
             throw $e;
         }
     }
