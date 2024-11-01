@@ -74,62 +74,71 @@
 
                 {# Mostrar reservas de parking #}
                 {% for reserva in misReservasParking %}
-                    <div class="reserva-card bg-gray-50 rounded-lg shadow-md p-6 parking">
+                    <div class="reserva-card bg-gray-50 rounded-lg shadow-md p-6 parking mb-4 relative">
                         <!-- Datos comunes -->
-                    <div class="flex flex-col md:flex-row justify-between mb-4">
-                        <div class="mb-4 md:mb-0">
-                            <p class="text-sm text-gray-500">ID Reserva</p>
-                            <p class="font-bold">{{ reserva.id }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Matrícula</p>
-                            <p class="font-bold">{{ reserva.matricula }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Estado</p>
-                            <p class="font-bold">{{ reserva.estado }}</p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row justify-between mb-4">
-                        <div class="mb-4 md:mb-0">
-                            <p class="text-sm text-gray-500">Fecha Inicio</p>
-                            <p>{{ reserva.fecha_inicio }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Fecha Final</p>
-                            <p>{{ reserva.fecha_final }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Precio</p>
-                            <p class="font-bold">${{ reserva.precio }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-4 border-t border-gray-200">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <p class="text-sm text-gray-500">Tipo de Plaza</p>
-                                <p>{{ reserva.tipo_plaza }}</p>
+                        <div class="flex flex-col md:flex-row justify-between mb-4">
+                            <div class="mb-4 md:mb-0">
+                                <p class="text-sm text-gray-500">ID Reserva</p>
+                                <p class="font-bold">{{ reserva.id }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Tipo de Reserva</p>
-                                <p>{{ reserva.largo_plazo ? 'Largo plazo' : 'Regular' }}</p>
+                                <p class="text-sm text-gray-500">Matrícula</p>
+                                <p class="font-bold">{{ reserva.matricula }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Plaza Asignada</p>
-                                <p>{{ reserva.plazas }}</p>
+                                <p class="text-sm text-gray-500">Estado</p>
+                                <p class="font-bold">{{ reserva.estado }}</p>
                             </div>
                         </div>
-                    </div>
 
-                   
+                        <div class="flex flex-col md:flex-row justify-between mb-4">
+                            <div class="mb-4 md:mb-0">
+                                <p class="text-sm text-gray-500">Fecha Inicio</p>
+                                <p>{{ reserva.fecha_inicio }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Fecha Final</p>
+                                <p>{{ reserva.fecha_final }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Precio</p>
+                                <p class="font-bold">${{ reserva.precio }}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <p class="text-sm text-gray-500">Tipo de Plaza</p>
+                                    <p>{{ reserva.tipo_plaza }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Tipo de Reserva</p>
+                                    <p>{{ reserva.largo_plazo ? 'Largo plazo' : 'Regular' }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Plaza Asignada</p>
+                                    <p>{{ reserva.plazas }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botón de cancelar -->
+                        <form action="{{ path('cancelService') }}" method="POST" class="absolute top-4 right-4">
+                            <input type="hidden" name="reservaId" value="{{ reserva.id }}">
+                            <input type="hidden" name="tipoReserva" value="parking">
+                            <button type="submit" class="p-2 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-100 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </form>
                     </div>
                 {% endfor %}
 
                 {# Mostrar reservas de taller #}
                 {% for reserva in misReservasTaller %}
-                    <div class="reserva-card bg-gray-50 rounded-lg shadow-md p-6 taller">
+                    <div class="reserva-card bg-gray-50 rounded-lg shadow-md p-6 taller mb-4 relative">
                         <!-- Datos comunes -->
                         <div class="flex flex-col md:flex-row justify-between mb-4">
                             <div class="mb-4 md:mb-0">
@@ -178,7 +187,16 @@
                             </div>
                         </div>
 
-                    
+                        <!-- Botón de cancelar -->
+                        <form action="{{ path('cancelService') }}" method="POST" class="absolute top-4 right-4">
+                            <input type="hidden" name="reservaId" value="{{ reserva.id }}">
+                            <input type="hidden" name="tipoReserva" value="taller">
+                            <button type="submit" class="p-2 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-100 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </form>
                     </div>
                 {% endfor %}
 
