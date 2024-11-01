@@ -443,6 +443,24 @@ class ControladorCliente extends AbstractController {
     function cancelService(){
         $response=['success' => false, 'errors' => []];
 
+        // Validacion de campos vacios
+        if (isset($_POST['id_servicio'], $_POST['tipo']) 
+            && !empty($_POST["id"]) && !empty($_POST["tipo"])) {
+        
+            $id = $_POST['id'];
+            $tipo = $_POST['tipo'];
+
+            try{
+                $this->controladorServicio->cancelarReserva('cliente', $id);
+            }catch(Exception $e){
+                error_log("Error al cancelar la reserva: " . $e->getMessage());
+                $response['errors'][] = $e->getMessage();
+            }
+        } else {
+            $response['errors'][] = "Error al cancelar la reserva.";
+        }
+
+        // Obtener datos para recargar la página de reservas
         try{
             $misReservasParking = Cliente::cargarMisReservasParking($_SESSION['id']);
             // Debug
@@ -463,21 +481,6 @@ class ControladorCliente extends AbstractController {
             'telefono' => isset($_SESSION['telefono']) ? $_SESSION['telefono'] : null,
             'fotoPerfil' => isset($_SESSION['fotoPerfil']) ? $_SESSION['fotoPerfil'] : null
         ];
-
-        // Validacion de campos vacios
-        if (isset($_POST['id_servicio'], $_POST['tipo']) 
-            && !empty($_POST["id"]) && !empty($_POST["tipo"])) {
-        
-            $id = $_POST['id'];
-            $tipo = $_POST['tipo'];
-
-            try{
-                $this->controladorServicio->cancelarReserva('cliente', $id);
-            }catch(Exception $e){
-                error_log("Error al cancelar la reserva: " . $e->getMessage());
-                $response['errors'][] = $e->getMessage();
-            }
-        }
 
         return $this->render('client/misReservas.html.twig', [
             'cliente' => $cliente,
