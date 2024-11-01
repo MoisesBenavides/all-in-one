@@ -177,6 +177,8 @@
     <script>
         // Definir la URL antes de cargar los scripts
         const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
+        console.log('URL configurada:', GET_BLOCKED_TIMES_URL); // Para verificar la URL
+
     </script>
     <script src="{{ asset('js/serviceHandler.js') }}"></script>
     <script src="{{ asset('js/timeSlotHandler.js') }}"></script>
