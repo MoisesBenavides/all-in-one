@@ -10,17 +10,22 @@ const TimeSlotHandler = {
         if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
     
         try {
+            console.log('Fetching time slots for date:', selectedDate);
+            console.log('Request URL:', `${GET_BLOCKED_TIMES_URL}?date=${selectedDate}`);
+            
             const response = await fetch(`${GET_BLOCKED_TIMES_URL}?date=${selectedDate}`);
             const data = await response.json();
             
+            console.log('Backend response:', data);
+
             if (!data.success) {
-                throw new Error(data.error || 'Error al cargar los horarios');
+                throw new Error(data.error || 'Error al obtener los horarios');
             }
             
             return data.horariosTaller || {};
         } catch (error) {
-            console.error('Error fetching time slots:', error);
-            return {};
+            console.error('Error completo:', error);
+            throw error;
         } finally {
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
@@ -37,7 +42,6 @@ const TimeSlotHandler = {
         }
         
         if (this.servicioSeleccionadoDuracion <= 30) {
-            // Para servicios de 30 minutos o menos
             document.querySelectorAll('#timeSlots button').forEach(btn => {
                 btn.classList.remove('bg-red-600', 'text-white');
             });
@@ -47,7 +51,6 @@ const TimeSlotHandler = {
             this.primerHorarioSeleccionado = null;
             
         } else {
-            // Para servicios que requieren más de 30 minutos
             if (!this.primerHorarioSeleccionado) {
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
                     btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
@@ -56,7 +59,6 @@ const TimeSlotHandler = {
                 this.primerHorarioSeleccionado = lapso;
                 button.classList.add('bg-red-600', 'text-white');
                 
-                // Resaltar slots adyacentes disponibles
                 const buttons = document.querySelectorAll('#timeSlots button');
                 const currentIndex = Array.from(buttons).indexOf(button);
                 
@@ -102,6 +104,8 @@ const TimeSlotHandler = {
     
         try {
             const timeSlots = await this.fetchTimeSlots(selectedDate);
+            console.log('Time slots received:', timeSlots);
+            
             timeSlotsContainer.innerHTML = '';
             
             if (serviceDurationMessage) {
@@ -113,6 +117,8 @@ const TimeSlotHandler = {
                 return a[1].inicio.localeCompare(b[1].inicio);
             });
             
+            console.log('Sorted slots:', sortedSlots);
+
             sortedSlots.forEach(([lapso, info]) => {
                 const button = document.createElement('button');
                 button.type = 'button';
@@ -135,8 +141,8 @@ const TimeSlotHandler = {
                 timeSlotsContainer.appendChild(button);
             });
         } catch (error) {
-            console.error('Error updating time slots:', error);
-            this.showError('Error al actualizar los horarios.');
+            console.error('Error actualizando time slots:', error);
+            this.showError('Error al cargar los horarios. Por favor, intente nuevamente.');
         }
     },
 
@@ -152,6 +158,7 @@ const TimeSlotHandler = {
             }
             setTimeout(() => errorContainer.classList.add('hidden'), 5000);
         }
+        console.error('Error shown:', message);
     }
 };
 
