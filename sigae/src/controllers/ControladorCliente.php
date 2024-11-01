@@ -311,7 +311,7 @@ class ControladorCliente extends AbstractController {
         }
 
         //Debug
-        error_log(print_r(array_slice($productos, 0, 100)), true);
+        error_log(print_r(array_slice($productos, 800, 100)), true);
     
         return $this->render('client/catalogo.html.twig', [
             'filtro' => $filtro,
