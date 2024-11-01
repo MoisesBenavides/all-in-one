@@ -104,7 +104,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
             <div class="flex flex-col items-center text-center">
                 <h2 traducir="yaReservaste" class="text-[#161212] text-3xl md:text-4xl lg:text-5xl font-bold mb-4">¿Ya reservaste?</h2>
                 <p traducir="apartadoMisReservas" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium mb-6">Si ya reservaste accede a nuestro apartado de "Mis reservas"</p>
-                <a href="#" traducir="botonMisReservas" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[10px]">Mis reservas</a>
+                <a href="{{ path('myBookedServices') }}" traducir="botonMisReservas" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[10px]">Mis reservas</a>
             </div>
         </section>
 
