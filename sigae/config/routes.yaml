@@ -217,6 +217,6 @@ getClientVehicles:
 
 # Retornar lapsos ocupados de taller en un dia 
 getServicesSchedule:
-  path: /api/getClientVehicles
+  path: /api/getServicesSchedule
   controller: Sigae\Controllers\ControladorTaller::getServicesSchedule
   methods: GET
