@@ -310,8 +310,8 @@ class ControladorCliente extends AbstractController {
             $response['errors'][] = $e->getMessage();
         }
 
-        //Debug
-        error_log(print_r(array_slice($productos, 800, 100)), true);
+        //Debug: mostrar primero 100 productos
+        error_log(print_r(array_slice($productos, 0, 100)), true);
     
         return $this->render('client/catalogo.html.twig', [
             'filtro' => $filtro,
