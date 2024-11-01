@@ -448,6 +448,7 @@ class ControladorCliente extends AbstractController {
             $id_servicio = $_POST['idServicio'];
 
             try{
+                $this->controladorServicio = new ControladorServicio();
                 $this->controladorServicio->cancelarServicio('cliente', $id_servicio);
                 $response['success'] = true;
             }catch(Exception $e){
