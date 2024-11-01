@@ -62,22 +62,23 @@
                     <img 
                         class="product-image" 
                         src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" 
-                        alt="{% if producto.tipo == 'neumatico' %}{{ producto.modelo }}{% else %}{{ producto.nombre }}{% endif %}"
+                        alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
                         onerror="this.src='{{ asset('img/productos/default.webp') }}'"
                     />
                     
                     <div class="product-details">
-                        {# Marca - común para ambos tipos #}
+                        {# Marca - común para todos #}
                         <p class="text-lg font-semibold text-gray-800">{{ producto.marca }}</p>
                         
-                        {# Campos específicos según el tipo #}
-                        {% if producto.tipo == 'neumatico' %}
-                            <p class="text-md text-gray-600">{{ producto.modelo }}</p>
-                        {% else %}
+                        {# Nombre o Modelo #}
+                        {% if producto.nombre is defined %}
                             <p class="text-md text-gray-600">{{ producto.nombre }}</p>
                         {% endif %}
+                        {% if producto.modelo is defined %}
+                            <p class="text-md text-gray-600">{{ producto.modelo }}</p>
+                        {% endif %}
                         
-                        {# Precio - común para ambos tipos #}
+                        {# Precio #}
                         <p class="mt-2 text-xl font-bold text-gray-900">${{ producto.precio }}</p>
                     </div>
                 </div>
