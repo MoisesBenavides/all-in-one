@@ -8,7 +8,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 class SessionTimeoutListener {
     private RouterInterface $router;
-    private const INACTIVIDAD_MAX_SESION = 600; // límite de 10 minutos de inactividad
+    private const INACTIVIDAD_MAX_SESION = 1200; // límite de 20 minutos de inactividad
     
     // Rutas que no deben verificar una sesión ya activa
     private array $rutasExcluidas = [
