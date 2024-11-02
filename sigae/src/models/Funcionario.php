@@ -121,6 +121,8 @@ class Funcionario{
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         } catch(PDOException $e){
+            //Debug
+            error_log("Error al cargar funcionarios: ".$e);
             throw $e;
         } finally {
             $conn = null; // Cierra la conexión
