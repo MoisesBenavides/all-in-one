@@ -136,6 +136,8 @@ class ControladorFuncionario extends AbstractController {
 
         $rol=$_SESSION['rol'];
 
+        $jefesDiagnostico = [];
+
         switch($rol){
             case 'gerente':
                 try{
@@ -160,6 +162,8 @@ class ControladorFuncionario extends AbstractController {
         $response=['success' => false, 'errors' => []];
 
         $rol=$_SESSION['rol'];
+
+        $jefesTaller = [];
 
         switch($rol){
             case 'gerente':
@@ -186,6 +190,8 @@ class ControladorFuncionario extends AbstractController {
 
         $rol=$_SESSION['rol'];
 
+        $cajeros = [];
+
         switch($rol){
             case 'gerente':
                 try{
@@ -209,6 +215,8 @@ class ControladorFuncionario extends AbstractController {
         $response=['success' => false, 'errors' => []];
 
         $rol=$_SESSION['rol'];
+
+        $valets = [];
         
         switch($rol){
             case 'gerente':
@@ -234,6 +242,8 @@ class ControladorFuncionario extends AbstractController {
         $response=['success' => false, 'errors' => []];
 
         $rol=$_SESSION['rol'];
+
+        $ejecutivos = [];
 
         switch($rol){
             case 'gerente':
