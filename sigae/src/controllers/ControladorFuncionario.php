@@ -140,6 +140,9 @@ class ControladorFuncionario extends AbstractController {
             case 'gerente':
                 try{
                     $jefesDiagnostico = Funcionario::getFuncionariosPorRol($rol, 'jefe_diagnostico');
+                    
+                    // Debug: Resultado funcionarios arreglo
+                    error_log(print_r($jefesDiagnostico, true));
                 } catch(Exception $e){
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
@@ -162,6 +165,9 @@ class ControladorFuncionario extends AbstractController {
             case 'gerente':
                 try{
                     $jefesTaller = Funcionario::getFuncionariosPorRol($rol, 'jefe_taller');
+                    
+                    // Debug: Resultado funcionarios arreglo
+                    error_log(print_r($jefesTaller, true));
                 } catch(Exception $e){
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
@@ -184,6 +190,9 @@ class ControladorFuncionario extends AbstractController {
             case 'gerente':
                 try{
                     $cajeros = Funcionario::getFuncionariosPorRol($rol, 'cajero');
+                    
+                    // Debug: Resultado funcionarios arreglo
+                    error_log(print_r($cajeros, true));
                 } catch(Exception $e){
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
@@ -205,6 +214,9 @@ class ControladorFuncionario extends AbstractController {
             case 'gerente':
                 try{
                     $valets = Funcionario::getFuncionariosPorRol($rol, 'valet');
+                    
+                    // Debug: Resultado funcionarios arreglo
+                    error_log(print_r($valets, true));
                 } catch(Exception $e){
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
@@ -227,6 +239,9 @@ class ControladorFuncionario extends AbstractController {
             case 'gerente':
                 try{
                     $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                    
+                    // Debug: Resultado funcionarios arreglo
+                    error_log(print_r($ejecutivos, true));
                 } catch(Exception $e){
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
@@ -238,6 +253,9 @@ class ControladorFuncionario extends AbstractController {
             case 'jefe_taller':
                 try{
                     $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+
+                    // Debug: Resultado funcionarios arreglo
+                    error_log(print_r($ejecutivos, true));
                 } catch(Exception $e){
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
