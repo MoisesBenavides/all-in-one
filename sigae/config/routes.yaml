@@ -221,6 +221,16 @@ showServiceExecutives:
   controller: Sigae\Controllers\ControladorFuncionario::showServiceExecutives
   methods: GET
 
+showServiceAgenda:
+  path: /serviceAgenda
+  controller: Sigae\Controllers\ControladorFuncionario::showServiceAgenda
+  methods: GET
+
+showServiceDiagnosisRecords:
+  path: /serviceDiagnosisRecords
+  controller: Sigae\Controllers\ControladorFuncionario::showServiceDiagnosisRecords
+  methods: GET
+
 # Rutas de API
 # Retornar datos de sesion de cliente 
 getClientProfilePhoto:
