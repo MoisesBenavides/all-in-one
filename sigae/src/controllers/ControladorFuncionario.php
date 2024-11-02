@@ -115,7 +115,7 @@ class ControladorFuncionario extends AbstractController {
     function employeeManagement(): Response{
         $rol=$_SESSION['rol'];
         if ($rol=='gerente'){
-            return $this->render('employee/manager/gestionFuncionariosPorRol.html.twig');
+            return $this->render('employee/manager/rolesFuncionarios.html.twig');
         } else{
             return $this->render('errors/errorAcceso.html.twig');
         }
