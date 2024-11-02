@@ -189,8 +189,8 @@ inventory:
   methods: GET
 
 employeeManagement:
-  path: /userManagement
-  controller: Sigae\Controllers\ControladorFuncionario::userManagement
+  path: /employeeManagement
+  controller: Sigae\Controllers\ControladorFuncionario::employeeManagement
   methods: GET
 
 # Rutas de API
