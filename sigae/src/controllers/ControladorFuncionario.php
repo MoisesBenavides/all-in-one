@@ -16,22 +16,6 @@ class ControladorFuncionario extends AbstractController {
         return $this->render('employee/loginEmpleado.html.twig');
     }
 
-    function showDashboard(): Response{
-        $rol=$_SESSION['rol'];
-        switch($rol){
-            case 'gerente':
-                return $this->render('employee/manager/homeGerente.html.twig');
-            case 'ejecutivo':
-                return $this->render('employee/serviceExecutive/ejecutivoServiciosHome.html.twig');
-            case 'cajero':
-                return $this->render('employee/cashier/cajeroHome.html.twig');
-            case 'jefe_diagnostico':
-                return $this->render('employee/diagnoseChief/jefeDiagnosticoHome.html.twig');
-            case 'jefe_taller':
-                return $this->render('employee/workshopChief/jefeTallerHome.html.twig');
-        }
-    }
-
     function doLoginAioEmployee(): Response|RedirectResponse{
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
@@ -95,6 +79,22 @@ class ControladorFuncionario extends AbstractController {
         ]);
     }
 
+    function showDashboard(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/homeGerente.html.twig');
+            case 'ejecutivo':
+                return $this->render('employee/serviceExecutive/ejecutivoServiciosHome.html.twig');
+            case 'cajero':
+                return $this->render('employee/cashier/cajeroHome.html.twig');
+            case 'jefe_diagnostico':
+                return $this->render('employee/diagnoseChief/jefeDiagnosticoHome.html.twig');
+            case 'jefe_taller':
+                return $this->render('employee/workshopChief/jefeTallerHome.html.twig');
+        }
+    }
+
     function showReports(): Response{
         $rol=$_SESSION['rol'];
         switch($rol){
@@ -112,10 +112,10 @@ class ControladorFuncionario extends AbstractController {
         }
     }
 
-    function userManagement(): Response{
+    function employeeManagement(): Response{
         $rol=$_SESSION['rol'];
         if ($rol=='gerente'){
-            return $this->render('employee/manager/listaUsuarios.html.twig');
+            return $this->render('employee/manager/gestionFuncionariosPorRol.html.twig');
         } else{
             return $this->render('errors/errorAcceso.html.twig');
         }

@@ -188,7 +188,7 @@ inventory:
   controller: Sigae\Controllers\ControladorFuncionario::showInventory
   methods: GET
 
-userManagement:
+employeeManagement:
   path: /userManagement
   controller: Sigae\Controllers\ControladorFuncionario::userManagement
   methods: GET
