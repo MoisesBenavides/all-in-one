@@ -39,6 +39,7 @@ GRANT GRANT OPTION ON *.* TO 'gerente';
 GRANT DROP USER ON *.* TO 'gerente';
 GRANT ALTER USER ON *.* TO 'gerente';
 GRANT SELECT ON mysql.role_edges TO 'gerente';
+GRANT SELECT ON mysql.user TO 'gerente';
 
 -- ejecutivo
 GRANT SELECT, UPDATE ON aio_db.vehiculo TO 'ejecutivo';
@@ -72,6 +73,7 @@ GRANT GRANT OPTION ON *.* TO 'jefe_taller';
 GRANT DROP USER ON *.* TO 'jefe_taller';
 GRANT ALTER USER ON *.* TO 'jefe_taller';
 GRANT SELECT ON mysql.role_edges TO 'jefe_taller';
+GRANT SELECT ON mysql.user TO 'jefe_taller';
 
 -- valet parking
 GRANT SELECT, INSERT, UPDATE ON aio_db.vehiculo TO 'valet_parking';
