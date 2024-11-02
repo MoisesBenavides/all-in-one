@@ -83,15 +83,15 @@ class ControladorFuncionario extends AbstractController {
         $rol=$_SESSION['rol'];
         switch($rol){
             case 'gerente':
-                return $this->render('employee/manager/homeGerente.html.twig');
+                return $this->render('employee/manager/dashboardGerente.html.twig');
             case 'ejecutivo':
-                return $this->render('employee/serviceExecutive/ejecutivoServiciosHome.html.twig');
+                return $this->render('employee/serviceExecutive/dashboardEjecutivoServicios.html.twig');
             case 'cajero':
-                return $this->render('employee/cashier/cajeroHome.html.twig');
+                return $this->render('employee/cashier/dashboardCajero.html.twig');
             case 'jefe_diagnostico':
-                return $this->render('employee/diagnoseChief/jefeDiagnosticoHome.html.twig');
+                return $this->render('employee/diagnoseChief/dashboardJefeDiagnostico.html.twig');
             case 'jefe_taller':
-                return $this->render('employee/workshopChief/jefeTallerHome.html.twig');
+                return $this->render('employee/workshopChief/dashboardJefeTaller.html.twig');
         }
     }
 
@@ -99,25 +99,47 @@ class ControladorFuncionario extends AbstractController {
         $rol=$_SESSION['rol'];
         switch($rol){
             case 'gerente':
-                return $this->render('employee/manager/consultas.html.twig');
+                return $this->render('employee/manager/reportes.html.twig');
+            case 'jefe_diagnostico':
+                return $this->render('employee/diagnoseChief/reportesJefeDiagnostico.html.twig');
+            case 'jefe_taller':
+                return $this->render('employee/workshopChief/reportesJefeTaller.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
         }
     }
 
     function stockManagement(): Response{
         $rol=$_SESSION['rol'];
-        if ($rol=='gerente'){
-            return $this->render('employee/manager/transaccionesStock.html.twig');
-        } else{
-            return $this->render('errors/errorAcceso.html.twig');
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/transaccionesStock.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
         }
     }
 
-    function employeeManagement(): Response{
+    function employeeManagement(): Response|RedirectResponse{
         $rol=$_SESSION['rol'];
-        if ($rol=='gerente'){
-            return $this->render('employee/manager/rolesFuncionarios.html.twig');
-        } else{
-            return $this->render('errors/errorAcceso.html.twig');
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/rolesFuncionarios.html.twig');
+            case 'jefe_taller':
+                return $this->redirectToRoute('showServiceExecutives');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showServiceExecutives(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/listaFuncionarios.html.twig');
+            case 'jefe_taller':
+                return $this->render('employee/workshopChief/listaEjecutivos.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
         }
     }
 

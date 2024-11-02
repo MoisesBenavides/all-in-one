@@ -158,6 +158,7 @@ filterProducts:
   methods: GET
 
 # Rutas de funcionarios
+# Gestion de Cuenta
 loginAioEmployee:
   path: /loginAioEmployee
   controller: Sigae\Controllers\ControladorFuncionario::loginAioEmployee
@@ -168,6 +169,7 @@ doLoginAioEmployee:
   controller: Sigae\Controllers\ControladorFuncionario::doLoginAioEmployee
   methods: POST
 
+# Home y apartados principales
 showDashboard:
   path: /dashboard
   controller: Sigae\Controllers\ControladorFuncionario::showDashboard
@@ -191,6 +193,32 @@ inventory:
 employeeManagement:
   path: /employeeManagement
   controller: Sigae\Controllers\ControladorFuncionario::employeeManagement
+  methods: GET
+
+# Gestion de funcionarios
+showDiagnoseChiefs:
+  path: /diagnoseChiefs
+  controller: Sigae\Controllers\ControladorFuncionario::showDiagnoseChiefs
+  methods: GET
+
+showWorkshopChiefs:
+  path: /workshopChiefs
+  controller: Sigae\Controllers\ControladorFuncionario::showWorkshopChiefs
+  methods: GET
+
+showCashiers:
+  path: /cashiers
+  controller: Sigae\Controllers\ControladorFuncionario::showCashiers
+  methods: GET
+
+showValets:
+  path: /valets
+  controller: Sigae\Controllers\ControladorFuncionario::showValets
+  methods: GET
+
+showServiceExecutives:
+  path: /serviceExecutives
+  controller: Sigae\Controllers\ControladorFuncionario::showServiceExecutives
   methods: GET
 
 # Rutas de API
