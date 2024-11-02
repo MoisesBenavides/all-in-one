@@ -105,4 +105,25 @@ class Funcionario{
             $conn = null; // Cierra la conexión
         }
     }
+
+    public static function getFuncionariosPorRol($rol_loggeado, $rol_a_buscar){
+        try{
+            $conn = conectarDB($rol_loggeado);
+            $stmt = $conn->prepare('SELECT to_user AS usuario, to_host AS host
+                                    FROM mysql.role_edges
+                                    WHERE from_user = :rolBuscado
+                                    ORDER BY to_user;');
+
+            $stmt->bindParam(':rolBuscado', $rol_a_buscar);
+
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch(PDOException $e){
+            throw $e;
+        } finally {
+            $conn = null; // Cierra la conexión
+        }
+    }
 }

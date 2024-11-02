@@ -131,7 +131,141 @@ class ControladorFuncionario extends AbstractController {
         }
     }
 
+    function showDiagnoseChiefs(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+
+        switch($rol){
+            case 'gerente':
+                try{
+                    $jefesDiagnostico = Funcionario::getFuncionariosPorRol($rol, 'jefe_diagnostico');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaFuncionarios.html.twig', [
+                    'jefesDiagnostico' => $jefesDiagnostico,
+                    'response' => $response
+                ]);
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showWorkshopChiefs(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+
+        switch($rol){
+            case 'gerente':
+                try{
+                    $jefesTaller = Funcionario::getFuncionariosPorRol($rol, 'jefe_taller');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaFuncionarios.html.twig', [
+                    'jefesTaller' => $jefesTaller,
+                    'response' => $response
+                ]);
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showCashiers(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+
+        switch($rol){
+            case 'gerente':
+                try{
+                    $cajeros = Funcionario::getFuncionariosPorRol($rol, 'cajero');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaFuncionarios.html.twig', [
+                    'cajeros' => $cajeros,
+                    'response' => $response
+                ]);
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+    function showValets(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        
+        switch($rol){
+            case 'gerente':
+                try{
+                    $valets = Funcionario::getFuncionariosPorRol($rol, 'valet');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaFuncionarios.html.twig', [
+                    'valets' => $valets,
+                    'response' => $response
+                ]);
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
     function showServiceExecutives(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+
+        switch($rol){
+            case 'gerente':
+                try{
+                    $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaFuncionarios.html.twig', [
+                    'ejecutivos' => $ejecutivos,
+                    'response' => $response
+                ]);
+            case 'jefe_taller':
+                try{
+                    $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+                return $this->render('employee/workshopChief/listaEjecutivos.html.twig', [
+                    'ejecutivos' => $ejecutivos,
+                    'response' => $response
+                ]);
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showServiceAgenda(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/listaFuncionarios.html.twig');
+            case 'jefe_taller':
+                return $this->render('employee/workshopChief/listaEjecutivos.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showServiceDiagnosisRecords(): Response{
         $rol=$_SESSION['rol'];
         switch($rol){
             case 'gerente':
