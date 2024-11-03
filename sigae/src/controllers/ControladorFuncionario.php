@@ -37,13 +37,12 @@ class ControladorFuncionario extends AbstractController {
                 error_log("Error con la contraseña de: ".$usuario." ".$contrasena);
                 $response['errors'][] = "Por favor, ingrese una contraseña válida.";
             } else {
-                $this->funcionario=new Funcionario($usuario, null);
+                $this->funcionario=new Funcionario($usuario, null, null);
                 try {
                     if (!$this->funcionario->verificarCredenciales($contrasena)) {
-                        error_log("Error con las credenciales: ".$usuario." ".$contrasena);
-                        throw new PDOException("Credenciales incorrectas.");
+                        throw new Exception("Usuario o contraseña incorrectos.");
                     }elseif(!$this->funcionario->iniciarFuncionario($usuario)){
-                        throw new PDOException("No se pudo iniciar el usuario.");
+                        throw new Exception("No se pudo iniciar el usuario.");
                     } else{
                         // Configuración y manejo de la sesión segura
                         session_set_cookie_params([
@@ -64,7 +63,7 @@ class ControladorFuncionario extends AbstractController {
                         // Redirigir al dashboard
                         return $this->redirectToRoute('showDashboard');
                     }               
-                } catch (PDOException $e) {
+                } catch (Exception $e) {
                     // Añade el mensaje de error al array de errores
                     error_log($e->getMessage(), true);
                     $response['errors'][] = $e->getMessage();
@@ -315,6 +314,10 @@ class ControladorFuncionario extends AbstractController {
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
+    }
+
+    function addEmployee(): Response{
+        $response=['success' => false, 'errors' => []];
     }
 
     private function validarUsuario($str, $max) {

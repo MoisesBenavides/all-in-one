@@ -10,8 +10,9 @@ class Funcionario{
     private ?PDO $conn =null;
     private $usuario;
     private $rol;
+    private $host;
 
-    public function __construct($usuario, $rol){
+    public function __construct($usuario, $rol, $host){
         $this->usuario = $usuario;
         $this->rol = $rol;
     }
@@ -48,6 +49,16 @@ class Funcionario{
         return $this;
     }
 
+    public function getHost(){
+        return $this->host;
+    }
+
+    public function setHost($host){
+        $this->host = $host;
+
+        return $this;
+    }
+
     public function verificarCredenciales($contrasena) {
         try {
             // Conectar sin especificar base de datos
@@ -59,18 +70,10 @@ class Funcionario{
 
             return true;
     
-        } catch (PDOException $e) {
-            $codigoError = $e->getCode();
-    
-            // Manejamos los códigos específicos pero lanzamos un error PDOException
-            if ($codigoError === '1045') {
-                throw new PDOException("Error: Usuario encontrado, pero la contraseña es incorrecta.", 1045, $e);
-            } elseif ($codigoError === '1044') {
-                throw new PDOException("Error: Usuario encontrado, pero no tiene permisos para acceder a esta base de datos.", 1044, $e);
-            } else {
-                // Re-lanzar la excepción original para otros errores
-                throw $e;
-            }
+        } catch (Exception $e) {
+            // Debug error
+            error_log($e->getMessage());
+            return false;
         } finally {
             // Desconectar de la base de datos
             $pdo = null;
