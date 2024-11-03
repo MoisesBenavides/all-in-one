@@ -120,6 +120,16 @@ class ControladorFuncionario extends AbstractController {
         }
     }
 
+    function prepareOrder(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'cajero':
+                return $this->render('employee/cashier/preparacionOrden.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
     function inventory(): Response{
         $response=['success' => false, 'errors' => [], 'debug' => []];
 

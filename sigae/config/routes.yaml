@@ -190,6 +190,11 @@ inventory:
   controller: Sigae\Controllers\ControladorFuncionario::inventory
   methods: GET
 
+prepareOrder:
+  path: /prepareOrder
+  controller: Sigae\Controllers\ControladorFuncionario::prepareOrder
+  methods: GET
+
 employeeManagement:
   path: /employeeManagement
   controller: Sigae\Controllers\ControladorFuncionario::employeeManagement
