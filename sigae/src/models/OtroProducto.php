@@ -80,7 +80,7 @@ class OtroProducto extends Producto{
     public function getProductosDetallados(){
         try{
             $stmt = $this->conn->prepare('SELECT p.id, p.upc, p.precio, 
-                                                p.marca, p.fecha_creacion, p.stock
+                                                p.marca, p.fecha_creacion, p.stock, 
                                                 op.nombre 
                                         FROM producto p 
                                         JOIN otro_producto op ON p.id=op.id_producto

@@ -106,7 +106,7 @@ class Neumatico extends Producto{
     public function getProductosDetallados(){
         try{
             $stmt = $this->conn->prepare('SELECT p.id, p.upc, p.precio, 
-                                                p.marca, p.fecha_creacion, p.stock 
+                                                p.marca, p.fecha_creacion, p.stock, 
                                                 n.tamano, n.modelo, n.tipo
                                         FROM producto p 
                                         JOIN neumatico n ON p.id=n.id_producto
