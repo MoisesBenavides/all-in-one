@@ -1,3 +1,4 @@
+console.log("debug");
 let traduccionesHeader = {};
 let traduccionesVista = {};
 let rutaArchivoHeader = '';
