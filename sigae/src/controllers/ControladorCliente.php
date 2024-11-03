@@ -306,6 +306,11 @@ class ControladorCliente extends AbstractController {
                     $productos = array_merge($neumaticos, $otrosProductos);
                     break;
             }
+
+            if (isset($productos) && !empty($productos)){
+                shuffle($productos);
+            }
+
         } catch (Exception $e) {
             error_log("Error al obtener productos: " . $e->getMessage());
             $response['errors'][] = $e->getMessage();
