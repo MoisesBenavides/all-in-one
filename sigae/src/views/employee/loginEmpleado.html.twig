@@ -20,6 +20,7 @@
              font-family: 'Teachers', sans-serif;
          }
      </style>
+     <script src="{{asset('js/traduccion.js')}}"></script>
 </head>
 <body>
     <body class="bg-gray-100">
@@ -46,16 +47,14 @@
           </div>
         </div>
 </body>
-<script src="{{asset('js/traduccion.js')}}"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
-    const archivoTraduccionHome = "{{ asset('translate/home.json') }}";
+       const archivoTraduccion = "{{ asset('translate/landingPage.json') }}";
+
+        // Inicializar la traducción
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarTraduccion(archivoTraduccion , 'es');
+        });
+
     
-    console.log('URL Header:', archivoTraduccionHeader);
-    console.log('URL Home:', archivoTraduccionHome);
-    
-    inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
-});
 </script>
 </html>
