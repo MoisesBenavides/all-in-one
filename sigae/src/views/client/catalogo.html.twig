@@ -53,13 +53,14 @@
         {# Contenedor de Productos #}
         <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for producto in productos %}
-                <div class="product flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg {% if loop.index > 50 %}hidden{% endif %}">
+              <div class="product flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
                     <div class="w-full h-48 bg-gray-100">
                         <img 
                             class="w-full h-full object-contain" 
                             src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" 
                             alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
-                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center\'><span class=\'text-gray-400\'>Imagen no disponible</span></div>'"
+                            onload="this.style.display='block'"
+                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'placeholder-image\'><p class=\'placeholder-text\'>Imagen no disponible</p></div>'"
                         />
                     </div>
                     
