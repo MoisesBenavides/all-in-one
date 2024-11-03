@@ -137,7 +137,7 @@ class ControladorFuncionario extends AbstractController {
                     // Obtiene otros
                     $otrosProductos = $this->controladorOtroProducto->getOtrosProductos('gerente');
                     // Combina productos de ambas categorías
-                    $productos = array_merge($neumaticos, $otrosProductos);
+                    $productos = array_merge($otrosProductos, $neumaticos);
                 } catch(Exception $e){
                     $response['errors'][] = $e->getMessage();
                 }
@@ -154,7 +154,7 @@ class ControladorFuncionario extends AbstractController {
                     // Obtiene otros
                     $otrosProductos = $this->controladorOtroProducto->getOtrosProductos('cajero');
                     // Combina productos de ambas categorías
-                    $productos = array_merge($neumaticos, $otrosProductos);
+                    $productos = array_merge($otrosProductos, $neumaticos);
                 } catch(Exception $e){
                     $response['errors'][] = $e->getMessage();
                 }
