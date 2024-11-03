@@ -53,53 +53,24 @@
 
                 <!-- Lista de usuarios -->
                 <ul class="w-full max-w-[430px] space-y-4">
-                    <!-- Usuario 1 -->
-                    <li>
-                        <div class="flex justify-between items-center px-6 py-2.5">
-                            <p class="text-lg font-semibold text-black">Mmendez@AllInOneTaller.uy</p>
-                            <div class="flex gap-7">
-                                <button class="transform hover:scale-110 transition-transform duration-200">
-                                    <img src="{{ asset('svg/pencil.svg') }}" alt="Editar" class="w-6 h-6"/>
-                                </button>
-                                <button class="transform hover:scale-110 transition-transform duration-200">
-                                    <img src="{{ asset('svg/trashCan.svg') }}" alt="Eliminar" class="w-6 h-6"/>
-                                </button>
+                    {% for funcionario in funcionarios %}
+                        {% if funcionario is defined and funcionario %}
+                        <li>
+                            <div class="flex justify-between items-center px-6 py-2.5">
+                                <p class="text-lg font-semibold text-black">{{ funcionario.usuario }}@{{ funcionario.host }}</p>
+                                <div class="flex gap-7">
+                                    <button class="transform hover:scale-110 transition-transform duration-200">
+                                        <img src="{{ asset('svg/pencil.svg') }}" alt="Editar" class="w-6 h-6"/>
+                                    </button>
+                                    <button class="transform hover:scale-110 transition-transform duration-200">
+                                        <img src="{{ asset('svg/trashCan.svg') }}" alt="Eliminar" class="w-6 h-6"/>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="w-full h-[1px] bg-neutral-200 my-2"></div>
-                    </li>
-
-                    <!-- Usuario 2 -->
-                    <li>
-                        <div class="flex justify-between items-center px-6 py-2.5">
-                            <p class="text-lg font-semibold text-black">Cbarrios@AllInOneTaller.uy</p>
-                            <div class="flex gap-7">
-                                <button class="transform hover:scale-110 transition-transform duration-200">
-                                    <img src="{{ asset('svg/pencil.svg') }}" alt="Editar" class="w-6 h-6"/>
-                                </button>
-                                <button class="transform hover:scale-110 transition-transform duration-200">
-                                    <img src="{{ asset('svg/trashCan.svg') }}" alt="Eliminar" class="w-6 h-6"/>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="w-full h-[1px] bg-neutral-200 my-2"></div>
-                    </li>
-
-                    <!-- Usuario 3 -->
-                    <li>
-                        <div class="flex justify-between items-center px-6 py-2.5">
-                            <p class="text-lg font-semibold text-black">Lcharlo@AllInOneTaller.uy</p>
-                            <div class="flex gap-7">
-                                <button class="transform hover:scale-110 transition-transform duration-200">
-                                    <img src="{{ asset('svg/pencil.svg') }}" alt="Editar" class="w-6 h-6"/>
-                                </button>
-                                <button class="transform hover:scale-110 transition-transform duration-200">
-                                    <img src="{{ asset('svg/trashCan.svg') }}" alt="Eliminar" class="w-6 h-6"/>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="w-full h-[1px] bg-neutral-200 my-2"></div>
-                    </li>
+                            <div class="w-full h-[1px] bg-neutral-200 my-2"></div>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
 
                 <!-- Botón Volver -->
