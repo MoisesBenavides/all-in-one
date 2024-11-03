@@ -387,10 +387,10 @@ class ControladorFuncionario extends AbstractController {
 
     private function validarHost($host, $max) {
         /* Verifica si el $host cumple con ciertos criterios como:
-            - Contiene un dominio válido o es igual a "localhost"
+            - Contiene un dominio válido, es igual a "localhost", o es una direccion ip valida
             - Un máximo específicado de $max caracteres
         */
-        return (preg_match("/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $host) || $host == "localhost" && strlen($host) <= $max);
+        return preg_match("/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $host) || $host == "localhost" || filter_var($host, FILTER_VALIDATE_IP) && strlen($host) <= $max;
     }
 
     private function validarContrasena($str, $min, $max) {
