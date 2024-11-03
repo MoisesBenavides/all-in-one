@@ -71,7 +71,7 @@ class OtroProducto extends Producto{
             return $otrosProductos;
 
         } catch (Exception $e){
-            error_log("Error al cargar neumaticos: ".$e->getMessage());
+            error_log("Error al cargar otros productos: ".$e->getMessage());
             throw $e;
             return;
         }
@@ -83,14 +83,15 @@ class OtroProducto extends Producto{
                                                 p.marca, p.fecha_creacion, p.stock
                                                 op.nombre 
                                         FROM producto p 
-                                        JOIN otro_producto op ON p.id=op.id_producto');
+                                        JOIN otro_producto op ON p.id=op.id_producto
+                                        ORDER BY p.id DESC');
             $stmt->execute();
             $otrosProductos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $otrosProductos;
 
         } catch (Exception $e){
-            error_log("Error al cargar neumaticos: ".$e->getMessage());
+            error_log("Error al cargar otros productos: ".$e->getMessage());
             throw $e;
             return;
         }
