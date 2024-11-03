@@ -24,56 +24,61 @@ class ControladorFuncionario extends AbstractController {
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
         // Validacion de campos vacios
-        if (isset($_POST["usuario"], $_POST['host'], $_POST["contrasena"]) && 
-            !empty($_POST["usuario"]) && !empty($_POST["host"]) && !empty($_POST["contrasena"])) {
+        if (isset($_POST["usuario"], $_POST["contrasena"]) && 
+            !empty($_POST["usuario"]) && !empty($_POST["contrasena"])) {
 
-            $usuario = $_POST["usuario"];
-            $host = $_POST["host"];
-            $contrasena = $_POST["contrasena"];
-            
-            //Debug
-            error_log("Datos recibidos: ".$usuario." ".$contrasena);
+            $usuarioHost = $_POST["usuario"];
 
-            // Validar credenciales
-            if (!$this->validarUsuario($usuario, 50)) {
-                $response['errors'][] = "Por favor, ingrese un usuario válido.";
-            } elseif (!$this->validarHost($host, 50)) {
-                $response['errors'][] = "Por favor, ingrese un nombre de host válido.";
-            } elseif (!$this->validarContrasena($contrasena, 6, 50)) {
-                $response['errors'][] = "Por favor, ingrese una contraseña válida.";
-            } else {
-                $this->funcionario=new Funcionario($usuario, $host, null);
-                try {
-                    if (!$this->funcionario->verificarCredenciales($contrasena)) {
-                        throw new Exception("Usuario o contraseña incorrectos.");
-                    }elseif(!$this->funcionario->iniciarFuncionario($usuario)){
-                        throw new Exception("No se pudo iniciar el usuario.");
-                    } else{
-                        // Configuración y manejo de la sesión segura
-                        session_set_cookie_params([
-                            'lifetime' => 0,
-                            'path' => '/',
-                            'secure' => true,
-                            'httponly' => true,
-                            'samesite' => 'Lax'
-                        ]);
-                        session_start();
-                        session_regenerate_id(true);
-                    
-                        // Guarda los datos de la sesión
-                        $_SESSION['ultima_solicitud'] = time();
-                        $_SESSION['usuario'] = $this->funcionario->getUsuario();
-                        $_SESSION['rol'] = $this->funcionario->getRol();
-                    
-                        // Redirigir al dashboard
-                        return $this->redirectToRoute('showDashboard');
-                    }               
-                } catch (Exception $e) {
-                    // Añade el mensaje de error al array de errores
-                    error_log($e->getMessage(), true);
-                    $response['errors'][] = $e->getMessage();
+            // Verifica si el input de usuario contiene un arroba
+            if (substr_count($usuarioHost, "@") !== 1){
+                // Extrae usuario y host de input $usuarioHost
+                $partes= explode("@", $usuarioHost);
+                $usuario=$partes[0];
+                $host=$partes[1];
+                $contrasena = $_POST["contrasena"];
+
+                // Validar credenciales
+                if (!$this->validarUsuario($usuario, 50)) {
+                    $response['errors'][] = "Por favor, ingrese un usuario válido.";
+                } elseif (!$this->validarHost($host, 50)) {
+                    $response['errors'][] = "Por favor, ingrese un nombre de host válido.";
+                } elseif (!$this->validarContrasena($contrasena, 6, 60)){
+                    $response['errors'][] = "Por favor, ingrese una contraseña válida.";
+                } else {
+                    $this->funcionario=new Funcionario($usuario, $host, null);
+                    try {
+                        if (!$this->funcionario->verificarCredenciales($contrasena)) {
+                            throw new Exception("Usuario o contraseña incorrectos.");
+                        } elseif(!$this->funcionario->iniciarFuncionario($usuario)) {
+                            throw new Exception("No se pudo iniciar el usuario.");
+                        } else{
+                            // Configuración y manejo de la sesión segura
+                            session_set_cookie_params([
+                                'lifetime' => 0,
+                                'path' => '/',
+                                'secure' => true,
+                                'httponly' => true,
+                                'samesite' => 'Lax'
+                            ]);
+                            session_start();
+                            session_regenerate_id(true);
+
+                            // Guarda los datos de la sesión
+                            $_SESSION['ultima_solicitud'] = time();
+                            $_SESSION['usuario'] = $this->funcionario->getUsuario();
+                            $_SESSION['rol'] = $this->funcionario->getRol();
+
+                            // Redirigir al dashboard
+                            return $this->redirectToRoute('showDashboard');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    }
                 }
-                
+            } else {
+                $response['errors'][] = "El usuario debe contener un arroba (@).";
             }
         } else {
             $response['errors'][] = "Debe llenar todos los campos.";
@@ -382,9 +387,10 @@ class ControladorFuncionario extends AbstractController {
 
     private function validarHost($host, $max) {
         /* Verifica si el $host cumple con ciertos criterios como:
-            - ...
+            - Contiene un dominio válido o es igual a "localhost"
+            - Un máximo específicado de $max caracteres
         */
-        return (preg_match("/^[a-zA-Z0-9]+(?:[-_]?[a-zA-Z0-9]+)*$/", $host) && strlen($host) <= $max);
+        return (preg_match("/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $host) || $host == "localhost" && strlen($host) <= $max);
     }
 
     private function validarContrasena($str, $min, $max) {
