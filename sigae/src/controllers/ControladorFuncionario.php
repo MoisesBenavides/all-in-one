@@ -272,7 +272,7 @@ class ControladorFuncionario extends AbstractController {
         switch($rol){
             case 'gerente':
                 try{
-                    $valets = Funcionario::getFuncionariosPorRol($rol, 'valet');
+                    $valets = Funcionario::getFuncionariosPorRol($rol, 'valet_parking');
                     
                     // Debug: Resultado funcionarios arreglo
                     error_log(print_r($valets, true));
