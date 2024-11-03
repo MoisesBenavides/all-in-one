@@ -12,6 +12,7 @@ CREATE ROLE 'verificador_credenciales';
 -- PERMISOS
 -- admin
 GRANT ALL PRIVILEGES ON aio_db.* TO 'admin_rol' WITH GRANT OPTION;
+GRANT CREATE USER ON *.* TO 'admin_rol';
 
 -- cliente
 GRANT SELECT, INSERT, UPDATE, DELETE ON aio_db.cliente TO 'cliente';
