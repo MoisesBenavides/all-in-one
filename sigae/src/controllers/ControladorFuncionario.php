@@ -113,7 +113,7 @@ class ControladorFuncionario extends AbstractController {
         $rol=$_SESSION['rol'];
         switch($rol){
             case 'gerente':
-                return $this->render('employee/manager/transaccionesStock.html.twig');
+                return $this->render('employee/manager/transaccionStock.html.twig');
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
