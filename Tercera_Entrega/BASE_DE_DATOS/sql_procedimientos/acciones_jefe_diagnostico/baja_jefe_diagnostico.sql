@@ -11,7 +11,7 @@ BEGIN
 
     -- Vefirica si el rol actual es autorizado
     IF rol_actual = 'gerente' OR 'admin_rol' THEN
-        -- Construye la consulta de eliminacion de usuario con rol de jefe_diagnostico
+        -- Construye la consulta de eliminacion de usuario
         SET @query = CONCAT('DROP USER "', nombre_usuario, '"@"', nombre_host, '";');
 
         PREPARE stmt FROM @query;

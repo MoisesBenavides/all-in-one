@@ -13,7 +13,7 @@ BEGIN
 
     -- Vefirica si el rol actual es autorizado
     IF rol_actual = 'gerente' OR 'admin_rol' THEN
-        -- Construye la consulta de modificacion de usuario con rol de jefe_diagnostico
+        -- Construye la consulta de modificacion de usuario
         SET @query = CONCAT('RENAME USER "', nombre_actual, '"@"', host_actual, '" TO "', nuevo_nombre, '"@"', nuevo_host, '";');
 
         PREPARE stmt FROM @query;
