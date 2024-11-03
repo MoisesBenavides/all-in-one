@@ -187,7 +187,7 @@ stockManagement:
 
 inventory:
   path: /inventory
-  controller: Sigae\Controllers\ControladorFuncionario::showInventory
+  controller: Sigae\Controllers\ControladorFuncionario::inventory
   methods: GET
 
 employeeManagement:

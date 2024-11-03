@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario | AIO</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+
+        .product {
+            transition: opacity 0.3s ease;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-details {
+            width: 100%;
+            padding: 1rem;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    {% include 'partials/headerGerente.html.twig' %}
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto flex flex-col items-center gap-8">
+            <div class="w-full bg-white border border-black rounded-md p-4">
+                <h1 class="text-center text-black text-2xl md:text-3xl font-semibold">Inventario</h1>
+            </div>
+            <div class="w-full max-w-md">
+                <div class="relative">
+                    <input type="text" id="buscar" placeholder="Buscar" class="w-full h-12 px-4 pr-10 rounded-md border border-black">
+                    <img id="searchIcon" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer" src="{{ asset('svg/search.svg') }}" alt="Search">
+                </div>
+            </div>
+        </div>
+        
+        <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for producto in productos %}
+                <div class="product flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden">
+                    {# Imagen del producto usando el ID #}
+                    <img 
+                        class="product-image" 
+                        src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" 
+                        alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
+                        onerror="this.src='{{ asset('img/productos/default.webp') }}'"
+                    />
+                    
+                    <div class="product-details">
+                        {# Marca - común para todos #}
+                        <p class="text-lg font-semibold text-gray-800">{{ producto.marca }}</p>
+                        
+                        {# Nombre o Modelo #}
+                        {% if producto.nombre is defined %}
+                            <p class="text-md text-gray-600">{{ producto.nombre }}</p>
+                            <p class="text-md text-gray-600">{{ producto.id }}</p>
+                        {% endif %}
+                        {% if producto.modelo is defined %}
+                            <p class="text-md text-gray-600">{{ producto.modelo }}</p>
+                            <p class="text-md text-gray-600">{{ producto.id }}</p>
+                            <p class="text-md text-gray-600">{{ producto.stock }}</p>
+                        {% endif %}
+                        
+                        {# Precio #}
+                        <p class="mt-2 text-xl font-bold text-gray-900">${{ producto.precio }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-span-full text-center py-8">
+                    <p>No se encontraron productos.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputBuscar = document.getElementById('buscar');
+        const productos = document.querySelectorAll('.product');
+        const searchIcon = document.getElementById('searchIcon');
+
+        function buscarProductos() {
+            const textoBusqueda = inputBuscar.value.toLowerCase();
+            productos.forEach(producto => {
+                const textoProducto = producto.textContent.toLowerCase();
+                if (textoProducto.includes(textoBusqueda) || textoBusqueda === '') {
+                    producto.classList.remove('hidden');
+                } else {
+                    producto.classList.add('hidden');
+                }
+            });
+        }
+
+        inputBuscar.addEventListener('input', buscarProductos);
+        inputBuscar.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                buscarProductos();
+            }
+        });
+
+        searchIcon.addEventListener('click', function() {
+            inputBuscar.focus();
+        });
+    });
+    </script>
+
+    {% include 'partials/footer.html.twig' %}
+</body>
+</html>
