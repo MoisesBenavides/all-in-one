@@ -60,7 +60,7 @@
                             class="w-full h-48 object-cover" 
                             src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" 
                             alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
-                            onerror="this.src='{{ asset('img/productos/default.webp') }}'"
+                            onerror="this.src='{{ asset('img/productos/default.jpg') }}'"
                         />
                     </div>
                     
