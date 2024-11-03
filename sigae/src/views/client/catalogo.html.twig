@@ -115,6 +115,8 @@
                             <p class="text-base text-gray-600">{{ producto.nombre }}</p>
                         {% elseif producto.modelo is defined and producto.modelo %}
                             <p class="text-base text-gray-600">{{ producto.modelo }}</p>
+                            <p class="text-base text-gray-600">{{ producto.tamano }}</p>
+                            <p class="text-base text-gray-600">{{ producto.tipo }}</p>
                         {% endif %}
                         
                         <p class="mt-auto text-2xl font-bold text-black">${{ producto.precio }}</p>
