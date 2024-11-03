@@ -47,10 +47,14 @@
         </div>
 </body>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
-        const archivoTraduccionHome = "{{ asset('translate/home.json') }}";
-        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome);
-    });
+  document.addEventListener('DOMContentLoaded', () => {
+    const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+    const archivoTraduccionHome = "{{ asset('translate/home.json') }}";
+    
+    console.log('URL Header:', archivoTraduccionHeader);
+    console.log('URL Home:', archivoTraduccionHome);
+    
+    inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+});
 </script>
 </html>

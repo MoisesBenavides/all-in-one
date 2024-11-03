@@ -11,6 +11,7 @@ async function cargarTraducciones(archivo, tipo) {
     }
 
     try {
+        console.log(`Intentando cargar archivo ${tipo}:`, archivo); // debug
         const response = await fetch(archivo);
         if (!response.ok) {
             throw new Error(`Error HTTP ${response.status}`);
