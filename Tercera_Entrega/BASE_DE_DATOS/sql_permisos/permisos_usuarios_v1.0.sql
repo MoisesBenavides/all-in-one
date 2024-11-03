@@ -36,8 +36,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON aio_db.* TO 'gerente';
 
 GRANT CREATE USER ON *.* TO 'gerente';
 GRANT GRANT OPTION ON *.* TO 'gerente';
-GRANT DROP USER ON *.* TO 'gerente';
-GRANT ALTER USER ON *.* TO 'gerente';
 GRANT SELECT ON mysql.role_edges TO 'gerente';
 GRANT SELECT ON mysql.user TO 'gerente';
 
@@ -70,8 +68,6 @@ GRANT SELECT ON aio_db.taller TO 'jefe_taller';
 
 GRANT CREATE USER ON *.* TO 'jefe_taller';
 GRANT GRANT OPTION ON *.* TO 'jefe_taller';
-GRANT DROP USER ON *.* TO 'jefe_taller';
-GRANT ALTER USER ON *.* TO 'jefe_taller';
 GRANT SELECT ON mysql.role_edges TO 'jefe_taller';
 GRANT SELECT ON mysql.user TO 'jefe_taller';
 
