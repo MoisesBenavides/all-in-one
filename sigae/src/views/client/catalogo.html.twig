@@ -51,8 +51,7 @@
         </div>
         
         {# Contenedor de Productos #}
-        <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {# Iteramos sobre todos los productos pero solo mostramos los primeros 50 inicialmente #}
+      <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for producto in productos %}
                 <div class="product flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg {% if loop.index > 50 %}hidden{% endif %}">
                     <div class="w-full aspect-w-4 aspect-h-3">
@@ -60,15 +59,13 @@
                             class="w-full h-48 object-cover" 
                             src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" 
                             alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
-                            onerror="this.src='{{ asset('img/productos/default.jpg') }}'"
+                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNmMGYwZjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM5OTkiPlNpbiBpbWFnZW48L3RleHQ+PC9zdmc+'; this.onerror=null;"
                         />
                     </div>
                     
                     <div class="w-full p-4 flex flex-col gap-2">
-                        {# Marca #}
                         <p class="text-lg font-semibold text-gray-800">{{ producto.marca }}</p>
                         
-                        {# Nombre o Modelo #}
                         {% if producto.nombre is defined and producto.nombre %}
                             <p class="text-md text-gray-600">{{ producto.nombre }}</p>
                         {% endif %}
@@ -76,7 +73,6 @@
                             <p class="text-md text-gray-600">{{ producto.modelo }}</p>
                         {% endif %}
                         
-                        {# Precio #}
                         <p class="mt-auto text-xl font-bold text-gray-900">${{ producto.precio }}</p>
                     </div>
                 </div>
