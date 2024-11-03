@@ -30,7 +30,7 @@ class ControladorFuncionario extends AbstractController {
             $usuarioHost = $_POST["usuario"];
 
             // Verifica si el input de usuario contiene un arroba
-            if (substr_count($usuarioHost, "@") !== 1){
+            if (substr_count($usuarioHost, "@") == 1){
                 // Extrae usuario y host de input $usuarioHost
                 $partes= explode("@", $usuarioHost);
                 $usuario=$partes[0];
