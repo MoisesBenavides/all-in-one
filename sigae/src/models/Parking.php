@@ -100,14 +100,15 @@ class Parking extends Servicio {
         $ocupadas=[];
 
         try {
-            $stmt = $this->conn->prepare('SELECT numero_plaza FROM numero_plaza WHERE id_servicio IN (
-                                        SELECT s.id FROM servicio s INNER JOIN parking p ON s.id = p.id_servicio
-                                        WHERE   p.tipo_plaza = :tip_plaza AND
-                                                p.largo_plazo = :lrg_plazo AND
-                                                s.estado = "pendiente" AND (
-                                                    s.fecha_inicio < :fecha_fin AND s.fecha_final > :fecha_ini
-                                                )
-                                    )');
+            $stmt = $this->conn->prepare('SELECT numero_plaza FROM numero_plaza 
+                                        WHERE id_servicio IN (
+                                                SELECT s.id FROM servicio s 
+                                                INNER JOIN parking p ON s.id = p.id_servicio 
+                                                WHERE   p.tipo_plaza = :tip_plaza AND 
+                                                        p.largo_plazo = :lrg_plazo AND 
+                                                        s.estado = "pendiente" AND (
+                                                        s.fecha_inicio < :fecha_fin AND s.fecha_final > :fecha_ini)
+                                        )');
             $stmt->bindParam(':tip_plaza', $tipo_plaza);
             $stmt->bindParam(':lrg_plazo', $largo_plazo);
             $stmt->bindParam(':fecha_fin', $fecha_final);
