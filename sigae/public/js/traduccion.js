@@ -1,4 +1,4 @@
-console.log("debug");
+// Variables globales
 let traduccionesHeader = {};
 let traduccionesVista = {};
 let rutaArchivoHeader = '';
@@ -12,28 +12,43 @@ async function cargarTraducciones(archivo, tipo) {
     }
 
     try {
-        console.log(`Intentando cargar archivo ${tipo}:`, archivo); // debug
+        console.log(`Intentando cargar archivo ${tipo}:`, archivo);
         const response = await fetch(archivo);
+        
         if (!response.ok) {
+            console.error(`Error al cargar archivo ${tipo}: HTTP ${response.status}`);
             throw new Error(`Error HTTP ${response.status}`);
         }
+        
         const data = await response.json();
+        console.log(`Archivo ${tipo} cargado correctamente`);
         
         if (tipo === 'header') {
             traduccionesHeader = data;
         } else if (tipo === 'vista' || tipo === 'unico') {
             traduccionesVista = data;
         }
+        
         return data;
     } catch (error) {
-        console.error(`Error al cargar traducciones de ${tipo}:`, error);
+        if (error.name === 'SyntaxError') {
+            console.error(`Error de sintaxis en archivo ${tipo}: El archivo no es un JSON válido`);
+        } else {
+            console.error(`Error al cargar traducciones de ${tipo}:`, error);
+        }
         return {};
     }
 }
 
 // Función para aplicar las traducciones
 function aplicarTraducciones(traducciones, tipo) {
-    if (!traducciones) return;
+    if (!traducciones) {
+        console.warn(`No hay traducciones disponibles para ${tipo}`);
+        return;
+    }
+
+    let elementosTraducidos = 0;
+    const elementosNoTraducidos = [];
 
     document.querySelectorAll('[traducir]').forEach(elemento => {
         const clave = elemento.getAttribute('traducir');
@@ -43,24 +58,23 @@ function aplicarTraducciones(traducciones, tipo) {
             } else {
                 elemento.textContent = traducciones[clave];
             }
+            elementosTraducidos++;
+        } else {
+            elementosNoTraducidos.push(clave);
         }
     });
+
+    console.log(`${elementosTraducidos} elementos traducidos para ${tipo}`);
+    if (elementosNoTraducidos.length > 0) {
+        console.warn(`Claves no encontradas en ${tipo}:`, elementosNoTraducidos);
+    }
 }
 
 // Función para cambiar el idioma
 async function cambiarIdioma(idioma, skipCookie = false) {
+    console.log(`Cambiando idioma a: ${idioma}`);
     try {
-        // Si hay archivo de header, cargarlo
-        if (rutaArchivoHeader) {
-            await cargarTraducciones(rutaArchivoHeader, 'header');
-        }
-        
-        // Si hay archivo de vista, cargarlo
-        if (rutaArchivoVista) {
-            await cargarTraducciones(rutaArchivoVista, 'vista');
-        }
-
-        // Aplicar traducciones
+        // Usar las traducciones ya cargadas
         if (traduccionesHeader[idioma]) {
             aplicarTraducciones(traduccionesHeader[idioma], 'header');
         }
@@ -68,9 +82,9 @@ async function cambiarIdioma(idioma, skipCookie = false) {
             aplicarTraducciones(traduccionesVista[idioma], 'vista');
         }
         
-        // Guardar el idioma en cookies solo si no se especifica lo contrario
         if (!skipCookie) {
             setCookie('idioma', idioma, 30);
+            console.log(`Idioma ${idioma} guardado en cookie`);
         }
     } catch (error) {
         console.error('Error al cambiar idioma:', error);
@@ -79,34 +93,43 @@ async function cambiarIdioma(idioma, skipCookie = false) {
 
 // Función para inicializar la traducción
 async function inicializarTraduccion(archivoHeader = null, archivoVista = null, idiomaInicial = 'es') {
+    console.log('Iniciando sistema de traducciones');
+    console.log('Archivo header:', archivoHeader);
+    console.log('Archivo vista:', archivoVista);
+    
     try {
-        // Guardar las rutas globalmente
         rutaArchivoHeader = archivoHeader;
         rutaArchivoVista = archivoVista;
 
-        // Cargar traducciones iniciales
+        // Cargar las traducciones iniciales
         const promesas = [];
+        
         if (archivoHeader) {
             promesas.push(cargarTraducciones(archivoHeader, 'header'));
         }
+        
         if (archivoVista) {
             promesas.push(cargarTraducciones(archivoVista, 'vista'));
         }
 
         await Promise.all(promesas);
 
-        // Configurar botones de idioma (si no están en el header)
+        // Configurar botones de idioma
         if (!window.languageButtonsInitialized) {
-            document.querySelectorAll('[data-idioma]').forEach(button => {
+            const botones = document.querySelectorAll('[data-idioma]');
+            botones.forEach(button => {
                 button.addEventListener('click', function(e) {
                     const idioma = this.getAttribute('data-idioma');
                     if (idioma) cambiarIdioma(idioma);
                 });
             });
+            window.languageButtonsInitialized = true;
+            console.log(`${botones.length} botones de idioma inicializados`);
         }
 
-        // Aplicar idioma inicial, sin escribir la cookie
+        // Aplicar idioma inicial
         const idiomaGuardado = getCookie('idioma') || idiomaInicial;
+        console.log(`Aplicando idioma inicial: ${idiomaGuardado}`);
         await cambiarIdioma(idiomaGuardado, true);
 
     } catch (error) {
