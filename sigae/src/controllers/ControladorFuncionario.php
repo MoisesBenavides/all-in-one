@@ -199,6 +199,7 @@ class ControladorFuncionario extends AbstractController {
 
                 return $this->render('employee/manager/listaFuncionarios.html.twig', [
                     'funcionarios' => $jefesDiagnostico,
+                    'rolBuscado' => "Jefes de Diagnóstico",
                     'response' => $response
                 ]);
             default:
@@ -226,6 +227,7 @@ class ControladorFuncionario extends AbstractController {
 
                 return $this->render('employee/manager/listaFuncionarios.html.twig', [
                     'funcionarios' => $jefesTaller,
+                    'rolBuscado' => "Jefes de Taller de Alineación y Balanceo",
                     'response' => $response
                 ]);
             default:
@@ -253,6 +255,7 @@ class ControladorFuncionario extends AbstractController {
 
                 return $this->render('employee/manager/listaFuncionarios.html.twig', [
                     'funcionarios' => $cajeros,
+                    'rolBuscado' => "Cajeros",
                     'response' => $response
                 ]);
             default:
@@ -279,6 +282,7 @@ class ControladorFuncionario extends AbstractController {
 
                 return $this->render('employee/manager/listaFuncionarios.html.twig', [
                     'funcionarios' => $valets,
+                    'rolBuscado' => "Valets Parking",
                     'response' => $response
                 ]);
             default:
@@ -306,6 +310,7 @@ class ControladorFuncionario extends AbstractController {
 
                 return $this->render('employee/manager/listaFuncionarios.html.twig', [
                     'funcionarios' => $ejecutivos,
+                    'rolBuscado' => "Ejecutivos de Servicio",
                     'response' => $response
                 ]);
             case 'jefe_taller':
@@ -318,7 +323,7 @@ class ControladorFuncionario extends AbstractController {
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
                 return $this->render('employee/workshopChief/listaEjecutivos.html.twig', [
-                    'funcionarios' => $ejecutivos,
+                    'ejecutivos' => $ejecutivos,
                     'response' => $response
                 ]);
             default:
