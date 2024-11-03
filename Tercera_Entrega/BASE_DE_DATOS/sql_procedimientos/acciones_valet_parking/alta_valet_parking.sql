@@ -3,7 +3,7 @@ DELIMITER $$
 CREATE PROCEDURE alta_valet_parking(
     IN nombre_usuario VARCHAR(50),
     IN nombre_host VARCHAR(50),
-    IN nueva_contrasena VARCHAR(50)
+    IN nueva_contrasena VARCHAR(60)
 )
 BEGIN
     -- Obtiene el rol del usuario que ejecuta el procedimento
