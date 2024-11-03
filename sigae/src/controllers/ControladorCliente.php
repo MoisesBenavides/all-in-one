@@ -319,6 +319,7 @@ class ControladorCliente extends AbstractController {
         return $this->render('client/catalogo.html.twig', [
             'filtro' => $filtro,
             'productos' => $productos,
+            'response' => $response
         ]);
     }
     
