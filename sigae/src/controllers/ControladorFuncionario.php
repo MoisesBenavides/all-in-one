@@ -24,22 +24,25 @@ class ControladorFuncionario extends AbstractController {
         $response=['success' => false, 'errors' => [], 'debug' => []];
 
         // Validacion de campos vacios
-        if (isset($_POST["usuario"], $_POST["contrasena"]) && 
-            !empty($_POST["usuario"]) && !empty($_POST["contrasena"])) {
+        if (isset($_POST["usuario"], $_POST['host'], $_POST["contrasena"]) && 
+            !empty($_POST["usuario"]) && !empty($_POST["host"]) && !empty($_POST["contrasena"])) {
 
             $usuario = $_POST["usuario"];
+            $host = $_POST["host"];
             $contrasena = $_POST["contrasena"];
-
+            
             //Debug
             error_log("Datos recibidos: ".$usuario." ".$contrasena);
 
             // Validar credenciales
-            if (!$this->validarUsuario($usuario, 63)) {
+            if (!$this->validarUsuario($usuario, 50)) {
                 $response['errors'][] = "Por favor, ingrese un usuario válido.";
-            } elseif (!$this->validarContrasena($contrasena, 6, 60)) {
+            } elseif (!$this->validarHost($host, 50)) {
+                $response['errors'][] = "Por favor, ingrese un nombre de host válido.";
+            } elseif (!$this->validarContrasena($contrasena, 6, 50)) {
                 $response['errors'][] = "Por favor, ingrese una contraseña válida.";
             } else {
-                $this->funcionario=new Funcionario($usuario, null, null);
+                $this->funcionario=new Funcionario($usuario, $host, null);
                 try {
                     if (!$this->funcionario->verificarCredenciales($contrasena)) {
                         throw new Exception("Usuario o contraseña incorrectos.");
@@ -377,10 +380,16 @@ class ControladorFuncionario extends AbstractController {
         return (preg_match("/^[a-zA-Z0-9]+(?:[-_]?[a-zA-Z0-9]+)*$/", $str) && strlen($str) <= $max);
     }
 
+    private function validarHost($host, $max) {
+        /* Verifica si el $host cumple con ciertos criterios como:
+            - ...
+        */
+        return (preg_match("/^[a-zA-Z0-9]+(?:[-_]?[a-zA-Z0-9]+)*$/", $host) && strlen($host) <= $max);
+    }
+
     private function validarContrasena($str, $min, $max) {
         /* Verifica si la contraseña:
-            - ...
-            - Su longitud está en el rango especificado por $min y $max.
+            - Tiene una longitud en el rango especificado por $min y $max.
         */
         return strlen($str) >= $min && strlen($str) <= $max;
     }

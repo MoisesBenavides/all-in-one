@@ -9,11 +9,12 @@ use Exception;
 class Funcionario{
     private ?PDO $conn =null;
     private $usuario;
-    private $rol;
     private $host;
+    private $rol;
 
-    public function __construct($usuario, $rol, $host){
+    public function __construct($usuario, $host, $rol){
         $this->usuario = $usuario;
+        $this->host = $host;
         $this->rol = $rol;
     }
 
@@ -39,16 +40,6 @@ class Funcionario{
         return $this;
     }
 
-    public function getRol(){
-        return $this->rol;
-    }
-
-    public function setRol($rol){
-        $this->rol = $rol;
-
-        return $this;
-    }
-
     public function getHost(){
         return $this->host;
     }
@@ -59,11 +50,24 @@ class Funcionario{
         return $this;
     }
 
+    public function getRol(){
+        return $this->rol;
+    }
+
+    public function setRol($rol){
+        $this->rol = $rol;
+
+        return $this;
+    }
+
     public function verificarCredenciales($contrasena) {
         try {
-            // Conectar sin especificar base de datos
-            $dsn = 'mysql:host=localhost';
             $usuario = $this->getUsuario();
+            $host = $this->getHost();
+
+            // Conectar sin especificar base de datos
+            $dsn = 'mysql:host='. $host;
+
             $pdo = new PDO($dsn, $usuario, $contrasena, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ]);
