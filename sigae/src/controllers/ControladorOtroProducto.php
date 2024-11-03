@@ -17,9 +17,9 @@ class ControladorOtroProducto extends AbstractController{
             if($rol == 'cliente'){
                 $this->otroProducto->setDBConnection("cliente");
                 $otrosProd = $this->otroProducto->getProductosDisp();
-            } else {
-                // TODO: Si es funcionario, usar credenciales por rol y accede a más datos
-                $this->otroProducto->setDBConnection("cliente");
+            } elseif($rol == 'gerente' || 'cajero') {
+                // Si es funcionario, usar credenciales por rol y accede a más datos
+                $this->otroProducto->setDBConnection($rol);
                 $otrosProd = $this->otroProducto->getProductosDetallados();
             }
         } catch(Exception $e){

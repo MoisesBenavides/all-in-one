@@ -2,6 +2,8 @@
 
 namespace Sigae\Controllers;
 use Sigae\Models\Funcionario;
+use Sigae\Controllers\ControladorNeumatico;
+use Sigae\Controllers\ControladorOtroProducto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -11,6 +13,8 @@ use Exception;
 
 class ControladorFuncionario extends AbstractController {
     private $funcionario;
+    private $controladorNeumatico;
+    private $controladorOtroProducto;
 
     function loginAioEmployee(): Response{
         return $this->render('employee/loginEmpleado.html.twig');
@@ -117,12 +121,47 @@ class ControladorFuncionario extends AbstractController {
     }
 
     function inventory(): Response{
+        $response=['success' => false, 'errors' => [], 'debug' => []];
+
         $rol=$_SESSION['rol'];
+
+        $productos = [];
+        
         switch($rol){
             case 'gerente':
-                return $this->render('employee/manager/inventario.html.twig');
+                try{
+                    $this->controladorNeumatico = new ControladorNeumatico();
+                    $this->controladorOtroProducto = new ControladorOtroProducto();
+                    // Obtiene neumaticos
+                    $neumaticos = $this->controladorNeumatico->getNeumaticos('gerente');
+                    // Obtiene otros
+                    $otrosProductos = $this->controladorOtroProducto->getOtrosProductos('gerente');
+                    // Combina productos de ambas categorías
+                    $productos = array_merge($neumaticos, $otrosProductos);
+                } catch(Exception $e){
+                    $response['errors'][] = $e->getMessage();
+                }
+                return $this->render('employee/manager/inventario.html.twig', [
+                    'productos' => $productos,
+                    'response' => $response
+                ]);
             case 'cajero':
-                return $this->render('employee/cashier/inventarioCajero.html.twig');
+                try{
+                    $this->controladorNeumatico = new ControladorNeumatico();
+                    $this->controladorOtroProducto = new ControladorOtroProducto();
+                    // Obtiene neumaticos
+                    $neumaticos = $this->controladorNeumatico->getNeumaticos('cajero');
+                    // Obtiene otros
+                    $otrosProductos = $this->controladorOtroProducto->getOtrosProductos('cajero');
+                    // Combina productos de ambas categorías
+                    $productos = array_merge($neumaticos, $otrosProductos);
+                } catch(Exception $e){
+                    $response['errors'][] = $e->getMessage();
+                }
+                return $this->render('employee/cashier/inventarioCajero.html.twig', [
+                    'productos' => $productos,
+                    'response' => $response
+                ]);
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
@@ -312,10 +351,6 @@ class ControladorFuncionario extends AbstractController {
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
-    }
-
-    function addEmployee(): Response{
-        $response=['success' => false, 'errors' => []];
     }
 
     private function validarUsuario($str, $max) {
