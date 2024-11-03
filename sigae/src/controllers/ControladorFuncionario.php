@@ -119,6 +119,18 @@ class ControladorFuncionario extends AbstractController {
         }
     }
 
+    function inventory(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/inventario.html.twig');
+            case 'cajero':
+                return $this->render('employee/cashier/inventarioCajero.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
     function employeeManagement(): Response|RedirectResponse{
         $rol=$_SESSION['rol'];
         switch($rol){
