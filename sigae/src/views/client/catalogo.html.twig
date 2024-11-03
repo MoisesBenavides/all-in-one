@@ -20,22 +20,6 @@
         body, input, select, button, option {
             font-family: 'Teachers', sans-serif;
         }
-
-        .product {
-            transition: opacity 0.3s ease;
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .product-details {
-            width: 100%;
-            padding: 1rem;
-        }
     </style>
 </head>
 
@@ -43,81 +27,154 @@
     {% include 'partials/header.html.twig' %}
 
     <div class="container mx-auto px-4 py-8">
+        {# Header y Búsqueda #}
         <div class="max-w-4xl mx-auto flex flex-col items-center gap-8">
             <div class="w-full bg-white border border-black rounded-md p-4">
                 <h1 class="text-center text-black text-2xl md:text-3xl font-semibold">Nuestros productos</h1>
             </div>
             <div class="w-full max-w-md">
                 <div class="relative">
-                    <input type="text" id="buscar" placeholder="Buscar" class="w-full h-12 px-4 pr-10 rounded-md border border-black">
-                    <img id="searchIcon" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer" src="{{ asset('svg/search.svg') }}" alt="Search">
+                    <input 
+                        type="text" 
+                        id="buscar" 
+                        placeholder="Buscar" 
+                        class="w-full h-12 px-4 pr-10 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
+                    >
+                    <img 
+                        id="searchIcon" 
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer hover:opacity-75 transition-opacity duration-300" 
+                        src="{{ asset('svg/search.svg') }}" 
+                        alt="Search"
+                    >
                 </div>
             </div>
         </div>
         
+        {# Contenedor de Productos #}
         <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {# Iteramos sobre todos los productos pero solo mostramos los primeros 50 inicialmente #}
             {% for producto in productos %}
-                <div class="product flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden">
-                    {# Imagen del producto usando el ID #}
-                    <img 
-                        class="product-image" 
-                        src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" 
-                        alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
-                        onerror="this.src='{{ asset('img/productos/default.webp') }}'"
-                    />
+                <div class="product flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg {% if loop.index > 50 %}hidden{% endif %}">
+                    <div class="w-full aspect-w-4 aspect-h-3">
+                        <img 
+                            class="w-full h-48 object-cover" 
+                            src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" 
+                            alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
+                            onerror="this.src='{{ asset('img/productos/default.webp') }}'"
+                        />
+                    </div>
                     
-                    <div class="product-details">
-                        {# Marca - común para todos #}
+                    <div class="w-full p-4 flex flex-col gap-2">
+                        {# Marca #}
                         <p class="text-lg font-semibold text-gray-800">{{ producto.marca }}</p>
                         
                         {# Nombre o Modelo #}
-                        {% if producto.nombre is defined %}
+                        {% if producto.nombre is defined and producto.nombre %}
                             <p class="text-md text-gray-600">{{ producto.nombre }}</p>
                         {% endif %}
-                        {% if producto.modelo is defined %}
+                        {% if producto.modelo is defined and producto.modelo %}
                             <p class="text-md text-gray-600">{{ producto.modelo }}</p>
                         {% endif %}
                         
                         {# Precio #}
-                        <p class="mt-2 text-xl font-bold text-gray-900">${{ producto.precio }}</p>
+                        <p class="mt-auto text-xl font-bold text-gray-900">${{ producto.precio }}</p>
                     </div>
                 </div>
             {% else %}
                 <div class="col-span-full text-center py-8">
-                    <p>No se encontraron productos disponibles.</p>
+                    <p class="text-gray-600">No se encontraron productos disponibles.</p>
                 </div>
             {% endfor %}
+        </div>
+
+        {# Botón Ver Más #}
+        {% if productos|length > 50 %}
+            <button 
+                id="verMas" 
+                class="mx-auto mt-8 mb-4 block px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+                Ver más productos
+            </button>
+        {% endif %}
+
+        {# Mensaje cuando no hay resultados de búsqueda #}
+        <div id="noResults" class="hidden text-center py-8">
+            <p class="text-gray-600">No se encontraron productos que coincidan con tu búsqueda.</p>
         </div>
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const inputBuscar = document.getElementById('buscar');
-        const productos = document.querySelectorAll('.product');
         const searchIcon = document.getElementById('searchIcon');
+        const productosContainer = document.getElementById('productosContainer');
+        const productos = document.querySelectorAll('.product');
+        const verMasBtn = document.getElementById('verMas');
+        const noResults = document.getElementById('noResults');
+        
+        let productosMostrados = 50;
+        let productosVisiblesTotales = productos.length;
 
-        function buscarProductos() {
+        function actualizarVisibilidad() {
+            let productosVisibles = 0;
             const textoBusqueda = inputBuscar.value.toLowerCase();
-            productos.forEach(producto => {
+
+            productos.forEach((producto, index) => {
                 const textoProducto = producto.textContent.toLowerCase();
-                if (textoProducto.includes(textoBusqueda) || textoBusqueda === '') {
+                const coincideBusqueda = textoProducto.includes(textoBusqueda);
+                const dentroDelLimite = index < productosMostrados;
+                
+                if (coincideBusqueda && dentroDelLimite) {
                     producto.classList.remove('hidden');
+                    productosVisibles++;
                 } else {
                     producto.classList.add('hidden');
                 }
+
+                if (coincideBusqueda) {
+                    productosVisiblesTotales++;
+                }
             });
+
+            // Mostrar/ocultar mensaje de no resultados
+            noResults.classList.toggle('hidden', productosVisibles > 0);
+            
+            // Actualizar visibilidad del botón Ver Más
+            if (verMasBtn) {
+                verMasBtn.style.display = (productosVisiblesTotales > productosMostrados) ? 'block' : 'none';
+            }
         }
 
-        inputBuscar.addEventListener('input', buscarProductos);
+        // Evento de búsqueda
+        inputBuscar.addEventListener('input', function() {
+            productosMostrados = 50; // Reset al buscar
+            productosVisiblesTotales = 0;
+            actualizarVisibilidad();
+        });
+
+        // Evento de búsqueda al presionar Enter
         inputBuscar.addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
-                buscarProductos();
+                actualizarVisibilidad();
             }
         });
 
+        // Click en icono de búsqueda
         searchIcon.addEventListener('click', function() {
             inputBuscar.focus();
+            actualizarVisibilidad();
         });
+
+        // Evento Ver Más
+        if (verMasBtn) {
+            verMasBtn.addEventListener('click', function() {
+                productosMostrados += 50;
+                actualizarVisibilidad();
+            });
+        }
+
+        // Inicialización
+        actualizarVisibilidad();
     });
     </script>
 
