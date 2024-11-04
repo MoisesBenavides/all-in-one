@@ -348,7 +348,7 @@ class ControladorFuncionario extends AbstractController {
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
 
-                if ($validacion['exito'] == true) {
+                if ($validacion['exito'] === true) {
 
                     $usuario = $_POST["usuario"];
                     $host = $_POST["host"];
@@ -373,8 +373,8 @@ class ControladorFuncionario extends AbstractController {
                         }
                     } catch (Exception $e) {
                         // Añade el mensaje de error al array de errores
-                        error_log($e->getMessage(), true);
-                        $response['errors'][] = $e->getMessage();
+                        error_log("Este es un error del catch: ".$e->getMessage());
+                        $response['errors'][] = "Envio de error catch al hacer conexion a bd".$e->getMessage();
                     } finally {
                         $this->funcionario->cerrarDBConnection();
                     }
