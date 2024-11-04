@@ -228,7 +228,7 @@ class ControladorTaller extends AbstractController{
                 ];
             }
 
-            error_log(print_r($horariosTallerDia));
+            error_log("Horarios Taller: " . print_r($horariosTallerDia, true));
 
             return new JsonResponse([
                 'success' => true,
