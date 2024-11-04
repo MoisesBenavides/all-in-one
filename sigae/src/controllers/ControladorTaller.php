@@ -228,9 +228,6 @@ class ControladorTaller extends AbstractController{
                 ];
             }
 
-            // Debug 
-            error_log("Lapsos del día $dia: ".print_r($horariosTallerDia), true);
-
             return new JsonResponse([
                 'success' => true,
                 'horariosTaller' => $horariosTallerDia
