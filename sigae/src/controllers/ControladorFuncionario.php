@@ -366,6 +366,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -421,6 +423,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -476,6 +480,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -531,6 +537,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -587,6 +595,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else {
                     $response['errors'][] = $validacion['msj_error'];
@@ -627,6 +637,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -678,6 +690,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -730,6 +744,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -782,6 +798,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -834,6 +852,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -886,6 +906,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
@@ -924,6 +946,8 @@ class ControladorFuncionario extends AbstractController {
                         // Añade el mensaje de error al array de errores
                         error_log($e->getMessage(), true);
                         $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
                 } else{
                     $response['errors'][] = $validacion['msj_error'];
