@@ -228,8 +228,10 @@ class ControladorTaller extends AbstractController{
                 ];
             }
 
+            date_default_timezone_set('America/Montevieo');
             $horaActual = date('Y-m-d H:i:s');
             error_log($horaActual);
+            
             error_log("Horarios Taller: " . print_r($horariosTallerDia, true));
 
             return new JsonResponse([
