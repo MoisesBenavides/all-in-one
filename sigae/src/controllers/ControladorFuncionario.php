@@ -338,7 +338,6 @@ class ControladorFuncionario extends AbstractController {
         $response = ['success' => false, 'errors' => []];
 
         $rol=$_SESSION['rol'];
-        error_log($rol);
         $jefesDiagnostico = [];
 
         $rolUsuarioNuevo = 'jefe_diagnostico';
@@ -354,18 +353,12 @@ class ControladorFuncionario extends AbstractController {
                     $host = $_POST["host"];
                     $contrasena = $_POST["contrasena"];
 
-                    error_log("Datos procesados luego de validacion".$usuario.$host.$contrasena);
-
-                    error_log("Esta es la validacion".print_r($validacion, true));
-
                     $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
                     $this->funcionario->setDBConnection('gerente');
                     try {
                         if (Funcionario::existe($rol, $usuario, $host)) {
-                            error_log("Usuario ya existe");
                             throw new Exception("Este usuario ya existe.");
                         } elseif (!$this->funcionario->altaJefeDiagnostico($contrasena)) {
-                            error_log("Error al registrar funcionario");
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -373,13 +366,11 @@ class ControladorFuncionario extends AbstractController {
                         }
                     } catch (Exception $e) {
                         // Añade el mensaje de error al array de errores
-                        error_log("Este es un error del catch: ".$e->getMessage());
-                        $response['errors'][] = "Envio de error catch al hacer conexion a bd".$e->getMessage();
+                        $response['errors'][] = $e->getMessage();
                     } finally {
                         $this->funcionario->cerrarDBConnection();
                     }
                 } else{
-                    error_log($validacion['msj_error']);
                     $response['errors'][] = $validacion['msj_error'];
                 }
 
@@ -387,10 +378,8 @@ class ControladorFuncionario extends AbstractController {
                 try{
                     $jefesDiagnostico = Funcionario::getFuncionariosPorRol($rol, 'jefe_diagnostico');
                 } catch(Exception $e){
-                    error_log("Error al cargar funcionarios".$e->getMessage());
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
-                error_log("Error de response: ".print_r($response), true);
 
                 return $this->render('employee/manager/listaJefesDiagnostico.html.twig', [
                     'funcionarios' => $jefesDiagnostico,
