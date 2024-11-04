@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Exception;
 use DateTime;
+use DateTimeZone;
 use InvalidArgumentException;
 
 class ControladorTaller extends AbstractController{
@@ -228,10 +229,15 @@ class ControladorTaller extends AbstractController{
                 ];
             }
 
-            date_default_timezone_set('America/Montevieo');
-            $horaActual = date('Y-m-d H:i:s');
+            // Obtener hora actual en Montevideo
+            $uruguayTimezone = new DateTimeZone('America/Montevideo');
+            $dtActual = new DateTime('now', $uruguayTimezone);
+
+            // Formatear la fecha
+            $horaActual = $dtActual->format('Y-m-d H:i:s');
+
             error_log($horaActual);
-            
+
             error_log("Horarios Taller: " . print_r($horariosTallerDia, true));
 
             return new JsonResponse([
