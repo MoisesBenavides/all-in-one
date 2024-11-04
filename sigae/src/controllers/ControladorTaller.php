@@ -228,6 +228,8 @@ class ControladorTaller extends AbstractController{
                 ];
             }
 
+            error_log($horariosTaller->format('Y-m-d H:i:s'));
+
             return new JsonResponse([
                 'success' => true,
                 'horariosTaller' => $horariosTallerDia
