@@ -345,10 +345,9 @@ class ControladorFuncionario extends AbstractController {
 
         switch($rol){
             case 'gerente':
-                error_log("Case ".$rol);
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
-
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
                 if ($validacion['exito'] === true) {
                     error_log("If ".$rol);
 
