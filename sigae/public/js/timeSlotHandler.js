@@ -10,26 +10,27 @@ const TimeSlotHandler = {
         if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
     
         try {
-            console.log('Fetching time slots for date:', selectedDate);
-            console.log('Request URL:', `${GET_BLOCKED_TIMES_URL}?date=${selectedDate}`);
+            const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
+            console.log('Fetching time slots for date:', formattedDate);
             
-            const response = await fetch(`${GET_BLOCKED_TIMES_URL}?date=${selectedDate}`);
+            const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
+            console.log('Request URL:', url);
+            
+            const response = await fetch(url);
             console.log('Response status:', response.status);
-            console.log('Response headers:', [...response.headers.entries()]);
 
-            // Si no es OK, obtener el texto de la respuesta para diagnóstico
+            if (timeSlotsContainer) {
+                timeSlotsContainer.innerHTML = '';
+            }
+
             if (!response.ok) {
                 const textResponse = await response.text();
                 console.error('Error response text:', textResponse);
-                throw new Error(`HTTP error! status: ${response.status}, body: ${textResponse.substring(0, 200)}...`);
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            // Intentar parsear como JSON solo si la respuesta es OK
             const contentType = response.headers.get('content-type');
             if (!contentType || !contentType.includes('application/json')) {
-                console.error('Invalid content type:', contentType);
-                const textResponse = await response.text();
-                console.error('Non-JSON response:', textResponse.substring(0, 200));
                 throw new Error('La respuesta del servidor no es JSON válido');
             }
 
@@ -42,11 +43,7 @@ const TimeSlotHandler = {
             
             return data.horariosTaller || {};
         } catch (error) {
-            console.error('Error completo:', error);
-            // Agregar más contexto al error
-            if (error.name === 'SyntaxError') {
-                console.error('Error de parsing JSON - probablemente respuesta HTML en lugar de JSON');
-            }
+            console.error('Error en fetchTimeSlots:', error);
             throw error;
         } finally {
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
@@ -69,7 +66,7 @@ const TimeSlotHandler = {
             });
             
             button.classList.add('bg-red-600', 'text-white');
-            fechaInput.value = datePicker.value;
+            fechaInput.value = datePicker.value + 'T' + timeInfo.inicio;
             this.primerHorarioSeleccionado = null;
             
         } else {
@@ -102,10 +99,12 @@ const TimeSlotHandler = {
                         btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
                     });
 
+                    const startButton = buttons[Math.min(firstIndex, secondIndex)];
                     buttons[Math.min(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     buttons[Math.max(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     
-                    fechaInput.value = datePicker.value;
+                    const startTime = JSON.parse(startButton.getAttribute('data-info')).inicio;
+                    fechaInput.value = datePicker.value + 'T' + startTime;
                     this.primerHorarioSeleccionado = null;
                 } else {
                     this.showError('Por favor, seleccione dos horarios consecutivos');
@@ -115,7 +114,6 @@ const TimeSlotHandler = {
         }
     },
 
- 
     async updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
@@ -124,28 +122,29 @@ const TimeSlotHandler = {
             this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
             return;
         }
+
+        this.primerHorarioSeleccionado = null;
+        document.getElementById('fecha_inicio').value = '';
+        timeSlotsContainer.innerHTML = '';
     
         try {
             const timeSlots = await this.fetchTimeSlots(selectedDate);
-            console.log('Time slots received:', timeSlots);
             
             if (!timeSlots || Object.keys(timeSlots).length === 0) {
                 this.showError('No hay horarios disponibles para la fecha seleccionada.');
                 return;
             }
             
-            // Convertir el objeto de lapsos a un array ordenado
             const sortedSlots = Object.entries(timeSlots).sort((a, b) => {
                 return a[1].inicio.localeCompare(b[1].inicio);
             });
-            
-            console.log('Sorted slots:', sortedSlots);
 
             sortedSlots.forEach(([lapso, info]) => {
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.textContent = `${info.inicio} - ${info.fin}`;
                 button.setAttribute('data-lapso', lapso);
+                button.setAttribute('data-info', JSON.stringify(info));
                 
                 const isDisabled = info.ocupado;
                 
@@ -162,16 +161,20 @@ const TimeSlotHandler = {
                 button.disabled = isDisabled;
                 timeSlotsContainer.appendChild(button);
             });
+
+            if (this.servicioSeleccionadoDuracion > 30 && serviceDurationMessage) {
+                serviceDurationMessage.classList.remove('hidden');
+            }
         } catch (error) {
-            console.error('Error detallado en updateTimeSlots:', error);
+            console.error('Error en updateTimeSlots:', error);
             let errorMessage = 'Error al cargar los horarios. ';
             
             if (error.message.includes('500')) {
-                errorMessage += 'Error interno del servidor. Por favor, contacte al administrador.';
-            } else if (error.message.includes('Invalid JSON')) {
-                errorMessage += 'Respuesta inválida del servidor.';
+                errorMessage += 'Error interno del servidor. Por favor, intente más tarde.';
+            } else if (error.message.includes('JSON')) {
+                errorMessage += 'Error en la respuesta del servidor.';
             } else {
-                errorMessage += 'Por favor, intente nuevamente.';
+                errorMessage += error.message;
             }
             
             this.showError(errorMessage);
