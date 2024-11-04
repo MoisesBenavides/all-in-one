@@ -505,7 +505,7 @@ class ControladorFuncionario extends AbstractController {
         
     }
 
-    function addValets(){
+    function addValet(){
         $response = ['success' => false, 'errors' => []];
 
         $rol=$_SESSION['rol'];
@@ -562,7 +562,7 @@ class ControladorFuncionario extends AbstractController {
         
     }
 
-    function addServiceExecutives(){
+    function addServiceExecutive(){
         $response = ['success' => false, 'errors' => []];
 
         $rol=$_SESSION['rol'];
