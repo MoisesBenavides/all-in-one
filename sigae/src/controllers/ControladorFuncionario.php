@@ -338,6 +338,7 @@ class ControladorFuncionario extends AbstractController {
         $response = ['success' => false, 'errors' => []];
 
         $rol=$_SESSION['rol'];
+        error_log($rol);
         $jefesDiagnostico = [];
 
         $rolUsuarioNuevo = 'jefe_diagnostico';
