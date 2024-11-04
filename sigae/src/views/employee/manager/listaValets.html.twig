@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIO - Taller, neumáticos, reservas y más</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+    
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+
+        .btn{
+            background-color: #dc2626;
+            text: white;
+        }
+
+        .btn:hover{
+            background-color: #b91c1c;
+            text: white;
+        }
+    </style>
+</head>
+
+{% include 'partials/headerGerente.html.twig' %}
+
+<body>
+    <main class="min-h-screen bg-white p-4">
+        <div class="max-w-7xl mx-auto flex justify-center items-center">
+            <!-- Contenedor principal -->
+            <section class="w-full max-w-[700px] min-h-[520px] p-8 bg-white rounded-md border border-neutral-900 flex flex-col items-center">
+                <!-- Título -->
+                <h2 class="text-2xl font-bold text-neutral-900 mb-8">Lista de Valets Parking</h2>
+
+                <!-- Botón Ingresar Nuevo -->
+                <div class="w-full max-w-[290px] mb-8">
+                    <button class="w-full px-7 py-3 bg-neutral-50 border border-black rounded-lg text-lg font-semibold hover:bg-neutral-100 transition-colors duration-200">
+                        Ingresar Nuevo
+                    </button>
+                </div>
+
+                <!-- Lista de funcionarios -->
+                <ul class="w-full max-w-[430px] space-y-4">
+                    {% for funcionario in funcionarios %}
+                        {% if funcionario is defined and funcionario %}
+                        <li>
+                            <div class="flex justify-between items-center px-6 py-2.5">
+                                <p class="text-lg font-semibold text-black">{{ funcionario.usuario }}@{{ funcionario.host }}</p>
+                                <div class="flex gap-7">
+                                    <button class="transform hover:scale-110 transition-transform duration-200">
+                                        <img src="{{ asset('svg/pencil.svg') }}" alt="Editar" class="w-6 h-6"/>
+                                    </button>
+                                    <button class="transform hover:scale-110 transition-transform duration-200">
+                                        <img src="{{ asset('svg/trashCan.svg') }}" alt="Eliminar" class="w-6 h-6"/>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="w-full h-[1px] bg-neutral-200 my-2"></div>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+                <!-- Botón Volver -->
+                <div class="mt-8 w-full max-w-[290px]">
+                    <a href="{{ path('showDashboard') }}" class="btn flex items-center justify-center w-full px-7 py-3.5 rounded-lg text-lg font-semibold text-white transition-colors duration-200">
+                        Volver
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    {% include 'partials/footer.html.twig' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+            // const archivoTraduccionHome = "{{ asset('translate/.json') }}";
+            inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+        });
+    </script>
+</body>
+</html>
