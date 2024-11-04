@@ -132,8 +132,6 @@ class Funcionario{
             return true;
 
         } catch(PDOException $e){
-            // Debug
-            error_log("Error al registrar Jefe diagnostico modelo".$e->getMessage());
             throw $e;
         }
 
