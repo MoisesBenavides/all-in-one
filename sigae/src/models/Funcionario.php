@@ -312,6 +312,26 @@ class Funcionario{
 
     }
 
+    public static function existe($rol_loggeado, $usuario, $host){
+        try{
+            $conn = conectarDB($rol_loggeado);
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM mysql.user
+                                    WHERE user = :usr
+                                    AND host = :host;');
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+            
+            return $count !=0;
+        } catch (PDOException $e){
+            throw $e;
+        } finally {
+            $conn = null; // Cierra la conexión
+        }
+    }
+
     public static function getFuncionariosPorRol($rol_loggeado, $rol_a_buscar){
         try{
             $conn = conectarDB($rol_loggeado);

@@ -356,7 +356,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->altaJefeDiagnostico($contrasena)) {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        } elseif (!$this->funcionario->altaJefeDiagnostico($contrasena)) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -413,7 +415,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->altaJefeTaller($contrasena)) {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        }elseif (!$this->funcionario->altaJefeTaller($contrasena)) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -470,7 +474,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->altaCajero($contrasena)) {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        }elseif (!$this->funcionario->altaCajero($contrasena)) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -527,7 +533,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->altaValetParking($contrasena)) {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        }elseif (!$this->funcionario->altaValetParking($contrasena)) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -584,7 +592,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if(!$this->funcionario->altaEjecutivo($contrasena)){
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        }elseif(!$this->funcionario->altaEjecutivo($contrasena)){
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -680,7 +690,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->bajaJefeDiagnostico()) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaJefeDiagnostico()) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -734,7 +746,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->bajaJefeTaller()) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaJefeTaller()) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -788,7 +802,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->bajaCajero()) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaCajero()) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -842,7 +858,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->bajaValetParking()) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaValetParking()) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -896,7 +914,9 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->bajaEjecutivo()) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaEjecutivo()) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
@@ -971,6 +991,10 @@ class ControladorFuncionario extends AbstractController {
         
     }
 
+    function doTransaction(): Response | RedirectResponse{
+        $response=['success' => false, 'errors' => []];
+    }
+
     function showServiceAgenda(): Response{
         $response=['success' => false, 'errors' => []];
 
@@ -978,9 +1002,7 @@ class ControladorFuncionario extends AbstractController {
         
         switch($rol){
             case 'gerente':
-                return $this->render('employee/manager/listaFuncionarios.html.twig');
             case 'jefe_taller':
-                return $this->render('employee/workshopChief/listaEjecutivos.html.twig');
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
@@ -990,9 +1012,7 @@ class ControladorFuncionario extends AbstractController {
         $rol=$_SESSION['rol'];
         switch($rol){
             case 'gerente':
-                return $this->render('employee/manager/listaFuncionarios.html.twig');
             case 'jefe_taller':
-                return $this->render('employee/workshopChief/listaEjecutivos.html.twig');
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
