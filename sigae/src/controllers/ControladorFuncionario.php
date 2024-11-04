@@ -1035,13 +1035,19 @@ class ControladorFuncionario extends AbstractController {
 
         // Validacion de campos vacios
         if (!isset($usuario, $host, $contrasena) || empty($usuario) || empty($host) || empty($contrasena)){
+            $resultado['exito'] = false;
             $resultado['msj_error'] = "Debe llenar todos los campos.";
         }elseif(!$this->validarUsuario($usuario, 50)){
+            $resultado['exito'] = false;
             $resultado['msj_error'] = "Por favor, ingrese un usuario válido.";
         } elseif(!$this->validarHost($host, 50)){
+            $resultado['exito'] = false;
             $resultado['msj_error'] = "Por favor, ingrese un nombre de host válido.";
         } elseif(!$this->validarContrasena($contrasena, 6, 60)){
+            $resultado['exito'] = false;
             $resultado['msj_error'] = "Por favor, ingrese una contraseña válida.";
+        } else{
+            $resultado['exito'] = true;
         }
         return $resultado;
     }
