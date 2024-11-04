@@ -60,6 +60,10 @@ class Funcionario{
         return $this;
     }
 
+    public function cerrarDBConnection(){
+        $this->conn = null;
+    }
+
     public function verificarCredenciales($contrasena) {
         try {
             $usuario = $this->getUsuario();
@@ -111,6 +115,201 @@ class Funcionario{
         } finally {
             $conn = null; // Cierra la conexión
         }
+    }
+
+    public function altaJefeDiagnostico($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL alta_jefe_diagnostico(:usr, :host, :pswd);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':pswd', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function altaJefeTaller($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL alta_jefe_taller(:usr, :host, :pswd);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':pswd', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function altaCajero($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL alta_cajero(:usr, :host, :pswd);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':pswd', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function altaValetParking($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL alta_valet_parking(:usr, :host, :pswd);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':pswd', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function altaEjecutivo($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL alta_ejecutivo(:usr, :host, :pswd);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':pswd', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function bajaJefeDiagnostico(){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL baja_jefe_diagnostico(:usr, :host);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function bajaJefeTaller(){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL baja_jefe_taller(:usr, :host);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function bajaCajero(){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL baja_cajero(:usr, :host);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function bajaValetParking(){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL baja_valet_parking(:usr, :host);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function bajaEjecutivo(){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL baja_ejecutivo(:usr, :host);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
     }
 
     public static function getFuncionariosPorRol($rol_loggeado, $rol_a_buscar){

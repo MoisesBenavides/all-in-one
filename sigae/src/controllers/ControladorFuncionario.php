@@ -527,7 +527,7 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (!$this->funcionario->altaValet($contrasena)) {
+                        if (!$this->funcionario->altaValetParking($contrasena)) {
                             throw new Exception("No se pudo registrar el usuario.");
                         } else {
                             // Redirigir a la lista actualizada
