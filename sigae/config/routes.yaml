@@ -201,6 +201,7 @@ employeeManagement:
   methods: GET
 
 # Gestion de funcionarios
+# Consulta
 showDiagnoseChiefs:
   path: /diagnoseChiefs
   controller: Sigae\Controllers\ControladorFuncionario::showDiagnoseChiefs
@@ -226,11 +227,65 @@ showServiceExecutives:
   controller: Sigae\Controllers\ControladorFuncionario::showServiceExecutives
   methods: GET
 
+# Alta
+addDiagnoseChief:
+  path: /addDiagnoseChief
+  controller: Sigae\Controllers\ControladorFuncionario::addDiagnoseChief
+  methods: POST
+
+addWorkshopChief:
+  path: /addWorkshopChief
+  controller: Sigae\Controllers\ControladorFuncionario::addWorkshopChief
+  methods: POST
+
+addCashiers:
+  path: /addCashier
+  controller: Sigae\Controllers\ControladorFuncionario::addCashier
+  methods: POST
+
+addValet:
+  path: /addValet
+  controller: Sigae\Controllers\ControladorFuncionario::addValet
+  methods: POST
+
+addServiceExecutive:
+  path: /addServiceExecutive
+  controller: Sigae\Controllers\ControladorFuncionario::addServiceExecutive
+  methods: POST
+
+# Baja
+deleteDiagnoseChief:
+  path: /deleteDiagnoseChief
+  controller: Sigae\Controllers\ControladorFuncionario::deleteDiagnoseChief
+  methods: POST
+
+deleteWorkshopChief:
+  path: /deleteWorkshopChief
+  controller: Sigae\Controllers\ControladorFuncionario::deleteWorkshopChief
+  methods: POST
+
+deleteCashiers:
+  path: /deleteCashier
+  controller: Sigae\Controllers\ControladorFuncionario::deleteCashier
+  methods: POST
+
+deleteValet:
+  path: /deleteValet
+  controller: Sigae\Controllers\ControladorFuncionario::deleteValet
+  methods: POST
+
+deleteServiceExecutive:
+  path: /deleteServiceExecutive
+  controller: Sigae\Controllers\ControladorFuncionario::deleteServiceExecutive
+  methods: POST
+
+# Agenda de servicios de taller para ejecutivo
 showServiceAgenda:
   path: /serviceAgenda
   controller: Sigae\Controllers\ControladorFuncionario::showServiceAgenda
   methods: GET
 
+# Registros de diagnosticos para jefe de diagnostico
 showServiceDiagnosisRecords:
   path: /serviceDiagnosisRecords
   controller: Sigae\Controllers\ControladorFuncionario::showServiceDiagnosisRecords
