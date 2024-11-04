@@ -346,8 +346,9 @@ class ControladorFuncionario extends AbstractController {
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
-
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
                 if ($validacion['exito'] === true) {
+                    error_log("If ".$rol);
 
                     $usuario = $_POST["usuario"];
                     $host = $_POST["host"];
@@ -1023,13 +1024,19 @@ class ControladorFuncionario extends AbstractController {
 
         // Validacion de campos vacios
         if (!isset($usuario, $host, $contrasena) || empty($usuario) || empty($host) || empty($contrasena)){
+            $resultado['exito'] = false;
             $resultado['msj_error'] = "Debe llenar todos los campos.";
         }elseif(!$this->validarUsuario($usuario, 50)){
+            $resultado['exito'] = false;
             $resultado['msj_error'] = "Por favor, ingrese un usuario válido.";
         } elseif(!$this->validarHost($host, 50)){
+            $resultado['exito'] = false;
             $resultado['msj_error'] = "Por favor, ingrese un nombre de host válido.";
         } elseif(!$this->validarContrasena($contrasena, 6, 60)){
+            $resultado['exito'] = false;
             $resultado['msj_error'] = "Por favor, ingrese una contraseña válida.";
+        } else{
+            $resultado['exito'] = true;
         }
         return $resultado;
     }
