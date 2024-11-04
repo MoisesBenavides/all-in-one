@@ -10,13 +10,27 @@ const TimeSlotHandler = {
         if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
     
         try {
-            const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
+            // Asegurarse de que la fecha esté en formato YYYY-MM-DD
+            const fecha = new Date(selectedDate);
+            const formattedDate = fecha.getFullYear() + '-' + 
+                String(fecha.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(fecha.getDate()).padStart(2, '0');
+            
             console.log('Fetching time slots for date:', formattedDate);
             
-            const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
+            // Asegurarse de que la URL se construya correctamente
+            const baseUrl = GET_BLOCKED_TIMES_URL.split('?')[0]; // Obtener la base de la URL sin parámetros
+            const url = `${baseUrl}?date=${encodeURIComponent(formattedDate)}`;
             console.log('Request URL:', url);
             
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            
             console.log('Response status:', response.status);
 
             if (timeSlotsContainer) {
@@ -31,6 +45,8 @@ const TimeSlotHandler = {
 
             const contentType = response.headers.get('content-type');
             if (!contentType || !contentType.includes('application/json')) {
+                const textResponse = await response.text();
+                console.error('Invalid content type:', contentType, 'Response:', textResponse);
                 throw new Error('La respuesta del servidor no es JSON válido');
             }
 
@@ -66,7 +82,9 @@ const TimeSlotHandler = {
             });
             
             button.classList.add('bg-red-600', 'text-white');
-            fechaInput.value = datePicker.value + 'T' + timeInfo.inicio;
+            const fecha = new Date(datePicker.value);
+            const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${timeInfo.inicio}`;
+            fechaInput.value = formattedDate;
             this.primerHorarioSeleccionado = null;
             
         } else {
@@ -103,8 +121,10 @@ const TimeSlotHandler = {
                     buttons[Math.min(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     buttons[Math.max(firstIndex, secondIndex)].classList.add('bg-red-600', 'text-white');
                     
-                    const startTime = JSON.parse(startButton.getAttribute('data-info')).inicio;
-                    fechaInput.value = datePicker.value + 'T' + startTime;
+                    const startInfo = JSON.parse(startButton.getAttribute('data-info'));
+                    const fecha = new Date(datePicker.value);
+                    const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${startInfo.inicio}`;
+                    fechaInput.value = formattedDate;
                     this.primerHorarioSeleccionado = null;
                 } else {
                     this.showError('Por favor, seleccione dos horarios consecutivos');
