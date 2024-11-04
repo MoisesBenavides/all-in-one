@@ -11,7 +11,7 @@ BEGIN
     SELECT CURRENT_ROLE() INTO rol_actual;
 
     -- Vefirica si el rol actual es autorizado
-    IF rol_actual = 'gerente' OR 'admin_rol' THEN
+    IF rol_actual = 'gerente' OR rol_actual = 'admin_rol' THEN
         -- Construye la consulta de creacion de usuario con rol de jefe_diagnostico
         SET @query = CONCAT('CREATE USER "', nombre_usuario, '"@"', nombre_host, '" IDENTIFIED BY "', nueva_contrasena, '" DEFAULT ROLE "jefe_diagnostico";');
 
