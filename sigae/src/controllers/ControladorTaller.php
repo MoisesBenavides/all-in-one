@@ -228,11 +228,14 @@ class ControladorTaller extends AbstractController{
                 ];
             }
 
+            $horaActual = date('Y-m-d H:i:s');
+            error_log($horaActual);
             error_log("Horarios Taller: " . print_r($horariosTallerDia, true));
 
             return new JsonResponse([
                 'success' => true,
-                'horariosTaller' => $horariosTallerDia
+                'horariosTaller' => $horariosTallerDia,
+                'horaActual' => $horaActual
             ]);
 
         } catch (Exception $e) {
