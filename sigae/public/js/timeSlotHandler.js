@@ -10,7 +10,7 @@ const TimeSlotHandler = {
         if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
     
         try {
-            // Formatear fecha como YYYY-MM-DD para coincidir con el formato esperado por el backend
+            // Formatear fecha como YYYY-MM-DD para coincidir 
             const fecha = new Date(selectedDate);
             const formattedDate = fecha.getFullYear() + '-' + 
                 String(fecha.getMonth() + 1).padStart(2, '0') + '-' + 
