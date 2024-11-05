@@ -312,6 +312,111 @@ class Funcionario{
 
     }
 
+    public function modJefeDiagnostico($usuarioNuevo, $hostNuevo){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL modificar_jefe_diagnostico(:usr, :host, :usrNuevo, :hostNuevo);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':usrNuevo', $usuarioNuevo);
+            $stmt->bindParam(':hostNuevo', $hostNuevo);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modJefeTaller($usuarioNuevo, $hostNuevo){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL modificar_jefe_taller(:usr, :host, :usrNuevo, :hostNuevo);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':usrNuevo', $usuarioNuevo);
+            $stmt->bindParam(':hostNuevo', $hostNuevo);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modCajero($usuarioNuevo, $hostNuevo){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL modificar_cajero(:usr, :host, :usrNuevo, :hostNuevo);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':usrNuevo', $usuarioNuevo);
+            $stmt->bindParam(':hostNuevo', $hostNuevo);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modValetParking($usuarioNuevo, $hostNuevo){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL modificar_valet_parking(:usr, :host, :usrNuevo, :hostNuevo);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':usrNuevo', $usuarioNuevo);
+            $stmt->bindParam(':hostNuevo', $hostNuevo);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modEjecutivo($usuarioNuevo, $hostNuevo){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL modificar_ejecutivo(:usr, :host, :usrNuevo, :hostNuevo);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':usrNuevo', $usuarioNuevo);
+            $stmt->bindParam(':hostNuevo', $hostNuevo);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
     public static function existe($rol_loggeado, $usuario, $host){
         try{
             $conn = conectarDB($rol_loggeado);
