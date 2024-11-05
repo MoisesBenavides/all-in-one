@@ -61,11 +61,12 @@ CREATE TABLE otro_producto (
 
 -- Transaccion
 CREATE TABLE transaccion (
+    id INT AUTO_INCREMENT NOT NULL,
     id_producto INT NOT NULL,
     cantidad INT NOT NULL,
-    tipo ENUM('ingreso', 'egreso'),
+    tipo ENUM('ingreso', 'egreso') NOT NULL,
     fecha DATETIME NOT NULL,
-    PRIMARY KEY (id_producto),
+    PRIMARY KEY (id),
     FOREIGN KEY (id_producto) REFERENCES producto(id)
 );
 

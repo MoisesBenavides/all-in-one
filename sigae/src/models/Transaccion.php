@@ -7,11 +7,14 @@ use Exception;
 
 class Transaccion{
     private ?PDO $conn =null;
+    private $id;
     private TipoTransaccion $tipo;
     private $cantidad;
     private $fecha;
+    
 
-    public function __construct(TipoTransaccion $tipo, $cantidad, $fecha){
+    public function __construct($id, TipoTransaccion $tipo, $cantidad, $fecha){
+        $this->id = $id;
         $this->tipo = $tipo;
         $this->cantidad = $cantidad;
         $this->fecha = $fecha;
@@ -27,6 +30,16 @@ class Transaccion{
 
     public function getDBConnection(){
         return $this->conn;
+    }
+
+    public function getId(){
+        return $this->id;
+    }
+
+    public function setId($id){
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getTipo(): string{
