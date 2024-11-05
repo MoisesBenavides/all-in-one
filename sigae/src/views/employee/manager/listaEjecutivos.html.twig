@@ -30,25 +30,97 @@
         .btn:hover{
             background-color: #b91c1c;
             text: white;
+        }  .password-container {
+            position: relative;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
         }
     </style>
 </head>
 
-{% include 'partials/headerGerente.html.twig' %}
-
 <body>
     <main class="min-h-screen bg-white p-4">
         <div class="max-w-7xl mx-auto flex justify-center items-center">
-            <!-- Contenedor principal -->
             <section class="w-full max-w-[700px] min-h-[520px] p-8 bg-white rounded-md border border-neutral-900 flex flex-col items-center">
-                <!-- Título -->
-                <h2 class="text-2xl font-bold text-neutral-900 mb-8">Lista de Ejecutivos</h2>
+                <h2 class="text-2xl font-bold text-neutral-900 mb-8">Lista de ejecutivos</h2>
 
-                <!-- Botón Ingresar Nuevo -->
-                <div class="w-full max-w-[290px] mb-8">
-                    <button class="w-full px-7 py-3 bg-neutral-50 border border-black rounded-lg text-lg font-semibold hover:bg-neutral-100 transition-colors duration-200">
-                        Ingresar Nuevo
+                <!-- Modified Add New Button with Dropdown -->
+                <div class="w-full max-w-[430px] mb-8">
+                    <button id="add-user-btn" type="button" 
+                            class="w-full px-7 py-3 bg-neutral-50 border border-black rounded-lg text-lg font-semibold hover:bg-neutral-100 transition-colors duration-200 flex justify-between items-center">
+                        <span>Ingresar Nuevo</span>
+                        <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" 
+                             class="w-5 h-5 transform transition-transform duration-300" id="dropdown-icon">
                     </button>
+
+                    <!-- New User Form -->
+                    <form id="new-user-form" action="{{ path('addUser') }}" method="POST" 
+                          class="hidden space-y-6 mt-4 p-4 border border-slate-300 rounded-md">
+                        <div class="space-y-4">
+                            <!-- Usuario Input -->
+                            <div>
+                                <label for="usuario" class="block text-lg font-medium text-neutral-900 mb-2">
+                                    Usuario *
+                                </label>
+                                <input type="text" id="usuario" name="usuario" required
+                                    class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                    placeholder="Ingrese el nombre de usuario">
+                            </div>
+
+                            <!-- Host Input -->
+                            <div>
+                                <label for="host" class="block text-lg font-medium text-neutral-900 mb-2">
+                                    Host *
+                                </label>
+                                <input type="text" id="host" name="host" required
+                                    class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                    placeholder="Ingrese el host">
+                            </div>
+
+                            <!-- Contraseña Input -->
+                            <div>
+                                <label for="contrasena" class="block text-lg font-medium text-neutral-900 mb-2">
+                                    Contraseña *
+                                </label>
+                                <div class="password-container">
+                                    <input type="password" id="contrasena" name="contrasena" required
+                                        class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                        placeholder="Ingrese la contraseña">
+                                    <span class="eye-icon" id="togglePassword">👁️</span>
+                                </div>
+                            </div>
+
+                            <!-- Rol Select -->
+                            <div>
+                                <label for="rol" class="block text-lg font-medium text-neutral-900 mb-2">
+                                    Rol *
+                                </label>
+                                <select id="rol" name="rol" required
+                                    class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm">
+                                    <option value="">Seleccione un rol</option>
+                                    <option value="jefe_diagnostico">Jefe de Diagnóstico</option>
+                                    <option value="jefe_taller">Jefe de Taller</option>
+                                    <option value="cajero">Cajero</option>
+                                    <option value="valet_parking">Valet Parking</option>
+                                </select>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div>
+                                <button type="submit" 
+                                    class="w-full px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg transition-colors">
+                                    Guardar Usuario
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- Lista de ejecutivos -->
