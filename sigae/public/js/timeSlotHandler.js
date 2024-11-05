@@ -3,56 +3,98 @@ const TimeSlotHandler = {
     primerHorarioSeleccionado: null,
 
     /**
-     * Actualiza los slots de tiempo basado en la fecha seleccionada
-     * @param {string} selectedDate - La fecha seleccionada
+     * Formatea la fecha para PHP asegurándose de que sea válida
+     */
+    formatDateForPHP(date) {
+        const d = new Date(date);
+        // Verificar que la fecha es válida
+        if (isNaN(d.getTime())) {
+            throw new Error('Fecha inválida');
+        }
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    },
+
+    /**
+     * Actualiza los slots de tiempo
      */
     updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
         const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorContainer = document.getElementById('error-container');
 
+        // Validaciones iniciales
         if (!timeSlotsContainer || !this.servicioSeleccionadoDuracion) {
             this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
             return Promise.reject();
         }
 
-        // Mostrar indicador de carga
-        if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+        // Validar fecha
+        try {
+            const currentDate = new Date();
+            const selectedDateTime = new Date(selectedDate);
+            
+            if (isNaN(selectedDateTime.getTime())) {
+                throw new Error('Fecha inválida');
+            }
 
-        // Resetear selecciones previas
+            // Remover la hora para comparar solo fechas
+            currentDate.setHours(0, 0, 0, 0);
+            selectedDateTime.setHours(0, 0, 0, 0);
+
+            if (selectedDateTime < currentDate) {
+                throw new Error('No se pueden seleccionar fechas pasadas');
+            }
+        } catch (error) {
+            this.showError(error.message);
+            return Promise.reject();
+        }
+
+        // Resetear estado
+        if (loadingIndicator) loadingIndicator.classList.remove('hidden');
         this.primerHorarioSeleccionado = null;
         document.getElementById('fecha_inicio').value = '';
         timeSlotsContainer.innerHTML = '';
-
-        // Ocultar mensajes de error previos
-        const errorContainer = document.getElementById('error-container');
         if (errorContainer) errorContainer.classList.add('hidden');
 
+        // Obtener horarios
         return this.fetchTimeSlots(selectedDate)
-            .then(timeSlots => {
-                if (!timeSlots || !timeSlots.horariosTaller || Object.keys(timeSlots.horariosTaller).length === 0) {
-                    throw new Error('No hay horarios disponibles');
+            .then(response => {
+                if (!response.success || !response.horariosTaller) {
+                    throw new Error(response.error || 'No hay horarios disponibles');
                 }
 
-                const sortedSlots = Object.entries(timeSlots.horariosTaller)
+                const sortedSlots = Object.entries(response.horariosTaller)
                     .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio));
 
-                // Verificar si es hoy
-                const today = new Date();
+                if (sortedSlots.length === 0) {
+                    throw new Error('No hay horarios disponibles para esta fecha');
+                }
+
+                const now = new Date();
                 const selectedDateObj = new Date(selectedDate);
-                const isToday = selectedDateObj.toDateString() === today.toDateString();
-                const currentTime = new Date(timeSlots.horaActual || Date.now());
+                const isToday = selectedDateObj.toDateString() === now.toDateString();
 
                 sortedSlots.forEach(([lapso, info]) => {
-                    const button = this.createTimeSlotButton(lapso, info, selectedDate, isToday, currentTime);
-                    timeSlotsContainer.appendChild(button);
+                    try {
+                        // Validar que la información del slot está completa
+                        if (!info.inicio || !info.fin) {
+                            console.warn(`Slot ${lapso} tiene información incompleta:`, info);
+                            return;
+                        }
+
+                        const button = this.createTimeSlotButton(lapso, info, selectedDate, isToday, now);
+                        timeSlotsContainer.appendChild(button);
+                    } catch (error) {
+                        console.warn(`Error al crear botón para slot ${lapso}:`, error);
+                    }
                 });
 
                 // Mostrar mensaje de duración si es necesario
-                if (this.servicioSeleccionadoDuracion > 30 && serviceDurationMessage) {
-                    serviceDurationMessage.classList.remove('hidden');
-                } else if (serviceDurationMessage) {
-                    serviceDurationMessage.classList.add('hidden');
+                if (serviceDurationMessage) {
+                    serviceDurationMessage.classList[
+                        this.servicioSeleccionadoDuracion > 30 ? 'remove' : 'add'
+                    ]('hidden');
                 }
             })
             .catch(error => {
@@ -69,39 +111,47 @@ const TimeSlotHandler = {
      * Obtiene los slots de tiempo del servidor
      */
     fetchTimeSlots(selectedDate) {
-        const formattedDate = this.formatDateForPHP(selectedDate);
-        const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
+        try {
+            const formattedDate = this.formatDateForPHP(selectedDate);
+            const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
 
-        return fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            credentials: 'same-origin'
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => {
-                    throw new Error(err.error || 'Error al obtener los horarios');
-                });
-            }
-            return response.json();
-        });
-    },
-
-    /**
-     * Formatea la fecha para PHP
-     */
-    formatDateForPHP(date) {
-        const d = new Date(date);
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            return fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 400) {
+                        throw new Error('Fecha inválida o fuera de rango');
+                    }
+                    throw new Error('Error al obtener los horarios');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data) {
+                    throw new Error('No se recibieron datos del servidor');
+                }
+                return data;
+            });
+        } catch (error) {
+            return Promise.reject(error);
+        }
     },
 
     /**
      * Crea un botón de slot de tiempo
      */
     createTimeSlotButton(lapso, info, selectedDate, isToday, currentTime) {
+        // Validar la información necesaria
+        if (!info || !info.inicio || !info.fin) {
+            throw new Error('Información de slot incompleta');
+        }
+
         const button = document.createElement('button');
         button.type = 'button';
         button.textContent = `${info.inicio} - ${info.fin}`;
@@ -110,18 +160,22 @@ const TimeSlotHandler = {
 
         // Determinar si el slot está deshabilitado
         let isDisabled = info.ocupado;
-        
+
         if (isToday) {
-            const [hours, minutes] = info.inicio.split(':').map(Number);
-            const slotTime = new Date(selectedDate);
-            slotTime.setHours(hours, minutes, 0, 0);
-            
-            if (slotTime < currentTime) {
+            try {
+                const [hours, minutes] = info.inicio.split(':').map(Number);
+                const slotTime = new Date(selectedDate);
+                slotTime.setHours(hours, minutes, 0, 0);
+
+                if (slotTime < currentTime) {
+                    isDisabled = true;
+                }
+            } catch (error) {
+                console.warn('Error al procesar hora del slot:', error);
                 isDisabled = true;
             }
         }
 
-        // Aplicar clases según el estado
         button.className = `w-full p-2 rounded-md text-center transition-colors ${
             isDisabled 
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
@@ -131,10 +185,11 @@ const TimeSlotHandler = {
         if (!isDisabled) {
             button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
         }
-        
+
         button.disabled = isDisabled;
         return button;
     },
+
 
     /**
      * Maneja la selección de tiempo
