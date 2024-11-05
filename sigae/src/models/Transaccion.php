@@ -115,6 +115,7 @@ class Transaccion{
     
         } catch (Exception $e) {
             throw $e;
+            return false;
         }
     }
     
