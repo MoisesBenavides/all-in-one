@@ -96,11 +96,5 @@ class OtroProducto extends Producto{
             return;
         }
     }
-    
-    public function agregarStock(){
-    }
-
-    public function restarStock(){
-    }
 
 }

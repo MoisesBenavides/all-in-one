@@ -337,6 +337,12 @@ showServiceAgenda:
   controller: Sigae\Controllers\ControladorFuncionario::showServiceAgenda
   methods: GET
 
+# Transacciones
+createTransaction:
+  path: /createTransaction
+  controller: Sigae\Controllers\ControladorTransaccion::createTransaction
+  methods: POST
+
 # Registros de diagnosticos para jefe de diagnostico
 showServiceDiagnosisRecords:
   path: /serviceDiagnosisRecords

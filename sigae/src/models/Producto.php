@@ -69,7 +69,10 @@ abstract class Producto{
     }
 
     abstract public function getProductosDisp();
-    abstract public function agregarStock();
-    abstract public function restarStock(); 
+
+    public static function agregarStock($id){
+    }
+    public static function restarStock($id){
+    }
 
 }

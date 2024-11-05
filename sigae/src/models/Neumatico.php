@@ -122,11 +122,5 @@ class Neumatico extends Producto{
             return;
         }
     }
-
-    public function agregarStock(){
-    }
-
-    public function restarStock(){
-    }
     
 }

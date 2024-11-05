@@ -1689,11 +1689,6 @@ class ControladorFuncionario extends AbstractController {
         
     }
 
-/*    function doTransaction(): Response|RedirectResponse{
-        $response=['success' => false, 'errors' => []];
-    }
-*/
-
     function showServiceAgenda(): Response{
         $response=['success' => false, 'errors' => []];
 
