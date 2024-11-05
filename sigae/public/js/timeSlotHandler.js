@@ -6,60 +6,53 @@ const TimeSlotHandler = {
         const loadingIndicator = document.getElementById('loadingIndicator');
         const timeSlotsContainer = document.getElementById('timeSlots');
         
-        // Mostrar indicador de carga
         if (loadingIndicator) loadingIndicator.classList.remove('hidden');
         if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
     
         try {
+            // Formatear fecha como lo espera el controlador (YYYY-MM-DD)
             const fecha = new Date(selectedDate);
-            const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
-            
-            const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
+            const formattedDate = fecha.toISOString().split('T')[0];
+
+            // Construir URL como la espera el controlador
+            const url = `${GET_BLOCKED_TIMES_URL}?date=${formattedDate}`;
             
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: 'include' // Importante para las sesiones de Symfony
             });
 
             if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`);
+                const errorText = await response.text();
+                throw new Error(errorText || 'Error al obtener los horarios');
             }
 
             const data = await response.json();
 
-            if (!data.success) {
-                throw new Error(data.error || 'Error al obtener horarios');
+            // Validar la estructura que devuelve el controlador
+            if (!data.success || !data.horariosTaller) {
+                throw new Error(data.error || 'Formato de respuesta inválido');
             }
 
-            if (!data.horariosTaller) {
-                return {};
-            }
+            const horariosProcesados = data.horariosTaller;
 
-            // Procesar horarios
-            const horariosProcesados = {};
-            Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
-                horariosProcesados[lapso] = {
-                    ocupado: info.ocupado || false,
-                    inicio: info.inicio,
-                    fin: info.fin
-                };
-            });
-
-            // Validar hora actual si está disponible
+            // Procesar horarios pasados si tenemos horaActual
             if (data.horaActual) {
                 const horaActual = new Date(data.horaActual);
                 const fechaSeleccionada = new Date(selectedDate);
 
+                // Solo procesar si es el día actual
                 if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
                     Object.entries(horariosProcesados).forEach(([lapso, info]) => {
-                        const [horas, minutos] = info.inicio.split(':').map(Number);
+                        const [hours, minutes] = info.inicio.split(':');
                         const horaInicio = new Date(fechaSeleccionada);
-                        horaInicio.setHours(horas, minutos, 0, 0);
+                        horaInicio.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
-                        if (horaInicio < horaActual) {
+                        if (horaInicio <= horaActual) {
                             horariosProcesados[lapso].ocupado = true;
                         }
                     });
@@ -67,11 +60,10 @@ const TimeSlotHandler = {
             }
 
             return horariosProcesados;
-
+            
         } catch (error) {
-            throw new Error(`Error al cargar horarios: ${error.message}`);
+            throw new Error(`Error al obtener horarios: ${error.message}`);
         } finally {
-            // Asegurar que el indicador de carga se oculte
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
         }
@@ -96,6 +88,7 @@ const TimeSlotHandler = {
             const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${timeInfo.inicio}`;
             fechaInput.value = formattedDate;
             this.primerHorarioSeleccionado = null;
+            
         } else {
             if (!this.primerHorarioSeleccionado) {
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
@@ -164,8 +157,9 @@ const TimeSlotHandler = {
                 return;
             }
             
-            const sortedSlots = Object.entries(timeSlots)
-                .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio));
+            const sortedSlots = Object.entries(timeSlots).sort((a, b) => {
+                return a[1].inicio.localeCompare(b[1].inicio);
+            });
 
             sortedSlots.forEach(([lapso, info]) => {
                 const button = document.createElement('button');
@@ -195,7 +189,6 @@ const TimeSlotHandler = {
             }
         } catch (error) {
             this.showError(error.message);
-            timeSlotsContainer.innerHTML = '';
         }
     },
 
