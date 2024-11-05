@@ -954,7 +954,7 @@ class ControladorFuncionario extends AbstractController {
                     $host = $_POST["host"];
 
                     $this->funcionario = new Funcionario($usuario, $host, null);
-                    $this->funcionario->setDBConnection('gerente');
+                    $this->funcionario->setDBConnection('jefe_taller');
                     try {
                         if (!$this->funcionario->bajaEjecutivo()) {
                             throw new Exception("No se pudo registrar el usuario.");
@@ -1290,53 +1290,398 @@ class ControladorFuncionario extends AbstractController {
                     'response' => $response  // Aquí pasa la respuesta a la vista
                 ]);
 
-                case 'jefe_taller':
-                    $validacion = ['exito' => false, 'msj_error' => "" ];
-                    
-                    $validacion = $this->validarFormModificacionFuncionario(
-                        $_POST["usuarioActual"], $_POST["hostActual"], 
-                        $_POST["usuarioNuevo"], $_POST["hostNuevo"]
-                    );
-                    error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
-                    if ($validacion['exito'] === true) {
-    
-                        $usuarioActual = $_POST["usuarioActual"];
-                        $hostActual = $_POST["hostActual"];
-                        $usuarioNuevo = $_POST["usuarioNuevo"];
-                        $hostNuevo = $_POST["hostNuevo"];
-    
-                        $this->funcionario = new Funcionario($usuarioActual, $hostActual, null);
-                        $this->funcionario->setDBConnection('gerente');
-                        try {
-                            if (!Funcionario::existe($rol, $usuarioActual, $hostActual)) {
-                                throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
-                            } elseif (!$this->funcionario->modEjecutivo($usuarioNuevo, $hostNuevo)) {
-                                throw new Exception("No se pudo modificar el usuario.");
-                            } else {
-                                // Redirigir a la lista actualizada
-                                return $this->redirectToRoute('showServiceExecutives');
-                            }
-                        } catch (Exception $e) {
-                            // Añade el mensaje de error al array de errores
-                            $response['errors'][] = $e->getMessage();
-                        } finally {
-                            $this->funcionario->cerrarDBConnection();
+            case 'jefe_taller':
+                $validacion = ['exito' => false, 'msj_error' => ""];
+
+                $validacion = $this->validarFormModificacionFuncionario(
+                    $_POST["usuarioActual"],
+                    $_POST["hostActual"],
+                    $_POST["usuarioNuevo"],
+                    $_POST["hostNuevo"]
+                );
+                error_log("Debug validacion " . $validacion['exito'] . $validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuarioActual = $_POST["usuarioActual"];
+                    $hostActual = $_POST["hostActual"];
+                    $usuarioNuevo = $_POST["usuarioNuevo"];
+                    $hostNuevo = $_POST["hostNuevo"];
+
+                    $this->funcionario = new Funcionario($usuarioActual, $hostActual, null);
+                    $this->funcionario->setDBConnection('jefe_taller');
+                    try {
+                        if (!Funcionario::existe($rol, $usuarioActual, $hostActual)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modEjecutivo($usuarioNuevo, $hostNuevo)) {
+                            throw new Exception("No se pudo modificar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showServiceExecutives');
                         }
-                    } else{
-                        $response['errors'][] = $validacion['msj_error'];
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
-    
-                    // Obtener arreglo con usuarios con rol ejecutivo
-                    try{
-                        $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
-                    } catch(Exception $e){
-                        $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                } else {
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol ejecutivo
+                try {
+                    $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                } catch (Exception $e) {
+                    $response['errors'][] = "Error al cargar funcionarios: " . $e->getMessage();
+                }
+
+                return $this->render('employee/workshopChief/listaEjecutivos.html.twig', [
+                    'ejecutivos' => $ejecutivos,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+        
+    }
+
+    function modPswdDiagnoseChief(){
+        $response = ['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $jefesDiagnostico = [];
+
+        switch($rol){
+            case 'gerente':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('gerente');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraJefeDiagnostico($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showDiagnoseChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
                     }
-    
-                    return $this->render('employee/workshopChief/listaEjecutivos.html.twig', [
-                        'ejecutivos' => $ejecutivos,
-                        'response' => $response  // Aquí pasa la respuesta a la vista
-                    ]);
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_diagnostico
+                try{
+                    $jefesDiagnostico = Funcionario::getFuncionariosPorRol($rol, 'jefe_diagnostico');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaJefesDiagnostico.html.twig', [
+                    'funcionarios' => $jefesDiagnostico,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+        
+    }
+
+    function modPswdWorkshopChief(){
+        $response = ['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $jefesTaller = [];
+
+        switch($rol){
+            case 'gerente':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('gerente');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraJefeTaller($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showWorkshopChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_taller
+                try{
+                    $jefesTaller = Funcionario::getFuncionariosPorRol($rol, 'jefe_taller');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaJefesTaller.html.twig', [
+                    'funcionarios' => $jefesTaller,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+        
+    }
+
+    function modPswdCashier(){
+        $response = ['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $cajeros = [];
+
+        switch($rol){
+            case 'gerente':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('gerente');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraCajero($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showCashiers');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol cajero
+                try{
+                    $cajeros = Funcionario::getFuncionariosPorRol($rol, 'cajero');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaCajeros.html.twig', [
+                    'funcionarios' => $cajeros,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+        
+    }
+
+    function modPswdValet(){
+        $response = ['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $valets = [];
+
+        switch($rol){
+            case 'gerente':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('gerente');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraValetParking($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showValets');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol valet_parking
+                try{
+                    $valets = Funcionario::getFuncionariosPorRol($rol, 'valet_parking');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaValets.html.twig', [
+                    'funcionarios' => $valets,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+        
+    }
+
+    function modPswdServiceExecutive(){
+        $response = ['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $ejecutivos = [];
+
+        switch($rol){
+            case 'gerente':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('gerente');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraEjecutivo($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showServiceExecutives');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol ejecutivo
+                try{
+                    $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('employee/manager/listaJefesDiagnostico.html.twig', [
+                    'funcionarios' => $ejecutivos,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            case 'jefe_taller':
+                $validacion = ['exito' => false, 'msj_error' => ""];
+
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"],
+                    $_POST["host"],
+                    $_POST["contraNueva"]
+                );
+                error_log("Debug validacion " . $validacion['exito'] . $validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('jefe_taller');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraEjecutivo($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showServiceExecutives');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else {
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol ejecutivo
+                try {
+                    $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                } catch (Exception $e) {
+                    $response['errors'][] = "Error al cargar funcionarios: " . $e->getMessage();
+                }
+
+                return $this->render('employee/workshopChief/listaJefesDiagnostico.html.twig', [
+                    'funcionarios' => $ejecutivos,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
 
             default:
                 return $this->render('errors/errorAcceso.html.twig');
@@ -1430,6 +1775,23 @@ class ControladorFuncionario extends AbstractController {
     }
 
     private function validarFormCambioContraFuncionario($usuario, $host, $contraNueva){
+        $resultado = ['exito' => false, 'msj_error' => ""];
+
+        // Validacion de campos vacios
+        if (!isset($usuario, $host, $contraNueva) 
+            || empty($usuario) || empty($hostl) || empty($contraNueva)){
+            $resultado['msj_error'] = "Debe llenar todos los campos.";
+        }elseif(!$this->validarUsuario($usuario, 50)){
+            $resultado['msj_error'] = "Por favor, ingrese un usuario válido.";
+        } elseif(!$this->validarHost($host, 50)){
+            $resultado['msj_error'] = "Por favor, ingrese un nombre de host válido.";
+        } elseif(!$this->validarContrasena($contraNueva, 6, 60)){
+            $resultado['msj_error'] = "Por favor, ingrese una contraseña válida.";
+        } else{
+            $resultado['exito'] = true;
+        }
+        return $resultado;
+
 
     }
 
