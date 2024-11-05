@@ -100,22 +100,39 @@ const TimeSlotHandler = {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'  // Añadir este header
                 },
-                credentials: 'same-origin'
+                credentials: 'include',  // Cambiar a 'include' en lugar de 'same-origin'
+                mode: 'cors'  // Añadir modo CORS
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(response.status === 400 
-                        ? 'Fecha inválida o fuera de rango'
-                        : 'Error al obtener los horarios');
+                    // Mejorar el manejo de errores
+                    if (response.status === 400) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.error || 'Fecha inválida o fuera de rango');
+                        });
+                    }
+                    throw new Error('Error al obtener los horarios');
                 }
                 return response.json();
+            })
+            .then(data => {
+                if (!data) {
+                    throw new Error('No se recibieron datos del servidor');
+                }
+                // Validar la estructura de la respuesta
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                return data;
             });
         } catch (error) {
             return Promise.reject(error);
         }
     },
+
 
     /**
      * Renderiza los slots de tiempo
