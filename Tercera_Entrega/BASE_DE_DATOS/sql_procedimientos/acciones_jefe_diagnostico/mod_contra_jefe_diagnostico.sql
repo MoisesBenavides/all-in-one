@@ -6,11 +6,12 @@ CREATE PROCEDURE mod_contra_jefe_diagnostico(
     IN nueva_contrasena VARCHAR(60)
 )
 BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
     BEGIN
-        -- En caso de error, anula la transaccion y envia un mensaje de error
+        -- Obtener mensaje de error exacto
+        GET DIAGNOSTICS CONDITION 1 @p1 = MESSAGE_TEXT;
         ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al cambiar la clave';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @p1;
     END;
 
     -- Inicia una transaccion
