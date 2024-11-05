@@ -1679,7 +1679,7 @@ class ControladorFuncionario extends AbstractController {
                 }
 
                 return $this->render('employee/workshopChief/listaEjecutivos.html.twig', [
-                    'funcionarios' => $ejecutivos,
+                    'ejecutivos' => $ejecutivos,
                     'response' => $response  // Aquí pasa la respuesta a la vista
                 ]);
 
