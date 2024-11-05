@@ -24,71 +24,50 @@ const TimeSlotHandler = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include' // Importante para las sesiones de Symfony
+                credentials: 'include'
             });
 
-            // Si no es respuesta exitosa, manejar el error
             if (!response.ok) {
-                let errorMessage = 'Error al obtener los horarios';
-                try {
-                    const errorData = await response.text();
-                    // Si es un warning de PHP, dar un mensaje más amigable
-                    if (errorData.includes('Warning')) {
-                        if (errorData.includes('hora_inicio')) {
-                            errorMessage = 'Error al procesar los horarios ocupados';
-                        } else {
-                            errorMessage = 'Error al procesar la fecha seleccionada';
-                        }
-                    }
-                } catch (e) {}
-                throw new Error(errorMessage);
+                throw new Error('Error al obtener los horarios');
             }
 
             const data = await response.json();
 
-            if (!data.success) {
-                throw new Error(data.error || 'No se pudieron obtener los horarios');
+            // Verificar la estructura de los datos
+            if (!data || typeof data !== 'object') {
+                throw new Error('Formato de respuesta inválido');
             }
 
-            if (!data.horariosTaller || typeof data.horariosTaller !== 'object') {
+            // Procesar los lapsos
+            const horariosProcesados = {};
+            Object.entries(data).forEach(([lapso, info]) => {
+                if (info && info.inicio && info.fin) {
+                    horariosProcesados[lapso] = {
+                        inicio: info.inicio,
+                        fin: info.fin,
+                        ocupado: Boolean(info.ocupado) // Si existe la propiedad ocupado, usarla
+                    };
+                }
+            });
+
+            if (Object.keys(horariosProcesados).length === 0) {
                 throw new Error('No hay horarios disponibles');
             }
 
-            const horariosProcesados = {};
+            // Procesar horarios pasados
+            const now = new Date();
+            const fechaSeleccionada = new Date(formattedDate);
             
-            // Procesar los horarios manteniendo la estructura exacta del backend
-            for (const [lapso, info] of Object.entries(data.horariosTaller)) {
-                if (info && typeof info === 'object') {
-                    horariosProcesados[lapso] = {
-                        ocupado: Boolean(info.ocupado),
-                        inicio: info.inicio,
-                        fin: info.fin
-                    };
-                }
-            }
-
-            // Si no hay horarios después del procesamiento, mostrar error
-            if (Object.keys(horariosProcesados).length === 0) {
-                throw new Error('No hay horarios disponibles para esta fecha');
-            }
-
-            // Procesar horarios pasados si existe horaActual
-            if (data.horaActual) {
-                const horaActual = new Date(data.horaActual);
-                const fechaSeleccionada = new Date(formattedDate);
-
-                // Solo procesar si es el día actual
-                if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
-                    for (const [lapso, info] of Object.entries(horariosProcesados)) {
-                        const [horas, minutos] = info.inicio.split(':');
-                        const horaInicio = new Date(fechaSeleccionada);
-                        horaInicio.setHours(parseInt(horas), parseInt(minutos), 0, 0);
-
-                        if (horaInicio <= horaActual) {
-                            horariosProcesados[lapso].ocupado = true;
-                        }
+            if (fechaSeleccionada.toDateString() === now.toDateString()) {
+                Object.entries(horariosProcesados).forEach(([lapso, info]) => {
+                    const [horas, minutos] = info.inicio.split(':').map(Number);
+                    const horaLapso = new Date(fechaSeleccionada);
+                    horaLapso.setHours(horas, minutos, 0, 0);
+                    
+                    if (horaLapso <= now) {
+                        horariosProcesados[lapso].ocupado = true;
                     }
-                }
+                });
             }
 
             return horariosProcesados;
@@ -106,7 +85,6 @@ const TimeSlotHandler = {
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
         const errorContainer = document.getElementById('error-container');
 
-        // Limpiar errores previos
         if (errorContainer) errorContainer.classList.add('hidden');
 
         if (!timeSlotsContainer || !this.servicioSeleccionadoDuracion) {
@@ -121,8 +99,13 @@ const TimeSlotHandler = {
         try {
             const timeSlots = await this.fetchTimeSlots(selectedDate);
             
+            // Ordenar los lapsos por hora de inicio
             const sortedSlots = Object.entries(timeSlots)
-                .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio));
+                .sort((a, b) => {
+                    const timeA = a[1].inicio.split(':').map(Number);
+                    const timeB = b[1].inicio.split(':').map(Number);
+                    return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
+                });
 
             sortedSlots.forEach(([lapso, info]) => {
                 const button = document.createElement('button');
@@ -133,6 +116,7 @@ const TimeSlotHandler = {
                 
                 const isDisabled = info.ocupado;
                 
+                // Aplicar estilos según el estado del lapso
                 button.className = `w-full p-2 rounded-md text-center transition-colors ${
                     isDisabled 
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
@@ -151,7 +135,6 @@ const TimeSlotHandler = {
                 serviceDurationMessage.classList.remove('hidden');
             }
         } catch (error) {
-            console.error('Error en updateTimeSlots:', error);
             this.showError(error.message);
             timeSlotsContainer.innerHTML = '';
         }
