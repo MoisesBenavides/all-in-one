@@ -40,6 +40,15 @@
 
 
 <section class="flex overflow-hidden flex-col justify-center items-center py-60 pr-16 pl-20 font-bold whitespace-nowrap bg-white max-md:px-5 max-md:py-24">
+    {% if response.errors is defined and response.errors is not empty %}
+        <div id="error-container" style="background-color: #ffcec6;" class=" text-gray-950 text-center  p-4 rounded-md mb-4">
+            <ul id="error-list">
+                {% for error in response.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
   <div class="flex flex-col max-w-full w-[1297px]">
     <article class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
       <h2 class="text-4xl text-neutral-900">Transacción</h2>
