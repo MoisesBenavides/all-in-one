@@ -6,117 +6,72 @@ const TimeSlotHandler = {
         const loadingIndicator = document.getElementById('loadingIndicator');
         const timeSlotsContainer = document.getElementById('timeSlots');
         
+        // Mostrar indicador de carga
         if (loadingIndicator) loadingIndicator.classList.remove('hidden');
         if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
     
         try {
-            // Formateo de fecha ajustado para coincidir con el formato esperado por el backend
             const fecha = new Date(selectedDate);
-            // Asegurar que los componentes de la fecha tengan dos dígitos
-            const year = fecha.getFullYear();
-            const month = String(fecha.getMonth() + 1).padStart(2, '0');
-            const day = String(fecha.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
+            const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
             
-            const baseUrl = GET_BLOCKED_TIMES_URL;
-            // Asegurar que la URL se construye correctamente
-            let url;
-            try {
-                url = new URL(baseUrl);
-                url.searchParams.set('date', formattedDate);
-            } catch (e) {
-                // Si baseUrl es una ruta relativa
-                url = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}date=${encodeURIComponent(formattedDate)}`;
-            }
-
-            const response = await fetch(url.toString(), {
+            const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
+            
+            const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin'
+                }
             });
 
-            let responseText;
-            try {
-                responseText = await response.text();
-            } catch (e) {
-                throw new Error('No se pudo leer la respuesta del servidor');
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
             }
 
-            let data;
-            try {
-                data = JSON.parse(responseText);
-            } catch (e) {
-                if (responseText.includes('Warning')) {
-                    throw new Error('Error en el servidor: ' + responseText.split('\n')[0]);
-                }
-                throw new Error('Respuesta del servidor no válida');
-            }
-
-            if (!data || typeof data !== 'object') {
-                throw new Error('Formato de respuesta inválido');
-            }
+            const data = await response.json();
 
             if (!data.success) {
-                throw new Error(data.error || 'Error al obtener los horarios');
+                throw new Error(data.error || 'Error al obtener horarios');
             }
 
-            if (!data.horariosTaller || typeof data.horariosTaller !== 'object') {
-                throw new Error('No hay horarios disponibles');
+            if (!data.horariosTaller) {
+                return {};
             }
 
+            // Procesar horarios
             const horariosProcesados = {};
-            for (const [lapso, info] of Object.entries(data.horariosTaller)) {
-                if (info && typeof info.ocupado === 'boolean' && info.inicio && info.fin) {
-                    horariosProcesados[lapso] = {
-                        ...info,
-                        inicio: info.inicio.trim(),
-                        fin: info.fin.trim()
-                    };
-                }
-            }
+            Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
+                horariosProcesados[lapso] = {
+                    ocupado: info.ocupado || false,
+                    inicio: info.inicio,
+                    fin: info.fin
+                };
+            });
 
-            if (Object.keys(horariosProcesados).length === 0) {
-                throw new Error('No hay horarios válidos para esta fecha');
-            }
-
-            // Procesar horarios pasados si existe horaActual
+            // Validar hora actual si está disponible
             if (data.horaActual) {
-                try {
-                    const horaActual = new Date(data.horaActual);
-                    const fechaSeleccionada = new Date(selectedDate);
-                    
-                    // Solo procesar si es el día actual
-                    if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
-                        Object.entries(horariosProcesados).forEach(([lapso, info]) => {
-                            const [horas, minutos] = info.inicio.split(':').map(Number);
-                            const horaInicio = new Date(fechaSeleccionada);
-                            horaInicio.setHours(horas, minutos, 0, 0);
-                            
-                            if (horaInicio < horaActual) {
-                                horariosProcesados[lapso].ocupado = true;
-                            }
-                        });
-                    }
-                } catch (e) {
-                    console.warn('Error al procesar horarios pasados:', e);
+                const horaActual = new Date(data.horaActual);
+                const fechaSeleccionada = new Date(selectedDate);
+
+                if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
+                    Object.entries(horariosProcesados).forEach(([lapso, info]) => {
+                        const [horas, minutos] = info.inicio.split(':').map(Number);
+                        const horaInicio = new Date(fechaSeleccionada);
+                        horaInicio.setHours(horas, minutos, 0, 0);
+
+                        if (horaInicio < horaActual) {
+                            horariosProcesados[lapso].ocupado = true;
+                        }
+                    });
                 }
             }
 
             return horariosProcesados;
+
         } catch (error) {
-            let mensajeError = 'Error al cargar los horarios: ';
-            if (error.message.includes('no válida')) {
-                mensajeError += 'El servidor respondió en un formato incorrecto.';
-            } else if (error.message.includes('Formato de respuesta')) {
-                mensajeError += 'Los datos recibidos no son válidos.';
-            } else {
-                mensajeError += error.message;
-            }
-            throw new Error(mensajeError);
+            throw new Error(`Error al cargar horarios: ${error.message}`);
         } finally {
+            // Asegurar que el indicador de carga se oculte
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
         }
@@ -141,7 +96,6 @@ const TimeSlotHandler = {
             const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${timeInfo.inicio}`;
             fechaInput.value = formattedDate;
             this.primerHorarioSeleccionado = null;
-            
         } else {
             if (!this.primerHorarioSeleccionado) {
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
@@ -192,15 +146,6 @@ const TimeSlotHandler = {
     async updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
-        const errorContainer = document.getElementById('error-container');
-        const errorList = document.getElementById('error-list');
-
-        if (errorContainer) {
-            errorContainer.classList.add('hidden');
-        }
-        if (errorList) {
-            errorList.innerHTML = '';
-        }
 
         if (!timeSlotsContainer || !this.servicioSeleccionadoDuracion) {
             this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
@@ -214,13 +159,13 @@ const TimeSlotHandler = {
         try {
             const timeSlots = await this.fetchTimeSlots(selectedDate);
             
-            const sortedSlots = Object.entries(timeSlots)
-                .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio))
-                .filter(([_, info]) => info && info.inicio && info.fin);
-
-            if (sortedSlots.length === 0) {
-                throw new Error('No hay horarios disponibles para la fecha seleccionada.');
+            if (!timeSlots || Object.keys(timeSlots).length === 0) {
+                this.showError('No hay horarios disponibles para la fecha seleccionada.');
+                return;
             }
+            
+            const sortedSlots = Object.entries(timeSlots)
+                .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio));
 
             sortedSlots.forEach(([lapso, info]) => {
                 const button = document.createElement('button');
@@ -256,24 +201,16 @@ const TimeSlotHandler = {
 
     showError(message) {
         const errorContainer = document.getElementById('error-container');
-        const errorList = document.getElementById('error-list');
-
-        if (!errorContainer) return;
-
-        errorContainer.classList.remove('hidden');
-        
-        if (errorList) {
-            errorList.innerHTML = '';
-            const li = document.createElement('li');
-            li.textContent = message;
-            errorList.appendChild(li);
-        } else {
-            errorContainer.textContent = message;
+        if (errorContainer) {
+            errorContainer.classList.remove('hidden');
+            const errorList = document.getElementById('error-list');
+            if (errorList) {
+                errorList.innerHTML = `<li>${message}</li>`;
+            } else {
+                errorContainer.textContent = message;
+            }
+            setTimeout(() => errorContainer.classList.add('hidden'), 5000);
         }
-        
-        setTimeout(() => {
-            errorContainer.classList.add('hidden');
-        }, 5000);
     }
 };
 
