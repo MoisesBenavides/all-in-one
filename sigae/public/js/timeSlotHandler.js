@@ -2,64 +2,87 @@ const TimeSlotHandler = {
     servicioSeleccionadoDuracion: 0,
     primerHorarioSeleccionado: null,
 
+    
     async fetchTimeSlots(selectedDate) {
         const loadingIndicator = document.getElementById('loadingIndicator');
         const timeSlotsContainer = document.getElementById('timeSlots');
         
-        // Mostrar indicador de carga
-        if (loadingIndicator) loadingIndicator.classList.remove('hidden');
-        if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
-    
         try {
+            if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+            if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
+
+            // Formatear fecha para coincidir con el formato esperado por PHP DateTime
             const fecha = new Date(selectedDate);
-            const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
+            // Ajustar a timezone local antes de formatear
+            const offset = fecha.getTimezoneOffset();
+            fecha.setMinutes(fecha.getMinutes() - offset);
             
-            const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
-            
+            // Formato Y-m-d que espera PHP
+            const formattedDate = fecha.toISOString().split('T')[0];
+
+            // Construir URL con formato correcto
+            let url = GET_BLOCKED_TIMES_URL;
+            url += (url.includes('?') ? '&' : '?') + `date=${encodeURIComponent(formattedDate)}`;
+
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: 'include' // Necesario para las sesiones de Symfony
             });
 
+            // Manejar errores HTTP
             if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`);
+                let errorMessage = 'Error al obtener los horarios';
+                try {
+                    const text = await response.text();
+                    // Si es un warning de PHP, dar un mensaje más amigable
+                    if (text.includes('Warning')) {
+                        errorMessage = 'Error al procesar la fecha seleccionada';
+                    }
+                } catch (e) {}
+                throw new Error(errorMessage);
             }
 
-            const data = await response.json();
-
-            if (!data.success) {
-                throw new Error(data.error || 'Error al obtener horarios');
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                throw new Error('Error al procesar la respuesta del servidor');
             }
 
-            if (!data.horariosTaller) {
-                return {};
+            // Validar la estructura de respuesta que espera el controlador
+            if (!data.success || !data.horariosTaller) {
+                throw new Error(data.error || 'No hay horarios disponibles');
             }
 
-            // Procesar horarios
             const horariosProcesados = {};
+
+            // Procesar los horarios manteniendo la estructura exacta del backend
             Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
                 horariosProcesados[lapso] = {
-                    ocupado: info.ocupado || false,
+                    ocupado: Boolean(info.ocupado),
                     inicio: info.inicio,
                     fin: info.fin
                 };
             });
 
-            // Validar hora actual si está disponible
+            // Procesar horarios pasados usando el mismo formato de hora que el backend
             if (data.horaActual) {
                 const horaActual = new Date(data.horaActual);
-                const fechaSeleccionada = new Date(selectedDate);
+                const diaActual = new Date(formattedDate + 'T00:00:00');
 
-                if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
+                if (diaActual.toDateString() === horaActual.toDateString()) {
                     Object.entries(horariosProcesados).forEach(([lapso, info]) => {
-                        const [horas, minutos] = info.inicio.split(':').map(Number);
-                        const horaInicio = new Date(fechaSeleccionada);
-                        horaInicio.setHours(horas, minutos, 0, 0);
+                        // Convertir hora del formato del backend (HH:mm)
+                        const [horas, minutos] = info.inicio.split(':');
+                        const horaInicio = new Date(diaActual);
+                        horaInicio.setHours(parseInt(horas), parseInt(minutos), 0, 0);
 
-                        if (horaInicio < horaActual) {
+                        // Usar la misma lógica de comparación que el backend
+                        if (horaInicio <= horaActual) {
                             horariosProcesados[lapso].ocupado = true;
                         }
                     });
@@ -69,13 +92,13 @@ const TimeSlotHandler = {
             return horariosProcesados;
 
         } catch (error) {
-            throw new Error(`Error al cargar horarios: ${error.message}`);
+            throw error;
         } finally {
-            // Asegurar que el indicador de carga se oculte
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
         }
     },
+
 
     handleTimeSelection(lapso, timeInfo, button) {
         const fechaInput = document.getElementById('fecha_inicio');
@@ -96,6 +119,7 @@ const TimeSlotHandler = {
             const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${timeInfo.inicio}`;
             fechaInput.value = formattedDate;
             this.primerHorarioSeleccionado = null;
+            
         } else {
             if (!this.primerHorarioSeleccionado) {
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
@@ -146,6 +170,9 @@ const TimeSlotHandler = {
     async updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
+        const errorContainer = document.getElementById('error-container');
+
+        if (errorContainer) errorContainer.classList.add('hidden');
 
         if (!timeSlotsContainer || !this.servicioSeleccionadoDuracion) {
             this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
