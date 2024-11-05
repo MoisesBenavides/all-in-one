@@ -41,6 +41,16 @@
         <div class="max-w-7xl mx-auto flex justify-center items-center">
             <!-- Contenedor principal -->
             <section class="w-full max-w-[700px] min-h-[520px] p-8 bg-white rounded-md border border-neutral-900 flex flex-col items-center">
+              <!-- Cuadro de error -->
+                {% if response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
                 <!-- Título -->
                 <h2 class="text-2xl font-bold text-neutral-900 mb-8">Lista de Ejecutivos</h2>
 
