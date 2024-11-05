@@ -46,7 +46,15 @@
                     <img src="{{ asset('img/world.png') }}" alt="Language" class="w-full h-full object-cover">
                 </button>
             </div>
+
+                   <form action="{{ path('logout') }}" method="GET" class="w-auto">
+                    <button type="submit" name="CerrarSesion" class="px-4 py-2 bg-rose-400 text-white text-sm font-bold rounded-lg hover:bg-rose-500 transition-colors" traducir="">
+                        Cerrar Sesión
+                    </button>
+                </form>
         </div>
+
+        
 
         <!-- Menú hamburguesa móvil -->
         <nav id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
@@ -55,6 +63,11 @@
             <a href="{{ path('inventory') }}" traducir="" class="block text-black text-sm font-bold">Inventario</a>
             <a href="{{ path('employeeManagement') }}" traducir="" class="block text-black text-sm font-bold">Funcionarios</a>
         </nav>
+           <form action="{{ path('logout') }}" method="GET" class="w-full">
+                <button type="submit" name="CerrarSesion" class="w-full text-left text-red-500 text-sm font-bold px-0" traducir="">
+                    Cerrar Sesión
+                </button>
+            </form>
     </div>
 
     <script src="{{ asset('js/traduccion.js') }}"></script>
