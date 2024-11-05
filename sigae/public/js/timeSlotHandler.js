@@ -7,155 +7,154 @@ const TimeSlotHandler = {
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     },
 
-    async fetchTimeSlots(selectedDate) {
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const timeSlotsContainer = document.getElementById('timeSlots');
-        
-        try {
-            if (loadingIndicator) loadingIndicator.classList.remove('hidden');
-            if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
-
+    fetchTimeSlots(selectedDate) {
+        return new Promise((resolve, reject) => {
             const formattedDate = this.formatDateForPHP(selectedDate);
             const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
 
-            const response = await fetch(url, {
+            fetch(url, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include' // Importante para las sesiones de Symfony
-            });
-
-            // Si no es respuesta exitosa, manejar el error
-            if (!response.ok) {
-                let errorMessage = 'Error al obtener los horarios';
-                try {
-                    const errorData = await response.text();
-                    // Si es un warning de PHP, dar un mensaje más amigable
-                    if (errorData.includes('Warning')) {
-                        if (errorData.includes('hora_inicio')) {
-                            errorMessage = 'Error al procesar los horarios ocupados';
-                        } else {
-                            errorMessage = 'Error al procesar la fecha seleccionada';
-                        }
-                    }
-                } catch (e) {}
-                throw new Error(errorMessage);
-            }
-
-            const data = await response.json();
-
-            if (!data.success) {
-                throw new Error(data.error || 'No se pudieron obtener los horarios');
-            }
-
-            if (!data.horariosTaller || typeof data.horariosTaller !== 'object') {
-                throw new Error('No hay horarios disponibles');
-            }
-
-            const horariosProcesados = {};
-            
-            // Procesar los horarios manteniendo la estructura exacta del backend
-            for (const [lapso, info] of Object.entries(data.horariosTaller)) {
-                if (info && typeof info === 'object') {
-                    horariosProcesados[lapso] = {
-                        ocupado: Boolean(info.ocupado),
-                        inicio: info.inicio,
-                        fin: info.fin
-                    };
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        console.error('Error de servidor:', err);
+                        throw new Error(err.error || 'Error al obtener los horarios');
+                    });
                 }
-            }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.horariosTaller || typeof data.horariosTaller !== 'object') {
+                    throw new Error('Formato de respuesta inválido: falta "horariosTaller"');
+                }
 
-            // Si no hay horarios después del procesamiento, mostrar error
-            if (Object.keys(horariosProcesados).length === 0) {
-                throw new Error('No hay horarios disponibles para esta fecha');
-            }
-
-            // Procesar horarios pasados si existe horaActual
-            if (data.horaActual) {
-                const horaActual = new Date(data.horaActual);
+                const horariosProcesados = {};
+                const now = new Date();
                 const fechaSeleccionada = new Date(formattedDate);
+                const esHoy = fechaSeleccionada.toDateString() === now.toDateString();
 
-                // Solo procesar si es el día actual
-                if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
-                    for (const [lapso, info] of Object.entries(horariosProcesados)) {
-                        const [horas, minutos] = info.inicio.split(':');
-                        const horaInicio = new Date(fechaSeleccionada);
-                        horaInicio.setHours(parseInt(horas), parseInt(minutos), 0, 0);
+                // Procesar cada lapso y verificar la estructura
+                Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
+                    // Validar que el lapso contenga 'inicio' y 'fin'
+                    if (info && typeof info === 'object' && info.inicio && info.fin) {
+                        let ocupado = Boolean(info.ocupado);
 
-                        if (horaInicio <= horaActual) {
-                            horariosProcesados[lapso].ocupado = true;
+                        // Si es hoy, verificar si el lapso ya pasó
+                        if (esHoy) {
+                            const [horas, minutos] = info.inicio.split(':').map(Number);
+                            const horaLapso = new Date(fechaSeleccionada);
+                            horaLapso.setHours(horas, minutos, 0, 0);
+
+                            if (horaLapso <= now) {
+                                ocupado = true;
+                            }
                         }
+
+                        horariosProcesados[lapso] = {
+                            inicio: info.inicio,
+                            fin: info.fin,
+                            ocupado: ocupado
+                        };
+                    } else {
+                        console.warn(`Datos incompletos para el lapso: ${lapso}`, info);
                     }
-                }
-            }
+                });
 
-            return horariosProcesados;
-
-        } catch (error) {
-            throw error;
-        } finally {
-            if (loadingIndicator) loadingIndicator.classList.add('hidden');
-            if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
-        }
+                resolve(horariosProcesados);
+            })
+            .catch(error => {
+                console.error('Error en fetchTimeSlots:', error);
+                reject(new Error('Error al obtener los horarios. Intente nuevamente o contacte al soporte.'));
+            });
+        });
     },
 
-    async updateTimeSlots(selectedDate) {
+    updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
         const errorContainer = document.getElementById('error-container');
 
-        // Limpiar errores previos
-        if (errorContainer) errorContainer.classList.add('hidden');
-
         if (!timeSlotsContainer || !this.servicioSeleccionadoDuracion) {
             this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
-            return;
+            return Promise.reject();
         }
+
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        if (loadingIndicator) loadingIndicator.classList.remove('hidden');
 
         this.primerHorarioSeleccionado = null;
         document.getElementById('fecha_inicio').value = '';
         timeSlotsContainer.innerHTML = '';
-    
-        try {
-            const timeSlots = await this.fetchTimeSlots(selectedDate);
-            
-            const sortedSlots = Object.entries(timeSlots)
-                .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio));
+        
+        if (errorContainer) errorContainer.classList.add('hidden');
 
-            sortedSlots.forEach(([lapso, info]) => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.textContent = `${info.inicio} - ${info.fin}`;
-                button.setAttribute('data-lapso', lapso);
-                button.setAttribute('data-info', JSON.stringify(info));
-                
-                const isDisabled = info.ocupado;
-                
-                button.className = `w-full p-2 rounded-md text-center transition-colors ${
-                    isDisabled 
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                        : 'bg-white border border-gray-300 hover:bg-gray-50'
-                }`;
-                
-                if (!isDisabled) {
-                    button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
+        return this.fetchTimeSlots(selectedDate)
+            .then(timeSlots => {
+                if (!timeSlots || Object.keys(timeSlots).length === 0) {
+                    throw new Error('No hay horarios disponibles');
                 }
-                
-                button.disabled = isDisabled;
-                timeSlotsContainer.appendChild(button);
-            });
 
-            if (this.servicioSeleccionadoDuracion > 30 && serviceDurationMessage) {
-                serviceDurationMessage.classList.remove('hidden');
+                const sortedSlots = Object.entries(timeSlots)
+                    .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio));
+
+                sortedSlots.forEach(([lapso, info]) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.textContent = `${info.inicio} - ${info.fin}`;
+                    button.setAttribute('data-lapso', lapso);
+                    button.setAttribute('data-info', JSON.stringify(info));
+                    
+                    const isDisabled = info.ocupado;
+                    
+                    button.className = `w-full p-2 rounded-md text-center transition-colors ${
+                        isDisabled 
+                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                            : 'bg-white border border-gray-300 hover:bg-gray-50'
+                    }`;
+                    
+                    if (!isDisabled) {
+                        button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
+                    }
+                    
+                    button.disabled = isDisabled;
+                    timeSlotsContainer.appendChild(button);
+                });
+
+                if (this.servicioSeleccionadoDuracion > 30 && serviceDurationMessage) {
+                    serviceDurationMessage.classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                this.showError(error.message);
+                timeSlotsContainer.innerHTML = '';
+            })
+            .finally(() => {
+                if (loadingIndicator) loadingIndicator.classList.add('hidden');
+            });
+    },
+
+    showError(message) {
+        const errorContainer = document.getElementById('error-container');
+        if (errorContainer) {
+            errorContainer.classList.remove('hidden');
+            const errorList = document.getElementById('error-list');
+            if (errorList) {
+                errorList.innerHTML = `<li>${message}</li>`;
+            } else {
+                errorContainer.textContent = message;
             }
-        } catch (error) {
-            console.error('Error en updateTimeSlots:', error);
-            this.showError(error.message);
-            timeSlotsContainer.innerHTML = '';
+            setTimeout(() => errorContainer.classList.add('hidden'), 5000);
         }
     },
+
+
 
     handleTimeSelection(lapso, timeInfo, button) {
         const fechaInput = document.getElementById('fecha_inicio');
@@ -176,7 +175,6 @@ const TimeSlotHandler = {
             const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${timeInfo.inicio}`;
             fechaInput.value = formattedDate;
             this.primerHorarioSeleccionado = null;
-            
         } else {
             if (!this.primerHorarioSeleccionado) {
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
