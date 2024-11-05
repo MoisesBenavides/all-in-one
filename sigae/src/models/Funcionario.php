@@ -417,6 +417,106 @@ class Funcionario{
 
     }
 
+    public function modContraJefeDiagnostico($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL mod_contra_jefe_diagnostico(:usr, :host, :contraNueva);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':contraNueva', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modContraJefeTaller($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL mod_contra_jefe_taller(:usr, :host, :contraNueva);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':contraNueva', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modContraCajero($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL mod_contra_cajero(:usr, :host, :contraNueva);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':contraNueva', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modContraValetParking($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL mod_contra_valet_parking(:usr, :host, :contraNueva);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':contraNueva', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modContraEjecutivo($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL mod_contra_ejecutivo(:usr, :host, :contraNueva);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':contraNueva', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
     public static function existe($rol_loggeado, $usuario, $host){
         try{
             $conn = conectarDB($rol_loggeado);
