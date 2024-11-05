@@ -58,6 +58,8 @@ class ControladorTransaccion extends AbstractController{
                                 
                                 $this->transaccion->confirmarTransaccion();
                                 $response['success'] = true;
+                                // Recarga la pagina
+                                return $this->redirectToRoute('stockManagement');
                             }
                         } catch (Exception $e){
                             $this->transaccion->deshacerTransaccion();
@@ -66,8 +68,13 @@ class ControladorTransaccion extends AbstractController{
                             $this->transaccion->cerrarDBConnection();
                         }
                     }
-
+                } else {
+                    $response['errors'][] = "Debe llenar todos los campos.";
                 }
+                return $this->render('employee/manager/transaccionStock.html.twig', [
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+                
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
