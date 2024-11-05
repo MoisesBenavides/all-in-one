@@ -39,7 +39,7 @@ class ControladorTransaccion extends AbstractController{
                     } else{
                         $fecha = $this->obtenerFechaHoraActual();
 
-                        $this->transaccion = new Transaccion(TipoTransaccion::tryFrom($tipoTr), $cantidad, $fecha);
+                        $this->transaccion = new Transaccion(null, TipoTransaccion::tryFrom($tipoTr), $cantidad, $fecha);
 
                         $this->transaccion->setDBConnection("gerente");
                         $this->transaccion->comenzarTransaccion();
@@ -58,8 +58,19 @@ class ControladorTransaccion extends AbstractController{
                                 
                                 $this->transaccion->confirmarTransaccion();
                                 $response['success'] = true;
-                                // Recarga la pagina
-                                return $this->redirectToRoute('stockManagement');
+
+                                $transaccion = [
+                                    'id' => $this->transaccion->getId(),
+                                    'idProd' => $idProd,
+                                    'tipo' => $this->transaccion->getTipo(),
+                                    'cantidad' => $this->transaccion->getCantidad(),
+                                    'fecha' => $this->transaccion->getFecha(),
+                                ];
+
+                                // Carga la transacción en la página de confirmación
+                                return $this->render('employee/manager/transaccionConfirmacion.html.twig', [
+                                    'transaccion' => $transaccion
+                                ]);
                             }
                         } catch (Exception $e){
                             $this->transaccion->deshacerTransaccion();
@@ -78,6 +89,11 @@ class ControladorTransaccion extends AbstractController{
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
+    }
+
+    function transactionConfirmation(){
+        $response=['success' => false, 'errors' => []];
+
     }
 
     private function obtenerFechaHoraActual(){

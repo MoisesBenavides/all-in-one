@@ -109,6 +109,7 @@ class Transaccion{
             $stmt->bindParam(':fecha', $fecha);
                 
             $stmt->execute();
+            $this->setId($this->conn->lastInsertId());
     
             return true;
     
