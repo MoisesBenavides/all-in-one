@@ -11,20 +11,18 @@ const TimeSlotHandler = {
             if (loadingIndicator) loadingIndicator.classList.remove('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
 
-            // Formatear la fecha como YYYY-MM-DD
+            // Formatear fecha para coincidir con el formato esperado por PHP DateTime
             const fecha = new Date(selectedDate);
-            const formattedDate = fecha.toLocaleDateString('en-CA');
+            // Ajustar a timezone local antes de formatear
+            const offset = fecha.getTimezoneOffset();
+            fecha.setMinutes(fecha.getMinutes() - offset);
+            
+            // Formato Y-m-d que espera PHP
+            const formattedDate = fecha.toISOString().split('T')[0];
 
-            // Construir la URL de manera segura
-            let url;
-            if (GET_BLOCKED_TIMES_URL.includes('http')) {
-                // Si es una URL absoluta
-                url = `${GET_BLOCKED_TIMES_URL}${GET_BLOCKED_TIMES_URL.includes('?') ? '&' : '?'}date=${formattedDate}`;
-            } else {
-                // Si es una URL relativa
-                const baseUrl = window.location.origin;
-                url = `${baseUrl}${GET_BLOCKED_TIMES_URL}${GET_BLOCKED_TIMES_URL.includes('?') ? '&' : '?'}date=${formattedDate}`;
-            }
+            // Construir URL con formato correcto
+            let url = GET_BLOCKED_TIMES_URL;
+            url += (url.includes('?') ? '&' : '?') + `date=${encodeURIComponent(formattedDate)}`;
 
             const response = await fetch(url, {
                 method: 'GET',
@@ -32,63 +30,69 @@ const TimeSlotHandler = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                credentials: 'same-origin'
+                credentials: 'include' // Necesario para las sesiones de Symfony
             });
 
-            // Si hay error, capturar el mensaje específico
+            // Manejar errores HTTP
             if (!response.ok) {
-                const errorText = await response.text();
-                if (errorText.includes('Warning:')) {
-                    throw new Error('Error al procesar la fecha seleccionada');
-                }
-                throw new Error(errorText || `Error del servidor: ${response.status}`);
+                let errorMessage = 'Error al obtener los horarios';
+                try {
+                    const text = await response.text();
+                    // Si es un warning de PHP, dar un mensaje más amigable
+                    if (text.includes('Warning')) {
+                        errorMessage = 'Error al procesar la fecha seleccionada';
+                    }
+                } catch (e) {}
+                throw new Error(errorMessage);
             }
 
-            const data = await response.json();
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                throw new Error('Error al procesar la respuesta del servidor');
+            }
 
+            // Validar la estructura de respuesta que espera el controlador
             if (!data.success || !data.horariosTaller) {
-                throw new Error(data.error || 'No se pudieron obtener los horarios');
+                throw new Error(data.error || 'No hay horarios disponibles');
             }
 
-            // Procesar y validar los horarios
             const horariosProcesados = {};
+
+            // Procesar los horarios manteniendo la estructura exacta del backend
             Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
-                if (info && 'ocupado' in info && info.inicio && info.fin) {
-                    horariosProcesados[lapso] = {
-                        ocupado: Boolean(info.ocupado),
-                        inicio: info.inicio.trim(),
-                        fin: info.fin.trim()
-                    };
-                }
+                horariosProcesados[lapso] = {
+                    ocupado: Boolean(info.ocupado),
+                    inicio: info.inicio,
+                    fin: info.fin
+                };
             });
 
-            // Procesar horarios pasados si hay hora actual
+            // Procesar horarios pasados usando el mismo formato de hora que el backend
             if (data.horaActual) {
-                try {
-                    const horaActual = new Date(data.horaActual);
-                    const diaActual = new Date(formattedDate);
+                const horaActual = new Date(data.horaActual);
+                const diaActual = new Date(formattedDate + 'T00:00:00');
 
-                    if (diaActual.toDateString() === horaActual.toDateString()) {
-                        Object.entries(horariosProcesados).forEach(([lapso, info]) => {
-                            const [horas, minutos] = info.inicio.split(':').map(Number);
-                            const horaInicio = new Date(diaActual);
-                            horaInicio.setHours(horas, minutos, 0, 0);
+                if (diaActual.toDateString() === horaActual.toDateString()) {
+                    Object.entries(horariosProcesados).forEach(([lapso, info]) => {
+                        // Convertir hora del formato del backend (HH:mm)
+                        const [horas, minutos] = info.inicio.split(':');
+                        const horaInicio = new Date(diaActual);
+                        horaInicio.setHours(parseInt(horas), parseInt(minutos), 0, 0);
 
-                            if (horaInicio <= horaActual) {
-                                horariosProcesados[lapso].ocupado = true;
-                            }
-                        });
-                    }
-                } catch (e) {
-                    console.warn('Error al procesar horarios pasados:', e);
+                        // Usar la misma lógica de comparación que el backend
+                        if (horaInicio <= horaActual) {
+                            horariosProcesados[lapso].ocupado = true;
+                        }
+                    });
                 }
             }
 
             return horariosProcesados;
 
         } catch (error) {
-            console.error('Error en fetchTimeSlots:', error);
-            throw new Error(error.message || 'Error al obtener los horarios');
+            throw error;
         } finally {
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
