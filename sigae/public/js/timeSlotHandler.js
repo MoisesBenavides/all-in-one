@@ -2,7 +2,24 @@ const TimeSlotHandler = {
     servicioSeleccionadoDuracion: 0,
     primerHorarioSeleccionado: null,
 
-    
+
+    validateDate(date) {
+        // Validar que la fecha sea válida
+        if (!date || isNaN(new Date(date).getTime())) {
+            throw new Error('Fecha inválida');
+        }
+    },
+
+    formatDateForServer(date) {
+        // Formatear fecha en el formato exacto que espera el servidor
+        const d = new Date(date);
+        // Asegurar que estamos usando la fecha correcta ajustando la zona horaria
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    },
+
     async fetchTimeSlots(selectedDate) {
         const loadingIndicator = document.getElementById('loadingIndicator');
         const timeSlotsContainer = document.getElementById('timeSlots');
@@ -11,94 +28,88 @@ const TimeSlotHandler = {
             if (loadingIndicator) loadingIndicator.classList.remove('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
 
-            // Formatear fecha para PHP - usando UTC para evitar problemas de timezone
-            const fecha = new Date(selectedDate);
-            const year = fecha.getUTCFullYear();
-            const month = String(fecha.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(fecha.getUTCDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
+            // Validar la fecha antes de procesar
+            this.validateDate(selectedDate);
+            const formattedDate = this.formatDateForServer(selectedDate);
 
-            // Log para debugging removible
-            // console.log('Fecha a enviar:', formattedDate);
+            // Construir URL con parámetros seguros
+            const url = new URL(GET_BLOCKED_TIMES_URL, window.location.origin);
+            url.searchParams.set('date', formattedDate);
 
-            const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
-
-            const response = await fetch(url, {
+            const response = await fetch(url.toString(), {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include'
+                credentials: 'same-origin'
             });
 
+            let errorMessage = 'Error al obtener los horarios';
+            
             if (!response.ok) {
-                const errorText = await response.text();
-                // Si el error contiene un warning de PHP, dar un mensaje más amigable
-                if (errorText.includes('Warning') || errorText.includes('Undefined array key')) {
-                    throw new Error('Error al procesar los horarios del día seleccionado');
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error || errorMessage;
+                } else {
+                    const text = await response.text();
+                    if (text.includes('Warning')) {
+                        errorMessage = 'Error al procesar los horarios';
+                    }
                 }
-                throw new Error('Error al obtener los horarios');
+                throw new Error(errorMessage);
             }
 
             const data = await response.json();
 
-            if (!data.success) {
-                throw new Error(data.error || 'No se pudieron obtener los horarios');
-            }
-
-            if (!data.horariosTaller || typeof data.horariosTaller !== 'object') {
-                throw new Error('No hay horarios disponibles para esta fecha');
+            if (!data.success || !data.horariosTaller) {
+                throw new Error(data.error || 'No se encontraron horarios disponibles');
             }
 
             const horariosProcesados = {};
-
-            // Procesar horarios con validación estricta
+            
+            // Procesar los horarios con validación estricta
             Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
-                // Solo procesar si tenemos la información mínima necesaria
-                if (info && info.inicio && info.fin) {
+                if (info && typeof info === 'object' && 'inicio' in info && 'fin' in info) {
                     horariosProcesados[lapso] = {
                         ocupado: Boolean(info.ocupado),
-                        inicio: info.inicio,
-                        fin: info.fin
+                        inicio: String(info.inicio).trim(),
+                        fin: String(info.fin).trim()
                     };
                 }
             });
 
-            // Procesar horarios pasados
-            if (data.horaActual) {
-                try {
-                    const horaActual = new Date(data.horaActual);
-                    const diaActual = new Date(formattedDate);
-
-                    if (diaActual.toDateString() === horaActual.toDateString()) {
-                        Object.entries(horariosProcesados).forEach(([lapso, info]) => {
-                            if (info.inicio) {
-                                const [horas, minutos] = info.inicio.split(':');
-                                if (!isNaN(horas) && !isNaN(minutos)) {
-                                    const horaInicio = new Date(diaActual);
-                                    horaInicio.setHours(parseInt(horas, 10), parseInt(minutos, 10), 0, 0);
-                                    
-                                    if (horaInicio <= horaActual) {
-                                        horariosProcesados[lapso].ocupado = true;
-                                    }
-                                }
-                            }
-                        });
-                    }
-                } catch (e) {
-                    console.warn('Error al procesar horarios pasados:', e);
-                }
+            if (Object.keys(horariosProcesados).length === 0) {
+                throw new Error('No hay horarios disponibles para la fecha seleccionada');
             }
 
-            // Verificar que tengamos horarios para mostrar
-            if (Object.keys(horariosProcesados).length === 0) {
-                throw new Error('No hay horarios disponibles para esta fecha');
+            // Procesar horarios pasados si existe horaActual
+            if (data.horaActual) {
+                const horaActual = new Date(data.horaActual);
+                const fechaSeleccionada = new Date(formattedDate);
+
+                if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
+                    Object.entries(horariosProcesados).forEach(([lapso, info]) => {
+                        if (!info.inicio) return;
+
+                        const [horas, minutos] = info.inicio.split(':').map(Number);
+                        if (isNaN(horas) || isNaN(minutos)) return;
+
+                        const horaInicio = new Date(fechaSeleccionada);
+                        horaInicio.setHours(horas, minutos, 0, 0);
+
+                        if (horaInicio <= horaActual) {
+                            horariosProcesados[lapso].ocupado = true;
+                        }
+                    });
+                }
             }
 
             return horariosProcesados;
 
         } catch (error) {
+            console.error('Error en fetchTimeSlots:', error);
             throw error;
         } finally {
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
