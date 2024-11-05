@@ -305,6 +305,32 @@ editServiceExecutive:
   controller: Sigae\Controllers\ControladorFuncionario::editServiceExecutive
   methods: POST
 
+# Cambio clave
+modPswdDiagnoseChief:
+  path: /modPasswordDiagnoseChief
+  controller: Sigae\Controllers\ControladorFuncionario::modPswdDiagnoseChief
+  methods: POST
+
+modPswdWorkshopChief:
+  path: /modPasswordWorkshopChief
+  controller: Sigae\Controllers\ControladorFuncionario::modPswdWorkshopChief
+  methods: POST
+
+modPswdCashiers:
+  path: /modPasswordCashier
+  controller: Sigae\Controllers\ControladorFuncionario::modPswdCashier
+  methods: POST
+
+modPswdValet:
+  path: /modPasswordValet
+  controller: Sigae\Controllers\ControladorFuncionario::modPswdValet
+  methods: POST
+
+modPswdServiceExecutive:
+  path: /modPasswordServiceExecutive
+  controller: Sigae\Controllers\ControladorFuncionario::modPswdServiceExecutive
+  methods: POST
+
 # Agenda de servicios de taller para ejecutivo
 showServiceAgenda:
   path: /serviceAgenda
