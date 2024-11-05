@@ -40,7 +40,9 @@ class ControladorTransaccion extends AbstractController{
                         $fecha = $this->obtenerFechaHoraActual();
 
                         $this->transaccion = new Transaccion(TipoTransaccion::tryFrom($tipoTr), $cantidad, $fecha);
+
                         $this->transaccion->setDBConnection("gerente");
+                        $this->transaccion->comenzarTransaccion();
 
                         try{
                             if(!$this->transaccion->registrarTransaccion($idProd)){
