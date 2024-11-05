@@ -10,71 +10,81 @@ const TimeSlotHandler = {
             if (loadingIndicator) loadingIndicator.classList.remove('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
 
+            // Convertir la fecha seleccionada a objeto Date
             const fecha = new Date(selectedDate);
-            const year = fecha.getFullYear();
-            const month = String(fecha.getMonth() + 1).padStart(2, '0');
-            const day = String(fecha.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
+            
+            // Formatear la fecha como lo espera PHP (YYYY-MM-DD)
+            // Importante: Usar UTC para evitar problemas de zona horaria
+            const formattedDate = fecha.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
 
-            const response = await fetch(`${GET_BLOCKED_TIMES_URL}?date=${formattedDate}`, {
+            const url = new URL(GET_BLOCKED_TIMES_URL);
+            url.searchParams.append('date', formattedDate);
+
+            const response = await fetch(url.toString(), {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: 'same-origin' // Importante para mantener la sesión
             });
 
+            // Si hay error, capturar el mensaje específico
             if (!response.ok) {
-                const text = await response.text();
-                throw new Error(text || `Error del servidor: ${response.status}`);
+                const errorText = await response.text();
+                if (errorText.includes('Warning:')) {
+                    // Es un error de PHP, dar un mensaje más amigable
+                    throw new Error('Error al procesar la fecha seleccionada');
+                }
+                throw new Error(errorText || `Error del servidor: ${response.status}`);
             }
 
-            let data;
-            try {
-                data = await response.json();
-            } catch (e) {
-                throw new Error('Error al procesar la respuesta del servidor');
-            }
+            const data = await response.json();
 
             if (!data.success || !data.horariosTaller) {
                 throw new Error(data.error || 'No se pudieron obtener los horarios');
             }
 
+            // Procesar y validar los horarios
             const horariosProcesados = {};
             Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
-                if (info && typeof info.ocupado === 'boolean' && info.inicio && info.fin) {
+                // Asegurarse de que el horario tenga toda la información necesaria
+                if (info && 'ocupado' in info && info.inicio && info.fin) {
                     horariosProcesados[lapso] = {
-                        ocupado: info.ocupado,
-                        inicio: info.inicio,
-                        fin: info.fin
+                        ocupado: Boolean(info.ocupado),
+                        inicio: info.inicio.trim(),
+                        fin: info.fin.trim()
                     };
                 }
             });
 
+            // Procesar horarios pasados si hay hora actual
             if (data.horaActual) {
-                const horaActual = new Date(data.horaActual);
-                const diaActual = new Date(formattedDate);
+                try {
+                    const horaActual = new Date(data.horaActual);
+                    const diaActual = new Date(formattedDate);
 
-                if (diaActual.toDateString() === horaActual.toDateString()) {
-                    Object.entries(horariosProcesados).forEach(([lapso, info]) => {
-                        const [horas, minutos] = info.inicio.split(':');
-                        const horaInicio = new Date(diaActual);
-                        horaInicio.setHours(parseInt(horas), parseInt(minutos), 0, 0);
+                    if (diaActual.toDateString() === horaActual.toDateString()) {
+                        Object.entries(horariosProcesados).forEach(([lapso, info]) => {
+                            const [horas, minutos] = info.inicio.split(':').map(Number);
+                            const horaInicio = new Date(diaActual);
+                            horaInicio.setHours(horas, minutos, 0, 0);
 
-                        if (horaInicio <= horaActual) {
-                            horariosProcesados[lapso].ocupado = true;
-                        }
-                    });
+                            if (horaInicio <= horaActual) {
+                                horariosProcesados[lapso].ocupado = true;
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.warn('Error al procesar horarios pasados:', e);
                 }
             }
 
             return horariosProcesados;
 
         } catch (error) {
-            if (error.message.includes('Warning:')) {
-                throw new Error('Error al procesar los horarios en el servidor');
-            }
-            throw error;
+            console.error('Error en fetchTimeSlots:', error);
+            throw new Error(error.message || 'Error al obtener los horarios');
         } finally {
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
