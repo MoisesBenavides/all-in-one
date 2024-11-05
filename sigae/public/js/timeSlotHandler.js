@@ -6,53 +6,74 @@ const TimeSlotHandler = {
         const loadingIndicator = document.getElementById('loadingIndicator');
         const timeSlotsContainer = document.getElementById('timeSlots');
         
-        if (loadingIndicator) loadingIndicator.classList.remove('hidden');
-        if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
-    
         try {
-            // Asegurarse de que la fecha esté en el formato exacto que espera el controlador
-            let fecha = new Date(selectedDate);
-            // Ajustar a zona horaria local y formato YYYY-MM-DD
-            const offset = fecha.getTimezoneOffset();
-            fecha = new Date(fecha.getTime() - (offset * 60 * 1000));
-            const formattedDate = fecha.toISOString().split('T')[0];
+            if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+            if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
 
-            // Construir URL exactamente como espera el controlador
-            const url = `${GET_BLOCKED_TIMES_URL}?date=${formattedDate}`;
-            
-            // Realizar la petición
-            const response = await fetch(url, {
+            const fecha = new Date(selectedDate);
+            const year = fecha.getFullYear();
+            const month = String(fecha.getMonth() + 1).padStart(2, '0');
+            const day = String(fecha.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+
+            const response = await fetch(`${GET_BLOCKED_TIMES_URL}?date=${formattedDate}`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
-                },
-                credentials: 'include'
+                }
             });
 
-            // Si la respuesta no es exitosa, intentar obtener el mensaje de error
             if (!response.ok) {
-                if (response.status === 400) {
-                    const errorData = await response.json().catch(() => null);
-                    throw new Error(errorData?.error || 'Error en la solicitud');
+                const text = await response.text();
+                throw new Error(text || `Error del servidor: ${response.status}`);
+            }
+
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                throw new Error('Error al procesar la respuesta del servidor');
+            }
+
+            if (!data.success || !data.horariosTaller) {
+                throw new Error(data.error || 'No se pudieron obtener los horarios');
+            }
+
+            const horariosProcesados = {};
+            Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
+                if (info && typeof info.ocupado === 'boolean' && info.inicio && info.fin) {
+                    horariosProcesados[lapso] = {
+                        ocupado: info.ocupado,
+                        inicio: info.inicio,
+                        fin: info.fin
+                    };
                 }
-                throw new Error(`Error del servidor: ${response.status}`);
+            });
+
+            if (data.horaActual) {
+                const horaActual = new Date(data.horaActual);
+                const diaActual = new Date(formattedDate);
+
+                if (diaActual.toDateString() === horaActual.toDateString()) {
+                    Object.entries(horariosProcesados).forEach(([lapso, info]) => {
+                        const [horas, minutos] = info.inicio.split(':');
+                        const horaInicio = new Date(diaActual);
+                        horaInicio.setHours(parseInt(horas), parseInt(minutos), 0, 0);
+
+                        if (horaInicio <= horaActual) {
+                            horariosProcesados[lapso].ocupado = true;
+                        }
+                    });
+                }
             }
 
-            const data = await response.json();
+            return horariosProcesados;
 
-            // Validar la estructura de la respuesta
-            if (!data.success) {
-                throw new Error(data.error || 'Error al obtener los horarios');
-            }
-
-            if (!data.horariosTaller || typeof data.horariosTaller !== 'object') {
-                throw new Error('No hay horarios disponibles');
-            }
-
-            return data.horariosTaller;
         } catch (error) {
-            console.error('Error en fetchTimeSlots:', error);
+            if (error.message.includes('Warning:')) {
+                throw new Error('Error al procesar los horarios en el servidor');
+            }
             throw error;
         } finally {
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
@@ -127,10 +148,12 @@ const TimeSlotHandler = {
         }
     },
 
-    
     async updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
+        const errorContainer = document.getElementById('error-container');
+
+        if (errorContainer) errorContainer.classList.add('hidden');
 
         if (!timeSlotsContainer || !this.servicioSeleccionadoDuracion) {
             this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
@@ -149,9 +172,8 @@ const TimeSlotHandler = {
                 return;
             }
             
-            const sortedSlots = Object.entries(timeSlots).sort((a, b) => {
-                return a[1].inicio.localeCompare(b[1].inicio);
-            });
+            const sortedSlots = Object.entries(timeSlots)
+                .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio));
 
             sortedSlots.forEach(([lapso, info]) => {
                 const button = document.createElement('button');
@@ -180,7 +202,6 @@ const TimeSlotHandler = {
                 serviceDurationMessage.classList.remove('hidden');
             }
         } catch (error) {
-            console.error('Error en updateTimeSlots:', error);
             this.showError(error.message);
             timeSlotsContainer.innerHTML = '';
         }
