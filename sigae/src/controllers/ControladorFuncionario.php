@@ -1630,7 +1630,7 @@ class ControladorFuncionario extends AbstractController {
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
 
-                return $this->render('employee/manager/listaJefesDiagnostico.html.twig', [
+                return $this->render('employee/manager/listaEjecutivos.html.twig', [
                     'funcionarios' => $ejecutivos,
                     'response' => $response  // Aquí pasa la respuesta a la vista
                 ]);
@@ -1678,7 +1678,7 @@ class ControladorFuncionario extends AbstractController {
                     $response['errors'][] = "Error al cargar funcionarios: " . $e->getMessage();
                 }
 
-                return $this->render('employee/workshopChief/listaJefesDiagnostico.html.twig', [
+                return $this->render('employee/workshopChief/listaEjecutivos.html.twig', [
                     'funcionarios' => $ejecutivos,
                     'response' => $response  // Aquí pasa la respuesta a la vista
                 ]);
