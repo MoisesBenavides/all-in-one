@@ -162,7 +162,7 @@ abstract class Producto{
             return $neumaticos;
 
         } catch(Exception $e){
-            error_log("Error al cargar otros neumáticos: ".$e->getMessage());
+            error_log("Error al cargar productos: ".$e->getMessage());
             throw $e;
             return;
         } finally {
@@ -186,7 +186,7 @@ abstract class Producto{
             return $count != 0;
 
         } catch(Exception $e){
-            throw $e;
+            throw "Error al verificar un producto existente por id: ".$e;
         } finally {
             $conn = null;
         }
@@ -208,7 +208,7 @@ abstract class Producto{
             return true;
 
         } catch(Exception $e){
-            error_log("Error al cancelar el servicio: ".$e->getMessage());
+            error_log("Error al modificar el stock: ".$e->getMessage());
             throw $e;
             return false;
         } finally{
@@ -232,7 +232,7 @@ abstract class Producto{
             return $stock;
 
         } catch(Exception $e){
-            throw $e;
+            throw "Error al obtener stock del producto: ".$e;
         } finally {
             $conn = null;
         }

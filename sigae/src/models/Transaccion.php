@@ -114,7 +114,7 @@ class Transaccion{
             return true;
     
         } catch (Exception $e) {
-            throw $e;
+            throw "Error al registrar transaccion: ".$e;
             return false;
         }
     }
