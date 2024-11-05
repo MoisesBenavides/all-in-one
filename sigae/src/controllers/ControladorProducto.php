@@ -43,4 +43,20 @@ class ControladorProducto extends AbstractController{
         }
     }
 
+    function getProductosTodos($rol){
+        $neumaticos=[];
+        try{
+            if($rol == 'cliente'){
+                $neumaticos = Producto::getProductosDisp($rol);
+            } elseif ($rol == 'gerente' || 'cajero') {
+                // Si es funcionario, accede a más datos
+                $neumaticos = Producto::getProductosDetallados($rol);
+            }
+        } catch(Exception $e){
+            throw $e;
+        } finally {
+            return $neumaticos;
+        }
+    }
+
 }

@@ -112,9 +112,62 @@ abstract class Producto{
     abstract public static function getProductosCategoriaDetallados($rol);
 
     public static function getProductosDisp($rol){
+        try{
+            $conn = conectarDB($rol);
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
+
+            $stmt = $conn->prepare('SELECT p.id, p.precio, p.marca, p.fecha_creacion, 
+                                                n.tamano, n.modelo, n.tipo, 
+                                                op.nombre 
+                                        FROM producto p 
+                                        LEFT JOIN neumatico n ON p.id=n.id_producto 
+                                        LEFT JOIN otro_producto op ON p.id=op.id_producto 
+                                        WHERE p.stock > 0');
+            $stmt->execute();
+
+            $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $neumaticos;
+
+        } catch(Exception $e){
+            error_log("Error al cargar otros neumáticos: ".$e->getMessage());
+            throw $e;
+            return;
+        } finally {
+            $conn = null;
+        }
     }
 
     public static function getProductosDetallados($rol){
+        try{
+            $conn = conectarDB($rol);
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
+
+            $stmt = $conn->prepare('SELECT p.id, p.upc, p.precio, 
+                                                p.marca, p.fecha_creacion, p.stock, 
+                                                n.tamano, n.modelo, n.tipo, 
+                                                op.nombre 
+                                        FROM producto p 
+                                        LEFT JOIN neumatico n ON p.id=n.id_producto 
+                                        LEFT JOIN otro_producto op ON p.id=op.id_producto 
+                                        ORDER BY p.id DESC');
+            $stmt->execute();
+
+            $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $neumaticos;
+
+        } catch(Exception $e){
+            error_log("Error al cargar otros neumáticos: ".$e->getMessage());
+            throw $e;
+            return;
+        } finally {
+            $conn = null;
+        }
     }
 
     public static function existeId($rol, $id){
