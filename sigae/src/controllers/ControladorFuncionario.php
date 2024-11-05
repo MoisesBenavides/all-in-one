@@ -1369,7 +1369,7 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (Funcionario::existe($rol, $usuario, $host)) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
                             throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
                         } elseif (!$this->funcionario->modContraJefeDiagnostico($contraNueva)) {
                             throw new Exception("No se pudo cambiar la clave del usuario.");
@@ -1428,7 +1428,7 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (Funcionario::existe($rol, $usuario, $host)) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
                             throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
                         } elseif (!$this->funcionario->modContraJefeTaller($contraNueva)) {
                             throw new Exception("No se pudo cambiar la clave del usuario.");
@@ -1487,7 +1487,7 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (Funcionario::existe($rol, $usuario, $host)) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
                             throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
                         } elseif (!$this->funcionario->modContraCajero($contraNueva)) {
                             throw new Exception("No se pudo cambiar la clave del usuario.");
@@ -1546,7 +1546,7 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (Funcionario::existe($rol, $usuario, $host)) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
                             throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
                         } elseif (!$this->funcionario->modContraValetParking($contraNueva)) {
                             throw new Exception("No se pudo cambiar la clave del usuario.");
@@ -1605,7 +1605,7 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('gerente');
                     try {
-                        if (Funcionario::existe($rol, $usuario, $host)) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
                             throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
                         } elseif (!$this->funcionario->modContraEjecutivo($contraNueva)) {
                             throw new Exception("No se pudo cambiar la clave del usuario.");
@@ -1653,7 +1653,7 @@ class ControladorFuncionario extends AbstractController {
                     $this->funcionario = new Funcionario($usuario, $host, null);
                     $this->funcionario->setDBConnection('jefe_taller');
                     try {
-                        if (Funcionario::existe($rol, $usuario, $host)) {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
                             throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
                         } elseif (!$this->funcionario->modContraEjecutivo($contraNueva)) {
                             throw new Exception("No se pudo cambiar la clave del usuario.");
