@@ -10,6 +10,11 @@ const TimeSlotHandler = {
         }
     },
 
+    getLocalDate(date) {
+        const d = new Date(date);
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    },
+
     updateTimeSlots(selectedDate) {
         this.debug('Iniciando updateTimeSlots', { selectedDate });
         
@@ -20,30 +25,18 @@ const TimeSlotHandler = {
 
         // Validar fecha
         try {
-            const dateObj = new Date(selectedDate);
-            this.debug('Fecha parseada', {
-                original: selectedDate,
-                parsed: dateObj,
-                isValid: !isNaN(dateObj.getTime()),
-                timestamp: dateObj.getTime()
+            // Convertir a fecha local sin tiempo
+            const selectedLocalDate = this.getLocalDate(selectedDate);
+            const todayLocalDate = this.getLocalDate(new Date());
+
+            this.debug('Fechas locales', {
+                selectedLocalDate,
+                todayLocalDate,
+                selectedTimestamp: selectedLocalDate.getTime(),
+                todayTimestamp: todayLocalDate.getTime()
             });
 
-            if (isNaN(dateObj.getTime())) {
-                throw new Error('La fecha seleccionada no es válida');
-            }
-
-            // Validar que no sea una fecha pasada
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            dateObj.setHours(0, 0, 0, 0);
-
-            this.debug('Comparación de fechas', {
-                selectedDate: dateObj.toISOString(),
-                today: today.toISOString(),
-                isPast: dateObj < today
-            });
-
-            if (dateObj < today) {
+            if (selectedLocalDate.getTime() < todayLocalDate.getTime()) {
                 throw new Error('No se pueden seleccionar fechas pasadas');
             }
         } catch (error) {
@@ -146,20 +139,22 @@ const TimeSlotHandler = {
     },
 
     buildUrl(selectedDate) {
+        // Formatear fecha como YYYY-MM-DD usando la fecha local
         const date = new Date(selectedDate);
-        if (isNaN(date.getTime())) {
-            throw new Error('Fecha inválida');
-        }
-        
-        // Formatear fecha como YYYY-MM-DD
-        const formattedDate = date.toISOString().split('T')[0];
-        this.debug('Fecha formateada', {
+        const formattedDate = [
+            date.getFullYear(),
+            String(date.getMonth() + 1).padStart(2, '0'),
+            String(date.getDate()).padStart(2, '0')
+        ].join('-');
+
+        this.debug('Fecha formateada para URL', {
             input: selectedDate,
             formatted: formattedDate
         });
         
         return `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
     },
+
 
     resetState(container) {
         this.debug('Reseteando estado');
