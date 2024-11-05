@@ -114,7 +114,7 @@ class Transaccion{
             return true;
     
         } catch (Exception $e) {
-            throw "Error al registrar transaccion: ".$e;
+            throw new Exception("Error al registrar transaccion: ".$e->getMessage());
             return false;
         }
     }
