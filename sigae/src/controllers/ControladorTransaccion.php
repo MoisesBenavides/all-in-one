@@ -16,7 +16,7 @@ class ControladorTransaccion extends AbstractController{
     private $transaccion;
     private $controladorProducto;
 
-    function createTransaction(): Response|RedirectResponse{
+    function createTransaction(): Response{
         $response=['success' => false, 'errors' => []];
 
         $rol=$_SESSION['rol'];

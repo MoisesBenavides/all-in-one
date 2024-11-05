@@ -187,6 +187,8 @@ abstract class Producto{
 
         } catch(Exception $e){
             throw $e;
+        } finally {
+            $conn = null;
         }
     }
 
@@ -209,6 +211,8 @@ abstract class Producto{
             error_log("Error al cancelar el servicio: ".$e->getMessage());
             throw $e;
             return false;
+        } finally{
+            $conn = null;
         }
     }
 
@@ -229,6 +233,8 @@ abstract class Producto{
 
         } catch(Exception $e){
             throw $e;
+        } finally {
+            $conn = null;
         }
     }
 }
