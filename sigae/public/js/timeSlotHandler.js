@@ -10,14 +10,11 @@ const TimeSlotHandler = {
         if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
     
         try {
-            // Formatear fecha como YYYY-MM-DD para coincidir 
             const fecha = new Date(selectedDate);
-            const formattedDate = fecha.getFullYear() + '-' + 
-                String(fecha.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(fecha.getDate()).padStart(2, '0');
+            const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
             
             const baseUrl = GET_BLOCKED_TIMES_URL;
-            const url = `${baseUrl}?date=${encodeURIComponent(formattedDate)}`;
+            const url = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}date=${encodeURIComponent(formattedDate)}`;
             
             const response = await fetch(url, {
                 method: 'GET',
@@ -27,44 +24,61 @@ const TimeSlotHandler = {
                 },
                 credentials: 'same-origin'
             });
-            
-            if (!response.ok) {
-                throw new Error('Error al obtener los horarios');
+
+            let responseText;
+            try {
+                responseText = await response.text();
+            } catch (e) {
+                throw new Error('No se pudo leer la respuesta del servidor');
             }
 
-            const data = await response.json();
-
-            if (!data.success || !data.horariosTaller) {
-                throw new Error(data.error || 'No hay horarios disponibles');
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                throw new Error('Respuesta del servidor no válida');
             }
 
-            // Validar y procesar horarios pasados si es el día actual
+            if (!data || !data.horariosTaller) {
+                throw new Error(data.error || 'Formato de respuesta inválido');
+            }
+
+            const horariosProcesados = {};
+            for (const [lapso, info] of Object.entries(data.horariosTaller)) {
+                if (info && typeof info.ocupado === 'boolean' && info.inicio && info.fin) {
+                    horariosProcesados[lapso] = info;
+                }
+            }
+
             if (data.horaActual) {
                 const horaActual = new Date(data.horaActual);
                 const fechaSeleccionada = new Date(selectedDate);
 
-                // Solo procesar si es el día actual
                 if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
-                    Object.entries(data.horariosTaller).forEach(([lapso, horario]) => {
-                        // Crear fecha completa para comparar
-                        const horaInicioCompleta = new Date(
-                            fechaSeleccionada.getFullYear(),
-                            fechaSeleccionada.getMonth(),
-                            fechaSeleccionada.getDate(),
-                            ...horario.inicio.split(':').map(Number)
-                        );
+                    for (const [lapso, info] of Object.entries(horariosProcesados)) {
+                        const [horas, minutos] = info.inicio.split(':').map(Number);
+                        const horaInicio = new Date(fechaSeleccionada);
+                        horaInicio.setHours(horas, minutos, 0, 0);
 
-                        // Marcar como ocupado si la hora ya pasó
-                        if (horaInicioCompleta < horaActual) {
-                            data.horariosTaller[lapso].ocupado = true;
+                        if (horaInicio < horaActual) {
+                            horariosProcesados[lapso].ocupado = true;
                         }
-                    });
+                    }
                 }
             }
 
-            return data.horariosTaller;
+            return horariosProcesados;
+            
         } catch (error) {
-            throw new Error(`Error al obtener horarios: ${error.message}`);
+            let mensajeError = 'Error al cargar los horarios: ';
+            if (error.message.includes('no válida')) {
+                mensajeError += 'El servidor respondió en un formato incorrecto.';
+            } else if (error.message.includes('Formato de respuesta')) {
+                mensajeError += 'Los datos recibidos no son válidos.';
+            } else {
+                mensajeError += error.message;
+            }
+            throw new Error(mensajeError);
         } finally {
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
@@ -81,7 +95,6 @@ const TimeSlotHandler = {
         }
         
         if (this.servicioSeleccionadoDuracion <= 30) {
-            // Limpiar selecciones previas
             document.querySelectorAll('#timeSlots button').forEach(btn => {
                 btn.classList.remove('bg-red-600', 'text-white');
             });
@@ -94,7 +107,6 @@ const TimeSlotHandler = {
             
         } else {
             if (!this.primerHorarioSeleccionado) {
-                // Primera selección para servicios de más de 30 minutos
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
                     btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
                 });
@@ -105,7 +117,6 @@ const TimeSlotHandler = {
                 const buttons = document.querySelectorAll('#timeSlots button');
                 const currentIndex = Array.from(buttons).indexOf(button);
                 
-                // Resaltar horarios adyacentes disponibles
                 if (currentIndex > 0 && !buttons[currentIndex - 1].disabled) {
                     buttons[currentIndex - 1].classList.add('bg-yellow-200');
                 }
@@ -113,7 +124,6 @@ const TimeSlotHandler = {
                     buttons[currentIndex + 1].classList.add('bg-yellow-200');
                 }
             } else {
-                // Segunda selección para servicios de más de 30 minutos
                 const buttons = document.querySelectorAll('#timeSlots button');
                 const firstButton = Array.from(buttons).find(btn => 
                     btn.getAttribute('data-lapso') === this.primerHorarioSeleccionado);
@@ -121,7 +131,6 @@ const TimeSlotHandler = {
                 const secondIndex = Array.from(buttons).indexOf(button);
                 
                 if (Math.abs(firstIndex - secondIndex) === 1) {
-                    // Selección válida de horarios consecutivos
                     document.querySelectorAll('#timeSlots button').forEach(btn => {
                         btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
                     });
@@ -149,7 +158,6 @@ const TimeSlotHandler = {
         const errorContainer = document.getElementById('error-container');
         const errorList = document.getElementById('error-list');
 
-        // Limpiar errores previos
         if (errorContainer) {
             errorContainer.classList.add('hidden');
         }
@@ -174,8 +182,7 @@ const TimeSlotHandler = {
                 .filter(([_, info]) => info && info.inicio && info.fin);
 
             if (sortedSlots.length === 0) {
-                this.showError('No hay horarios disponibles para la fecha seleccionada.');
-                return;
+                throw new Error('No hay horarios disponibles para la fecha seleccionada.');
             }
 
             sortedSlots.forEach(([lapso, info]) => {
@@ -205,7 +212,8 @@ const TimeSlotHandler = {
                 serviceDurationMessage.classList.remove('hidden');
             }
         } catch (error) {
-            this.showError(error.message || 'Error al cargar los horarios');
+            this.showError(error.message);
+            timeSlotsContainer.innerHTML = '';
         }
     },
 
