@@ -12,10 +12,7 @@ const TimeSlotHandler = {
             return Promise.reject(new Error('Configuración incompleta'));
         }
 
-        // Mostrar indicador de carga
-        if (loadingIndicator) {
-            loadingIndicator.classList.remove('hidden');
-        }
+        if (loadingIndicator) loadingIndicator.classList.remove('hidden');
 
         // Resetear estado
         this.primerHorarioSeleccionado = null;
@@ -25,36 +22,19 @@ const TimeSlotHandler = {
         return new Promise((resolve, reject) => {
             this.fetchTimeSlots(selectedDate)
                 .then(response => {
-                    if (!response || !response.success || !response.horariosTaller) {
-                        throw new Error('Formato de respuesta inválido');
+                    if (!response.horariosTaller) {
+                        throw new Error('No hay horarios disponibles');
                     }
 
                     const slots = response.horariosTaller;
-                    
-                    // Validar y procesar los slots
-                    const validSlots = Object.entries(slots)
-                        .filter(([_, info]) => {
-                            return info && 
-                                   typeof info.inicio === 'string' && 
-                                   typeof info.fin === 'string' &&
-                                   typeof info.ocupado !== 'undefined';
-                        })
-                        .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio));
+                    const sortedSlots = Object.entries(slots)
+                        .sort((a, b) => a[1].hora_inicio?.localeCompare(b[1].hora_inicio || ''));
 
-                    if (validSlots.length === 0) {
-                        throw new Error('No hay horarios disponibles para esta fecha');
-                    }
-
-                    // Limpiar contenedor
-                    timeSlotsContainer.innerHTML = '';
-
-                    // Renderizar slots válidos
-                    validSlots.forEach(([lapso, info]) => {
+                    sortedSlots.forEach(([lapso, info]) => {
                         const button = this.createTimeSlotButton(lapso, info, selectedDate);
                         timeSlotsContainer.appendChild(button);
                     });
 
-                    // Actualizar mensaje de duración
                     if (serviceDurationMessage) {
                         serviceDurationMessage.classList[
                             this.servicioSeleccionadoDuracion > 30 ? 'remove' : 'add'
@@ -65,22 +45,18 @@ const TimeSlotHandler = {
                 })
                 .catch(error => {
                     console.error('Error en updateTimeSlots:', error);
-                    this.showError('Error al cargar los horarios. Por favor, intente nuevamente.');
+                    this.showError('Error al cargar los horarios disponibles');
                     timeSlotsContainer.innerHTML = '';
                     reject(error);
                 })
                 .finally(() => {
-                    if (loadingIndicator) {
-                        loadingIndicator.classList.add('hidden');
-                    }
+                    if (loadingIndicator) loadingIndicator.classList.add('hidden');
                 });
         });
     },
 
     fetchTimeSlots(selectedDate) {
-        if (!selectedDate) {
-            return Promise.reject(new Error('Fecha no seleccionada'));
-        }
+        if (!selectedDate) return Promise.reject(new Error('Fecha no seleccionada'));
 
         const formattedDate = this.formatDateForPHP(selectedDate);
         const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
@@ -92,30 +68,37 @@ const TimeSlotHandler = {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            credentials: 'include',
-            mode: 'cors'
+            credentials: 'include'
         })
-        .then(async response => {
+        .then(response => {
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || 'Error al obtener los horarios');
+                return response.json()
+                    .then(data => {
+                        throw new Error(data.error || 'Error al obtener los horarios');
+                    })
+                    .catch(() => {
+                        throw new Error('Error al obtener los horarios');
+                    });
             }
             return response.json();
-        })
-        .then(data => {
-            if (!data || !data.horariosTaller) {
-                throw new Error('Respuesta inválida del servidor');
-            }
-            return data;
         });
     },
 
     createTimeSlotButton(lapso, info, selectedDate) {
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = `${info.inicio} - ${info.fin}`;
+        
+        // Usar hora_inicio y hora_fin en lugar de inicio y fin
+        const horaInicio = info.hora_inicio || info.inicio || '';
+        const horaFin = info.hora_fin || info.fin || '';
+        
+        button.textContent = `${horaInicio} - ${horaFin}`;
         button.setAttribute('data-lapso', lapso);
-        button.setAttribute('data-info', JSON.stringify(info));
+        button.setAttribute('data-info', JSON.stringify({
+            ...info,
+            inicio: horaInicio, // Mantener compatibilidad con el resto del código
+            fin: horaFin
+        }));
 
         let isDisabled = info.ocupado;
 
@@ -124,8 +107,8 @@ const TimeSlotHandler = {
         const selectedDateObj = new Date(selectedDate);
         const isToday = selectedDateObj.toDateString() === now.toDateString();
 
-        if (isToday) {
-            const [hours, minutes] = info.inicio.split(':').map(Number);
+        if (isToday && horaInicio) {
+            const [hours, minutes] = horaInicio.split(':').map(Number);
             const slotTime = new Date(selectedDate);
             slotTime.setHours(hours, minutes, 0, 0);
             
@@ -172,7 +155,9 @@ const TimeSlotHandler = {
         button.classList.add('bg-red-600', 'text-white');
         const fechaInput = document.getElementById('fecha_inicio');
         if (fechaInput) {
-            fechaInput.value = `${selectedDate}T${timeInfo.inicio}`;
+            // Usar hora_inicio si está disponible, sino usar inicio
+            const horaInicio = timeInfo.hora_inicio || timeInfo.inicio;
+            fechaInput.value = `${selectedDate}T${horaInicio}`;
         }
     },
 
@@ -180,10 +165,13 @@ const TimeSlotHandler = {
         const buttons = document.querySelectorAll('#timeSlots button');
         
         if (!this.primerHorarioSeleccionado) {
-            this.resetSlotStyles();
+            document.querySelectorAll('#timeSlots button').forEach(btn => {
+                btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
+            });
+
             this.primerHorarioSeleccionado = lapso;
             selectedButton.classList.add('bg-red-600', 'text-white');
-            
+
             const currentIndex = Array.from(buttons).indexOf(selectedButton);
             if (currentIndex > 0 && !buttons[currentIndex - 1].disabled) {
                 buttons[currentIndex - 1].classList.add('bg-yellow-200');
@@ -196,7 +184,7 @@ const TimeSlotHandler = {
                 btn.getAttribute('data-lapso') === this.primerHorarioSeleccionado);
             const firstIndex = Array.from(buttons).indexOf(firstButton);
             const secondIndex = Array.from(buttons).indexOf(selectedButton);
-            
+
             if (Math.abs(firstIndex - secondIndex) === 1) {
                 this.confirmDoubleSelection(buttons, firstIndex, secondIndex);
             } else {
@@ -206,33 +194,28 @@ const TimeSlotHandler = {
     },
 
     confirmDoubleSelection(buttons, firstIndex, secondIndex) {
-        this.resetSlotStyles();
-        
+        document.querySelectorAll('#timeSlots button').forEach(btn => {
+            btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
+        });
+
         const startIndex = Math.min(firstIndex, secondIndex);
         const endIndex = Math.max(firstIndex, secondIndex);
-        
+
         buttons[startIndex].classList.add('bg-red-600', 'text-white');
         buttons[endIndex].classList.add('bg-red-600', 'text-white');
 
         const startButton = buttons[startIndex];
         const startInfo = JSON.parse(startButton.getAttribute('data-info') || '{}');
-        
-        if (startInfo.inicio) {
-            const fechaSelector = document.getElementById('fecha_selector');
-            if (fechaSelector?.value) {
-                const fecha = new Date(fechaSelector.value);
-                document.getElementById('fecha_inicio').value = 
-                    `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${startInfo.inicio}`;
-            }
+        const fechaSelector = document.getElementById('fecha_selector');
+
+        if (fechaSelector?.value) {
+            const fecha = new Date(fechaSelector.value);
+            const horaInicio = startInfo.hora_inicio || startInfo.inicio;
+            document.getElementById('fecha_inicio').value = 
+                `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${horaInicio}`;
         }
 
         this.primerHorarioSeleccionado = null;
-    },
-
-    resetSlotStyles() {
-        document.querySelectorAll('#timeSlots button').forEach(btn => {
-            btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
-        });
     },
 
     formatDateForPHP(date) {
