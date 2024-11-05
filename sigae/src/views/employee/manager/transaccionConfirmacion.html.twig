@@ -38,9 +38,9 @@
     {% include 'partials/headerGerente.html.twig'%}
     <main class="w-full px-4 pt-10 bg-white flex flex-col items-center gap-10">
         <section class="w-full max-w-[980px] p-6 bg-[#f0edf2] rounded-[14px] border border-black flex flex-col justify-center items-center gap-6">
-            <h1 class="text-black text-3xl md:text-4xl lg:text-5xl font-bold text-center">Confirmación de Reserva</h1>
+            <h1 class="text-black text-3xl md:text-4xl lg:text-5xl font-bold text-center">Confirmación de Transacción</h1>
             
-            {% if sessionData.reserva %}
+            {% if transaccion %}
                 <div class="w-full mt-6">
                     <h2 class="text-black text-2xl md:text-3xl font-bold mb-4">Detalles de la Transacción</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
