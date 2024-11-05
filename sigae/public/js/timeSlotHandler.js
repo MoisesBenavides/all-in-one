@@ -10,13 +10,26 @@ const TimeSlotHandler = {
         if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
     
         try {
+            // Formateo de fecha ajustado para coincidir con el formato esperado por el backend
             const fecha = new Date(selectedDate);
-            const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
+            // Asegurar que los componentes de la fecha tengan dos dígitos
+            const year = fecha.getFullYear();
+            const month = String(fecha.getMonth() + 1).padStart(2, '0');
+            const day = String(fecha.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
             
             const baseUrl = GET_BLOCKED_TIMES_URL;
-            const url = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}date=${encodeURIComponent(formattedDate)}`;
-            
-            const response = await fetch(url, {
+            // Asegurar que la URL se construye correctamente
+            let url;
+            try {
+                url = new URL(baseUrl);
+                url.searchParams.set('date', formattedDate);
+            } catch (e) {
+                // Si baseUrl es una ruta relativa
+                url = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}date=${encodeURIComponent(formattedDate)}`;
+            }
+
+            const response = await fetch(url.toString(), {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -36,39 +49,63 @@ const TimeSlotHandler = {
             try {
                 data = JSON.parse(responseText);
             } catch (e) {
+                if (responseText.includes('Warning')) {
+                    throw new Error('Error en el servidor: ' + responseText.split('\n')[0]);
+                }
                 throw new Error('Respuesta del servidor no válida');
             }
 
-            if (!data || !data.horariosTaller) {
-                throw new Error(data.error || 'Formato de respuesta inválido');
+            if (!data || typeof data !== 'object') {
+                throw new Error('Formato de respuesta inválido');
+            }
+
+            if (!data.success) {
+                throw new Error(data.error || 'Error al obtener los horarios');
+            }
+
+            if (!data.horariosTaller || typeof data.horariosTaller !== 'object') {
+                throw new Error('No hay horarios disponibles');
             }
 
             const horariosProcesados = {};
             for (const [lapso, info] of Object.entries(data.horariosTaller)) {
                 if (info && typeof info.ocupado === 'boolean' && info.inicio && info.fin) {
-                    horariosProcesados[lapso] = info;
+                    horariosProcesados[lapso] = {
+                        ...info,
+                        inicio: info.inicio.trim(),
+                        fin: info.fin.trim()
+                    };
                 }
             }
 
+            if (Object.keys(horariosProcesados).length === 0) {
+                throw new Error('No hay horarios válidos para esta fecha');
+            }
+
+            // Procesar horarios pasados si existe horaActual
             if (data.horaActual) {
-                const horaActual = new Date(data.horaActual);
-                const fechaSeleccionada = new Date(selectedDate);
-
-                if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
-                    for (const [lapso, info] of Object.entries(horariosProcesados)) {
-                        const [horas, minutos] = info.inicio.split(':').map(Number);
-                        const horaInicio = new Date(fechaSeleccionada);
-                        horaInicio.setHours(horas, minutos, 0, 0);
-
-                        if (horaInicio < horaActual) {
-                            horariosProcesados[lapso].ocupado = true;
-                        }
+                try {
+                    const horaActual = new Date(data.horaActual);
+                    const fechaSeleccionada = new Date(selectedDate);
+                    
+                    // Solo procesar si es el día actual
+                    if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
+                        Object.entries(horariosProcesados).forEach(([lapso, info]) => {
+                            const [horas, minutos] = info.inicio.split(':').map(Number);
+                            const horaInicio = new Date(fechaSeleccionada);
+                            horaInicio.setHours(horas, minutos, 0, 0);
+                            
+                            if (horaInicio < horaActual) {
+                                horariosProcesados[lapso].ocupado = true;
+                            }
+                        });
                     }
+                } catch (e) {
+                    console.warn('Error al procesar horarios pasados:', e);
                 }
             }
 
             return horariosProcesados;
-            
         } catch (error) {
             let mensajeError = 'Error al cargar los horarios: ';
             if (error.message.includes('no válida')) {
