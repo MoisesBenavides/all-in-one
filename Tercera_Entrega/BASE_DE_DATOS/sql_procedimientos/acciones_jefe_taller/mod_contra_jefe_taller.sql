@@ -26,7 +26,7 @@ BEGIN
     COMMIT;
 
     -- Mensaje de modificacion de contraseña exitosa
-    SELECT CONCAT('Cambio de clave al usuario ', nombre_actual, '@', host_actual, ' realizado exitosamente.') AS resultado;
+    SELECT CONCAT('Cambio de clave al usuario ', nombre_usuario, '@', nombre_host, ' realizado exitosamente.') AS resultado;
 END $$
 
 DELIMITER ;

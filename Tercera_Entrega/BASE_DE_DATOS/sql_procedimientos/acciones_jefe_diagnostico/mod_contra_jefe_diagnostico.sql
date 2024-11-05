@@ -6,12 +6,11 @@ CREATE PROCEDURE mod_contra_jefe_diagnostico(
     IN nueva_contrasena VARCHAR(60)
 )
 BEGIN
-    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        -- Obtener mensaje de error exacto
-        GET DIAGNOSTICS CONDITION 1 @p1 = MESSAGE_TEXT;
+        -- En caso de error, anula la transaccion y envia un mensaje de error
         ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @p1;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al cambiar la clave';
     END;
 
     -- Inicia una transaccion
@@ -27,7 +26,7 @@ BEGIN
     COMMIT;
 
     -- Mensaje de modificacion de contraseña exitosa
-    SELECT CONCAT('Cambio de clave al usuario ', nombre_actual, '@', host_actual, ' realizado exitosamente.') AS resultado;
+    SELECT CONCAT('Cambio de clave al usuario ', nombre_usuario, '@', nombre_host, ' realizado exitosamente.') AS resultado;
 END $$
 
 DELIMITER ;
