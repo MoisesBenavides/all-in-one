@@ -432,6 +432,7 @@ class Funcionario{
             return true;
 
         } catch(PDOException $e){
+            error_log("Error cambiando la contraseña".$e->getMessage());
             throw $e;
         }
 
