@@ -7,155 +7,140 @@ const TimeSlotHandler = {
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     },
 
-    async fetchTimeSlots(selectedDate) {
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const timeSlotsContainer = document.getElementById('timeSlots');
-        
-        try {
-            if (loadingIndicator) loadingIndicator.classList.remove('hidden');
-            if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
-
+    fetchTimeSlots(selectedDate) {
+        return new Promise((resolve, reject) => {
             const formattedDate = this.formatDateForPHP(selectedDate);
             const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
 
-            const response = await fetch(url, {
+            fetch(url, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include'
-            });
-
-            const responseText = await response.text();
-            let data;
-            
-            try {
-                data = JSON.parse(responseText);
-            } catch (e) {
-                throw new Error('Error al procesar la respuesta del servidor');
-            }
-
-            // Verificar si tenemos una respuesta exitosa
-            if (data.success === false) {
-                throw new Error(data.error || 'Error al obtener los horarios');
-            }
-
-            // Obtener los horariosTaller de la respuesta
-            const horarios = data.horariosTaller || data;
-
-            if (!horarios || typeof horarios !== 'object') {
-                throw new Error('No hay horarios disponibles');
-            }
-
-            // Procesar los lapsos
-            const horariosProcesados = {};
-            
-            Object.entries(horarios).forEach(([lapso, info]) => {
-                // Asegurarse de que tenemos la información necesaria
-                if (info && info.inicio && info.fin) {
-                    horariosProcesados[lapso] = {
-                        inicio: info.inicio,
-                        fin: info.fin,
-                        ocupado: info.ocupado || false // Si no existe ocupado, asumir que está libre
-                    };
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text || 'Error al obtener los horarios');
+                    });
                 }
-            });
+                return response.json();
+            })
+            .then(data => {
+                // La respuesta debe contener horariosTaller
+                if (!data.horariosTaller) {
+                    throw new Error('Formato de respuesta inválido');
+                }
 
-            // Si no hay horarios procesados, mostrar error
-            if (Object.keys(horariosProcesados).length === 0) {
-                throw new Error('No hay horarios disponibles para esta fecha');
-            }
+                const horariosProcesados = {};
+                const now = new Date();
+                const fechaSeleccionada = new Date(formattedDate);
+                const esHoy = fechaSeleccionada.toDateString() === now.toDateString();
 
-            // Procesar horarios pasados
-            const now = new Date();
-            const fechaSeleccionada = new Date(formattedDate);
+                // Procesar cada lapso
+                Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
+                    // Solo procesar si tenemos la información necesaria
+                    if (info && typeof info === 'object' && 'inicio' in info && 'fin' in info) {
+                        let ocupado = Boolean(info.ocupado);
 
-            if (fechaSeleccionada.toDateString() === now.toDateString()) {
-                Object.entries(horariosProcesados).forEach(([lapso, info]) => {
-                    if (!info.inicio) return;
-                    
-                    const [horas, minutos] = info.inicio.split(':').map(Number);
-                    if (isNaN(horas) || isNaN(minutos)) return;
-                    
-                    const horaLapso = new Date(fechaSeleccionada);
-                    horaLapso.setHours(horas, minutos, 0, 0);
-                    
-                    if (horaLapso <= now) {
-                        horariosProcesados[lapso].ocupado = true;
+                        // Si es hoy, verificar si el lapso ya pasó
+                        if (esHoy) {
+                            const [horas, minutos] = info.inicio.split(':').map(Number);
+                            const horaLapso = new Date(fechaSeleccionada);
+                            horaLapso.setHours(horas, minutos, 0, 0);
+                            
+                            if (horaLapso <= now) {
+                                ocupado = true;
+                            }
+                        }
+
+                        horariosProcesados[lapso] = {
+                            inicio: info.inicio,
+                            fin: info.fin,
+                            ocupado: ocupado
+                        };
                     }
                 });
-            }
 
-            return horariosProcesados;
-
-        } catch (error) {
-            console.error('Error en fetchTimeSlots:', error);
-            throw new Error('Error al obtener los horarios');
-        } finally {
-            if (loadingIndicator) loadingIndicator.classList.add('hidden');
-            if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
-        }
+                resolve(horariosProcesados);
+            })
+            .catch(error => {
+                console.error('Error en fetchTimeSlots:', error);
+                reject(new Error('Error al obtener los horarios'));
+            });
+        });
     },
 
-    async updateTimeSlots(selectedDate) {
+    updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
         const errorContainer = document.getElementById('error-container');
 
-        if (errorContainer) errorContainer.classList.add('hidden');
-
+        // Validaciones iniciales
         if (!timeSlotsContainer || !this.servicioSeleccionadoDuracion) {
             this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
-            return;
+            return Promise.reject();
         }
 
+        // Mostrar indicador de carga
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+
+        // Limpiar estado previo
         this.primerHorarioSeleccionado = null;
         document.getElementById('fecha_inicio').value = '';
         timeSlotsContainer.innerHTML = '';
-    
-        try {
-            const timeSlots = await this.fetchTimeSlots(selectedDate);
-            
-            // Ordenar los lapsos por hora
-            const sortedSlots = Object.entries(timeSlots)
-                .sort((a, b) => {
-                    const timeA = a[1].inicio.split(':').map(Number);
-                    const timeB = b[1].inicio.split(':').map(Number);
-                    return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
+        
+        if (errorContainer) errorContainer.classList.add('hidden');
+
+        return this.fetchTimeSlots(selectedDate)
+            .then(timeSlots => {
+                if (!timeSlots || Object.keys(timeSlots).length === 0) {
+                    throw new Error('No hay horarios disponibles');
+                }
+
+                // Ordenar los lapsos por hora
+                const sortedSlots = Object.entries(timeSlots)
+                    .sort((a, b) => a[1].inicio.localeCompare(b[1].inicio));
+
+                // Crear botones para cada lapso
+                sortedSlots.forEach(([lapso, info]) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.textContent = `${info.inicio} - ${info.fin}`;
+                    button.setAttribute('data-lapso', lapso);
+                    button.setAttribute('data-info', JSON.stringify(info));
+                    
+                    const isDisabled = info.ocupado;
+                    
+                    button.className = `w-full p-2 rounded-md text-center transition-colors ${
+                        isDisabled 
+                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                            : 'bg-white border border-gray-300 hover:bg-gray-50'
+                    }`;
+                    
+                    if (!isDisabled) {
+                        button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
+                    }
+                    
+                    button.disabled = isDisabled;
+                    timeSlotsContainer.appendChild(button);
                 });
 
-            sortedSlots.forEach(([lapso, info]) => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.textContent = `${info.inicio} - ${info.fin}`;
-                button.setAttribute('data-lapso', lapso);
-                button.setAttribute('data-info', JSON.stringify(info));
-                
-                const isDisabled = info.ocupado;
-                
-                button.className = `w-full p-2 rounded-md text-center transition-colors ${
-                    isDisabled 
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                        : 'bg-white border border-gray-300 hover:bg-gray-50'
-                }`;
-                
-                if (!isDisabled) {
-                    button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
+                if (this.servicioSeleccionadoDuracion > 30 && serviceDurationMessage) {
+                    serviceDurationMessage.classList.remove('hidden');
                 }
-                
-                button.disabled = isDisabled;
-                timeSlotsContainer.appendChild(button);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                this.showError(error.message);
+                timeSlotsContainer.innerHTML = '';
+            })
+            .finally(() => {
+                if (loadingIndicator) loadingIndicator.classList.add('hidden');
             });
-
-            if (this.servicioSeleccionadoDuracion > 30 && serviceDurationMessage) {
-                serviceDurationMessage.classList.remove('hidden');
-            }
-        } catch (error) {
-            console.error('Error en updateTimeSlots:', error);
-            this.showError(error.message);
-            timeSlotsContainer.innerHTML = '';
-        }
     },
 
     handleTimeSelection(lapso, timeInfo, button) {
@@ -177,7 +162,6 @@ const TimeSlotHandler = {
             const formattedDate = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${timeInfo.inicio}`;
             fechaInput.value = formattedDate;
             this.primerHorarioSeleccionado = null;
-            
         } else {
             if (!this.primerHorarioSeleccionado) {
                 document.querySelectorAll('#timeSlots button').forEach(btn => {
