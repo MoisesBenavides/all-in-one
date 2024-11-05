@@ -2,6 +2,7 @@ const TimeSlotHandler = {
     servicioSeleccionadoDuracion: 0,
     primerHorarioSeleccionado: null,
 
+    
     async fetchTimeSlots(selectedDate) {
         const loadingIndicator = document.getElementById('loadingIndicator');
         const timeSlotsContainer = document.getElementById('timeSlots');
@@ -10,30 +11,34 @@ const TimeSlotHandler = {
             if (loadingIndicator) loadingIndicator.classList.remove('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
 
-            // Convertir la fecha seleccionada a objeto Date
+            // Formatear la fecha como YYYY-MM-DD
             const fecha = new Date(selectedDate);
-            
-            // Formatear la fecha como lo espera PHP (YYYY-MM-DD)
-            // Importante: Usar UTC para evitar problemas de zona horaria
-            const formattedDate = fecha.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
+            const formattedDate = fecha.toLocaleDateString('en-CA');
 
-            const url = new URL(GET_BLOCKED_TIMES_URL);
-            url.searchParams.append('date', formattedDate);
+            // Construir la URL de manera segura
+            let url;
+            if (GET_BLOCKED_TIMES_URL.includes('http')) {
+                // Si es una URL absoluta
+                url = `${GET_BLOCKED_TIMES_URL}${GET_BLOCKED_TIMES_URL.includes('?') ? '&' : '?'}date=${formattedDate}`;
+            } else {
+                // Si es una URL relativa
+                const baseUrl = window.location.origin;
+                url = `${baseUrl}${GET_BLOCKED_TIMES_URL}${GET_BLOCKED_TIMES_URL.includes('?') ? '&' : '?'}date=${formattedDate}`;
+            }
 
-            const response = await fetch(url.toString(), {
+            const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                credentials: 'same-origin' // Importante para mantener la sesión
+                credentials: 'same-origin'
             });
 
             // Si hay error, capturar el mensaje específico
             if (!response.ok) {
                 const errorText = await response.text();
                 if (errorText.includes('Warning:')) {
-                    // Es un error de PHP, dar un mensaje más amigable
                     throw new Error('Error al procesar la fecha seleccionada');
                 }
                 throw new Error(errorText || `Error del servidor: ${response.status}`);
@@ -48,7 +53,6 @@ const TimeSlotHandler = {
             // Procesar y validar los horarios
             const horariosProcesados = {};
             Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
-                // Asegurarse de que el horario tenga toda la información necesaria
                 if (info && 'ocupado' in info && info.inicio && info.fin) {
                     horariosProcesados[lapso] = {
                         ocupado: Boolean(info.ocupado),
@@ -90,6 +94,7 @@ const TimeSlotHandler = {
             if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
         }
     },
+
 
     handleTimeSelection(lapso, timeInfo, button) {
         const fechaInput = document.getElementById('fecha_inicio');
