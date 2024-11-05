@@ -7,40 +7,51 @@ use Exception;
 
 class ControladorProducto extends AbstractController{
 
-    public function sumarStock($rol, $id, $cantidad){
+    public function sumarStock($conn, $id, $cantidad, $stockActual){
         try{
-            if (!Producto::existeId($rol, $id)){
-                throw new Exception("No existe un producto registrado con el ID: " . $id);
-            }
-            $stockActual = Producto::obtenerStock($rol, $id);
-
             if(($stockActual + $cantidad) > 999999){
                 throw new Exception("Límite máximo de stock excedido.");
             } else{
                 $nuevoStock = $stockActual + $cantidad;
-                Producto::modificarStock($rol, $id, $nuevoStock);
+                Producto::modificarStock($conn, $id, $nuevoStock);
             }
         } catch(Exception $e){
             throw $e;
         }
     }
 
-    public function restarStock($rol, $id, $cantidad){
+    public function obtenerStock($conn, $id){
         try{
-            if (!Producto::existeId($rol, $id)){
-                throw new Exception("No existe un producto registrado con el ID: " . $id);
-            }
-            $stockActual = Producto::obtenerStock($rol, $id);
+            return Producto::obtenerStock($conn, $id);
+        } catch(Exception $e){
+            throw $e;
+        }
+    }
 
+    public function restarStock($conn, $id, $cantidad, $stockActual){
+        try{
             if ($stockActual == 0 || ($stockActual - $cantidad) < 0){
                 throw new Exception("Límite mínimo de stock excedido.");            
             } else {
                 $nuevoStock = $stockActual - $cantidad;
-                Producto::modificarStock($rol, $id, $nuevoStock);
+                Producto::modificarStock($conn, $id, $nuevoStock);
             }
         } catch(Exception $e){
             throw $e;
         }
+    }
+
+    public function existeId($rol, $id){
+        try{
+            if (!Producto::existeId($rol, $id)){
+                throw new Exception("No existe un producto registrado con el ID: " . $id);
+            }
+            return true;
+        } catch(Exception $e){
+            throw $e;
+            return false;
+        }
+
     }
 
     function getProductosTodos($rol){

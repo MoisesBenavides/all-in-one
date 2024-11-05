@@ -42,6 +42,7 @@ class ControladorTransaccion extends AbstractController{
                         $this->transaccion = new Transaccion(null, TipoTransaccion::tryFrom($tipoTr), $cantidad, $fecha);
 
                         $this->transaccion->setDBConnection("gerente");
+                        $this->transaccion->comenzarTransaccion();
 
                         try{
                             if(!$this->transaccion->registrarTransaccion($idProd)){
@@ -50,11 +51,12 @@ class ControladorTransaccion extends AbstractController{
                                 $this->controladorProducto = new ControladorProducto();
 
                                 if ($tipoTr == 'ingreso'){
-                                    $this->controladorProducto->sumarStock($rol, $idProd, $cantidad);
+                                    $this->controladorProducto->sumarStock($rol, $idProd, $cantidad, $stockActual);
                                 } elseif($tipoTr == 'egreso'){
-                                     $this->controladorProducto->restarStock($rol, $idProd, $cantidad);
+                                     $this->controladorProducto->restarStock($rol, $idProd, $cantidad, $stockActual);
                                 }
                                 
+                                $this->transaccion->confirmarTransaccion();
                                 $response['success'] = true;
 
                                 $transaccion = [
@@ -71,6 +73,7 @@ class ControladorTransaccion extends AbstractController{
                                 ]);
                             }
                         } catch (Exception $e){
+                            $this->transaccion->deshacerTransaccion();
                             $response['errors'][] = $e->getMessage();
                         } finally{
                             $this->transaccion->cerrarDBConnection();
