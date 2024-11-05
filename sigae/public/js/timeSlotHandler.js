@@ -22,14 +22,14 @@ const TimeSlotHandler = {
             })
             .then(response => {
                 if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(text || 'Error al obtener los horarios');
+                    return response.json().then(err => {
+                        console.error('Error de servidor:', err);
+                        throw new Error(err.error || 'Error al obtener los horarios');
                     });
                 }
                 return response.json();
             })
             .then(data => {
-                // Validar que el JSON contenga 'horariosTaller'
                 if (!data.horariosTaller || typeof data.horariosTaller !== 'object') {
                     throw new Error('Formato de respuesta inválido: falta "horariosTaller"');
                 }
@@ -39,11 +39,11 @@ const TimeSlotHandler = {
                 const fechaSeleccionada = new Date(formattedDate);
                 const esHoy = fechaSeleccionada.toDateString() === now.toDateString();
 
-                // Procesar cada lapso
+                // Procesar cada lapso y verificar la estructura
                 Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
-                    // Verificar la estructura y los tipos de 'inicio', 'fin' y 'ocupado'
-                    if (info && typeof info === 'object' && 'inicio' in info && 'fin' in info) {
-                        let ocupado = Boolean(info.ocupado); // Asegurarse de que sea booleano
+                    // Validar que el lapso contenga 'inicio' y 'fin'
+                    if (info && typeof info === 'object' && info.inicio && info.fin) {
+                        let ocupado = Boolean(info.ocupado);
 
                         // Si es hoy, verificar si el lapso ya pasó
                         if (esHoy) {
@@ -62,7 +62,7 @@ const TimeSlotHandler = {
                             ocupado: ocupado
                         };
                     } else {
-                        console.warn(`Lapso inválido o faltan datos en la respuesta: ${lapso}`, info);
+                        console.warn(`Datos incompletos para el lapso: ${lapso}`, info);
                     }
                 });
 
@@ -70,7 +70,7 @@ const TimeSlotHandler = {
             })
             .catch(error => {
                 console.error('Error en fetchTimeSlots:', error);
-                reject(new Error('Error al obtener los horarios'));
+                reject(new Error('Error al obtener los horarios. Intente nuevamente o contacte al soporte.'));
             });
         });
     },
@@ -139,6 +139,21 @@ const TimeSlotHandler = {
                 if (loadingIndicator) loadingIndicator.classList.add('hidden');
             });
     },
+
+    showError(message) {
+        const errorContainer = document.getElementById('error-container');
+        if (errorContainer) {
+            errorContainer.classList.remove('hidden');
+            const errorList = document.getElementById('error-list');
+            if (errorList) {
+                errorList.innerHTML = `<li>${message}</li>`;
+            } else {
+                errorContainer.textContent = message;
+            }
+            setTimeout(() => errorContainer.classList.add('hidden'), 5000);
+        }
+    },
+
 
 
     handleTimeSelection(lapso, timeInfo, button) {
