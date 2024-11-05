@@ -6,7 +6,6 @@ use PDO;
 use Exception;
 
 class Taller extends Servicio{
-    private ?PDO $conn=null;
     private $tipo;
     private $descripcion;
     private $diagnostico;
@@ -18,18 +17,6 @@ class Taller extends Servicio{
         $this->descripcion = $descripcion;
         $this->diagnostico = $diagnostico;
         $this->tiempo_estimado = $tiempo_estimado;
-    }
-
-    public function setDBConnection($rol){
-        $this->conn = conectarDB($rol);
-        if($this->conn === false){
-            throw new Exception("No se puede conectar con la base de datos.");
-        }
-        return $this;
-    }
-
-    public function getDBConnection(){
-        return $this->conn;
     }
 
     public function getTipo(){
@@ -62,30 +49,6 @@ class Taller extends Servicio{
 
     public function setTiempo_estimado($tiempo_estimado){
         $this->tiempo_estimado = $tiempo_estimado;
-    }
-
-    public function comenzarTransaccion() {
-        if ($this->conn) {
-            $this->conn->beginTransaction();
-        }
-    }
-
-    // Método para confirmar una transacción
-    public function confirmarTransaccion() {
-        if ($this->conn) {
-            $this->conn->commit();
-        }
-    }
-
-    // Método para revertir una transacción
-    public function deshacerTransaccion() {
-        if ($this->conn) {
-            $this->conn->rollback();
-        }
-    }
-
-    public function cerrarDBConnection(){
-        $this->conn = null;
     }
 
     public function reservar($matricula) {

@@ -1,8 +1,13 @@
 <?php
 
 namespace Sigae\Models;
+use function Sigae\Config\conectarDB;
+use PDO;
+use PDOException;
+use Exception;
 
 abstract class Producto{
+    protected ?PDO $conn =null;
     protected $id;
     protected $upc;
     protected $precio;
@@ -68,11 +73,109 @@ abstract class Producto{
         $this->stock = $stock;
     }
 
-    abstract public function getProductosDisp();
-
-    public static function agregarStock($id){
+    public function setDBConnection($rol){
+        $this->conn = conectarDB($rol);
+        if($this->conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+        return $this;
     }
-    public static function restarStock($id){
+
+    public function getDBConnection(){
+        return $this->conn;
     }
 
+    public function comenzarTransaccion() {
+        if ($this->conn) {
+            $this->conn->beginTransaction();
+        }
+    }
+
+    public function confirmarTransaccion() {
+        if ($this->conn) {
+            $this->conn->commit();
+        }
+    }
+
+    public function deshacerTransaccion() {
+        if ($this->conn) {
+            $this->conn->rollback();
+        }
+    }
+
+    public function cerrarDBConnection(){
+        $this->conn = null;
+    }
+
+    abstract public static function getProductosCategoriaDisp($rol);
+
+    abstract public static function getProductosCategoriaDetallados($rol);
+
+    public static function getProductosDisp($rol){
+    }
+
+    public static function getProductosDetallados($rol){
+    }
+
+    public static function existeId($rol, $id){
+        $conn = conectarDB($rol);
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
+        try{
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM producto WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            
+            $count = $stmt->fetchColumn();
+
+            return $count != 0;
+
+        } catch(Exception $e){
+            throw $e;
+        }
+    }
+
+    public static function modificarStock($rol, $id, $nuevoStock){
+        try{
+            $conn = conectarDB($rol);
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
+
+            $stmt = $conn->prepare('UPDATE producto 
+                                    SET stock = :nStock 
+                                    WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':nStock', $nuevoStock);
+            $stmt->execute();
+            return true;
+
+        } catch(Exception $e){
+            error_log("Error al cancelar el servicio: ".$e->getMessage());
+            throw $e;
+            return false;
+        }
+    }
+
+    public static function obtenerStock($rol, $id){
+        $conn = conectarDB($rol);
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
+        try{
+            $stmt = $conn->prepare('SELECT stock FROM producto WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            
+            $stock = $stmt->fetchColumn();
+
+            return $stock;
+
+        } catch(Exception $e){
+            throw $e;
+        }
+    }
 }

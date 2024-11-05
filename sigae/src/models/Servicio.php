@@ -6,6 +6,7 @@ use Exception;
 use PDO;
 
 abstract class Servicio{
+    protected ?PDO $conn =null;
     protected $id;
     protected $precio;
     protected $fecha_inicio;
@@ -66,6 +67,42 @@ abstract class Servicio{
 
     public function setEstado(EstadoServicio $estado){
         $this->estado = $estado;
+    }
+
+    public function setDBConnection($rol){
+        $this->conn = conectarDB($rol);
+        if($this->conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+        return $this;
+    }
+
+    public function getDBConnection(){
+        return $this->conn;
+    }
+
+    public function comenzarTransaccion() {
+        if ($this->conn) {
+            $this->conn->beginTransaction();
+        }
+    }
+
+    // Método para confirmar una transacción
+    public function confirmarTransaccion() {
+        if ($this->conn) {
+            $this->conn->commit();
+        }
+    }
+
+    // Método para revertir una transacción
+    public function deshacerTransaccion() {
+        if ($this->conn) {
+            $this->conn->rollback();
+        }
+    }
+
+    public function cerrarDBConnection(){
+        $this->conn = null;
     }
 
     abstract public function reservar($matricula);

@@ -12,20 +12,16 @@ class ControladorNeumatico extends AbstractController{
 
     function getNeumaticos($rol){
         $neumaticos=[];
-        $this->neumatico = new Neumatico();
         try{
-            $this->neumatico->setDBConnection($rol);
-            
             if($rol == 'cliente'){
-                $neumaticos = $this->neumatico->getProductosDisp();
+                $neumaticos = Neumatico::getProductosCategoriaDisp($rol);
             } elseif ($rol == 'gerente' || 'cajero') {
                 // Si es funcionario, accede a más datos
-                $neumaticos = $this->neumatico->getProductosDetallados();
+                $neumaticos = Neumatico::getProductosCategoriaDetallados($rol);
             }
         } catch(Exception $e){
             throw $e;
         } finally {
-            $this->neumatico->cerrarDBConnection();
             return $neumaticos;
         }
     }

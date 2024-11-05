@@ -3,6 +3,7 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Cliente;
 use Sigae\Controllers\ControladorServicio;
+use Sigae\Controllers\ControladorProducto;
 use Sigae\Controllers\ControladorNeumatico;
 use Sigae\Controllers\ControladorOtroProducto;
 use Google_Client;
@@ -16,6 +17,7 @@ use Exception;
 class ControladorCliente extends AbstractController {
     private $cliente;
     private $controladorServicio;
+    private $controladorProducto;
     private $controladorNeumatico;
     private $controladorOtroProducto;
 
@@ -296,14 +298,8 @@ class ControladorCliente extends AbstractController {
                     break;
                 case 'todos':
                 default:
-                    $this->controladorNeumatico = new ControladorNeumatico();
-                    $this->controladorOtroProducto = new ControladorOtroProducto();
-                    // Obtiene neumaticos
-                    $neumaticos = $this->controladorNeumatico->getNeumaticos('cliente');
-                    // Obtiene otros
-                    $otrosProductos = $this->controladorOtroProducto->getOtrosProductos('cliente');
-                    // Combina productos de ambas categorías
-                    $productos = array_merge($neumaticos, $otrosProductos);
+                    $this->controladorProducto = new ControladorProducto();
+                    $productos = $this->controladorProducto->getProductosTodos('cliente');
                     break;
             }
 

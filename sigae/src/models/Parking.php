@@ -6,7 +6,6 @@ use PDO;
 use Exception;
 
 class Parking extends Servicio {
-    private ?PDO $conn =null;
     private $largo_plazo;
     private TipoPlazaParking $tipo_plaza;
 
@@ -14,18 +13,6 @@ class Parking extends Servicio {
         parent::__construct($id, $precio, $fecha_inicio, $fecha_final);
         $this->largo_plazo = $largo_plazo;
         $this->tipo_plaza = $tipo_plaza;
-    }
-
-    public function setDBConnection($rol){
-        $this->conn = conectarDB($rol);
-        if($this->conn === false){
-            throw new Exception("No se puede conectar con la base de datos.");
-        }
-        return $this;
-    }
-
-    public function getDBConnection(){
-        return $this->conn;
     }
 
     public function getTipo_pLaza(): string{
@@ -44,31 +31,6 @@ class Parking extends Servicio {
 
         return $this;
     }
-
-    public function comenzarTransaccion() {
-        if ($this->conn) {
-            $this->conn->beginTransaction();
-        }
-    }
-
-    // Método para confirmar una transacción
-    public function confirmarTransaccion() {
-        if ($this->conn) {
-            $this->conn->commit();
-        }
-    }
-
-    // Método para revertir una transacción
-    public function deshacerTransaccion() {
-        if ($this->conn) {
-            $this->conn->rollback();
-        }
-    }
-
-    public function cerrarDBConnection(){
-        $this->conn = null;
-    }
-
 
     public function apartarPlaza($numero_plaza){
         //Debug numero plaza

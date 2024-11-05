@@ -9,10 +9,12 @@ class Transaccion{
     private ?PDO $conn =null;
     private TipoTransaccion $tipo;
     private $cantidad;
+    private $fecha;
 
-    public function __construct(TipoTransaccion $tipo, $cantidad){
+    public function __construct(TipoTransaccion $tipo, $cantidad, $fecha){
         $this->tipo = $tipo;
         $this->cantidad = $cantidad;
+        $this->fecha = $fecha;
     }
 
     public function setDBConnection($rol){
@@ -47,6 +49,16 @@ class Transaccion{
         return $this;
     }
 
+    public function getFecha(){
+        return $this->fecha;
+    }
+
+    public function setFecha($fecha){
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
     public function comenzarTransaccion() {
         if ($this->conn) {
             $this->conn->beginTransaction();
@@ -71,7 +83,27 @@ class Transaccion{
         $this->conn = null;
     }
 
-    public function realizarTransaccion(){
+    public function registrarTransaccion($idProd){
+        $tipo = $this->getTipo();
+        $cantidad = $this->getCantidad();
+        $fecha = $this->getFecha();
+    
+        try {
+            $stmt = $this->conn->prepare('INSERT INTO transaccion (id_producto, cantidad, tipo, fecha) 
+                                    VALUES (:idProd, :cant, :tip, :fecha)');
+    
+            $stmt->bindParam(':idProd', $idProd);
+            $stmt->bindParam(':cant', $cantidad);
+            $stmt->bindParam(':tip', $tipo);
+            $stmt->bindParam(':fecha', $fecha);
+                
+            $stmt->execute();
+    
+            return true;
+    
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
     
 }

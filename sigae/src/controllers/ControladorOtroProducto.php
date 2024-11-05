@@ -12,20 +12,16 @@ class ControladorOtroProducto extends AbstractController{
 
     function getOtrosProductos($rol){
         $otrosProd=[];
-        $this->otroProducto = new OtroProducto();
         try{
-            $this->otroProducto->setDBConnection($rol);
-            
             if($rol == 'cliente'){
-                $otrosProd = $this->otroProducto->getProductosDisp();
+                $otrosProd = OtroProducto::getProductosCategoriaDisp($rol);
             } elseif($rol == 'gerente' || 'cajero') {
                 // Si es funcionario, accede a más datos
-                $otrosProd = $this->otroProducto->getProductosDetallados();
+                $otrosProd = OtroProducto::getProductosCategoriaDetallados($rol);
             }
         } catch(Exception $e){
             throw $e;
         } finally {
-            $this->otroProducto->cerrarDBConnection();
             return $otrosProd;
         }
     }
