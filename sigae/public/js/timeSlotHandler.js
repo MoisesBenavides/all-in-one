@@ -10,59 +10,50 @@ const TimeSlotHandler = {
         if (timeSlotsContainer) timeSlotsContainer.classList.add('hidden');
     
         try {
-            // Formatear fecha como lo espera el controlador (YYYY-MM-DD)
-            const fecha = new Date(selectedDate);
+            // Asegurarse de que la fecha esté en el formato exacto que espera el controlador
+            let fecha = new Date(selectedDate);
+            // Ajustar a zona horaria local y formato YYYY-MM-DD
+            const offset = fecha.getTimezoneOffset();
+            fecha = new Date(fecha.getTime() - (offset * 60 * 1000));
             const formattedDate = fecha.toISOString().split('T')[0];
 
-            // Construir URL como la espera el controlador
+            // Construir URL exactamente como espera el controlador
             const url = `${GET_BLOCKED_TIMES_URL}?date=${formattedDate}`;
             
+            // Realizar la petición
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include' // Importante para las sesiones de Symfony
+                credentials: 'include'
             });
 
+            // Si la respuesta no es exitosa, intentar obtener el mensaje de error
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || 'Error al obtener los horarios');
+                if (response.status === 400) {
+                    const errorData = await response.json().catch(() => null);
+                    throw new Error(errorData?.error || 'Error en la solicitud');
+                }
+                throw new Error(`Error del servidor: ${response.status}`);
             }
 
             const data = await response.json();
 
-            // Validar la estructura que devuelve el controlador
-            if (!data.success || !data.horariosTaller) {
-                throw new Error(data.error || 'Formato de respuesta inválido');
+            // Validar la estructura de la respuesta
+            if (!data.success) {
+                throw new Error(data.error || 'Error al obtener los horarios');
             }
 
-            const horariosProcesados = data.horariosTaller;
-
-            // Procesar horarios pasados si tenemos horaActual
-            if (data.horaActual) {
-                const horaActual = new Date(data.horaActual);
-                const fechaSeleccionada = new Date(selectedDate);
-
-                // Solo procesar si es el día actual
-                if (fechaSeleccionada.toDateString() === horaActual.toDateString()) {
-                    Object.entries(horariosProcesados).forEach(([lapso, info]) => {
-                        const [hours, minutes] = info.inicio.split(':');
-                        const horaInicio = new Date(fechaSeleccionada);
-                        horaInicio.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-                        if (horaInicio <= horaActual) {
-                            horariosProcesados[lapso].ocupado = true;
-                        }
-                    });
-                }
+            if (!data.horariosTaller || typeof data.horariosTaller !== 'object') {
+                throw new Error('No hay horarios disponibles');
             }
 
-            return horariosProcesados;
-            
+            return data.horariosTaller;
         } catch (error) {
-            throw new Error(`Error al obtener horarios: ${error.message}`);
+            console.error('Error en fetchTimeSlots:', error);
+            throw error;
         } finally {
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (timeSlotsContainer) timeSlotsContainer.classList.remove('hidden');
@@ -136,6 +127,7 @@ const TimeSlotHandler = {
         }
     },
 
+    
     async updateTimeSlots(selectedDate) {
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
@@ -188,7 +180,9 @@ const TimeSlotHandler = {
                 serviceDurationMessage.classList.remove('hidden');
             }
         } catch (error) {
+            console.error('Error en updateTimeSlots:', error);
             this.showError(error.message);
+            timeSlotsContainer.innerHTML = '';
         }
     },
 
