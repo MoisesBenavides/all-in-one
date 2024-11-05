@@ -39,10 +39,10 @@ const TimeSlotHandler = {
                 const fechaSeleccionada = new Date(formattedDate);
                 const esHoy = fechaSeleccionada.toDateString() === now.toDateString();
 
-                // Procesar cada lapso y verificar la estructura
+                // Procesar cada lapso y omitir los incompletos
                 Object.entries(data.horariosTaller).forEach(([lapso, info]) => {
                     // Validar que el lapso contenga 'inicio' y 'fin'
-                    if (info && typeof info === 'object' && info.inicio && info.fin) {
+                    if (info && typeof info === 'object' && 'inicio' in info && 'fin' in info) {
                         let ocupado = Boolean(info.ocupado);
 
                         // Si es hoy, verificar si el lapso ya pasó
@@ -62,7 +62,7 @@ const TimeSlotHandler = {
                             ocupado: ocupado
                         };
                     } else {
-                        console.warn(`Datos incompletos para el lapso: ${lapso}`, info);
+                        console.warn(`Datos incompletos o clave faltante para el lapso: ${lapso}`, info);
                     }
                 });
 
