@@ -29,14 +29,12 @@ class Transaccion{
         return $this->conn;
     }
 
-    public function getTipo(){
-        return $this->tipo;
+    public function getTipo(): string{
+        return $this->tipo->value;
     }
 
-    public function setTipo($tipo){
+    public function setTipo(TipoTransaccion $tipo){
         $this->tipo = $tipo;
-
-        return $this;
     }
 
     public function getCantidad(){
