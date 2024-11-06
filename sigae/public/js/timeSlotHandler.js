@@ -1,4 +1,3 @@
-console.log("debug");
 const TimeSlotHandler = {
     servicioSeleccionadoDuracion: 0,
     primerHorarioSeleccionado: null,
