@@ -1,187 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
-    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
-    <meta name="author" content="All In One">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario | AIO</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @font-face {
-            font-family: 'Teachers';
-            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
-            font-weight: normal;
-            font-style: normal;
-        }
-        body {
-            font-family: 'Teachers', sans-serif;
-        }
-    </style>
-</head>
-
-<body class="bg-gray-50">
-    {% include 'partials/headerGerente.html.twig' %}
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header Section -->
-        <div class="bg-gradient-to-r from-black to-gray-800 rounded-2xl shadow-lg mb-8 p-8">
-            <h1 class="text-white text-4xl font-bold text-center">Inventario</h1>
-        </div>
-
-        <!-- Search Section -->
-        <div class="max-w-2xl mx-auto mb-12">
-            <div class="relative">
-                <input 
-                    type="text" 
-                    id="buscar" 
-                    placeholder="Buscar productos..." 
-                    class="w-full h-14 px-6 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-2 focus:ring-black focus:outline-none transition duration-300 ease-in-out"
-                >
-            </div>
-        </div>
-
-        <!-- Products Grid -->
-        <div id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {% for producto in productos %}
-                <div class="product bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                    <!-- Product Image -->
-                    <div class="w-full h-48 bg-gray-50 rounded-t-xl overflow-hidden">
-                        <img 
-                            src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}"
-                            alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
-                            class="w-full h-full object-contain"
-                            onload="this.style.display='block'"
-                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full bg-gray-50\'><p class=\'text-gray-400 text-sm\'>Imagen no disponible</p></div>'"
-                        />
+<!-- Products Grid -->
+<div id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {% for producto in productos %}
+        <div class="product bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+            <form class="product-form" id="product-form-{{ producto.id }}" action="{{ path('editProduct') }}" method="POST">
+                <!-- Product Image -->
+                <div class="w-full h-48 bg-gray-50 rounded-t-xl overflow-hidden">
+                    <img 
+                        src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}"
+                        alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
+                        class="w-full h-full object-contain"
+                        onload="this.style.display='block'"
+                        onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full bg-gray-50\'><p class=\'text-gray-400 text-sm\'>Imagen no disponible</p></div>'"
+                    />
+                </div>
+                
+                <!-- Product Details -->
+                <div class="p-6 space-y-4">
+                    <!-- Brand -->
+                    <div class="space-y-1">
+                        <label class="text-xs font-medium text-gray-500 uppercase">Marca</label>
+                        <input type="text" name="marca" class="w-full text-gray-900 font-medium bg-transparent border-0 editable" value="{{ producto.marca }}" readonly>
                     </div>
-                    
-                    <!-- Product Details -->
-                    <div class="p-6 space-y-4">
-                        <!-- Brand -->
+
+                    {% if producto.nombre is defined and producto.nombre %}
                         <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase">Marca</label>
-                            <p class="text-gray-900 font-medium">{{ producto.marca }}</p>
+                            <label class="text-xs font-medium text-gray-500 uppercase">Nombre</label>
+                            <input type="text" name="nombre" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.nombre }}" readonly>
                         </div>
+                    {% endif %}
 
-                        {% if producto.nombre is defined and producto.nombre %}
-                            <div class="space-y-1">
-                                <label class="text-xs font-medium text-gray-500 uppercase">Nombre</label>
-                                <p class="text-gray-900">{{ producto.nombre }}</p>
-                            </div>
-                        {% endif %}
-
-                        {% if producto.modelo is defined and producto.modelo %}
-                            <div class="space-y-1">
-                                <label class="text-xs font-medium text-gray-500 uppercase">Modelo</label>
-                                <p class="text-gray-900">{{ producto.modelo }}</p>
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-xs font-medium text-gray-500 uppercase">Tamaño</label>
-                                <p class="text-gray-900">{{ producto.tamano }}</p>
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-xs font-medium text-gray-500 uppercase">Tipo</label>
-                                <p class="text-gray-900">{{ producto.tipo }}</p>
-                            </div>
-                        {% endif %}
-
+                    {% if producto.modelo is defined and producto.modelo %}
                         <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase">ID</label>
-                            <p class="text-gray-900">{{ producto.id }}</p>
+                            <label class="text-xs font-medium text-gray-500 uppercase">Modelo</label>
+                            <input type="text" name="modelo" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.modelo }}" readonly>
                         </div>
-
                         <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase">UPC</label>
-                            <p class="text-gray-900">{{ producto.upc }}</p>
+                            <label class="text-xs font-medium text-gray-500 uppercase">Tamaño</label>
+                            <input type="text" name="tamano" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.tamano }}" readonly>
                         </div>
-
                         <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase">Fecha de Creación</label>
-                            <p class="text-gray-900">{{ producto.fecha_creacion }}</p>
+                            <label class="text-xs font-medium text-gray-500 uppercase">Tipo</label>
+                            <input type="text" name="tipo" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.tipo }}" readonly>
                         </div>
+                    {% endif %}
 
-                        <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase">Stock</label>
-                            <p class="text-gray-900">{{ producto.stock }}</p>
-                        </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-medium text-gray-500 uppercase">ID</label>
+                        <input type="text" name="id" class="w-full text-gray-900 bg-transparent border-0" value="{{ producto.id }}" readonly>
+                    </div>
 
-                        <!-- Price -->
-                        <div class="pt-4 mt-4 border-t border-gray-100">
-                            <p class="text-2xl font-bold text-black">${{ producto.precio }}</p>
-                        </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-medium text-gray-500 uppercase">UPC</label>
+                        <input type="text" name="upc" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.upc }}" readonly>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-xs font-medium text-gray-500 uppercase">Stock</label>
+                        <input type="number" name="stock" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.stock }}" readonly>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="pt-4 mt-4 border-t border-gray-100">
+                        <input type="number" name="precio" class="w-full text-2xl font-bold text-black bg-transparent border-0 editable" value="{{ producto.precio }}" readonly>
+                    </div>
+
+                    <!-- Edit and Delete Buttons -->
+                    <div class="flex justify-end items-center space-x-4 mt-4">
+                        <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300" onclick="toggleProductEdit('{{ producto.id }}')">
+                            <span class="edit-icon">✏️</span>
+                            <span class="save-icon hidden">💾</span>
+                        </button>
+                        <button type="submit" class="edit-button px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors hidden">
+                            Guardar
+                        </button>
                     </div>
                 </div>
-            {% endfor %}
+            </form>
+            <form action="{{ path('deleteProduct') }}" method="POST" class="px-6 pb-4">
+                <input type="hidden" name="id" value="{{ producto.id }}">
+                <button type="button" onclick="confirmDelete('{{ producto.id }}')" class="text-2xl hover:scale-110 transition-transform duration-300 text-red-500">
+                    🗑️
+                </button>
+            </form>
         </div>
+    {% endfor %}
+</div>
 
-        <!-- No Results Message -->
-        <div id="noResults" class="hidden">
-            <div class="mt-8 text-center bg-white rounded-xl p-12 shadow-sm">
-                <p class="text-gray-600 text-lg">No se encontraron productos que coincidan con tu búsqueda.</p>
-            </div>
-        </div>
+<style>
+.editing-mode {
+    background-color: #f0f9ff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
 
-        <!-- Load More Button -->
-        <div class="flex justify-center mt-12">
-            <button id="verMas" class="hidden bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-lg transform transition-all duration-300 hover:-translate-y-1 font-medium">
-                Ver más productos
-            </button>
-        </div>
-    </div>
+.editing-mode input:not([readonly]) {
+    background-color: white !important;
+    border: 1px solid #3b82f6 !important;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+}
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const inputBuscar = document.getElementById('buscar');
-        const productosContainer = document.getElementById('productosContainer');
-        const productos = document.querySelectorAll('.product');
-        const verMasBtn = document.getElementById('verMas');
-        const noResults = document.getElementById('noResults');
+.edit-button {
+    display: none;
+}
+
+.editing-mode .edit-button {
+    display: inline-flex;
+}
+</style>
+
+<script>
+function toggleProductEdit(productId) {
+    const form = document.getElementById(`product-form-${productId}`);
+    const formContainer = form.closest('.product');
+    const inputs = form.querySelectorAll('.editable');
+    const editButton = form.querySelector('.edit-button');
+    const editIcon = form.querySelector('.edit-icon');
+    const saveIcon = form.querySelector('.save-icon');
+    
+    // Toggle la clase de modo edición
+    formContainer.classList.toggle('editing-mode');
+    
+    // Toggle iconos
+    editIcon.classList.toggle('hidden');
+    saveIcon.classList.toggle('hidden');
+    
+    inputs.forEach(input => {
+        input.readOnly = !input.readOnly;
         
-        let productosMostrados = 50;
-        let productosVisiblesTotales = 0;
-
-        function actualizarVisibilidad() {
-            let productosVisibles = 0;
-            productosVisiblesTotales = 0;
-            const textoBusqueda = inputBuscar.value.toLowerCase();
-
-            productos.forEach((producto, index) => {
-                const textoProducto = producto.textContent.toLowerCase();
-                const coincideBusqueda = textoProducto.includes(textoBusqueda);
-                
-                if (coincideBusqueda) {
-                    productosVisiblesTotales++;
-                    if (productosVisiblesTotales <= productosMostrados) {
-                        producto.classList.remove('hidden');
-                        productosVisibles++;
-                    } else {
-                        producto.classList.add('hidden');
-                    }
-                } else {
-                    producto.classList.add('hidden');
-                }
-            });
-
-            noResults.classList.toggle('hidden', productosVisibles > 0);
-            verMasBtn.classList.toggle('hidden', productosVisiblesTotales <= productosMostrados);
+        // Añadir focus al primer input cuando se entra en modo edición
+        if (!input.readOnly) {
+            input.focus();
         }
-
-        inputBuscar.addEventListener('input', function() {
-            productosMostrados = 50;
-            actualizarVisibilidad();
-        });
-
-        verMasBtn.addEventListener('click', function() {
-            productosMostrados += 50;
-            actualizarVisibilidad();
-        });
-
-        actualizarVisibilidad();
     });
-    </script>
+    
+    // Toggle el botón de guardar
+    editButton.classList.toggle('hidden');
+}
 
-    {% include 'partials/footer.html.twig' %}
-</body>
-</html>
+function confirmDelete(productId) {
+    if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
+        const form = document.querySelector(`form[action="{{ path('deleteProduct') }}"] input[value="${productId}"]`).closest('form');
+        form.submit();
+    }
+}
+</script>
