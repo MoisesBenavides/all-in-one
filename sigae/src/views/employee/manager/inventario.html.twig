@@ -165,95 +165,123 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get DOM elements
-            const inputBuscar = document.getElementById('buscar');
-            const productosContainer = document.getElementById('productosContainer');
-            const productos = Array.from(document.querySelectorAll('.product'));
-            const verMasBtn = document.getElementById('verMas');
-            const noResults = document.getElementById('noResults');
-            
-            // Initialize variables
-            let productosMostrados = 50;
-            let productosFiltrados = productos;
+      document.addEventListener('DOMContentLoaded', function() {
+    // Get DOM elements
+    const inputBuscar = document.getElementById('buscar');
+    const productosContainer = document.getElementById('productosContainer');
+    const productos = Array.from(document.querySelectorAll('.product'));
+    const verMasBtn = document.getElementById('verMas');
+    const noResults = document.getElementById('noResults');
+    
+    // Initialize variables
+    let productosMostrados = 50;
+    let productosFiltrados = productos;
 
-            // Function to filter products
-            function filtrarProductos() {
-                const textoBusqueda = inputBuscar.value.toLowerCase().trim();
-                
-                productosFiltrados = productos.filter(producto => {
-                    const textoProducto = producto.textContent.toLowerCase();
-                    return textoProducto.includes(textoBusqueda);
-                });
+    // Function to check if a product matches search criteria
+    function productoCoincideConBusqueda(producto, textoBusqueda) {
+        // Get all text fields from the product
+        const marca = producto.querySelector('[name="marca"]')?.value || '';
+        const nombre = producto.querySelector('[name="nombre"]')?.value || '';
+        const modelo = producto.querySelector('[name="modelo"]')?.value || '';
+        const tipo = producto.querySelector('[name="tipo"]')?.value || '';
+        const id = producto.querySelector('[name="id"]')?.value || '';
+        const upc = producto.querySelector('[name="upc"]')?.value || '';
 
-                return productosFiltrados;
-            }
+        // Convert everything to lowercase for search
+        const textoProducto = [marca, nombre, modelo, tipo, id, upc]
+            .map(text => text.toLowerCase())
+            .join(' ');
 
-            // Function to display products
-            function mostrarProductos() {
-                const productosFiltrados = filtrarProductos();
-                
-                // Hide all products first
-                productos.forEach(producto => producto.classList.add('hidden'));
-                
-                // Show filtered products up to the limit
-                productosFiltrados.slice(0, productosMostrados).forEach(producto => {
-                    producto.classList.remove('hidden');
-                });
+        // Split search text into words for partial search
+        const palabrasBusqueda = textoBusqueda.toLowerCase().split(' ');
 
-                // Update UI elements
-                noResults.classList.toggle('hidden', productosFiltrados.length > 0);
-                verMasBtn.classList.toggle('hidden', productosFiltrados.length <= productosMostrados);
+        // Product matches if it contains all search words
+        return palabrasBusqueda.every(palabra => textoProducto.includes(palabra));
+    }
 
-                // If no products match the search, show the no results message
-                if (productosFiltrados.length === 0) {
-                    noResults.classList.remove('hidden');
-                }
-            }
+    // Function to filter products
+    function filtrarProductos() {
+        const textoBusqueda = inputBuscar.value.toLowerCase().trim();
+        
+        if (textoBusqueda === '') {
+            productosFiltrados = productos;
+        } else {
+            productosFiltrados = productos.filter(producto => 
+                productoCoincideConBusqueda(producto, textoBusqueda)
+            );
+        }
 
-            // Event Listeners
-            inputBuscar.addEventListener('input', function() {
-                productosMostrados = 50; // Reset to initial count when searching
-                mostrarProductos();
-            });
+        return productosFiltrados;
+    }
 
-            verMasBtn.addEventListener('click', function() {
-                productosMostrados += 50;
-                mostrarProductos();
-            });
-
-            // Initial display
-            mostrarProductos();
+    // Function to display products
+    function mostrarProductos() {
+        const productosFiltrados = filtrarProductos();
+        
+        // Hide all products first
+        productos.forEach(producto => producto.classList.add('hidden'));
+        
+        // Show filtered products up to the limit
+        productosFiltrados.slice(0, productosMostrados).forEach(producto => {
+            producto.classList.remove('hidden');
         });
 
-        function toggleProductEdit(productId) {
-            const form = document.getElementById(`product-form-${productId}`);
-            const formContainer = form.closest('.product');
-            const inputs = form.querySelectorAll('.editable');
-            const editButton = form.querySelector('.edit-button');
-            const editIcon = form.querySelector('.edit-icon');
-            const saveIcon = form.querySelector('.save-icon');
-            
-            formContainer.classList.toggle('editing-mode');
-            editIcon.classList.toggle('hidden');
-            saveIcon.classList.toggle('hidden');
-            
-            inputs.forEach(input => {
-                input.readOnly = !input.readOnly;
-                if (!input.readOnly) {
-                    input.focus();
-                }
-            });
-            
-            editButton.classList.toggle('hidden');
-        }
+        // Update UI elements
+        const hayResultados = productosFiltrados.length > 0;
+        noResults.classList.toggle('hidden', hayResultados);
+        verMasBtn.classList.toggle('hidden', productosFiltrados.length <= productosMostrados);
+    }
 
-        function confirmDelete(productId) {
-            if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
-                const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
-                form.submit();
+    // Function to toggle edit mode
+    function toggleProductEdit(productId) {
+        const form = document.getElementById(`product-form-${productId}`);
+        const formContainer = form.closest('.product');
+        const inputs = form.querySelectorAll('.editable');
+        const editButton = form.querySelector('.edit-button');
+        const editIcon = form.querySelector('.edit-icon');
+        const saveIcon = form.querySelector('.save-icon');
+        
+        formContainer.classList.toggle('editing-mode');
+        editIcon.classList.toggle('hidden');
+        saveIcon.classList.toggle('hidden');
+        
+        inputs.forEach(input => {
+            input.readOnly = !input.readOnly;
+            if (!input.readOnly) {
+                input.focus();
             }
+        });
+        
+        editButton.classList.toggle('hidden');
+    }
+
+    // Function to handle product deletion
+    function confirmDelete(productId) {
+        if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
+            const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
+            form.submit();
         }
+    }
+
+    // Event Listeners
+    inputBuscar.addEventListener('input', function() {
+        productosMostrados = 50; // Reset to initial count when searching
+        mostrarProductos();
+    });
+
+    verMasBtn.addEventListener('click', function() {
+        productosMostrados += 50;
+        mostrarProductos();
+    });
+
+    // Make functions globally available
+    window.toggleProductEdit = toggleProductEdit;
+    window.confirmDelete = confirmDelete;
+
+    // Initial display
+    mostrarProductos();
+});
+
     </script>
 
     {% include 'partials/footer.html.twig' %}
