@@ -182,7 +182,7 @@
                                     </div>
                                 </form>
 
-                                    <form action="{{ path('modPswValet') }}" method="POST" class="password-change-form">
+                                    <form action="{{ path('modPswdValet') }}" method="POST" class="password-change-form">
                                         <input type="hidden" name="usuario" value="{{ funcionario.usuario }}">
                                         <input type="hidden" name="host" value="{{ funcionario.host }}">
                                         <div class="password-form-content hidden space-y-2">
@@ -203,7 +203,7 @@
                                     </form>
 
                                 <div class="flex justify-end gap-4 mt-4">
-                                    <form action="{{ path('delteValet') }}" method="POST" class="delete-user-form">
+                                    <form action="{{ path('deleteValet') }}" method="POST" class="delete-user-form">
                                         <input type="hidden" name="usuario" value="{{ funcionario.usuario }}">
                                         <input type="hidden" name="host" value="{{ funcionario.host }}">
                                         <button type="submit" class="transform hover:scale-110 transition-transform duration-200">
