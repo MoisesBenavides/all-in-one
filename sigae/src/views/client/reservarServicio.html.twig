@@ -230,32 +230,32 @@
 </script>
 
 <script>
-        // TimeSlotHandler - Funciones principales
-        const TimeSlotHandler = {
-        servicioSeleccionadoDuracion: 0,
-        primerHorarioSeleccionado: null,
+            // TimeSlotHandler - Funciones principales
+            const TimeSlotHandler = {
+            servicioSeleccionadoDuracion: 0,
+            primerHorarioSeleccionado: null,
 
-        initialize() {
-            const fechaSelector = document.getElementById('fecha_selector');
-            if (fechaSelector) {
-                const today = DateUtils.getUruguayDate(new Date());
-                fechaSelector.min = DateUtils.formatDateForUrl(today);
-                fechaSelector.addEventListener('change', (e) => this.handleDateChange(e));
-            }
-        },
+            initialize() {
+                const fechaSelector = document.getElementById('fecha_selector');
+                if (fechaSelector) {
+                    const today = DateUtils.getUruguayDate(new Date());
+                    fechaSelector.min = DateUtils.formatDateForUrl(today);
+                    fechaSelector.addEventListener('change', (e) => this.handleDateChange(e));
+                }
+            },
 
-        handleDateChange(event) {
-            const fechaInicio = document.getElementById('fecha_inicio');
-            if (fechaInicio) fechaInicio.value = '';
+            handleDateChange(event) {
+                const fechaInicio = document.getElementById('fecha_inicio');
+                if (fechaInicio) fechaInicio.value = '';
 
-            if (this.servicioSeleccionadoDuracion > 0) {
-                this.updateTimeSlots(event.target.value);
-            } else {
-                this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
-            }
-        },
+                if (this.servicioSeleccionadoDuracion > 0) {
+                    this.updateTimeSlots(event.target.value);
+                } else {
+                    this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
+                }
+            },
 
-        async updateTimeSlots(selectedDate) {
+          async updateTimeSlots(selectedDate) {
             const timeSlotsContainer = document.getElementById('timeSlots');
             const serviceDurationMessage = document.getElementById('serviceDurationMessage');
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -273,8 +273,6 @@
                 const timestamp = new Date().getTime();
                 const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(DateUtils.formatDateForUrl(selectedDate))}&_=${timestamp}`;
 
-                console.log('Consultando horarios para fecha:', selectedDate);
-                
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: {
@@ -292,19 +290,16 @@
                 }
 
                 const data = await response.json();
-                console.log('Respuesta completa del servidor:', data);
+                console.log('Respuesta del servidor:', data);
 
-                if (!data || !data.horariosTaller || !data.horaActual) {
-                    throw new Error('Formato de respuesta inválido del servidor');
+                if (!data || !data.horariosTaller) {
+                    throw new Error('No hay horarios disponibles');
                 }
 
                 const slots = Object.entries(data.horariosTaller);
                 const currentDateTime = new Date(data.horaActual);
-                
-                console.log('Hora actual del servidor:', currentDateTime);
-                console.log('Total de slots recibidos:', slots.length);
 
-                this.renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime);
+                this.renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime, data.horariosTaller);
 
             } catch (error) {
                 console.error('Error en updateTimeSlots:', error);
@@ -315,7 +310,8 @@
             }
         },
 
-        renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime) {
+
+        renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime, originalData) {
             const container = document.getElementById('timeSlots');
             if (!container) return;
 
@@ -331,19 +327,26 @@
                     // Verificar si el slot está en el pasado
                     const isPastSlot = slotDateTime < currentDateTime;
                     
-                    console.log(`Evaluando slot ${lapso}:`, {
+                    // Debug para ver los estados
+                    console.log(`Slot ${lapso}:`, {
+                        inicio: info.inicio,
+                        ocupadoDB: info.ocupado,
+                        isPastSlot: isPastSlot,
                         slotTime: slotDateTime,
-                        currentTime: currentDateTime,
-                        isPast: isPastSlot,
-                        backendOccupied: info.ocupado
+                        currentTime: currentDateTime
                     });
 
-                    // Un slot está ocupado si está marcado como ocupado por el backend o si es un horario pasado
+                    // Un slot está ocupado si:
+                    // 1. Está marcado como ocupado en el backend (info.ocupado === true)
+                    // 2. O es un horario pasado (isPastSlot === true)
                     const isSlotOccupied = Boolean(info.ocupado) || isPastSlot;
 
                     const button = this.createTimeSlotButton(
                         lapso, 
-                        { ...info, ocupado: isSlotOccupied }, 
+                        { 
+                            ...info, 
+                            ocupado: isSlotOccupied 
+                        }, 
                         selectedDate
                     );
 
@@ -371,6 +374,13 @@
                 fin: horaFin,
                 ocupado: info.ocupado
             }));
+
+            // Debug para el estado del botón
+            console.log(`Creando botón ${lapso}:`, {
+                ocupado: info.ocupado,
+                inicio: horaInicio,
+                fin: horaFin
+            });
 
             const isDisabled = info.ocupado === true;
 
