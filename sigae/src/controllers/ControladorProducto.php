@@ -36,7 +36,9 @@ class ControladorProducto extends AbstractController{
             $this->existeId($id);
 
             $stockActual = Producto::obtenerStock($this->conn, $id);
-            if ($stockActual == 0 || ($stockActual - $cantidad) < 0) {
+            if ($stockActual == 0) {
+                throw new Exception("No hay disponibilidad.");
+            } elseif (($stockActual - $cantidad) < 0) {
                 throw new Exception("Límite mínimo de stock excedido.");
             } else {
                 $nuevoStock = $stockActual - $cantidad;
