@@ -196,14 +196,7 @@
 
             let servicios = {};
 
-            // Configuración inicial de la fecha
-            const fechaInicio = document.getElementById('fecha_inicio');
-            const today = new Date();
-            const formattedToday = today.toISOString().split('T')[0];
-            
-            fechaSelector.min = formattedToday;
-            fechaSelector.value = formattedToday;
-
+    
             try {
                 // Cargar servicios
                 servicios = await ServiceHandler.cargarServicios();
@@ -356,395 +349,487 @@
         // Definir la URL antes de cargar los scripts
         const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
         console.log('URL configurada:', GET_BLOCKED_TIMES_URL); // Para verificar la URL
-            const TimeSlotHandler = {
-            servicioSeleccionadoDuracion: 0,
-            primerHorarioSeleccionado: null,
+     const TimeSlotHandler = {
+    servicioSeleccionadoDuracion: 0,
+    primerHorarioSeleccionado: null,
 
-            debug(message, data = null) {
-                const timestamp = new Date().toISOString();
-                console.log(`[${timestamp}] TimeSlotHandler: ${message}`);
-                if (data) {
-                    console.log('Data:', data);
-                }
-            },
+    debug(message, data = null) {
+        const timestamp = new Date().toISOString();
+        console.log(`[${timestamp}] TimeSlotHandler: ${message}`);
+        if (data) {
+            console.log('Data:', data);
+        }
+    },
 
-            getLocalDate(date) {
-                const d = new Date(date);
-                // Ajustar a la zona horaria local de Uruguay
-                const uruguayDate = new Date(d.toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
-                return new Date(uruguayDate.getFullYear(), uruguayDate.getMonth(), uruguayDate.getDate());
-            },
+    getLocalDate(date) {
+        // Crear fecha con la zona horaria de Uruguay
+        const uruguayOptions = { timeZone: 'America/Montevideo' };
+        const dateString = new Date(date).toLocaleString('en-US', uruguayOptions);
+        const [month, day, year] = dateString.split(',')[0].split('/');
+        return new Date(year, month - 1, day);
+    },
 
-            updateTimeSlots(selectedDate) {
-                this.debug('Iniciando updateTimeSlots', { selectedDate });
-                
-                const timeSlotsContainer = document.getElementById('timeSlots');
-                const serviceDurationMessage = document.getElementById('serviceDurationMessage');
-                const loadingIndicator = document.getElementById('loadingIndicator');
-                const errorContainer = document.getElementById('error-container');
+    updateTimeSlots(selectedDate) {
+        this.debug('Iniciando updateTimeSlots', { selectedDate });
+        
+        const timeSlotsContainer = document.getElementById('timeSlots');
+        const serviceDurationMessage = document.getElementById('serviceDurationMessage');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorContainer = document.getElementById('error-container');
+
+        // Validar fecha
+        try {
+            // Obtener fecha actual en Uruguay
+            const uruguayTime = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
+            const today = new Date(uruguayTime);
             
-                // Validar fecha
-                try {
-                    const selectedLocalDate = this.getLocalDate(selectedDate);
-                    const todayLocalDate = this.getLocalDate(new Date());
-                    
-                    this.debug('Fechas locales', {
-                        selectedLocalDate,
-                        todayLocalDate,
-                        selectedTimestamp: selectedLocalDate.getTime(),
-                        todayTimestamp: todayLocalDate.getTime()
-                    });
+            // Convertir la fecha seleccionada
+            const selectedDateTime = new Date(selectedDate);
             
-                    // Comparar solo las fechas sin la hora
-                    const selectedDateOnly = new Date(selectedLocalDate.setHours(0,0,0,0));
-                    const todayDateOnly = new Date(todayLocalDate.setHours(0,0,0,0));
+            // Normalizar ambas fechas a medianoche
+            const normalizedSelected = new Date(
+                selectedDateTime.getFullYear(),
+                selectedDateTime.getMonth(),
+                selectedDateTime.getDate()
+            ).setHours(0, 0, 0, 0);
             
-                    if (selectedDateOnly.getTime() < todayDateOnly.getTime()) {
-                        throw new Error('No se pueden seleccionar fechas pasadas');
-                    }
-                } catch (error) {
-                    this.debug('Error en validación de fecha', { error: error.message });
-                    this.showError(error.message);
-                    return Promise.reject(error);
-                }
-                // Validaciones iniciales
-                if (!timeSlotsContainer) {
-                    this.debug('Error: No se encontró el contenedor de time slots');
-                    return Promise.reject(new Error('Error de configuración: contenedor no encontrado'));
-                }
+            const normalizedToday = new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                today.getDate()
+            ).setHours(0, 0, 0, 0);
 
-                if (!this.servicioSeleccionadoDuracion) {
-                    this.debug('Error: No se ha seleccionado un servicio');
-                    this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
-                    return Promise.reject(new Error('No se ha seleccionado un servicio'));
-                }
+            this.debug('Fechas normalizadas', {
+                selectedDate: new Date(normalizedSelected),
+                today: new Date(normalizedToday)
+            });
 
-                // Mostrar loading y limpiar estado
-                if (loadingIndicator) loadingIndicator.classList.remove('hidden');
-                if (errorContainer) errorContainer.classList.add('hidden');
-
-                this.resetState(timeSlotsContainer);
-
-                // Construir y validar URL
-                let requestUrl;
-                try {
-                    requestUrl = this.buildUrl(selectedDate);
-                    this.debug('URL construida', { url: requestUrl });
-                } catch (error) {
-                    this.debug('Error construyendo URL', { error: error.message });
-                    this.showError('Error al procesar la fecha');
-                    return Promise.reject(error);
-                }
-
-                // Hacer la petición
-                return fetch(requestUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    credentials: 'include'
-                })
-                .then(async response => {
-                    this.debug('Respuesta recibida', {
-                        status: response.status,
-                        statusText: response.statusText,
-                        headers: Object.fromEntries(response.headers.entries())
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.text();
-                        this.debug('Error en respuesta', { 
-                            status: response.status,
-                            errorData 
-                        });
-
-                        try {
-                            const parsedError = JSON.parse(errorData);
-                            throw new Error(parsedError.error || 'Error al obtener los horarios');
-                        } catch (e) {
-                            throw new Error(`Error ${response.status}: ${errorData || response.statusText}`);
-                        }
-                    }
-
-                    return response.json();
-                })
-                .then(data => {
-                    this.debug('Datos recibidos', { data });
-
-                    if (!data || !data.horariosTaller) {
-                        throw new Error('Formato de respuesta inválido');
-                    }
-
-                    const slots = Object.entries(data.horariosTaller);
-                    this.debug('Slots procesados', { 
-                        totalSlots: slots.length,
-                        firstSlot: slots[0],
-                        lastSlot: slots[slots.length - 1]
-                    });
-
-                    return this.renderTimeSlots(slots, selectedDate, serviceDurationMessage);
-                })
-                .catch(error => {
-                    this.debug('Error capturado', {
-                        message: error.message,
-                        stack: error.stack
-                    });
-                    this.showError(error.message);
-                    timeSlotsContainer.innerHTML = '';
-                    throw error;
-                })
-                .finally(() => {
-                    if (loadingIndicator) loadingIndicator.classList.add('hidden');
-                });
-            },
-
-            buildUrl(selectedDate) {
-                // Formatear fecha como YYYY-MM-DD usando la fecha local
-                const date = new Date(selectedDate);
-                const formattedDate = [
-                    date.getFullYear(),
-                    String(date.getMonth() + 1).padStart(2, '0'),
-                    String(date.getDate()).padStart(2, '0')
-                ].join('-');
-
-                this.debug('Fecha formateada para URL', {
-                    input: selectedDate,
-                    formatted: formattedDate
-                });
-                
-                return `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
-            },
-
-
-            resetState(container) {
-                this.debug('Reseteando estado');
-                this.primerHorarioSeleccionado = null;
-                const fechaInicio = document.getElementById('fecha_inicio');
-                if (fechaInicio) fechaInicio.value = '';
-                container.innerHTML = '';
-            },
-
-            formatDateForPHP(date) {
-                const d = new Date(date);
-                if (isNaN(d.getTime())) {
-                    throw new Error('Fecha inválida');
-                }
-                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-            },
-
-            renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
-                this.debug('Iniciando renderizado de slots', {
-                    slotsCount: slots.length,
-                    selectedDate
-                });
-
-                const container = document.getElementById('timeSlots');
-                if (!container) {
-                    throw new Error('Contenedor no encontrado');
-                }
-
-                slots
-                    .sort(([, a], [, b]) => {
-                        const timeA = a.hora_inicio || a.inicio || '';
-                        const timeB = b.hora_inicio || b.inicio || '';
-                        return timeA.localeCompare(timeB);
-                    })
-                    .forEach(([lapso, info]) => {
-                        try {
-                            const button = this.createTimeSlotButton(lapso, info, selectedDate);
-                            container.appendChild(button);
-                        } catch (error) {
-                            this.debug('Error creando botón', {
-                                lapso,
-                                info,
-                                error: error.message
-                            });
-                        }
-                    });
-
-                if (serviceDurationMessage) {
-                    serviceDurationMessage.classList[
-                        this.servicioSeleccionadoDuracion > 30 ? 'remove' : 'add'
-                    ]('hidden');
-                }
-            },
-
-            createTimeSlotButton(lapso, info, selectedDate) {
-                const button = document.createElement('button');
-                button.type = 'button';
-                
-                // Usar hora_inicio y hora_fin en lugar de inicio y fin
-                const horaInicio = info.hora_inicio || info.inicio || '';
-                const horaFin = info.hora_fin || info.fin || '';
-                
-                this.debug('Creando botón para slot', { lapso, horaInicio, horaFin, info });
-                
-                button.textContent = `${horaInicio} - ${horaFin}`;
-                button.setAttribute('data-lapso', lapso);
-                button.setAttribute('data-info', JSON.stringify({
-                    inicio: horaInicio,
-                    fin: horaFin,
-                    ocupado: info.ocupado
-                }));
-
-                let isDisabled = info.ocupado;
-
-                // Verificar si el slot ya pasó (solo para el día actual)
-                if (this.isCurrentDay(selectedDate)) {
-                    const currentTime = new Date();
-                    const [hours, minutes] = horaInicio.split(':');
-                    const slotTime = new Date(selectedDate);
-                    slotTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
-
-                    if (slotTime < currentTime) {
-                        isDisabled = true;
-                    }
-                }
-
-                button.className = `w-full p-2 rounded-md text-center transition-colors ${
-                    isDisabled 
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                        : 'bg-white border border-gray-300 hover:bg-gray-50'
-                }`;
-
-                if (!isDisabled) {
-                    button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
-                }
-
-                button.disabled = isDisabled;
-                return button;
-            },
-
-            isCurrentDay(selectedDate) {
-                const selected = new Date(selectedDate);
-                const now = new Date();
-                return selected.toDateString() === now.toDateString();
-            },
-
-            handleTimeSelection(lapso, timeInfo, button) {
-                this.debug('Manejando selección de tiempo', { lapso, timeInfo });
-                
-                const fechaInput = document.getElementById('fecha_inicio');
-                const datePicker = document.getElementById('fecha_selector');
-                
-                if (!datePicker?.value) {
-                    this.showError('Por favor, seleccione primero una fecha.');
-                    return;
-                }
-
-                if (this.servicioSeleccionadoDuracion <= 30) {
-                    this.handleSingleSelection(button, timeInfo, datePicker.value);
-                } else {
-                    this.handleDoubleSelection(lapso, button);
-                }
-            },
-
-            handleSingleSelection(button, timeInfo, selectedDate) {
-                this.debug('Manejando selección simple', { timeInfo, selectedDate });
-                
-                document.querySelectorAll('#timeSlots button').forEach(btn => {
-                    btn.classList.remove('bg-red-600', 'text-white');
-                });
-                
-                button.classList.add('bg-red-600', 'text-white');
-                const fechaInput = document.getElementById('fecha_inicio');
-                if (fechaInput) {
-                    const horaInicio = timeInfo.hora_inicio || timeInfo.inicio;
-                    fechaInput.value = `${selectedDate}T${horaInicio}`;
-                }
-            },
-
-            handleDoubleSelection(lapso, selectedButton) {
-                this.debug('Manejando selección doble', { lapso });
-                
-                const buttons = document.querySelectorAll('#timeSlots button');
-                
-                if (!this.primerHorarioSeleccionado) {
-                    this.resetSlotStyles();
-                    this.primerHorarioSeleccionado = lapso;
-                    selectedButton.classList.add('bg-red-600', 'text-white');
-                    
-                    const currentIndex = Array.from(buttons).indexOf(selectedButton);
-                    this.highlightAdjacentSlots(buttons, currentIndex);
-                } else {
-                    this.processSecondSelection(buttons, selectedButton);
-                }
-            },
-
-            resetSlotStyles() {
-                document.querySelectorAll('#timeSlots button').forEach(btn => {
-                    btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
-                });
-            },
-
-            highlightAdjacentSlots(buttons, currentIndex) {
-                if (currentIndex > 0 && !buttons[currentIndex - 1].disabled) {
-                    buttons[currentIndex - 1].classList.add('bg-yellow-200');
-                }
-                if (currentIndex < buttons.length - 1 && !buttons[currentIndex + 1].disabled) {
-                    buttons[currentIndex + 1].classList.add('bg-yellow-200');
-                }
-            },
-
-            processSecondSelection(buttons, selectedButton) {
-                const firstButton = Array.from(buttons).find(btn => 
-                    btn.getAttribute('data-lapso') === this.primerHorarioSeleccionado);
-                const firstIndex = Array.from(buttons).indexOf(firstButton);
-                const secondIndex = Array.from(buttons).indexOf(selectedButton);
-
-                if (Math.abs(firstIndex - secondIndex) === 1) {
-                    this.confirmDoubleSelection(buttons, firstIndex, secondIndex);
-                } else {
-                    this.showError('Por favor, seleccione dos horarios consecutivos');
-                }
-            },
-
-            confirmDoubleSelection(buttons, firstIndex, secondIndex) {
-                this.resetSlotStyles();
-                
-                const startIndex = Math.min(firstIndex, secondIndex);
-                const endIndex = Math.max(firstIndex, secondIndex);
-                
-                buttons[startIndex].classList.add('bg-red-600', 'text-white');
-                buttons[endIndex].classList.add('bg-red-600', 'text-white');
-
-                const startButton = buttons[startIndex];
-                const startInfo = JSON.parse(startButton.getAttribute('data-info') || '{}');
-                const fechaSelector = document.getElementById('fecha_selector');
-
-                if (fechaSelector?.value && startInfo.inicio) {
-                    const fecha = new Date(fechaSelector.value);
-                    const fechaInicio = document.getElementById('fecha_inicio');
-                    if (fechaInicio) {
-                        fechaInicio.value = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${startInfo.inicio}`;
-                    }
-                }
-
-                this.primerHorarioSeleccionado = null;
-            },
-
-            showError(message) {
-                this.debug('Mostrando error', { message });
-                const errorContainer = document.getElementById('error-container');
-                if (!errorContainer) return;
-
-                errorContainer.classList.remove('hidden');
-                const errorList = document.getElementById('error-list');
-                
-                if (errorList) {
-                    errorList.innerHTML = `<li>${message}</li>`;
-                } else {
-                    errorContainer.textContent = message;
-                }
-                
-                setTimeout(() => errorContainer.classList.add('hidden'), 5000);
+            if (normalizedSelected < normalizedToday) {
+                throw new Error('No se pueden seleccionar fechas pasadas');
             }
-        };
 
-        window.TimeSlotHandler = TimeSlotHandler;
-    
+        } catch (error) {
+            this.debug('Error en validación de fecha', { error: error.message });
+            this.showError(error.message);
+            return Promise.reject(error);
+        }
+
+        // Validaciones iniciales
+        if (!timeSlotsContainer) {
+            this.debug('Error: No se encontró el contenedor de time slots');
+            return Promise.reject(new Error('Error de configuración: contenedor no encontrado'));
+        }
+
+        if (!this.servicioSeleccionadoDuracion) {
+            this.debug('Error: No se ha seleccionado un servicio');
+            this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
+            return Promise.reject(new Error('No se ha seleccionado un servicio'));
+        }
+
+        // Mostrar loading y limpiar estado
+        if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+        if (errorContainer) errorContainer.classList.add('hidden');
+
+        this.resetState(timeSlotsContainer);
+
+        // Construir y validar URL
+        let requestUrl;
+        try {
+            requestUrl = this.buildUrl(selectedDate);
+            this.debug('URL construida', { url: requestUrl });
+        } catch (error) {
+            this.debug('Error construyendo URL', { error: error.message });
+            this.showError('Error al procesar la fecha');
+            return Promise.reject(error);
+        }
+
+        // Hacer la petición
+        return fetch(requestUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'include'
+        })
+        .then(async response => {
+            this.debug('Respuesta recibida', {
+                status: response.status,
+                statusText: response.statusText,
+                headers: Object.fromEntries(response.headers.entries())
+            });
+
+            if (!response.ok) {
+                const errorData = await response.text();
+                this.debug('Error en respuesta', { 
+                    status: response.status,
+                    errorData 
+                });
+
+                try {
+                    const parsedError = JSON.parse(errorData);
+                    throw new Error(parsedError.error || 'Error al obtener los horarios');
+                } catch (e) {
+                    throw new Error(`Error ${response.status}: ${errorData || response.statusText}`);
+                }
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            this.debug('Datos recibidos', { data });
+
+            if (!data || !data.horariosTaller) {
+                throw new Error('Formato de respuesta inválido');
+            }
+
+            const slots = Object.entries(data.horariosTaller);
+            this.debug('Slots procesados', { 
+                totalSlots: slots.length,
+                firstSlot: slots[0],
+                lastSlot: slots[slots.length - 1]
+            });
+
+            return this.renderTimeSlots(slots, selectedDate, serviceDurationMessage);
+        })
+        .catch(error => {
+            this.debug('Error capturado', {
+                message: error.message,
+                stack: error.stack
+            });
+            this.showError(error.message);
+            timeSlotsContainer.innerHTML = '';
+            throw error;
+        })
+        .finally(() => {
+            if (loadingIndicator) loadingIndicator.classList.add('hidden');
+        });
+    },
+
+    buildUrl(selectedDate) {
+        const date = new Date(selectedDate);
+        // Asegurar que usamos la zona horaria de Uruguay
+        const uruguayDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
+        
+        const formattedDate = [
+            uruguayDate.getFullYear(),
+            String(uruguayDate.getMonth() + 1).padStart(2, '0'),
+            String(uruguayDate.getDate()).padStart(2, '0')
+        ].join('-');
+
+        this.debug('Fecha formateada para URL', {
+            input: selectedDate,
+            formatted: formattedDate
+        });
+        
+        return `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
+    },
+
+    resetState(container) {
+        this.debug('Reseteando estado');
+        this.primerHorarioSeleccionado = null;
+        const fechaInicio = document.getElementById('fecha_inicio');
+        if (fechaInicio) fechaInicio.value = '';
+        container.innerHTML = '';
+    },
+
+    renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
+        this.debug('Iniciando renderizado de slots', {
+            slotsCount: slots.length,
+            selectedDate
+        });
+
+        const container = document.getElementById('timeSlots');
+        if (!container) {
+            throw new Error('Contenedor no encontrado');
+        }
+
+        slots
+            .sort(([, a], [, b]) => {
+                const timeA = a.hora_inicio || a.inicio || '';
+                const timeB = b.hora_inicio || b.inicio || '';
+                return timeA.localeCompare(timeB);
+            })
+            .forEach(([lapso, info]) => {
+                try {
+                    const button = this.createTimeSlotButton(lapso, info, selectedDate);
+                    container.appendChild(button);
+                } catch (error) {
+                    this.debug('Error creando botón', {
+                        lapso,
+                        info,
+                        error: error.message
+                    });
+                }
+            });
+
+        if (serviceDurationMessage) {
+            serviceDurationMessage.classList[
+                this.servicioSeleccionadoDuracion > 30 ? 'remove' : 'add'
+            ]('hidden');
+        }
+    },
+
+    createTimeSlotButton(lapso, info, selectedDate) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        
+        const horaInicio = info.hora_inicio || info.inicio || '';
+        const horaFin = info.hora_fin || info.fin || '';
+        
+        this.debug('Creando botón para slot', { lapso, horaInicio, horaFin, info });
+        
+        button.textContent = `${horaInicio} - ${horaFin}`;
+        button.setAttribute('data-lapso', lapso);
+        button.setAttribute('data-info', JSON.stringify({
+            inicio: horaInicio,
+            fin: horaFin,
+            ocupado: info.ocupado
+        }));
+
+        let isDisabled = info.ocupado;
+
+        // Verificar si el slot ya pasó (solo para el día actual)
+        if (this.isCurrentDay(selectedDate)) {
+            // Obtener hora actual en Uruguay
+            const currentTimeUruguay = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
+            const currentTime = new Date(currentTimeUruguay);
+            
+            const [hours, minutes] = horaInicio.split(':');
+            const slotTime = new Date(selectedDate);
+            slotTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
+
+            if (slotTime < currentTime) {
+                isDisabled = true;
+            }
+        }
+
+        button.className = `w-full p-2 rounded-md text-center transition-colors ${
+            isDisabled 
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                : 'bg-white border border-gray-300 hover:bg-gray-50'
+        }`;
+
+        if (!isDisabled) {
+            button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
+        }
+
+        button.disabled = isDisabled;
+        return button;
+    },
+
+    isCurrentDay(selectedDate) {
+        const selectedUruguay = new Date(selectedDate).toLocaleString('en-US', { timeZone: 'America/Montevideo' });
+        const nowUruguay = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
+        
+        const selected = new Date(selectedUruguay);
+        const now = new Date(nowUruguay);
+        
+        return selected.toDateString() === now.toDateString();
+    },
+
+    handleTimeSelection(lapso, timeInfo, button) {
+        this.debug('Manejando selección de tiempo', { lapso, timeInfo });
+        
+        const fechaInput = document.getElementById('fecha_inicio');
+        const datePicker = document.getElementById('fecha_selector');
+        
+        if (!datePicker?.value) {
+            this.showError('Por favor, seleccione primero una fecha.');
+            return;
+        }
+
+        if (this.servicioSeleccionadoDuracion <= 30) {
+            this.handleSingleSelection(button, timeInfo, datePicker.value);
+        } else {
+            this.handleDoubleSelection(lapso, button);
+        }
+    },
+
+    handleSingleSelection(button, timeInfo, selectedDate) {
+        this.debug('Manejando selección simple', { timeInfo, selectedDate });
+        
+        document.querySelectorAll('#timeSlots button').forEach(btn => {
+            btn.classList.remove('bg-red-600', 'text-white');
+        });
+        
+        button.classList.add('bg-red-600', 'text-white');
+        const fechaInput = document.getElementById('fecha_inicio');
+        if (fechaInput) {
+            const horaInicio = timeInfo.hora_inicio || timeInfo.inicio;
+            fechaInput.value = `${selectedDate}T${horaInicio}`;
+        }
+    },
+
+    handleDoubleSelection(lapso, selectedButton) {
+        this.debug('Manejando selección doble', { lapso });
+        
+        const buttons = document.querySelectorAll('#timeSlots button');
+        
+        if (!this.primerHorarioSeleccionado) {
+            this.resetSlotStyles();
+            this.primerHorarioSeleccionado = lapso;
+            selectedButton.classList.add('bg-red-600', 'text-white');
+            
+            const currentIndex = Array.from(buttons).indexOf(selectedButton);
+            this.highlightAdjacentSlots(buttons, currentIndex);
+        } else {
+            this.processSecondSelection(buttons, selectedButton);
+        }
+    },
+
+    resetSlotStyles() {
+        document.querySelectorAll('#timeSlots button').forEach(btn => {
+            btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
+        });
+    },
+
+    highlightAdjacentSlots(buttons, currentIndex) {
+        if (currentIndex > 0 && !buttons[currentIndex - 1].disabled) {
+            buttons[currentIndex - 1].classList.add('bg-yellow-200');
+        }
+        if (currentIndex < buttons.length - 1 && !buttons[currentIndex + 1].disabled) {
+            buttons[currentIndex + 1].classList.add('bg-yellow-200');
+        }
+    },
+
+    processSecondSelection(buttons, selectedButton) {
+        const firstButton = Array.from(buttons).find(btn => 
+            btn.getAttribute('data-lapso') === this.primerHorarioSeleccionado);
+        const firstIndex = Array.from(buttons).indexOf(firstButton);
+        const secondIndex = Array.from(buttons).indexOf(selectedButton);
+
+        if (Math.abs(firstIndex - secondIndex) === 1) {
+            this.confirmDoubleSelection(buttons, firstIndex, secondIndex);
+        } else {
+            this.showError('Por favor, seleccione dos horarios consecutivos');
+            this.resetSlotStyles();
+            this.primerHorarioSeleccionado = null;
+        }
+    },
+
+    confirmDoubleSelection(buttons, firstIndex, secondIndex) {
+        this.resetSlotStyles();
+        
+        const startIndex = Math.min(firstIndex, secondIndex);
+        const endIndex = Math.max(firstIndex, secondIndex);
+        
+        buttons[startIndex].classList.add('bg-red-600', 'text-white');
+        buttons[endIndex].classList.add('bg-red-600', 'text-white');
+
+        const startButton = buttons[startIndex];
+        const startInfo = JSON.parse(startButton.getAttribute('data-info') || '{}');
+        const fechaSelector = document.getElementById('fecha_selector');
+
+        if (fechaSelector?.value && startInfo.inicio) {
+            const fechaInicio = document.getElementById('fecha_inicio');
+            if (fechaInicio) {
+                fechaInicio.value = `${fechaSelector.value}T${startInfo.inicio}`;
+            }
+        }
+
+        this.primerHorarioSeleccionado = null;
+    },
+
+    showError(message) {
+        this.debug('Mostrando error', { message });
+        const errorContainer = document.getElementById('error-container');
+        if (!errorContainer) return;
+
+        errorContainer.classList.remove('hidden');
+        const errorList = document.getElementById('error-list');
+        
+        if (errorList) {
+            errorList.innerHTML = `<li>${message}</li>`;
+        } else {
+            errorContainer.textContent = message;
+        }
+        
+        setTimeout(() => errorContainer.classList.add('hidden'), 5000);
+        },
+
+    formatDateForDisplay(date) {
+        const d = new Date(date);
+        const uruguayDate = new Date(d.toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
+        return uruguayDate.toISOString().split('T')[0];
+    },
+
+    // Método para validar el horario contra la hora actual
+    validateTimeAgainstCurrent(timeString, selectedDate) {
+        const [hours, minutes] = timeString.split(':');
+        const selectedDateTime = new Date(selectedDate);
+        selectedDateTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
+
+        const currentTimeUruguay = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
+        const currentTime = new Date(currentTimeUruguay);
+
+        return selectedDateTime >= currentTime;
+    },
+
+    // Método para formatear la hora para mostrar
+    formatTimeForDisplay(timeString) {
+        if (!timeString) return '';
+        const [hours, minutes] = timeString.split(':');
+        const uruguayTime = new Date().setHours(parseInt(hours, 10), parseInt(minutes, 10));
+        return new Date(uruguayTime).toLocaleTimeString('es-UY', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+            timeZone: 'America/Montevideo'
+        });
+    },
+
+    // Método para validar la selección de horarios consecutivos
+    validateConsecutiveSlots(slot1, slot2) {
+        const time1 = slot1.getAttribute('data-info');
+        const time2 = slot2.getAttribute('data-info');
+        
+        if (!time1 || !time2) return false;
+        
+        const info1 = JSON.parse(time1);
+        const info2 = JSON.parse(time2);
+        
+        const end1 = info1.fin;
+        const start2 = info2.inicio;
+        
+        return end1 === start2;
+    },
+
+    // Método para limpiar la selección
+    clearSelection() {
+        this.primerHorarioSeleccionado = null;
+        this.resetSlotStyles();
+        const fechaInicio = document.getElementById('fecha_inicio');
+        if (fechaInicio) fechaInicio.value = '';
+    },
+
+    // Método para inicializar los listeners de eventos
+    initializeEventListeners() {
+        const fechaSelector = document.getElementById('fecha_selector');
+        if (fechaSelector) {
+            // Configurar fecha mínima y valor inicial
+            const uruguayTime = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
+            const today = new Date(uruguayTime);
+            const formattedToday = this.formatDateForDisplay(today);
+            
+            fechaSelector.min = formattedToday;
+            fechaSelector.value = formattedToday;
+
+            // Agregar listener para cambios de fecha
+            fechaSelector.addEventListener('change', (e) => {
+                if (this.servicioSeleccionadoDuracion > 0) {
+                    this.updateTimeSlots(e.target.value);
+                } else {
+                    this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
+                }
+            });
+        }
+    }
+};
+
+// Exportar el objeto TimeSlotHandler para uso global
+window.TimeSlotHandler = TimeSlotHandler;
     </script>
   
 </body>
