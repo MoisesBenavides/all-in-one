@@ -67,6 +67,10 @@
         .editing-mode .delete-user-form {
             display: none;
         }
+        
+        .editing-mode .password-change-form {
+            display: none;
+        }
     </style>
 </head>
 
@@ -139,7 +143,7 @@
                     </div>
                 {% endif %}
 
-                <ul class="w-full max-w-[430px] space-y-4">
+             <ul class="w-full max-w-[430px] space-y-4">
                     {% for funcionario in funcionarios %}
                         {% if funcionario is defined and funcionario %}
                         <li class="bg-white rounded-md border border-slate-300">
@@ -169,7 +173,7 @@
                                             <span class="edit-icon">
                                                 <img src="{{ asset('svg/pencil.svg') }}" alt="Editar" class="w-6 h-6"/>
                                             </span>
-                                            <span class="save-icon hidden">X</span>
+                                            <span class="save-icon hidden">💾</span>
                                         </button>
                                         <button type="submit" 
                                                 class="edit-button hidden px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
@@ -177,13 +181,36 @@
                                         </button>
                                     </div>
                                 </form>
-                                <form action="{{ path('deleteDiagnoseChief') }}" method="POST" class="delete-user-form mt-4 flex justify-end">
-                                    <input type="hidden" name="usuario" value="{{ funcionario.usuario }}">
-                                    <input type="hidden" name="host" value="{{ funcionario.host }}">
-                                    <button type="submit" class="transform hover:scale-110 transition-transform duration-200">
-                                        <img src="{{ asset('svg/trashCan.svg') }}" alt="Eliminar" class="w-6 h-6"/>
-                                    </button>
-                                </form>
+
+                                <div class="flex justify-end gap-4 mt-4">
+                                    <form action="{{ path('deleteDiagnoseChief') }}" method="POST" class="delete-user-form">
+                                        <input type="hidden" name="usuario" value="{{ funcionario.usuario }}">
+                                        <input type="hidden" name="host" value="{{ funcionario.host }}">
+                                        <button type="submit" class="transform hover:scale-110 transition-transform duration-200">
+                                            <img src="{{ asset('svg/trashCan.svg') }}" alt="Eliminar" class="w-6 h-6"/>
+                                        </button>
+                                    </form>
+
+                                    <form action="{{ path('modPswdDiagnoseChief') }}" method="POST" class="password-change-form">
+                                        <input type="hidden" name="usuario" value="{{ funcionario.usuario }}">
+                                        <input type="hidden" name="host" value="{{ funcionario.host }}">
+                                        <div class="password-form-content hidden space-y-2">
+                                            <div class="password-container">
+                                                <input type="password" name="contraNueva" required
+                                                       class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                                       placeholder="Nueva contraseña">
+                                                <span class="eye-icon toggle-password">👁️</span>
+                                            </div>
+                                            <button type="submit" 
+                                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors">
+                                                Cambiar
+                                            </button>
+                                        </div>
+                                        <button type="button" class="text-blue-600 hover:text-blue-800 text-sm font-medium toggle-password-form">
+                                            Cambiar contraseña
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                             <div class="w-full h-[1px] bg-neutral-200 my-2"></div>
                         </li>
@@ -221,7 +248,7 @@
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
             
-            // Change eye icon based on password visibility
+            // cambiar icono de ojo segun se quiera ver o no la contrasena
             this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
         });
 
@@ -252,6 +279,16 @@
             // Toggle el botón de guardar
             editButton.classList.toggle('hidden');
         }
+
+        //toggle para cambiar contrasena
+        document.querySelectorAll('.toggle-password-form').forEach(button => {
+            button.addEventListener('click', function() {
+                const form = this.closest('.password-change-form');
+                const content = form.querySelector('.password-form-content');
+                content.classList.toggle('hidden');
+                this.classList.toggle('hidden');
+            });
+        });
 
         // Validación del formulario antes de enviar
         document.querySelectorAll('form.user-form').forEach(form => {
