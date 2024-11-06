@@ -120,7 +120,6 @@ class ControladorCliente extends AbstractController {
         $client->setAccessToken($token);
     
         // Obtener la información del perfil del usuario
-        // @phpstan-ignore-next-line
         $oauth2 = new Google_Service_Oauth2($client);
         $userInfo = $oauth2->userinfo->get();
         $email = $userInfo->email;
