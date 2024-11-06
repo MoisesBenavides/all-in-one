@@ -230,17 +230,10 @@
 </script>
 
 <script>
-    // TimeSlotHandler - Funciones principales
-    const TimeSlotHandler = {
+        // TimeSlotHandler - Funciones principales
+        const TimeSlotHandler = {
         servicioSeleccionadoDuracion: 0,
         primerHorarioSeleccionado: null,
-
-        // Método para formatear hora para mostrar
-        formatHora(hora) {
-            const ampm = hora >= 12 ? 'PM' : 'AM';
-            const hora12 = hora > 12 ? hora - 12 : hora;
-            return `${hora12}:00 ${ampm}`;
-        },
 
         initialize() {
             const fechaSelector = document.getElementById('fecha_selector');
@@ -261,7 +254,7 @@
                 this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
             }
         },
-    
+
         async updateTimeSlots(selectedDate) {
             const timeSlotsContainer = document.getElementById('timeSlots');
             const serviceDurationMessage = document.getElementById('serviceDurationMessage');
@@ -277,49 +270,41 @@
                 if (errorContainer) errorContainer.classList.add('hidden');
                 if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
 
-                const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(DateUtils.formatDateForUrl(selectedDate))}`;
+                const timestamp = new Date().getTime();
+                const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(DateUtils.formatDateForUrl(selectedDate))}&_=${timestamp}`;
+
+                console.log('Consultando horarios para fecha:', selectedDate);
+                
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
                     },
                     credentials: 'include'
                 });
 
-                let errorMessage = 'Error al obtener los horarios disponibles';
-                
                 if (!response.ok) {
-                    const contentType = response.headers.get('content-type');
-                    if (contentType && contentType.includes('application/json')) {
-                        const errorData = await response.json();
-                        errorMessage = errorData.error || errorData.message || errorMessage;
-                    } else {
-                        const errorText = await response.text();
-                        try {
-                            const errorData = JSON.parse(errorText);
-                            errorMessage = errorData.error || errorData.message || errorMessage;
-                        } catch (e) {
-                            errorMessage = errorText || errorMessage;
-                        }
-                    }
-                    throw new Error(errorMessage);
+                    throw new Error('Error al obtener los horarios disponibles');
                 }
 
                 const data = await response.json();
+                console.log('Respuesta completa del servidor:', data);
 
-                if (!data || !data.horariosTaller) {
-                    throw new Error('No hay horarios disponibles para la fecha seleccionada');
+                if (!data || !data.horariosTaller || !data.horaActual) {
+                    throw new Error('Formato de respuesta inválido del servidor');
                 }
 
                 const slots = Object.entries(data.horariosTaller);
+                const currentDateTime = new Date(data.horaActual);
+                
+                console.log('Hora actual del servidor:', currentDateTime);
+                console.log('Total de slots recibidos:', slots.length);
 
-                if (slots.length === 0 || slots.every(([, info]) => info.ocupado)) {
-                    throw new Error('No hay horarios disponibles para esta fecha. Por favor, seleccione otra fecha.');
-                }
-
-                this.renderTimeSlots(slots, selectedDate, serviceDurationMessage);
+                this.renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime);
 
             } catch (error) {
                 console.error('Error en updateTimeSlots:', error);
@@ -329,59 +314,39 @@
                 if (loadingIndicator) loadingIndicator.classList.add('hidden');
             }
         },
-    
-     /*  async  updateTimeSlots(date) {
-            try {
-                const response = await fetch(`https://aio.ngrok.app/api/getServicesSchedule?date=${date}`);
-                if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
 
-                const data = await response.json();
-                if (!data.success) throw new Error(data.error || "Error desconocido en la respuesta del servidor.");
-
-                const timeSlotsContainer = document.getElementById('timeSlots');
-                timeSlotsContainer.innerHTML = '';  // Limpia el contenido previo
-
-                // Itera sobre cada lapso del JSON y crea elementos en la vista
-                Object.keys(data.horariosTaller).forEach(lapso => {
-                    const { ocupado, inicio, fin } = data.horariosTaller[lapso];
-
-                    // Crea el elemento de horario
-                    const lapsoElement = document.createElement('div');
-                    lapsoElement.classList.add('lapso');
-                    lapsoElement.innerHTML = `
-                        <span class="hora">${inicio} - ${fin}</span>
-                        <span class="estado">${ocupado ? 'Ocupado' : 'Disponible'}</span>
-                    `;
-
-                    // Aplica estilos o desactiva si está ocupado
-                    if (ocupado) {
-                        lapsoElement.classList.add('ocupado');
-                        lapsoElement.style.pointerEvents = 'none';  // Bloquea la selección
-                    } else {
-                        lapsoElement.classList.add('disponible');
-                    }
-
-                    timeSlotsContainer.appendChild(lapsoElement);
-                });
-            } catch (error) {
-                console.error("Error en updateTimeSlots:", error);
-                alert("No se pudo obtener el horario del taller. Revisa la consola para más detalles.");
-            }
-        },
-        */
-
-        renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
+        renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime) {
             const container = document.getElementById('timeSlots');
             if (!container) return;
 
             slots
                 .sort(([, a], [, b]) => {
-                    const timeA = a.hora_inicio || a.inicio || '';
-                    const timeB = b.hora_inicio || b.inicio || '';
+                    const timeA = a.inicio || '';
+                    const timeB = b.inicio || '';
                     return timeA.localeCompare(timeB);
                 })
                 .forEach(([lapso, info]) => {
-                    const button = this.createTimeSlotButton(lapso, info, selectedDate);
+                    const slotDateTime = this.createSlotDateTime(selectedDate, info.inicio);
+                    
+                    // Verificar si el slot está en el pasado
+                    const isPastSlot = slotDateTime < currentDateTime;
+                    
+                    console.log(`Evaluando slot ${lapso}:`, {
+                        slotTime: slotDateTime,
+                        currentTime: currentDateTime,
+                        isPast: isPastSlot,
+                        backendOccupied: info.ocupado
+                    });
+
+                    // Un slot está ocupado si está marcado como ocupado por el backend o si es un horario pasado
+                    const isSlotOccupied = Boolean(info.ocupado) || isPastSlot;
+
+                    const button = this.createTimeSlotButton(
+                        lapso, 
+                        { ...info, ocupado: isSlotOccupied }, 
+                        selectedDate
+                    );
+
                     if (button) container.appendChild(button);
                 });
 
@@ -396,8 +361,8 @@
             const button = document.createElement('button');
             button.type = 'button';
             
-            const horaInicio = info.hora_inicio || info.inicio;
-            const horaFin = info.hora_fin || info.fin;
+            const horaInicio = info.inicio;
+            const horaFin = info.fin;
             
             button.textContent = `${horaInicio} - ${horaFin}`;
             button.setAttribute('data-lapso', lapso);
@@ -451,7 +416,7 @@
             button.classList.add('bg-red-600', 'text-white');
             const fechaInicio = document.getElementById('fecha_inicio');
             if (fechaInicio) {
-                const horaInicio = timeInfo.hora_inicio || timeInfo.inicio;
+                const horaInicio = timeInfo.inicio;
                 fechaInicio.value = `${selectedDate}T${horaInicio}`;
             }
         },
@@ -522,6 +487,18 @@
             this.primerHorarioSeleccionado = null;
         },
 
+        createSlotDateTime(selectedDate, timeString) {
+            try {
+                const [hours, minutes] = timeString.split(':').map(Number);
+                const dateTime = new Date(selectedDate);
+                dateTime.setHours(hours, minutes, 0, 0);
+                return dateTime;
+            } catch (error) {
+                console.error('Error al crear datetime para slot:', error);
+                return new Date();
+            }
+        },
+
         showError(message) {
             const errorContainer = document.getElementById('error-container');
             if (!errorContainer) return;
@@ -545,7 +522,7 @@
         }
     };
 
-    // Exportar TimeSlotHandler para uso global
+    // Export TimeSlotHandler for global use
     window.TimeSlotHandler = TimeSlotHandler;
 </script>
 
