@@ -38,10 +38,7 @@ class ControladorTaller extends AbstractController{
     }
     
     function doBookService(): Response|RedirectResponse{
-        $response = ['success' => false, 'errors' => [], 'debug' => []];
-    
-        // Debug: Log all received data
-        $response['debug']['received_data'] = $_POST;
+        $response = ['success' => false, 'errors' => []];
     
         // Validación de campos vacíos
         if (isset($_POST["fecha_inicio"], $_POST["categoriaServicio"], $_POST["tipoServicio"], $_POST["tipoVehiculo"]) 
@@ -66,16 +63,7 @@ class ControladorTaller extends AbstractController{
     
             if (isset($matricula)) { // Verifica que la matrícula se haya definido correctamente
                 $matricula = strtoupper($matricula);
-    
-                // Debug: Datos procesados
-                $response['debug']['processed_data'] = [
-                    'fecha_inicio' => $fecha_inicio,
-                    'categoriaServicio' => $categoriaServicio,
-                    'tipoServicio' => $tipoServicio,
-                    'tipoVehiculo' => $tipoVehiculo,
-                    'matricula' => $matricula
-                ];
-    
+
                 // Validaciones
                 if (!$this->validarFecha($fecha_inicio)) {
                     $response['errors'][] = "Por favor, ingrese una fecha válida.";
@@ -205,7 +193,7 @@ class ControladorTaller extends AbstractController{
                     $finOcupado = new DateTime($oc['fecha_final']);
     
                     // Compara si el lapso del horario está ocupado
-                    if ($inicioLapso < $finOcupado && $finLapso > $inicioOcupado) {
+                    if ($inicioLapso <= $finOcupado && $finLapso >= $inicioOcupado) {
                         $ocupado = true;
                         break;
                     }
