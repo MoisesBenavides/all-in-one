@@ -173,7 +173,7 @@
                                             <span class="edit-icon">
                                                 <img src="{{ asset('svg/pencil.svg') }}" alt="Editar" class="w-6 h-6"/>
                                             </span>
-                                            <span class="save-icon hidden">💾</span>
+                                            <span class="save-icon hidden ">X</span>
                                         </button>
                                         <button type="submit" 
                                                 class="edit-button hidden px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
@@ -201,7 +201,7 @@
                                             Cambiar contraseña
                                         </button>
                                     </form>
-                                    
+
                                 <div class="flex justify-end gap-4 mt-4">
                                     <form action="{{ path('deleteDiagnoseChief') }}" method="POST" class="delete-user-form">
                                         <input type="hidden" name="usuario" value="{{ funcionario.usuario }}">
