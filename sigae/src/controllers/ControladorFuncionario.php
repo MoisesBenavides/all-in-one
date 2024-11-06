@@ -91,6 +91,8 @@ class ControladorFuncionario extends AbstractController {
     function showDashboard(): Response{
         $rol=$_SESSION['rol'];
         switch($rol){
+            case 'admin_rol':
+                return $this->render('aministrator/dashboardAdmin.html.twig');
             case 'gerente':
                 return $this->render('employee/manager/dashboardGerente.html.twig');
             case 'ejecutivo':
@@ -190,10 +192,37 @@ class ControladorFuncionario extends AbstractController {
     function employeeManagement(): Response|RedirectResponse{
         $rol=$_SESSION['rol'];
         switch($rol){
+            case 'admin_rol':
+                return $this->render('administrator/rolesFuncionarios.html.twig');
             case 'gerente':
                 return $this->render('employee/manager/rolesFuncionarios.html.twig');
             case 'jefe_taller':
                 return $this->redirectToRoute('showServiceExecutives');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showManagers(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+
+        $gerentes = [];
+
+        switch($rol){
+            case 'admin_rol':
+                // Obtener arreglo con usuarios con rol gerente
+                try{
+                    $gerentes = Funcionario::getFuncionariosPorRol($rol, 'gerente');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaGerentes.html.twig', [
+                    'funcionarios' => $gerentes,
+                    'response' => $response
+                ]);
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
@@ -207,6 +236,18 @@ class ControladorFuncionario extends AbstractController {
         $jefesDiagnostico = [];
 
         switch($rol){
+            case 'admin_rol':
+                // Obtener arreglo con usuarios con rol jefe_diagnostico
+                try{
+                    $jefesDiagnostico = Funcionario::getFuncionariosPorRol($rol, 'jefe_diagnostico');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesDiagnostico.html.twig', [
+                    'funcionarios' => $jefesDiagnostico,
+                    'response' => $response
+                ]);
             case 'gerente':
                 // Obtener arreglo con usuarios con rol jefe_diagnostico
                 try{
@@ -232,6 +273,18 @@ class ControladorFuncionario extends AbstractController {
         $jefesTaller = [];
 
         switch($rol){
+            case 'admin_rol':
+                // Obtener arreglo con usuarios con rol jefe_taller
+                try{
+                    $jefesTaller = Funcionario::getFuncionariosPorRol($rol, 'jefe_taller');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesTaller.html.twig', [
+                    'funcionarios' => $jefesTaller,
+                    'response' => $response
+                ]);
             case 'gerente':
                 // Obtener arreglo con usuarios con rol jefe_taller
                 try{
@@ -257,6 +310,18 @@ class ControladorFuncionario extends AbstractController {
         $cajeros = [];
 
         switch($rol){
+            case 'admin_rol':
+                // Obtener arreglo con usuarios con rol cajero
+                try{
+                    $cajeros = Funcionario::getFuncionariosPorRol($rol, 'cajero');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaCajeros.html.twig', [
+                    'funcionarios' => $cajeros,
+                    'response' => $response
+                ]);
             case 'gerente':
                 // Obtener arreglo con usuarios con rol cajero
                 try{
@@ -281,6 +346,18 @@ class ControladorFuncionario extends AbstractController {
         $valets = [];
         
         switch($rol){
+            case 'admin_rol':
+                // Obtener arreglo con usuarios con rol valet_parking
+                try{
+                    $valets = Funcionario::getFuncionariosPorRol($rol, 'valet_parking');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaValets.html.twig', [
+                    'funcionarios' => $valets,
+                    'response' => $response
+                ]);
             case 'gerente':
                 // Obtener arreglo con usuarios con rol valet_parking
                 try{
@@ -306,7 +383,7 @@ class ControladorFuncionario extends AbstractController {
         $ejecutivos = [];
 
         switch($rol){
-            case 'gerente':
+            case 'admin_rol':
                 // Obtener arreglo con usuarios con rol ejecutivo
                 try{
                     $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
@@ -314,7 +391,7 @@ class ControladorFuncionario extends AbstractController {
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
 
-                return $this->render('employee/manager/listaEjecutivos.html.twig', [
+                return $this->render('administrator/listaEjecutivos.html.twig', [
                     'funcionarios' => $ejecutivos,
                     'response' => $response
                 ]);
@@ -334,6 +411,62 @@ class ControladorFuncionario extends AbstractController {
         }
     }
 
+    function addManager(){
+        $response = ['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $gerentes = [];
+
+        $rolUsuarioNuevo = 'gerente';
+
+        switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
+                if ($validacion['exito'] === true) {
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contrasena = $_POST["contrasena"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        } elseif (!$this->funcionario->altaGerente($contrasena)) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showManagers');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol gerente
+                try{
+                    $gerentes = Funcionario::getFuncionariosPorRol($rol, 'gerente');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaGerentes.html.twig', [
+                    'funcionarios' => $gerentes,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+        
+    }
+
     function addDiagnoseChief(){
         $response = ['success' => false, 'errors' => []];
 
@@ -343,6 +476,46 @@ class ControladorFuncionario extends AbstractController {
         $rolUsuarioNuevo = 'jefe_diagnostico';
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
+                if ($validacion['exito'] === true) {
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contrasena = $_POST["contrasena"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        } elseif (!$this->funcionario->altaJefeDiagnostico($contrasena)) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showDiagnoseChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_diagnostico
+                try{
+                    $jefesDiagnostico = Funcionario::getFuncionariosPorRol($rol, 'jefe_diagnostico');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesDiagnostico.html.twig', [
+                    'funcionarios' => $jefesDiagnostico,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
@@ -402,6 +575,49 @@ class ControladorFuncionario extends AbstractController {
         $rolUsuarioNuevo = 'jefe_taller';
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
+
+                if ($validacion['exito'] == true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contrasena = $_POST["contrasena"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        }elseif (!$this->funcionario->altaJefeTaller($contrasena)) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showWorkshopChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_taller
+                try{
+                    $jefesTaller = Funcionario::getFuncionariosPorRol($rol, 'jefe_taller');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesTaller.html.twig', [
+                    'funcionarios' => $jefesTaller,
+                    'response' => $response
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
@@ -461,6 +677,50 @@ class ControladorFuncionario extends AbstractController {
         $rolUsuarioNuevo = 'cajero';
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
+
+                if ($validacion['exito'] == true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contrasena = $_POST["contrasena"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        }elseif (!$this->funcionario->altaCajero($contrasena)) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showCashiers');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol cajero
+                try{
+                    $cajeros = Funcionario::getFuncionariosPorRol($rol, 'cajero');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaCajeros.html.twig', [
+                    'funcionarios' => $cajeros,
+                    'response' => $response
+                ]);
+
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
@@ -520,6 +780,49 @@ class ControladorFuncionario extends AbstractController {
         $rolUsuarioNuevo = 'valet_parking';
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
+
+                if ($validacion['exito'] == true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contrasena = $_POST["contrasena"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        }elseif (!$this->funcionario->altaValetParking($contrasena)) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showValets');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol valet_parking
+                try{
+                    $valets = Funcionario::getFuncionariosPorRol($rol, 'valet_parking');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaValets.html.twig', [
+                    'funcionarios' => $valets,
+                    'response' => $response
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
@@ -579,6 +882,50 @@ class ControladorFuncionario extends AbstractController {
         $rolUsuarioNuevo = 'ejecutivo';
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
+
+                if($validacion['exito'] == true){
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contrasena = $_POST["contrasena"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, $rolUsuarioNuevo);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("Este usuario ya existe.");
+                        }elseif(!$this->funcionario->altaEjecutivo($contrasena)){
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showServiceExecutives');
+                        }
+                            
+                    } catch (Exception $e){
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else {
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol ejecutivo
+                try{
+                    $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaEjecutivos.html.twig', [
+                    'funcionarios' => $ejecutivos,
+                    'response' => $response
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormAltaFuncionario($_POST["usuario"], $_POST["host"], $_POST["contrasena"]);
@@ -671,6 +1018,62 @@ class ControladorFuncionario extends AbstractController {
         
     }
 
+    function deleteManager(){
+        $response = ['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $gerentes = [];
+
+        switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
+
+                if ($validacion['exito'] == true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaGerente()) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showManagers');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol gerente
+                try{
+                    $gerentes = Funcionario::getFuncionariosPorRol($rol, 'gerente');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaGerentes.html.twig', [
+                    'funcionarios' => $gerentes,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+        
+    }
+
     function deleteDiagnoseChief(){
         $response = ['success' => false, 'errors' => []];
 
@@ -678,6 +1081,49 @@ class ControladorFuncionario extends AbstractController {
         $jefesDiagnostico = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
+
+                if ($validacion['exito'] == true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaJefeDiagnostico()) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showDiagnoseChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_diagnostico
+                try{
+                    $jefesDiagnostico = Funcionario::getFuncionariosPorRol($rol, 'jefe_diagnostico');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesDiagnostico.html.twig', [
+                    'funcionarios' => $jefesDiagnostico,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
@@ -734,6 +1180,48 @@ class ControladorFuncionario extends AbstractController {
         $jefesTaller = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
+
+                if ($validacion['exito'] == true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaJefeTaller()) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showWorkshopChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_taller
+                try{
+                    $jefesTaller = Funcionario::getFuncionariosPorRol($rol, 'jefe_taller');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesTaller.html.twig', [
+                    'funcionarios' => $jefesTaller,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
@@ -790,6 +1278,48 @@ class ControladorFuncionario extends AbstractController {
         $cajeros = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
+
+                if ($validacion['exito'] == true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaCajero()) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showCashiers');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_taller
+                try{
+                    $cajeros = Funcionario::getFuncionariosPorRol($rol, 'cajero');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaCajeros.html.twig', [
+                    'funcionarios' => $cajeros,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
@@ -846,6 +1376,48 @@ class ControladorFuncionario extends AbstractController {
         $valets = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
+
+                if ($validacion['exito'] == true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaValetParking()) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showValets');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_taller
+                try{
+                    $valets = Funcionario::getFuncionariosPorRol($rol, 'valet_parking');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaValets.html.twig', [
+                    'funcionarios' => $valets,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
@@ -902,6 +1474,48 @@ class ControladorFuncionario extends AbstractController {
         $ejecutivos = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
+
+                if ($validacion['exito'] == true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        }elseif (!$this->funcionario->bajaEjecutivo()) {
+                            throw new Exception("No se pudo registrar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showServiceExecutives');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        error_log($e->getMessage(), true);
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_taller
+                try{
+                    $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaEjecutivos.html.twig', [
+                    'funcionarios' => $ejecutivos,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 $validacion = $this->validarFormBajaFuncionario($_POST["usuario"], $_POST["host"]);
@@ -991,6 +1605,67 @@ class ControladorFuncionario extends AbstractController {
         
     }
 
+    function editManager(){
+        $response = ['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $gerentes = [];
+
+        switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormModificacionFuncionario(
+                    $_POST["usuarioActual"], $_POST["hostActual"], 
+                    $_POST["usuarioNuevo"], $_POST["hostNuevo"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuarioActual = $_POST["usuarioActual"];
+                    $hostActual = $_POST["hostActual"];
+                    $usuarioNuevo = $_POST["usuarioNuevo"];
+                    $hostNuevo = $_POST["hostNuevo"];
+
+                    $this->funcionario = new Funcionario($usuarioActual, $hostActual, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuarioActual, $hostActual)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modGerente($usuarioNuevo, $hostNuevo)) {
+                            throw new Exception("No se pudo modificar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showManagers');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol gerente
+                try{
+                    $gerentes = Funcionario::getFuncionariosPorRol($rol, 'gerente');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaGerentes.html.twig', [
+                    'funcionarios' => $gerentes,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+        
+    }
+
     function editDiagnoseChief(){
         $response = ['success' => false, 'errors' => []];
 
@@ -998,6 +1673,53 @@ class ControladorFuncionario extends AbstractController {
         $jefesDiagnostico = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormModificacionFuncionario(
+                    $_POST["usuarioActual"], $_POST["hostActual"], 
+                    $_POST["usuarioNuevo"], $_POST["hostNuevo"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuarioActual = $_POST["usuarioActual"];
+                    $hostActual = $_POST["hostActual"];
+                    $usuarioNuevo = $_POST["usuarioNuevo"];
+                    $hostNuevo = $_POST["hostNuevo"];
+
+                    $this->funcionario = new Funcionario($usuarioActual, $hostActual, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuarioActual, $hostActual)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modJefeDiagnostico($usuarioNuevo, $hostNuevo)) {
+                            throw new Exception("No se pudo modificar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showDiagnoseChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_diagnostico
+                try{
+                    $jefesDiagnostico = Funcionario::getFuncionariosPorRol($rol, 'jefe_diagnostico');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesDiagnostico.html.twig', [
+                    'funcionarios' => $jefesDiagnostico,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
@@ -1059,6 +1781,53 @@ class ControladorFuncionario extends AbstractController {
         $jefesTaller = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormModificacionFuncionario(
+                    $_POST["usuarioActual"], $_POST["hostActual"], 
+                    $_POST["usuarioNuevo"], $_POST["hostNuevo"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuarioActual = $_POST["usuarioActual"];
+                    $hostActual = $_POST["hostActual"];
+                    $usuarioNuevo = $_POST["usuarioNuevo"];
+                    $hostNuevo = $_POST["hostNuevo"];
+
+                    $this->funcionario = new Funcionario($usuarioActual, $hostActual, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuarioActual, $hostActual)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modJefeTaller($usuarioNuevo, $hostNuevo)) {
+                            throw new Exception("No se pudo modificar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showWorkshopChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_taller
+                try{
+                    $jefesTaller = Funcionario::getFuncionariosPorRol($rol, 'jefe_taller');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesTaller.html.twig', [
+                    'funcionarios' => $jefesTaller,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
@@ -1120,6 +1889,54 @@ class ControladorFuncionario extends AbstractController {
         $cajeros = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormModificacionFuncionario(
+                    $_POST["usuarioActual"], $_POST["hostActual"], 
+                    $_POST["usuarioNuevo"], $_POST["hostNuevo"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuarioActual = $_POST["usuarioActual"];
+                    $hostActual = $_POST["hostActual"];
+                    $usuarioNuevo = $_POST["usuarioNuevo"];
+                    $hostNuevo = $_POST["hostNuevo"];
+
+                    $this->funcionario = new Funcionario($usuarioActual, $hostActual, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuarioActual, $hostActual)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modCajero($usuarioNuevo, $hostNuevo)) {
+                            throw new Exception("No se pudo modificar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showCashiers');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol cajero
+                try{
+                    $cajeros = Funcionario::getFuncionariosPorRol($rol, 'ccajero');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesTaller.html.twig', [
+                    'funcionarios' => $cajeros,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
@@ -1181,6 +1998,53 @@ class ControladorFuncionario extends AbstractController {
         $valets = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormModificacionFuncionario(
+                    $_POST["usuarioActual"], $_POST["hostActual"], 
+                    $_POST["usuarioNuevo"], $_POST["hostNuevo"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuarioActual = $_POST["usuarioActual"];
+                    $hostActual = $_POST["hostActual"];
+                    $usuarioNuevo = $_POST["usuarioNuevo"];
+                    $hostNuevo = $_POST["hostNuevo"];
+
+                    $this->funcionario = new Funcionario($usuarioActual, $hostActual, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuarioActual, $hostActual)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modValetParking($usuarioNuevo, $hostNuevo)) {
+                            throw new Exception("No se pudo modificar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showValets');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol valet
+                try{
+                    $valets = Funcionario::getFuncionariosPorRol($rol, 'valet_parking');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaValets.html.twig', [
+                    'funcionarios' => $valets,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
@@ -1242,6 +2106,53 @@ class ControladorFuncionario extends AbstractController {
         $ejecutivos = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormModificacionFuncionario(
+                    $_POST["usuarioActual"], $_POST["hostActual"], 
+                    $_POST["usuarioNuevo"], $_POST["hostNuevo"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuarioActual = $_POST["usuarioActual"];
+                    $hostActual = $_POST["hostActual"];
+                    $usuarioNuevo = $_POST["usuarioNuevo"];
+                    $hostNuevo = $_POST["hostNuevo"];
+
+                    $this->funcionario = new Funcionario($usuarioActual, $hostActual, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuarioActual, $hostActual)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modEjecutivo($usuarioNuevo, $hostNuevo)) {
+                            throw new Exception("No se pudo modificar el usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showServiceExecutives');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol ejecutivo
+                try{
+                    $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaEjecutivos.html.twig', [
+                    'funcionarios' => $ejecutivos,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
@@ -1346,6 +2257,65 @@ class ControladorFuncionario extends AbstractController {
         
     }
 
+    function modPswdManager(){
+        $response = ['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $gerentes = [];
+
+        switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraGerente($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showManagers');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol gerente
+                try{
+                    $gerentes = Funcionario::getFuncionariosPorRol($rol, 'gerente');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaGerentes.html.twig', [
+                    'funcionarios' => $gerentes,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+        
+    }
+
     function modPswdDiagnoseChief(){
         $response = ['success' => false, 'errors' => []];
 
@@ -1353,6 +2323,51 @@ class ControladorFuncionario extends AbstractController {
         $jefesDiagnostico = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraJefeDiagnostico($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showDiagnoseChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_diagnostico
+                try{
+                    $jefesDiagnostico = Funcionario::getFuncionariosPorRol($rol, 'jefe_diagnostico');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesDiagnostico.html.twig', [
+                    'funcionarios' => $jefesDiagnostico,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
@@ -1412,6 +2427,51 @@ class ControladorFuncionario extends AbstractController {
         $jefesTaller = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraJefeTaller($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showWorkshopChiefs');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol jefe_taller
+                try{
+                    $jefesTaller = Funcionario::getFuncionariosPorRol($rol, 'jefe_taller');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaJefesTaller.html.twig', [
+                    'funcionarios' => $jefesTaller,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
@@ -1471,6 +2531,52 @@ class ControladorFuncionario extends AbstractController {
         $cajeros = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraCajero($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showCashiers');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol cajero
+                try{
+                    $cajeros = Funcionario::getFuncionariosPorRol($rol, 'cajero');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaCajeros.html.twig', [
+                    'funcionarios' => $cajeros,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
@@ -1530,6 +2636,51 @@ class ControladorFuncionario extends AbstractController {
         $valets = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraValetParking($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showValets');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol valet_parking
+                try{
+                    $valets = Funcionario::getFuncionariosPorRol($rol, 'valet_parking');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaValets.html.twig', [
+                    'funcionarios' => $valets,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
@@ -1589,6 +2740,51 @@ class ControladorFuncionario extends AbstractController {
         $ejecutivos = [];
 
         switch($rol){
+            case 'admin_rol':
+                $validacion = ['exito' => false, 'msj_error' => "" ];
+                
+                $validacion = $this->validarFormCambioContraFuncionario(
+                    $_POST["usuario"], $_POST["host"], $_POST["contraNueva"]
+                );
+                error_log("Debug validacion ".$validacion['exito'].$validacion['msj_error']);
+                if ($validacion['exito'] === true) {
+
+                    $usuario = $_POST["usuario"];
+                    $host = $_POST["host"];
+                    $contraNueva = $_POST["contraNueva"];
+
+                    $this->funcionario = new Funcionario($usuario, $host, null);
+                    $this->funcionario->setDBConnection('admin_rol');
+                    try {
+                        if (!Funcionario::existe($rol, $usuario, $host)) {
+                            throw new Exception("No se encontró un usuario registrado con los datos ingresados.");
+                        } elseif (!$this->funcionario->modContraEjecutivo($contraNueva)) {
+                            throw new Exception("No se pudo cambiar la clave del usuario.");
+                        } else {
+                            // Redirigir a la lista actualizada
+                            return $this->redirectToRoute('showServiceExecutives');
+                        }
+                    } catch (Exception $e) {
+                        // Añade el mensaje de error al array de errores
+                        $response['errors'][] = $e->getMessage();
+                    } finally {
+                        $this->funcionario->cerrarDBConnection();
+                    }
+                } else{
+                    $response['errors'][] = $validacion['msj_error'];
+                }
+
+                // Obtener arreglo con usuarios con rol ejecutivo
+                try{
+                    $ejecutivos = Funcionario::getFuncionariosPorRol($rol, 'ejecutivo');
+                } catch(Exception $e){
+                    $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
+                }
+
+                return $this->render('administrator/listaEjecutivos.html.twig', [
+                    'funcionarios' => $ejecutivos,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
             case 'gerente':
                 $validacion = ['exito' => false, 'msj_error' => "" ];
                 
