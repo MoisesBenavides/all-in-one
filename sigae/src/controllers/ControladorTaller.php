@@ -38,10 +38,7 @@ class ControladorTaller extends AbstractController{
     }
     
     function doBookService(): Response|RedirectResponse{
-        $response = ['success' => false, 'errors' => [], 'debug' => []];
-    
-        // Debug: Log all received data
-        $response['debug']['received_data'] = $_POST;
+        $response = ['success' => false, 'errors' => []];
     
         // Validación de campos vacíos
         if (isset($_POST["fecha_inicio"], $_POST["categoriaServicio"], $_POST["tipoServicio"], $_POST["tipoVehiculo"]) 
@@ -66,16 +63,7 @@ class ControladorTaller extends AbstractController{
     
             if (isset($matricula)) { // Verifica que la matrícula se haya definido correctamente
                 $matricula = strtoupper($matricula);
-    
-                // Debug: Datos procesados
-                $response['debug']['processed_data'] = [
-                    'fecha_inicio' => $fecha_inicio,
-                    'categoriaServicio' => $categoriaServicio,
-                    'tipoServicio' => $tipoServicio,
-                    'tipoVehiculo' => $tipoVehiculo,
-                    'matricula' => $matricula
-                ];
-    
+
                 // Validaciones
                 if (!$this->validarFecha($fecha_inicio)) {
                     $response['errors'][] = "Por favor, ingrese una fecha válida.";
@@ -172,56 +160,46 @@ class ControladorTaller extends AbstractController{
         return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
     }
     
-    public function getServicesSchedule(Request $request): JsonResponse{
+    public function getServicesSchedule(Request $request): JsonResponse {
         try {
-            // Obtener el día seleccionado desde el cliente
             $diaSelec = $request->query->get('date');
             if (!$diaSelec) {
                 throw new InvalidArgumentException('El día de reserva es requerido.');
             }
-
+    
+            // Formatea la fecha seleccionada
             $dia = new DateTime($diaSelec);
-
-            $fijos = $this->horarios;
-            
-            // Carga el arreglo del archivo json con los horarios fijos de lapsos
+            $fijos = $this->horarios;  // JSON de horarios fijos
+    
             if (!$fijos) {
                 throw new Exception("No se pudo cargar los horarios del taller.");
             }
-
+    
             // Obtener lapsos ocupados de la base de datos para el día seleccionado
-            $ocupados = [];
-            try{
-                // Asigna como rol para conexion, cliente
-                // TODO: Implementar asignación dinámica por rol de funcionario
-                $rol='cliente';
-                $ocupados = Taller::obtenerLapsosOcupados($rol, $dia);
-            } catch(Exception $e){
-                error_log($e->getMessage());
-                throw $e;
-            }
-            
-            // Procesar horarios del json, marcando los ocupados
+            $ocupados = Taller::obtenerLapsosOcupados('cliente', $dia);
+    
+            // Crear estructura de lapsos para la respuesta, marcando los ocupados
             $horariosTallerDia = [];
             foreach ($fijos as $lapso => $detalles) {
                 // Convertir el inicio y fin del lapso a DateTime para comparar
                 $inicioLapso = new DateTime($dia->format('Y-m-d') . ' ' . $detalles['inicio']);
                 $finLapso = new DateTime($dia->format('Y-m-d') . ' ' . $detalles['fin']);
-
-                // Revisa si el lapso está ocupado
+                
+                // Establece el estado como falso de inicio
                 $ocupado = false;
+                // Revisa si el lapso está ocupado
                 foreach ($ocupados as $oc) {
-                    $inicioOcupado = new DateTime($oc['hora_inicio']);
-                    $finOcupado = new DateTime($oc['hora_fin']);
-
-                    // Comparar si el horario de este lapso está ocupado
-                    if ($inicioLapso < $finOcupado && $finLapso > $inicioOcupado) {
+                    $inicioOcupado = new DateTime($oc['fecha_inicio']);
+                    $finOcupado = new DateTime($oc['fecha_final']);
+    
+                    // Compara si el lapso del horario está ocupado
+                    if ($inicioLapso <= $finOcupado && $finLapso >= $inicioOcupado) {
                         $ocupado = true;
                         break;
                     }
                 }
-
-                // Añadir cada lapso con el estado ocupado o no ocupado
+    
+                // Almacena el lapso con el estado ocupado o libre
                 $horariosTallerDia[$lapso] = [
                     'ocupado' => $ocupado,
                     'inicio' => $detalles['inicio'],
@@ -236,9 +214,8 @@ class ControladorTaller extends AbstractController{
             // Formatear la fecha
             $horaActual = $dtActual->format('Y-m-d H:i:s');
 
-            error_log($horaActual);
-
-            error_log("Horarios Taller: " . print_r($horariosTallerDia, true));
+            // Loguear $horariosTallerDia antes de la respuesta
+            error_log('Horarios: ' . print_r($horariosTallerDia, true));
 
             return new JsonResponse([
                 'success' => true,

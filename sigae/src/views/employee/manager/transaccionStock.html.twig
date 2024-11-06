@@ -24,12 +24,12 @@
 
         .btn{
             background-color: #dc2626;
-            text: white;
+            color: white;
         }
 
         .btn:hover{
             background-color: #b91c1c;
-            text: white;
+            color: white;
         }
     </style>
 </head>
@@ -37,11 +37,9 @@
 {% include 'partials/headerGerente.html.twig' %}
 
 <body>
-
-
 <section class="flex overflow-hidden flex-col justify-center items-center py-60 pr-16 pl-20 font-bold whitespace-nowrap bg-white max-md:px-5 max-md:py-24">
     {% if response.errors is defined and response.errors is not empty %}
-        <div id="error-container" style="background-color: #ffcec6;" class=" text-gray-950 text-center  p-4 rounded-md mb-4">
+        <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
             <ul id="error-list">
                 {% for error in response.errors %}
                     <li>{{ error }}</li>
@@ -49,25 +47,49 @@
             </ul>
         </div>
     {% endif %}
-  <div class="flex flex-col max-w-full w-[1297px]">
-    <article class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
-      <h2 class="text-4xl text-neutral-900">Transacción</h2>
-      <h1 class="text-4xl text-neutral-900">Hacer un egreso/ingreso de stock</h2>
-      <h1 class="text-4xl text-neutral-900">id</h2>
-      <h1 class="text-4xl text-neutral-900">cantidad</h2>
-    </article>
-  </div>
+    <div class="flex flex-col max-w-full w-[1297px]">
+        <article class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
+            <h2 class="text-4xl text-neutral-900 mb-8">Transacción</h2>
+            <form method="POST" action="{{path("createTransaction")}}" class="w-full max-w-lg">
+                <div class="mb-6">
+                    <label for="idProd" class="block text-neutral-900 text-lg mb-2">ID Producto</label>
+                    <input type="number" id="idProd" name="idProd" required 
+                           class="w-full px-4 py-2 rounded-lg border border-neutral-300 focus:border-neutral-900 focus:outline-none">
+                </div>
+
+                <div class="mb-6">
+                    <label for="tipoTr" class="block text-neutral-900 text-lg mb-2">Tipo de Transacción</label>
+                    <select id="tipoTr" name="tipoTr" required 
+                            class="w-full px-4 py-2 rounded-lg border border-neutral-300 focus:border-neutral-900 focus:outline-none">
+                        <option value="">Seleccione tipo</option>
+                        <option value="ingreso">Ingreso</option>
+                        <option value="egreso">Egreso</option>
+                    </select>
+                </div>
+
+                <div class="mb-6">
+                    <label for="cantidad" class="block text-neutral-900 text-lg mb-2">Cantidad</label>
+                    <input type="number" id="cantidad" name="cantidad" required min="1"
+                           class="w-full px-4 py-2 rounded-lg border border-neutral-300 focus:border-neutral-900 focus:outline-none">
+                </div>
+
+                <div class="flex justify-center">
+                    <button type="submit" class="btn px-8 py-3 rounded-lg text-lg">
+                        Realizar
+                    </button>
+                </div>
+            </form>
+        </article>
+    </div>
 </section>
 
-  </main>
+{% include 'partials/footer.html.twig' %}
 
-    {% include 'partials/footer.html.twig' %}
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
-            // const archivoTraduccionHome = "{{ asset('translate/.json') }}";
-            inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
-        });
-    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+    });
+</script>
 </body>
+</html>

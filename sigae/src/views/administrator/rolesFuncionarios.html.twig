@@ -39,17 +39,6 @@
 <body>
     <main class="min-h-screen bg-white p-4">
         <div class="max-w-7xl mx-auto">
-            <!-- Cuadro de error -->
-            {% if response.errors is defined and response.errors is not empty %}
-                <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
-                    <ul id="error-list">
-                        {% for error in response.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-
             <!-- Título principal -->
             <h2 class="text-2xl md:text-4xl text-center font-bold text-neutral-900 p-4 bg-neutral-50 border border-neutral-900 rounded-lg mb-8">
                 Gestión de Funcionarios por rol
@@ -88,9 +77,16 @@
                         Gestionar
                     </a>
                 </section>
-                  <!-- Ejecutivo -->
+                    <!-- Ejecutivo -->
                 <section class="flex flex-col items-center justify-center p-6 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[215px]">
-                    <h3 class="text-xl md:text-2xl font-bold text-center text-neutral-900 mb-6">Ejecutivo</h3>
+                    <h3 class="text-xl md:text-2xl font-bold text-center text-neutral-900 mb-6">Ejucutivo de servicios</h3>
+                    <a href="{{ path('showValets') }}" class="btn flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-white transition-colors duration-300">
+                        Gestionar
+                    </a>
+                </section>
+                     <!-- gerente -->
+                <section class="flex flex-col items-center justify-center p-6 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[215px]">
+                    <h3 class="text-xl md:text-2xl font-bold text-center text-neutral-900 mb-6">Gerente</h3>
                     <a href="{{ path('showValets') }}" class="btn flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-white transition-colors duration-300">
                         Gestionar
                     </a>

@@ -6,41 +6,46 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Exception;
 
 class ControladorProducto extends AbstractController{
+    private $conn;
 
-    public function sumarStock($rol, $id, $cantidad){
-        try{
-            if (!Producto::existeId($rol, $id)){
-                throw new Exception("No existe un producto registrado con el ID: " . $id);
-            }
-            $stockActual = Producto::obtenerStock($rol, $id);
+    public function continuarTransaccion($conn){
+        $this->conn = $conn;
+    }
 
-            if(($stockActual + $cantidad) > 999999){
+    public function sumarStock($id, $cantidad){
+        try {
+            $stockActual = Producto::obtenerStock($this->conn, $id);
+            $nuevoStock = $stockActual + $cantidad;
+            if ($nuevoStock > 999999) {
                 throw new Exception("Límite máximo de stock excedido.");
-            } else{
+            } else {
                 $nuevoStock = $stockActual + $cantidad;
-                Producto::modificarStock($rol, $id, $nuevoStock);
+                Producto::modificarStock($this->conn, $id, $nuevoStock);
             }
-        } catch(Exception $e){
+        } catch (Exception $e) {
             throw $e;
         }
     }
 
-    public function restarStock($rol, $id, $cantidad){
-        try{
-            if (!Producto::existeId($rol, $id)){
-                throw new Exception("No existe un producto registrado con el ID: " . $id);
-            }
-            $stockActual = Producto::obtenerStock($rol, $id);
-
-            if ($stockActual == 0 || ($stockActual - $cantidad) < 0){
-                throw new Exception("Límite mínimo de stock excedido.");            
+    public function restarStock($id, $cantidad){
+        try {
+            $stockActual = Producto::obtenerStock($this->conn, $id);
+            if ($stockActual == 0) {
+                throw new Exception("No hay disponibilidad.");
+            } elseif (($stockActual - $cantidad) < 0) {
+                throw new Exception("Límite mínimo de stock excedido.");
             } else {
                 $nuevoStock = $stockActual - $cantidad;
-                Producto::modificarStock($rol, $id, $nuevoStock);
-            }
-        } catch(Exception $e){
+                Producto::modificarStock($this->conn, $id, $nuevoStock);
+            }  
+            
+        } catch (Exception $e) {
             throw $e;
         }
+    }
+
+    public function existeId($rol, $id){
+        return Producto::existeId($rol, $id);
     }
 
     function getProductosTodos($rol){

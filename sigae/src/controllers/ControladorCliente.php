@@ -6,8 +6,8 @@ use Sigae\Controllers\ControladorServicio;
 use Sigae\Controllers\ControladorProducto;
 use Sigae\Controllers\ControladorNeumatico;
 use Sigae\Controllers\ControladorOtroProducto;
-use Google_Client;
-use Google_Service_Oauth2;
+use Google\Client;
+use Google\Service\Oauth2;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -99,7 +99,7 @@ class ControladorCliente extends AbstractController {
         $response = ['success' => false, 'errors' => [], 'debug' => []];
     
         // Configurar cliente Google
-        $client = new Google_Client();
+        $client = new Client();
         $client->setAuthConfig('/var/www/private/credencialesOAuth.json');
         $client->setRedirectUri('https://aio.ngrok.app/doLoginOAuth');
         $client->addScope(['email', 'profile']);
@@ -120,7 +120,7 @@ class ControladorCliente extends AbstractController {
         $client->setAccessToken($token);
     
         // Obtener la información del perfil del usuario
-        $oauth2 = new Google_Service_Oauth2($client);
+        $oauth2 = new Oauth2($client);
         $userInfo = $oauth2->userinfo->get();
         $email = $userInfo->email;
         $fotoPerfil = $userInfo->picture;

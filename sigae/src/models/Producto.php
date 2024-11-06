@@ -162,7 +162,7 @@ abstract class Producto{
             return $neumaticos;
 
         } catch(Exception $e){
-            error_log("Error al cargar otros neumáticos: ".$e->getMessage());
+            error_log("Error al cargar productos: ".$e->getMessage());
             throw $e;
             return;
         } finally {
@@ -171,12 +171,11 @@ abstract class Producto{
     }
 
     public static function existeId($rol, $id){
-        $conn = conectarDB($rol);
-        if($conn === false){
-            throw new Exception("No se puede conectar con la base de datos.");
-        }
-
         try{
+            $conn = conectarDB($rol);
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
             $stmt = $conn->prepare('SELECT COUNT(*) FROM producto WHERE id = :id');
             $stmt->bindParam(':id', $id);
             $stmt->execute();
@@ -186,17 +185,17 @@ abstract class Producto{
             return $count != 0;
 
         } catch(Exception $e){
-            throw $e;
+            throw "Error al verificar un producto existente por id: ".$e;
+        } finally {
+            $conn = null;
         }
     }
 
-    public static function modificarStock($rol, $id, $nuevoStock){
+    public static function modificarStock($conn, $id, $nuevoStock){
+        if(!$conn){
+            throw new Exception("No se ha podido iniciar una conexión.");
+        }
         try{
-            $conn = conectarDB($rol);
-            if($conn === false){
-                throw new Exception("No se puede conectar con la base de datos.");
-            }
-
             $stmt = $conn->prepare('UPDATE producto 
                                     SET stock = :nStock 
                                     WHERE id = :id');
@@ -206,18 +205,16 @@ abstract class Producto{
             return true;
 
         } catch(Exception $e){
-            error_log("Error al cancelar el servicio: ".$e->getMessage());
+            error_log("Error al modificar el stock: ".$e->getMessage());
             throw $e;
             return false;
         }
     }
 
-    public static function obtenerStock($rol, $id){
-        $conn = conectarDB($rol);
-        if($conn === false){
-            throw new Exception("No se puede conectar con la base de datos.");
+    public static function obtenerStock($conn, $id){
+        if(!$conn){
+            throw new Exception("No se ha podido iniciar una conexión.");
         }
-
         try{
             $stmt = $conn->prepare('SELECT stock FROM producto WHERE id = :id');
             $stmt->bindParam(':id', $id);
@@ -228,7 +225,7 @@ abstract class Producto{
             return $stock;
 
         } catch(Exception $e){
-            throw $e;
+            throw "Error al obtener stock del producto: ".$e;
         }
     }
 }
