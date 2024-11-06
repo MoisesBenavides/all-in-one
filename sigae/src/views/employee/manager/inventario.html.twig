@@ -154,6 +154,55 @@
 </style>
 
 <script>
+ 
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputBuscar = document.getElementById('buscar');
+        const productosContainer = document.getElementById('productosContainer');
+        const productos = document.querySelectorAll('.product');
+        const verMasBtn = document.getElementById('verMas');
+        const noResults = document.getElementById('noResults');
+        
+        let productosMostrados = 50;
+        let productosVisiblesTotales = 0;
+
+        function actualizarVisibilidad() {
+            let productosVisibles = 0;
+            productosVisiblesTotales = 0;
+            const textoBusqueda = inputBuscar.value.toLowerCase();
+
+            productos.forEach((producto, index) => {
+                const textoProducto = producto.textContent.toLowerCase();
+                const coincideBusqueda = textoProducto.includes(textoBusqueda);
+                
+                if (coincideBusqueda) {
+                    productosVisiblesTotales++;
+                    if (productosVisiblesTotales <= productosMostrados) {
+                        producto.classList.remove('hidden');
+                        productosVisibles++;
+                    } else {
+                        producto.classList.add('hidden');
+                    }
+                } else {
+                    producto.classList.add('hidden');
+                }
+            });
+
+            noResults.classList.toggle('hidden', productosVisibles > 0);
+            verMasBtn.classList.toggle('hidden', productosVisiblesTotales <= productosMostrados);
+        }
+
+        inputBuscar.addEventListener('input', function() {
+            productosMostrados = 50;
+            actualizarVisibilidad();
+        });
+
+        verMasBtn.addEventListener('click', function() {
+            productosMostrados += 50;
+            actualizarVisibilidad();
+        });
+
+        actualizarVisibilidad();
+    });
 function toggleProductEdit(productId) {
     const form = document.getElementById(`product-form-${productId}`);
     const formContainer = form.closest('.product');
