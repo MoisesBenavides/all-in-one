@@ -14,9 +14,9 @@ class ControladorProducto extends AbstractController{
 
     public function sumarStock($id, $cantidad){
         try {
-            // Verificar existencia del ID de producto antes de continuar
+            // Verifica la existencia del ID de producto
             $this->existeId($id);
-            
+
             $stockActual = Producto::obtenerStock($this->conn, $id);
             $nuevoStock = $stockActual + $cantidad;
             if ($nuevoStock > 999999) {
@@ -32,7 +32,7 @@ class ControladorProducto extends AbstractController{
 
     public function restarStock($id, $cantidad){
         try {
-            // Verificar existencia del ID de producto antes de continuar
+            // Verifica la existencia del ID de producto
             $this->existeId($id);
 
             $stockActual = Producto::obtenerStock($this->conn, $id);
