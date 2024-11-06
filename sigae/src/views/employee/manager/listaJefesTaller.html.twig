@@ -153,7 +153,29 @@
     </main>
 
     {% include 'partials/footer.html.twig' %}
+ <script>
+        // Toggle form visibility
+        const addUserBtn = document.getElementById('add-user-btn');
+        const newUserForm = document.getElementById('new-user-form');
+        const dropdownIcon = document.getElementById('dropdown-icon');
 
+        addUserBtn.addEventListener('click', () => {
+            newUserForm.classList.toggle('hidden');
+            dropdownIcon.classList.toggle('rotate-180');
+        });
+
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('contrasena');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Change eye icon based on password visibility
+            this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
