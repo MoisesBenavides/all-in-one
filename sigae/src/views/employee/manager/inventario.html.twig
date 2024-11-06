@@ -7,8 +7,6 @@
     <meta name="author" content="All In One">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario | AIO</title>
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <style>
         @font-face {
             font-family: 'Teachers';
@@ -17,135 +15,269 @@
             font-style: normal;
         }
     
-        body, input, select, button, option {
+        body {
             font-family: 'Teachers', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
         }
 
-        .placeholder-image {
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #000000, #333333);
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-section h1 {
+            color: white;
+            text-align: center;
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        .search-section {
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .search-input {
             width: 100%;
-            height: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            height: 200px;
+            background-color: #f8fafc;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f3f4f6;
-        }
-        
-        .placeholder-text {
-            color: #9ca3af;
-            text-align: center;
-            font-size: 0.875rem;
+            overflow: hidden;
         }
 
-        .btn-ver-mas {
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .product-details {
+            padding: 1.5rem;
+        }
+
+        .detail-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: #1e293b;
+            font-weight: 400;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .load-more {
             background-color: #000;
             color: white;
-            padding: 0.75rem 2rem;
+            border: none;
+            padding: 1rem 2rem;
             border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 1rem;
             font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 2rem auto;
+            display: block;
         }
 
-        .btn-ver-mas:hover {
+        .load-more:hover {
             background-color: #333;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .no-results {
-            padding: 3rem;
             text-align: center;
-            background-color: #f9fafb;
-            border-radius: 0.5rem;
-            border: 1px solid #e5e7eb;
+            padding: 3rem;
+            background-color: white;
+            border-radius: 1rem;
+            margin: 2rem auto;
+            max-width: 600px;
         }
 
-        #productosContainer {
-            min-height: 200px;
+        .no-results p {
+            color: #64748b;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-section h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body>
     {% include 'partials/headerGerente.html.twig' %}
 
-    <div class="container mx-auto px-4 py-8">
-        {# Header y Búsqueda #}
-        <div class="max-w-4xl mx-auto flex flex-col items-center gap-8 mb-12">
-            <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                <h1 class="text-center text-black text-3xl md:text-4xl font-bold">Inventario</h1>
-            </div>
-            <div class="w-full max-w-md">
-                <div class="relative">
-                    <input 
-                        type="text" 
-                        id="buscar" 
-                        placeholder="Buscar productos..." 
-                        class="w-full h-14 px-6 pr-12 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
-                    >
-                    <img 
-                        id="searchIcon" 
-                        class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer hover:opacity-75 transition-opacity duration-300" 
-                        src="{{ asset('svg/search.svg') }}" 
-                        alt="Search"
-                    >
-                </div>
-            </div>
+    <div class="container">
+        <div class="header-section">
+            <h1>Inventario</h1>
         </div>
-        
-        {# Contenedor de Productos #}
-        <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+        <div class="search-section">
+            <input 
+                type="text" 
+                id="buscar" 
+                class="search-input"
+                placeholder="Buscar productos..." 
+            >
+        </div>
+
+        <div id="productosContainer" class="products-grid">
             {% for producto in productos %}
-                <div class="product flex flex-col bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
-                    <div class="w-full h-48 bg-gray-100">
+                <div class="product-card product">
+                    <div class="product-image">
                         <img 
-                            class="w-full h-full object-contain" 
-                            {# src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" #}
+                            src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}"
                             alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
                             onload="this.style.display='block'"
                             onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'placeholder-image\'><p class=\'placeholder-text\'>Imagen no disponible</p></div>'"
                         />
                     </div>
                     
-                    <div class="w-full p-6 flex flex-col gap-3">
-                        <p class="text-lg font-bold text-gray-900">{{ producto.marca }}</p>
-                        
+                    <div class="product-details">
+                        <div class="detail-group">
+                            <span class="detail-label">Marca</span>
+                            <span class="detail-value">{{ producto.marca }}</span>
+                        </div>
+
                         {% if producto.nombre is defined and producto.nombre %}
-                            <p class="text-base text-gray-600">{{ producto.nombre }}</p>
-                        {% elseif producto.modelo is defined and producto.modelo %}
-                            <p class="text-base text-gray-600">{{ producto.modelo }}</p>
-                            <p class="text-base text-gray-600">{{ producto.tamano }}</p>
-                            <p class="text-base text-gray-600">{{ producto.tipo }}</p>
+                            <div class="detail-group">
+                                <span class="detail-label">Nombre</span>
+                                <span class="detail-value">{{ producto.nombre }}</span>
+                            </div>
                         {% endif %}
 
-                        <p class="text-base text-gray-600">{{ producto.id }}</p>
-                        <p class="text-base text-gray-600">{{ producto.upc }}</p>
-                        <p class="text-base text-gray-600">{{ producto.fecha_creacion }}</p>
-                        <p class="text-base text-gray-600">{{ producto.stock }}</p>
-                        <p class="mt-auto text-2xl font-bold text-black">${{ producto.precio }}</p>
+                        {% if producto.modelo is defined and producto.modelo %}
+                            <div class="detail-group">
+                                <span class="detail-label">Modelo</span>
+                                <span class="detail-value">{{ producto.modelo }}</span>
+                            </div>
+                            <div class="detail-group">
+                                <span class="detail-label">Tamaño</span>
+                                <span class="detail-value">{{ producto.tamano }}</span>
+                            </div>
+                            <div class="detail-group">
+                                <span class="detail-label">Tipo</span>
+                                <span class="detail-value">{{ producto.tipo }}</span>
+                            </div>
+                        {% endif %}
+
+                        <div class="detail-group">
+                            <span class="detail-label">ID</span>
+                            <span class="detail-value">{{ producto.id }}</span>
+                        </div>
+
+                        <div class="detail-group">
+                            <span class="detail-label">UPC</span>
+                            <span class="detail-value">{{ producto.upc }}</span>
+                        </div>
+
+                        <div class="detail-group">
+                            <span class="detail-label">Fecha de Creación</span>
+                            <span class="detail-value">{{ producto.fecha_creacion }}</span>
+                        </div>
+
+                        <div class="detail-group">
+                            <span class="detail-label">Stock</span>
+                            <span class="detail-value">{{ producto.stock }}</span>
+                        </div>
+
+                        <div class="price">${{ producto.precio }}</div>
                     </div>
                 </div>
             {% endfor %}
         </div>
 
-        {# Mensajes de estado #}
-        <div id="noResults" class="hidden no-results mt-8">
-            <p class="text-gray-600 text-lg">No se encontraron productos que coincidan con tu búsqueda.</p>
+        <div id="noResults" class="no-results hidden">
+            <p>No se encontraron productos que coincidan con tu búsqueda.</p>
         </div>
 
-        {# Botón Ver Más #}
-        <div class="flex justify-center mt-12">
-            <button id="verMas" class="btn-ver-mas hidden">
-                Ver más productos
-            </button>
-        </div>
+        <button id="verMas" class="load-more hidden">
+            Ver más productos
+        </button>
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const inputBuscar = document.getElementById('buscar');
-        const searchIcon = document.getElementById('searchIcon');
         const productosContainer = document.getElementById('productosContainer');
         const productos = document.querySelectorAll('.product');
         const verMasBtn = document.getElementById('verMas');
@@ -176,26 +308,20 @@
                 }
             });
 
-            // Mostrar/ocultar mensaje de no resultados
             noResults.classList.toggle('hidden', productosVisibles > 0);
-            
-            // Actualizar visibilidad del botón Ver Más
             verMasBtn.classList.toggle('hidden', productosVisiblesTotales <= productosMostrados);
         }
 
-        // Evento de búsqueda
         inputBuscar.addEventListener('input', function() {
-            productosMostrados = 50; // Reset al buscar
+            productosMostrados = 50;
             actualizarVisibilidad();
         });
 
-        // Click en botón Ver Más
         verMasBtn.addEventListener('click', function() {
             productosMostrados += 50;
             actualizarVisibilidad();
         });
 
-        // Inicialización
         actualizarVisibilidad();
     });
     </script>
