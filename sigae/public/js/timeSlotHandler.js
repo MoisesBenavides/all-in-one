@@ -12,7 +12,9 @@ const TimeSlotHandler = {
 
     getLocalDate(date) {
         const d = new Date(date);
-        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        // Ajustar a la zona horaria local de Uruguay
+        const uruguayDate = new Date(d.toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
+        return new Date(uruguayDate.getFullYear(), uruguayDate.getMonth(), uruguayDate.getDate());
     },
 
     updateTimeSlots(selectedDate) {
@@ -22,21 +24,24 @@ const TimeSlotHandler = {
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const errorContainer = document.getElementById('error-container');
-
+    
         // Validar fecha
         try {
-            // Convertir a fecha local sin tiempo
             const selectedLocalDate = this.getLocalDate(selectedDate);
             const todayLocalDate = this.getLocalDate(new Date());
-
+            
             this.debug('Fechas locales', {
                 selectedLocalDate,
                 todayLocalDate,
                 selectedTimestamp: selectedLocalDate.getTime(),
                 todayTimestamp: todayLocalDate.getTime()
             });
-
-            if (selectedLocalDate.getTime() < todayLocalDate.getTime()) {
+    
+            // Comparar solo las fechas sin la hora
+            const selectedDateOnly = new Date(selectedLocalDate.setHours(0,0,0,0));
+            const todayDateOnly = new Date(todayLocalDate.setHours(0,0,0,0));
+    
+            if (selectedDateOnly.getTime() < todayDateOnly.getTime()) {
                 throw new Error('No se pueden seleccionar fechas pasadas');
             }
         } catch (error) {
@@ -44,7 +49,6 @@ const TimeSlotHandler = {
             this.showError(error.message);
             return Promise.reject(error);
         }
-
         // Validaciones iniciales
         if (!timeSlotsContainer) {
             this.debug('Error: No se encontró el contenedor de time slots');
