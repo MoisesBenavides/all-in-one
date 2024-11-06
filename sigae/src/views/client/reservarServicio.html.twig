@@ -542,9 +542,7 @@
 
 <!-- Funciones de validación del formulario -->
 <script>
-    function validarFormulario(event) {
-    event.preventDefault(); // Prevenimos el envío tradicional del formulario
-    
+ function validarFormulario(event) {
     let isValid = true;
     let errorMessage = '';
 
@@ -564,8 +562,8 @@
     }
 
     if (!isValid) {
+        event.preventDefault();
         TimeSlotHandler.showError(errorMessage);
-        return;
     }
 
     // Si todo es válido, enviamos el formulario vía fetch
