@@ -170,11 +170,12 @@ abstract class Producto{
         }
     }
 
-    public static function existeId($conn, $id){
-        if(!$conn){
-            throw new Exception("No se ha podido iniciar una conexión.");
-        }
+    public static function existeId($rol, $id){
         try{
+            $conn = conectarDB($rol);
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
             $stmt = $conn->prepare('SELECT COUNT(*) FROM producto WHERE id = :id');
             $stmt->bindParam(':id', $id);
             $stmt->execute();
@@ -207,8 +208,6 @@ abstract class Producto{
             error_log("Error al modificar el stock: ".$e->getMessage());
             throw $e;
             return false;
-        } finally{
-            $conn = null;
         }
     }
 
@@ -227,8 +226,6 @@ abstract class Producto{
 
         } catch(Exception $e){
             throw "Error al obtener stock del producto: ".$e;
-        } finally {
-            $conn = null;
         }
     }
 }
