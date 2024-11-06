@@ -177,17 +177,7 @@
    
     <script src="{{ asset('js/serviceHandler.js') }}"></script>
   <script>
-// Utilidades para el manejo de fechas
 const DateUtils = {
-    getCurrentUruguayDateTime() {
-        return new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
-    },
-
-    formatToISODate(date) {
-        const d = new Date(date);
-        return d.toISOString().split('T')[0];
-    },
-
     getUruguayDate(date) {
         return new Date(new Date(date).toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
     },
@@ -198,33 +188,18 @@ const DateUtils = {
         return d1.getFullYear() === d2.getFullYear() &&
                d1.getMonth() === d2.getMonth() &&
                d1.getDate() === d2.getDate();
-    },
-
-    debug(context, ...args) {
-        console.log(`[${new Date().toISOString()}] [DateUtils] [${context}]:`, ...args);
     }
 };
 
 // URL para el servicio de horarios bloqueados
 const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
-console.log('URL configurada:', GET_BLOCKED_TIMES_URL);
 
 // TimeSlotHandler
 const TimeSlotHandler = {
     servicioSeleccionadoDuracion: 0,
     primerHorarioSeleccionado: null,
 
-    debug(message, data = null) {
-        const timestamp = new Date().toISOString();
-        console.log(`[${timestamp}] TimeSlotHandler: ${message}`);
-        if (data) {
-            console.log('Data:', data);
-        }
-    },
-
     updateTimeSlots(selectedDate) {
-        this.debug('Iniciando updateTimeSlots', { selectedDate });
-        
         const timeSlotsContainer = document.getElementById('timeSlots');
         const serviceDurationMessage = document.getElementById('serviceDurationMessage');
         const loadingIndicator = document.getElementById('loadingIndicator');
@@ -235,31 +210,30 @@ const TimeSlotHandler = {
             const today = DateUtils.getUruguayDate(new Date());
             const selected = DateUtils.getUruguayDate(selectedDate);
 
-            this.debug('Comparando fechas', {
-                today: today.toISOString(),
-                selected: selected.toISOString(),
-                todayDate: today.getDate(),
-                selectedDate: selected.getDate()
-            });
-
-            if (!DateUtils.compareOnlyDates(selected, today) && selected < today) {
+            // Validar solo si la fecha es anterior a hoy
+            if (selected < today && !DateUtils.compareOnlyDates(selected, today)) {
                 throw new Error('No se pueden seleccionar fechas pasadas');
             }
 
+            // Validar horario del taller si es el día actual
+            if (DateUtils.compareOnlyDates(selected, today)) {
+                const currentHour = today.getHours();
+                if (currentHour >= 17 || currentHour < 5) {
+                    throw new Error('El taller está cerrado en este momento. Horario de atención: 5:00 AM - 5:00 PM');
+                }
+            }
+
         } catch (error) {
-            this.debug('Error en validación de fecha', { error: error.message });
             this.showError(error.message);
             return Promise.reject(error);
         }
 
         // Validaciones iniciales
         if (!timeSlotsContainer) {
-            this.debug('Error: No se encontró el contenedor de time slots');
             return Promise.reject(new Error('Error de configuración: contenedor no encontrado'));
         }
 
         if (!this.servicioSeleccionadoDuracion) {
-            this.debug('Error: No se ha seleccionado un servicio');
             this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
             return Promise.reject(new Error('No se ha seleccionado un servicio'));
         }
@@ -270,16 +244,15 @@ const TimeSlotHandler = {
 
         this.resetState(timeSlotsContainer);
 
-        // Construir y validar URL
-        let requestUrl;
-        try {
-            requestUrl = this.buildUrl(selectedDate);
-            this.debug('URL construida', { url: requestUrl });
-        } catch (error) {
-            this.debug('Error construyendo URL', { error: error.message });
-            this.showError('Error al procesar la fecha');
-            return Promise.reject(error);
-        }
+        // Construir URL
+        const date = new Date(selectedDate);
+        const formattedDate = [
+            date.getFullYear(),
+            String(date.getMonth() + 1).padStart(2, '0'),
+            String(date.getDate()).padStart(2, '0')
+        ].join('-');
+
+        const requestUrl = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
 
         // Hacer la petición
         return fetch(requestUrl, {
@@ -292,19 +265,8 @@ const TimeSlotHandler = {
             credentials: 'include'
         })
         .then(async response => {
-            this.debug('Respuesta recibida', {
-                status: response.status,
-                statusText: response.statusText,
-                headers: Object.fromEntries(response.headers.entries())
-            });
-
             if (!response.ok) {
                 const errorData = await response.text();
-                this.debug('Error en respuesta', { 
-                    status: response.status,
-                    errorData 
-                });
-
                 try {
                     const parsedError = JSON.parse(errorData);
                     throw new Error(parsedError.error || 'Error al obtener los horarios');
@@ -312,30 +274,17 @@ const TimeSlotHandler = {
                     throw new Error(`Error ${response.status}: ${errorData || response.statusText}`);
                 }
             }
-
             return response.json();
         })
         .then(data => {
-            this.debug('Datos recibidos', { data });
-
             if (!data || !data.horariosTaller) {
                 throw new Error('Formato de respuesta inválido');
             }
 
             const slots = Object.entries(data.horariosTaller);
-            this.debug('Slots procesados', { 
-                totalSlots: slots.length,
-                firstSlot: slots[0],
-                lastSlot: slots[slots.length - 1]
-            });
-
             return this.renderTimeSlots(slots, selectedDate, serviceDurationMessage);
         })
         .catch(error => {
-            this.debug('Error capturado', {
-                message: error.message,
-                stack: error.stack
-            });
             this.showError(error.message);
             timeSlotsContainer.innerHTML = '';
             throw error;
@@ -345,20 +294,7 @@ const TimeSlotHandler = {
         });
     },
 
-    buildUrl(selectedDate) {
-        const selected = DateUtils.getUruguayDate(selectedDate);
-        const formattedDate = DateUtils.formatToISODate(selected);
-
-        this.debug('Fecha formateada para URL', {
-            input: selectedDate,
-            formatted: formattedDate
-        });
-        
-        return `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
-    },
-
     resetState(container) {
-        this.debug('Reseteando estado');
         this.primerHorarioSeleccionado = null;
         const fechaInicio = document.getElementById('fecha_inicio');
         if (fechaInicio) fechaInicio.value = '';
@@ -366,11 +302,6 @@ const TimeSlotHandler = {
     },
 
     renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
-        this.debug('Iniciando renderizado de slots', {
-            slotsCount: slots.length,
-            selectedDate
-        });
-
         const container = document.getElementById('timeSlots');
         if (!container) {
             throw new Error('Contenedor no encontrado');
@@ -387,11 +318,7 @@ const TimeSlotHandler = {
                     const button = this.createTimeSlotButton(lapso, info, selectedDate);
                     container.appendChild(button);
                 } catch (error) {
-                    this.debug('Error creando botón', {
-                        lapso,
-                        info,
-                        error: error.message
-                    });
+                    console.error('Error creando botón:', error);
                 }
             });
 
@@ -408,8 +335,6 @@ const TimeSlotHandler = {
         
         const horaInicio = info.hora_inicio || info.inicio || '';
         const horaFin = info.hora_fin || info.fin || '';
-        
-        this.debug('Creando botón para slot', { lapso, horaInicio, horaFin, info });
         
         button.textContent = `${horaInicio} - ${horaFin}`;
         button.setAttribute('data-lapso', lapso);
@@ -428,6 +353,13 @@ const TimeSlotHandler = {
             const slotTime = new Date(selectedDate);
             slotTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
 
+            // Validar horario del taller
+            const slotHour = parseInt(hours, 10);
+            if (slotHour < 5 || slotHour >= 17) {
+                isDisabled = true;
+            }
+
+            // Validar si el horario ya pasó
             if (slotTime < currentTime) {
                 isDisabled = true;
             }
@@ -454,8 +386,6 @@ const TimeSlotHandler = {
     },
 
     handleTimeSelection(lapso, timeInfo, button) {
-        this.debug('Manejando selección de tiempo', { lapso, timeInfo });
-        
         const fechaInput = document.getElementById('fecha_inicio');
         const datePicker = document.getElementById('fecha_selector');
         
@@ -472,8 +402,6 @@ const TimeSlotHandler = {
     },
 
     handleSingleSelection(button, timeInfo, selectedDate) {
-        this.debug('Manejando selección simple', { timeInfo, selectedDate });
-        
         document.querySelectorAll('#timeSlots button').forEach(btn => {
             btn.classList.remove('bg-red-600', 'text-white');
         });
@@ -487,8 +415,6 @@ const TimeSlotHandler = {
     },
 
     handleDoubleSelection(lapso, selectedButton) {
-        this.debug('Manejando selección doble', { lapso });
-        
         const buttons = document.querySelectorAll('#timeSlots button');
         
         if (!this.primerHorarioSeleccionado) {
@@ -557,7 +483,6 @@ const TimeSlotHandler = {
     },
 
     showError(message) {
-        this.debug('Mostrando error', { message });
         const errorContainer = document.getElementById('error-container');
         if (!errorContainer) return;
 
@@ -574,178 +499,163 @@ const TimeSlotHandler = {
     }
 };
 
-// Inicialización del DOM
+// Exportar TimeSlotHandler para uso global
+window.TimeSlotHandler = TimeSlotHandler;
+
+// Inicialización y setup de event listeners
 document.addEventListener('DOMContentLoaded', async function() {
-    // Configurar fecha inicial
-    const fechaSelector = document.getElementById('fecha_selector');
-    const fechaInicio = document.getElementById('fecha_inicio');
-    
-    if (fechaSelector) {
-        const today = DateUtils.getUruguayDate(new Date());
-        const formattedToday = DateUtils.formatToISODate(today);
+    // Configurar ServiceHandler
+    ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
+
+    try {
+        // Cargar servicios
+        const servicios = await ServiceHandler.cargarServicios();
+
+        // Configurar dropdowns
+        ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
+        ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
+        ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+
+        // Configurar fecha mínima
+        const fechaSelector = document.getElementById('fecha_selector');
+        if (fechaSelector) {
+            const today = DateUtils.getUruguayDate(new Date());
+            const formattedDate = today.toISOString().split('T')[0];
+            fechaSelector.min = formattedDate;
+        }
+
+        // Evento para actualizar subtipos
+        document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
+            option.addEventListener('click', () => {
+                ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
+                    document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                    document.getElementById('selectedServiceSubtype').value = subtype;
+                    TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
+                    document.getElementById('dropdownMenu2').classList.add('hidden');
+                    
+                    // Cargar horarios si hay una fecha seleccionada
+                    const fechaSelector = document.getElementById('fecha_selector');
+                    if (fechaSelector && fechaSelector.value) {
+                        TimeSlotHandler.updateTimeSlots(fechaSelector.value);
+                    }
+                });
+            });
+        });
+
+        // Event listener para cambio de fecha
+        const fechaSelector = document.getElementById('fecha_selector');
+        const fechaInicio = document.getElementById('fecha_inicio');
         
-        DateUtils.debug('Configuración inicial', {
-            today: today.toISOString(),
-            formattedToday});
+        fechaSelector.addEventListener('change', function() {
+            if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
+                TimeSlotHandler.updateTimeSlots(this.value);
+            } else {
+                TimeSlotHandler.showError('Por favor, seleccione un servicio antes de elegir el horario.');
+            }
+            // Limpiar la selección de hora cuando cambia la fecha
+            if (fechaInicio) fechaInicio.value = '';
+        });
 
-       fechaSelector.min = formattedToday;
-       fechaSelector.value = formattedToday;
-   }
+        // Event listener para el formulario
+        document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
 
-   // Configurar ServiceHandler
-   ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
+        // Setup de manejo de vehículos
+        setupVehicleHandlers();
 
-   try {
-       // Cargar servicios
-       const servicios = await ServiceHandler.cargarServicios();
-
-       // Configurar dropdowns
-       ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
-       ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
-       ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
-
-       // Evento para actualizar subtipos
-       document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
-           option.addEventListener('click', () => {
-               ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
-                   document.getElementById('selectedOption2').textContent = servicioData.descripcion;
-                   document.getElementById('selectedOption2').textContent = servicioData.descripcion;
-                   document.getElementById('selectedServiceSubtype').value = subtype;
-                   TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
-                   document.getElementById('dropdownMenu2').classList.add('hidden');
-                   
-                   // Cargar horarios inmediatamente si hay una fecha seleccionada
-                   if (fechaSelector.value) {
-                       TimeSlotHandler.updateTimeSlots(fechaSelector.value);
-                   }
-               });
-           });
-       });
-
-       // Cargar horarios iniciales si hay un servicio seleccionado
-       if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
-           TimeSlotHandler.updateTimeSlots(fechaSelector.value);
-       }
-
-       // Event listener para cambio de fecha
-       fechaSelector.addEventListener('change', function() {
-           if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
-               TimeSlotHandler.updateTimeSlots(this.value);
-           } else {
-               TimeSlotHandler.showError('Por favor, seleccione un servicio antes de elegir el horario.');
-           }
-           // Limpiar la selección de hora cuando cambia la fecha
-           fechaInicio.value = '';
-       });
-
-       // Event listener para el formulario
-       document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
-
-       // Configurar manejo de vehículos
-       setupVehicleHandlers();
-
-   } catch (error) {
-       console.error('Error en la inicialización:', error);
-       TimeSlotHandler.showError('Error al inicializar el formulario');
-   }
+    } catch (error) {
+        console.error('Error en la inicialización:', error);
+        TimeSlotHandler.showError('Error al inicializar el formulario');
+    }
 });
 
 // Función de validación del formulario
 function validarFormulario(event) {
-   let isValid = true;
-   let errorMessage = '';
+    let isValid = true;
+    let errorMessage = '';
 
-   if (!document.getElementById('selectedServiceType').value) {
-       isValid = false;
-       errorMessage += 'Por favor, seleccione un tipo de servicio. ';
-   } else if (!document.getElementById('selectedServiceSubtype').value) {
-       isValid = false;
-       errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
-   } else if (!document.getElementById('fecha_inicio').value) {
-       isValid = false;
-       errorMessage += 'Por favor, seleccione fecha y hora. ';
-   } else if (!document.getElementById('tipoVehiculo').value && 
-       document.getElementById('vehiculosDropdown').value === "") {
-       isValid = false;
-       errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
-   }
+    if (!document.getElementById('selectedServiceType').value) {
+        isValid = false;
+        errorMessage += 'Por favor, seleccione un tipo de servicio. ';
+    } else if (!document.getElementById('selectedServiceSubtype').value) {
+        isValid = false;
+        errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
+    } else if (!document.getElementById('fecha_inicio').value) {
+        isValid = false;
+        errorMessage += 'Por favor, seleccione fecha y hora. ';
+    } else if (!document.getElementById('tipoVehiculo').value && 
+        document.getElementById('vehiculosDropdown').value === "") {
+        isValid = false;
+        errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
+    }
 
-   if (!isValid) {
-       event.preventDefault();
-       TimeSlotHandler.showError(errorMessage);
-   }
+    if (!isValid) {
+        event.preventDefault();
+        TimeSlotHandler.showError(errorMessage);
+    }
 }
 
 // Configuración del manejo de vehículos
 function setupVehicleHandlers() {
-   const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-   const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
-   const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
-   const selectedOptionAuto = document.getElementById('selectedOptionAuto');
-   const tipoVehiculo = document.getElementById('tipoVehiculo');
-   const matriculaYa = document.getElementById('matriculaYa');
-   const matriculaYaContainer = document.getElementById('matriculaYaContainer');
-   const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
+    const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+    const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+    const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+    const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+    const tipoVehiculo = document.getElementById('tipoVehiculo');
+    const matriculaYa = document.getElementById('matriculaYa');
+    const matriculaYaContainer = document.getElementById('matriculaYaContainer');
+    const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
 
-   // Opción default para mis vehículos
-   const defaultOption = document.createElement('option');
-   defaultOption.value = "default";
-   defaultOption.text = "Seleccione un vehículo";
-   vehiculosDropdown.insertBefore(defaultOption, vehiculosDropdown.firstChild);
-   vehiculosDropdown.value = "default";
+    // Opción default para mis vehículos
+    const defaultOption = document.createElement('option');
+    defaultOption.value = "default";
+    defaultOption.text = "Seleccione un vehículo";
+    vehiculosDropdown.insertBefore(defaultOption, vehiculosDropdown.firstChild);
+    vehiculosDropdown.value = "default";
 
-   // Event listener para el dropdown de vehículo
-   vehiculosDropdown.addEventListener('change', function() {
-       if (this.value !== "" && this.value !== "default") {
-           // Conseguir el tipo de vehículo
-           const selectedOption = this.options[this.selectedIndex];
-           const tipo = selectedOption.getAttribute('data-tipo');
-           
-           // Actualizar sección de tipo de vehículo
-           selectedOptionAuto.textContent = tipo;
-           tipoVehiculo.value = tipo.toLowerCase();
-           
-           // Deshabilitar sección de tipo de vehículo
-           tipoVehiculoSection.classList.add('disabled-section');
-           dropdownButtonAuto.style.pointerEvents = 'none';
-           dropdownButtonAuto.style.backgroundColor = '#f3f4f6';
-           dropTipoVehiculo.classList.add('hidden');
-           
-           // Esconder matrícula ya
-           matriculaYa.value = '';
-           matriculaYa.removeAttribute('name');
-           matriculaYaContainer.style.display = 'none';
-           
-           this.setAttribute('name', 'matricula');
-       } else {
-           // Resetear cuando no hay vehículo
-           tipoVehiculoSection.classList.remove('disabled-section');
-           dropdownButtonAuto.style.pointerEvents = 'auto';
-           dropdownButtonAuto.style.backgroundColor = 'white';
-           matriculaYaContainer.style.display = 'block';
-           selectedOptionAuto.textContent = 'Tipo de Vehículo';
-           tipoVehiculo.value = '';
-           
-           this.removeAttribute('name');
-           matriculaYa.setAttribute('name', 'matriculaYa');
-       }
-   });
+    // Event listener para el dropdown de vehículo
+    vehiculosDropdown.addEventListener('change', function() {
+        if (this.value !== "" && this.value !== "default") {
+            const selectedOption = this.options[this.selectedIndex];
+            const tipo = selectedOption.getAttribute('data-tipo');
+            
+            selectedOptionAuto.textContent = tipo;
+            tipoVehiculo.value = tipo.toLowerCase();
+            
+            tipoVehiculoSection.classList.add('disabled-section');
+            dropdownButtonAuto.style.pointerEvents = 'none';
+            dropdownButtonAuto.style.backgroundColor = '#f3f4f6';
+            dropTipoVehiculo.classList.add('hidden');
+            
+            matriculaYa.value = '';
+            matriculaYa.removeAttribute('name');
+            matriculaYaContainer.style.display = 'none';
+            
+            this.setAttribute('name', 'matricula');
+        } else {
+            tipoVehiculoSection.classList.remove('disabled-section');
+            dropdownButtonAuto.style.pointerEvents = 'auto';
+            dropdownButtonAuto.style.backgroundColor = 'white';
+            matriculaYaContainer.style.display = 'block';
+            selectedOptionAuto.textContent = 'Tipo de Vehículo';
+            tipoVehiculo.value = '';
+            
+            this.removeAttribute('name');
+            matriculaYa.setAttribute('name', 'matriculaYa');
+        }
+    });
 
-   // Event listener para matrícula ya
-   matriculaYa.addEventListener('input', function() {
-       if (this.value !== "") {
-           vehiculosDropdown.value = "default";
-           vehiculosDropdown.removeAttribute('name');
-           this.setAttribute('name', 'matriculaYa');
-           tipoVehiculoSection.classList.remove('disabled-section');
-           dropdownButtonAuto.style.pointerEvents = 'auto';
-           dropdownButtonAuto.style.backgroundColor = 'white';
-       } else {
-           this.removeAttribute('name');
-       }
-   });
+    // Event listener para matrícula ya
+    matriculaYa.addEventListener('input', function() {
+        if (this.value !== "") {
+            vehiculosDropdown.value = "default";
+            vehiculosDropdown.removeAttribute('name');
+            this.setAttribute('name', 'matriculaYa');
+            tipoVehiculoSection.classList.remove('disabled-section');
+            dropdownButtonAuto.style.pointerEvents = 'auto';
+            dropdownButtonAuto.style.backgroundColor = 'white';
+        } else {
+            this.removeAttribute('name');
+        }
+    });
 }
-
-// Exportar TimeSlotHandler para uso global
-window.TimeSlotHandler = TimeSlotHandler;
 </script>
