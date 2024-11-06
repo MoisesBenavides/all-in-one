@@ -16,6 +16,10 @@ class ControladorTransaccion extends AbstractController{
     private $transaccion;
     private $controladorProducto;
 
+    public function __construct(){
+        $this->controladorProducto=new ControladorProducto();
+    }
+
     function createTransaction(): Response{
         $response=['success' => false, 'errors' => []];
 
@@ -36,6 +40,8 @@ class ControladorTransaccion extends AbstractController{
                         $response['errors'][] = "Por favor, seleccione un ID de producto válido.";
                     } elseif(!$this->validarCantidad($cantidad)){
                         $response['errors'][] = "Por favor, ingrese una cantidad de productos válida.";
+                    } elseif(!$this->controladorProducto->existeId($rol, $idProd)){
+                        $response['errors'][] = "No existe un producto con el ID ingresado.";
                     } else{
                         $fecha = $this->obtenerFechaHoraActual();
 
@@ -48,7 +54,6 @@ class ControladorTransaccion extends AbstractController{
                             if(!$this->transaccion->registrarTransaccion($idProd)){
                                 throw new Exception("Error al registrar la transacción.");
                             } else {
-                                $this->controladorProducto = new ControladorProducto();
                                 $this->controladorProducto->continuarTransaccion($this->transaccion->getDBConnection());
 
                                 if ($tipoTr == 'ingreso'){
