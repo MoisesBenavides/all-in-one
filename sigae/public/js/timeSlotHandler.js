@@ -189,8 +189,8 @@ const TimeSlotHandler = {
 
         slots
             .sort(([, a], [, b]) => {
-                const timeA = a.inicio || '';
-                const timeB = b.inicio || '';
+                const timeA = a.hora_inicio || a.inicio || '';
+                const timeB = b.hora_inicio || b.inicio || '';
                 return timeA.localeCompare(timeB);
             })
             .forEach(([lapso, info]) => {
@@ -218,8 +218,8 @@ const TimeSlotHandler = {
         button.type = 'button';
         
         // Usar hora_inicio y hora_fin en lugar de inicio y fin
-        const horaInicio = info.inicio || '';
-        const horaFin = info.fin || '';
+        const horaInicio = info.hora_inicio || info.inicio || '';
+        const horaFin = info.hora_fin || info.fin || '';
         
         this.debug('Creando botón para slot', { lapso, horaInicio, horaFin, info });
         
@@ -293,7 +293,7 @@ const TimeSlotHandler = {
         button.classList.add('bg-red-600', 'text-white');
         const fechaInput = document.getElementById('fecha_inicio');
         if (fechaInput) {
-            const horaInicio = timeInfo.inicio;
+            const horaInicio = timeInfo.hora_inicio || timeInfo.inicio;
             fechaInput.value = `${selectedDate}T${horaInicio}`;
         }
     },
