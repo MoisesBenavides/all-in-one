@@ -176,154 +176,516 @@
 
    
     <script src="{{ asset('js/serviceHandler.js') }}"></script>
-      <script>
-        document.addEventListener('DOMContentLoaded', async function() {
+  <script>
+                    const DateUtils = {
+                        getUruguayDate(date) {
+                            return new Date(new Date(date).toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
+                        },
 
+                        compareOnlyDates(date1, date2) {
+                            const d1 = new Date(date1);
+                            const d2 = new Date(date2);
+                            return d1.getFullYear() === d2.getFullYear() &&
+                                d1.getMonth() === d2.getMonth() &&
+                                d1.getDate() === d2.getDate();
+                        }
+                    };
 
-                const fechaSelector = document.getElementById('fecha_selector');
-                const fechaInicio = document.getElementById('fecha_inicio');
-                
-                // Obtener fecha actual en Uruguay
-                const uruguayTime = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
-                const today = new Date(uruguayTime);
-                const formattedToday = today.toISOString().split('T')[0];
-                
-                fechaSelector.min = formattedToday;
-                fechaSelector.value = formattedToday;
-                
-            // Configurar URLs
-            ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
+                    // URL para el servicio de horarios bloqueados
+                    const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
 
-            let servicios = {};
+                    // TimeSlotHandler
+                    const TimeSlotHandler = {
+                        servicioSeleccionadoDuracion: 0,
+                        primerHorarioSeleccionado: null,
 
-            // Configuración inicial de la fecha
-            const fechaInicio = document.getElementById('fecha_inicio');
-            const today = new Date();
-            const formattedToday = today.toISOString().split('T')[0];
-            
-            fechaSelector.min = formattedToday;
-            fechaSelector.value = formattedToday;
+                        updateTimeSlots(selectedDate) {
+                            const timeSlotsContainer = document.getElementById('timeSlots');
+                            const serviceDurationMessage = document.getElementById('serviceDurationMessage');
+                            const loadingIndicator = document.getElementById('loadingIndicator');
+                            const errorContainer = document.getElementById('error-container');
 
-            try {
-                // Cargar servicios
-                servicios = await ServiceHandler.cargarServicios();
+                            // Validar fecha
+                            try {
+                                const today = DateUtils.getUruguayDate(new Date());
+                                const selected = DateUtils.getUruguayDate(selectedDate);
 
-                // Configurar dropdowns
-                ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
-                ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
-                ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+                                // Validar solo si la fecha es anterior a hoy
+                                if (selected < today && !DateUtils.compareOnlyDates(selected, today)) {
+                                    throw new Error('No se pueden seleccionar fechas pasadas');
+                                }
 
-                // Evento para actualizar subtipos
-                document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
-                    option.addEventListener('click', () => {
-                        ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
-                            document.getElementById('selectedOption2').textContent = servicioData.descripcion;
-                            document.getElementById('selectedOption2').textContent = servicioData.descripcion;
-                            document.getElementById('selectedServiceSubtype').value = subtype;
-                            TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
-                            document.getElementById('dropdownMenu2').classList.add('hidden');
+                                // Validar horario del taller si es el día actual
+                                if (DateUtils.compareOnlyDates(selected, today)) {
+                                    const currentHour = today.getHours();
+                                    if (currentHour >= 17 || currentHour < 5) {
+                                        throw new Error('El taller está cerrado en este momento. Horario de atención: 5:00 AM - 5:00 PM');
+                                    }
+                                }
+
+                            } catch (error) {
+                                this.showError(error.message);
+                                return Promise.reject(error);
+                            }
+
+                            // Validaciones iniciales
+                            if (!timeSlotsContainer) {
+                                return Promise.reject(new Error('Error de configuración: contenedor no encontrado'));
+                            }
+
+                            if (!this.servicioSeleccionadoDuracion) {
+                                this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
+                                return Promise.reject(new Error('No se ha seleccionado un servicio'));
+                            }
+
+                            // Mostrar loading y limpiar estado
+                            if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+                            if (errorContainer) errorContainer.classList.add('hidden');
+
+                            this.resetState(timeSlotsContainer);
+
+                            // Construir URL
+                            const date = new Date(selectedDate);
+                            const formattedDate = [
+                                date.getFullYear(),
+                                String(date.getMonth() + 1).padStart(2, '0'),
+                                String(date.getDate()).padStart(2, '0')
+                            ].join('-');
+
+                            const requestUrl = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
+
+                            // Hacer la petición
+                            return fetch(requestUrl, {
+                                method: 'GET',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                credentials: 'include'
+                            })
+                            .then(async response => {
+                                if (!response.ok) {
+                                    const errorData = await response.text();
+                                    try {
+                                        const parsedError = JSON.parse(errorData);
+                                        throw new Error(parsedError.error || 'Error al obtener los horarios');
+                                    } catch (e) {
+                                        throw new Error(`Error ${response.status}: ${errorData || response.statusText}`);
+                                    }
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (!data || !data.horariosTaller) {
+                                    throw new Error('Formato de respuesta inválido');
+                                }
+
+                                const slots = Object.entries(data.horariosTaller);
+                                return this.renderTimeSlots(slots, selectedDate, serviceDurationMessage);
+                            })
+                            .catch(error => {
+                                this.showError(error.message);
+                                timeSlotsContainer.innerHTML = '';
+                                throw error;
+                            })
+                            .finally(() => {
+                                if (loadingIndicator) loadingIndicator.classList.add('hidden');
+                            });
+                        },
+
+                        resetState(container) {
+                            this.primerHorarioSeleccionado = null;
+                            if (fechaInicio) fechaInicio.value = '';
+                            container.innerHTML = '';
+                        },
+
+                        renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
+                            const container = document.getElementById('timeSlots');
+                            if (!container) {
+                                throw new Error('Contenedor no encontrado');
+                            }
+
+                            slots
+                                .sort(([, a], [, b]) => {
+                                    const timeA = a.hora_inicio || a.inicio || '';
+                                    const timeB = b.hora_inicio || b.inicio || '';
+                                    return timeA.localeCompare(timeB);
+                                })
+                                .forEach(([lapso, info]) => {
+                                    try {
+                                        const button = this.createTimeSlotButton(lapso, info, selectedDate);
+                                        container.appendChild(button);
+                                    } catch (error) {
+                                        console.error('Error creando botón:', error);
+                                    }
+                                });
+
+                            if (serviceDurationMessage) {
+                                serviceDurationMessage.classList[
+                                    this.servicioSeleccionadoDuracion > 30 ? 'remove' : 'add'
+                                ]('hidden');
+                            }
+                        },
+
+                        createTimeSlotButton(lapso, info, selectedDate) {
+                            const button = document.createElement('button');
+                            button.type = 'button';
                             
-                            // Cargar horarios inmediatamente si hay una fecha seleccionada
-                            if (fechaSelector.value) {
-                                TimeSlotHandler.updateTimeSlots(fechaSelector.value);
+                            const horaInicio = info.hora_inicio || info.inicio || '';
+                            const horaFin = info.hora_fin || info.fin || '';
+                            
+                            button.textContent = `${horaInicio} - ${horaFin}`;
+                            button.setAttribute('data-lapso', lapso);
+                            button.setAttribute('data-info', JSON.stringify({
+                                inicio: horaInicio,
+                                fin: horaFin,
+                                ocupado: info.ocupado
+                            }));
+
+                            let isDisabled = info.ocupado;
+
+                            // Verificar si el slot ya pasó (solo para el día actual)
+                            if (this.isCurrentDay(selectedDate)) {
+                                const currentTime = DateUtils.getUruguayDate(new Date());
+                                const [hours, minutes] = horaInicio.split(':');
+                                const slotTime = new Date(selectedDate);
+                                slotTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
+
+                                // Validar horario del taller
+                                const slotHour = parseInt(hours, 10);
+                                if (slotHour < 5 || slotHour >= 17) {
+                                    isDisabled = true;
+                                }
+
+                                // Validar si el horario ya pasó
+                                if (slotTime < currentTime) {
+                                    isDisabled = true;
+                                }
+                            }
+
+                            button.className = `w-full p-2 rounded-md text-center transition-colors ${
+                                isDisabled 
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                                    : 'bg-white border border-gray-300 hover:bg-gray-50'
+                            }`;
+
+                            if (!isDisabled) {
+                                button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
+                            }
+
+                            button.disabled = isDisabled;
+                            return button;
+                        },
+
+                        isCurrentDay(selectedDate) {
+                            const selected = DateUtils.getUruguayDate(selectedDate);
+                            const now = DateUtils.getUruguayDate(new Date());
+                            return DateUtils.compareOnlyDates(selected, now);
+                        },
+
+                        handleTimeSelection(lapso, timeInfo, button) {
+                            const fechaInput = document.getElementById('fecha_inicio');
+                            const datePicker = document.getElementById('fecha_selector');
+                            
+                            if (!datePicker?.value) {
+                                this.showError('Por favor, seleccione primero una fecha.');
+                                return;
+                            }
+
+                            if (this.servicioSeleccionadoDuracion <= 30) {
+                                this.handleSingleSelection(button, timeInfo, datePicker.value);
+                            } else {
+                                this.handleDoubleSelection(lapso, button);
+                            }
+                        },
+
+                        handleSingleSelection(button, timeInfo, selectedDate) {
+                            document.querySelectorAll('#timeSlots button').forEach(btn => {
+                                btn.classList.remove('bg-red-600', 'text-white');
+                            });
+                            
+                            button.classList.add('bg-red-600', 'text-white');
+                            if (fechaInicio) {
+                                const horaInicio = timeInfo.hora_inicio || timeInfo.inicio;
+                                fechaInicio.value = `${selectedDate}T${horaInicio}`;
+                            }
+                        },
+
+                        handleDoubleSelection(lapso, selectedButton) {
+                            const buttons = document.querySelectorAll('#timeSlots button');
+                            
+                            if (!this.primerHorarioSeleccionado) {
+                                this.resetSlotStyles();
+                                this.primerHorarioSeleccionado = lapso;
+                                selectedButton.classList.add('bg-red-600', 'text-white');
+                                
+                                const currentIndex = Array.from(buttons).indexOf(selectedButton);
+                                this.highlightAdjacentSlots(buttons, currentIndex);
+                            } else {
+                                this.processSecondSelection(buttons, selectedButton);
+                            }
+                        },
+
+                        resetSlotStyles() {
+                            document.querySelectorAll('#timeSlots button').forEach(btn => {
+                                btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
+                            });
+                        },
+
+                        highlightAdjacentSlots(buttons, currentIndex) {
+                            if (currentIndex > 0 && !buttons[currentIndex - 1].disabled) {
+                                buttons[currentIndex - 1].classList.add('bg-yellow-200');
+                            }
+                            if (currentIndex < buttons.length - 1 && !buttons[currentIndex + 1].disabled) {
+                                buttons[currentIndex + 1].classList.add('bg-yellow-200');
+                            }
+                        },
+
+                        processSecondSelection(buttons, selectedButton) {
+                            const firstButton = Array.from(buttons).find(btn => 
+                                btn.getAttribute('data-lapso') === this.primerHorarioSeleccionado);
+                            const firstIndex = Array.from(buttons).indexOf(firstButton);
+                            const secondIndex = Array.from(buttons).indexOf(selectedButton);
+
+                            if (Math.abs(firstIndex - secondIndex) === 1) {
+                                this.confirmDoubleSelection(buttons, firstIndex, secondIndex);
+                            } else {
+                                this.showError('Por favor, seleccione dos horarios consecutivos');
+                                this.resetSlotStyles();
+                                this.primerHorarioSeleccionado = null;
+                            }
+                        },
+
+                        confirmDoubleSelection(buttons, firstIndex, secondIndex) {
+                            this.resetSlotStyles();
+                            
+                            const startIndex = Math.min(firstIndex, secondIndex);
+                            const endIndex = Math.max(firstIndex, secondIndex);
+                            
+                            buttons[startIndex].classList.add('bg-red-600', 'text-white');
+                            buttons[endIndex].classList.add('bg-red-600', 'text-white');
+
+                            const startButton = buttons[startIndex];
+                            const startInfo = JSON.parse(startButton.getAttribute('data-info') || '{}');
+
+                            if (fechaSelector?.value && startInfo.inicio) {
+                                if (fechaInicio) {
+                                    fechaInicio.value = `${fechaSelector.value}T${startInfo.inicio}`;
+                                }
+                            }
+
+                            this.primerHorarioSeleccionado = null;
+                        },
+
+                        showError(message) {
+                            const errorContainer = document.getElementById('error-container');
+                            if (!errorContainer) return;
+
+                            errorContainer.classList.remove('hidden');
+                            const errorList = document.getElementById('error-list');
+                            
+                            if (errorList) {
+                                errorList.innerHTML = `<li>${message}</li>`;
+                            } else {
+                                errorContainer.textContent = message;
+                            }
+                            
+                            setTimeout(() => errorContainer.classList.add('hidden'), 5000);
+                        }
+                    };
+
+                    // Exportar TimeSlotHandler para uso global
+                    window.TimeSlotHandler = TimeSlotHandler;
+
+                    // Inicialización y setup de event listeners
+                    document.addEventListener('DOMContentLoaded', async function() {
+                        const fechaSelector = document.getElementById('fecha_selector');
+                            const fechaInicio = document.getElementById('fecha_inicio');
+                        // Configurar ServiceHandler
+                        ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
+
+                        try {
+                            // Cargar servicios
+                            const servicios = await ServiceHandler.cargarServicios();
+
+                            // Configurar dropdowns
+                            ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
+                            ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
+                            ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+
+                            // Configurar fecha mínima
+                            if (fechaSelector) {
+                                const today = DateUtils.getUruguayDate(new Date());
+                                const formattedDate = today.toISOString().split('T')[0];
+                                fechaSelector.min = formattedDate;
+                            }
+
+                            // Evento para actualizar subtipos
+                            document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
+                                option.addEventListener('click', () => {
+                                    ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
+                                        document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                                        document.getElementById('selectedServiceSubtype').value = subtype;
+                                        TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
+                                        document.getElementById('dropdownMenu2').classList.add('hidden');
+                                        
+                                        // Cargar horarios si hay una fecha seleccionada
+                                        if (fechaSelector && fechaSelector.value) {
+                                            TimeSlotHandler.updateTimeSlots(fechaSelector.value);
+                                        }
+                                    });
+                                });
+                            });
+
+                            // Event listener para cambio de fecha
+                            
+                            fechaSelector.addEventListener('change', function() {
+                                if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
+                                    TimeSlotHandler.updateTimeSlots(this.value);
+                                } else {
+                                    TimeSlotHandler.showError('Por favor, seleccione un servicio antes de elegir el horario.');
+                                }
+                                // Limpiar la selección de hora cuando cambia la fecha
+                                if (fechaInicio) fechaInicio.value = '';
+                            });
+
+                            // Event listener para el formulario
+                            document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
+
+                            // Setup de manejo de vehículos
+                            setupVehicleHandlers();
+
+                        } catch (error) {
+                            console.error('Error en la inicialización:', error);
+                            TimeSlotHandler.showError('Error al inicializar el formulario');
+                        }
+                    });
+
+                    // Función de validación del formulario
+                    function validarFormulario(event) {
+                        let isValid = true;
+                        let errorMessage = '';
+
+                        if (!document.getElementById('selectedServiceType').value) {
+                            isValid = false;
+                            errorMessage += 'Por favor, seleccione un tipo de servicio. ';
+                        } else if (!document.getElementById('selectedServiceSubtype').value) {
+                            isValid = false;
+                            errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
+                        } else if (!document.getElementById('fecha_inicio').value) {
+                            isValid = false;
+                            errorMessage += 'Por favor, seleccione fecha y hora. ';
+                        } else if (!document.getElementById('tipoVehiculo').value && 
+                            document.getElementById('vehiculosDropdown').value === "") {
+                            isValid = false;
+                            errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
+                        }
+
+                        if (!isValid) {
+                            event.preventDefault();
+                            TimeSlotHandler.showError(errorMessage);
+                        }
+                    }
+
+                    // Configuración del manejo de vehículos
+                    function setupVehicleHandlers() {
+                        const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+                        const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+                        const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+                        const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+                        const tipoVehiculo = document.getElementById('tipoVehiculo');
+                        const matriculaYa = document.getElementById('matriculaYa');
+                        const matriculaYaContainer = document.getElementById('matriculaYaContainer');
+                        const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
+
+                        // Opción default para mis vehículos
+                        const defaultOption = document.createElement('option');
+                        defaultOption.value = "default";
+                        defaultOption.text = "Seleccione un vehículo";
+                        vehiculosDropdown.insertBefore(defaultOption, vehiculosDropdown.firstChild);
+                        vehiculosDropdown.value = "default";
+
+                        // Event listener para el dropdown de vehículo
+                        vehiculosDropdown.addEventListener('change', function() {
+                            if (this.value !== "" && this.value !== "default") {
+                                const selectedOption = this.options[this.selectedIndex];
+                                const tipo = selectedOption.getAttribute('data-tipo');
+                                
+                                selectedOptionAuto.textContent = tipo;
+                                tipoVehiculo.value = tipo.toLowerCase();
+                                
+                                tipoVehiculoSection.classList.add('disabled-section');
+                                dropdownButtonAuto.style.pointerEvents = 'none';
+                                dropdownButtonAuto.style.backgroundColor = '#f3f4f6';
+                                dropTipoVehiculo.classList.add('hidden');
+                                
+                                matriculaYa.value = '';
+                                matriculaYa.removeAttribute('name');
+                                matriculaYaContainer.style.display = 'none';
+                                
+                                this.setAttribute('name', 'matricula');
+                            } else {
+                                tipoVehiculoSection.classList.remove('disabled-section');
+                                dropdownButtonAuto.style.pointerEvents = 'auto';
+                                dropdownButtonAuto.style.backgroundColor = 'white';
+                                matriculaYaContainer.style.display = 'block';
+                                selectedOptionAuto.textContent = 'Tipo de Vehículo';
+                                tipoVehiculo.value = '';
+                                
+                                this.removeAttribute('name');
+                                matriculaYa.setAttribute('name', 'matriculaYa');
                             }
                         });
-                    });
-                });
 
-                // Cargar horarios iniciales si hay un servicio seleccionado
-                if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
-                    TimeSlotHandler.updateTimeSlots(fechaSelector.value);
-                }
-
-                // Event listener para cambio de fecha
-                fechaSelector.addEventListener('change', function() {
-                    if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
-                        TimeSlotHandler.updateTimeSlots(this.value);
-                    } else {
-                        TimeSlotHandler.showError('Por favor, seleccione un servicio antes de elegir el horario.');
+                        // Event listener para matrícula ya
+                        matriculaYa.addEventListener('input', function() {
+                            if (this.value !== "") {
+                                vehiculosDropdown.value = "default";
+                                vehiculosDropdown.removeAttribute('name');
+                                this.setAttribute('name', 'matriculaYa');
+                                tipoVehiculoSection.classList.remove('disabled-section');
+                                dropdownButtonAuto.style.pointerEvents = 'auto';
+                                dropdownButtonAuto.style.backgroundColor = 'white';
+                            } else {
+                                this.removeAttribute('name');
+                            }
+                        });
                     }
-                    // Limpiar la selección de hora cuando cambia la fecha
-                    fechaInicio.value = '';
-                });
+                    handleMatriculaInput.bind(this);
+                
 
-                // Event listener para el formulario
-                document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
+            handleVehiculoChange(event) {
+                const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+                const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+                const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+                const tipoVehiculo = document.getElementById('tipoVehiculo');
+                const matriculaYa = document.getElementById('matriculaYa');
+                const matriculaYaContainer = document.getElementById('matriculaYaContainer');
+                const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
 
-            } catch (error) {
-                console.error('Error en la inicialización:', error);
-                TimeSlotHandler.showError('Error al inicializar el formulario');
-            }
-        });
-
-        // Función de validación del formulario
-        function validarFormulario(event) {
-            let isValid = true;
-            let errorMessage = '';
-
-            if (!document.getElementById('selectedServiceType').value) {
-                isValid = false;
-                errorMessage += 'Por favor, seleccione un tipo de servicio. ';
-            } else if (!document.getElementById('selectedServiceSubtype').value) {
-                isValid = false;
-                errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
-            } else if (!document.getElementById('fecha_inicio').value) {
-                isValid = false;
-                errorMessage += 'Por favor, seleccione fecha y hora. ';
-            } else if (!document.getElementById('tipoVehiculo').value && 
-                document.getElementById('vehiculosDropdown').value === "") {
-                isValid = false;
-                errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
-            }
-
-            if (!isValid) {
-                event.preventDefault();
-                TimeSlotHandler.showError(errorMessage);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-            const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
-            const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
-            const selectedOptionAuto = document.getElementById('selectedOptionAuto');
-            const tipoVehiculo = document.getElementById('tipoVehiculo');
-            const matriculaYa = document.getElementById('matriculaYa');
-            const matriculaYaContainer = document.getElementById('matriculaYaContainer');
-            const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
-
-            // opcion default para mis vehiculos
-            const defaultOption = document.createElement('option');
-            defaultOption.value = "default";
-            defaultOption.text = "Seleccione un vehículo";
-            vehiculosDropdown.insertBefore(defaultOption, vehiculosDropdown.firstChild);
-            vehiculosDropdown.value = "default";
-
-            // Event listener para el dropdown de vehiculo
-            vehiculosDropdown.addEventListener('change', function() {
-                if (this.value !== "" && this.value !== "default") {
-                    // Conseguir el tipo de vehiculo
-                    const selectedOption = this.options[this.selectedIndex];
+                if (event.target.value !== "" && event.target.value !== "default") {
+                    const selectedOption = event.target.options[event.target.selectedIndex];
                     const tipo = selectedOption.getAttribute('data-tipo');
                     
-                    // Actualizar seccion de tipo de vehiculo
+                    // Actualizar tipo de vehículo
                     selectedOptionAuto.textContent = tipo;
                     tipoVehiculo.value = tipo.toLowerCase();
                     
-                    // Deshabilitar seccion de tipo de vehiculo
+                    // Deshabilitar sección de tipo de vehículo
                     tipoVehiculoSection.classList.add('disabled-section');
                     dropdownButtonAuto.style.pointerEvents = 'none';
                     dropdownButtonAuto.style.backgroundColor = '#f3f4f6';
                     dropTipoVehiculo.classList.add('hidden');
                     
-                    // esconder matricula ya
+                    // Limpiar y ocultar matrícula manual
                     matriculaYa.value = '';
                     matriculaYa.removeAttribute('name');
                     matriculaYaContainer.style.display = 'none';
                     
-                    this.setAttribute('name', 'matricula');
+                    event.target.setAttribute('name', 'matricula');
                 } else {
-                    // resetear cuando no hay vehiculo
+                    // Resetear todo
                     tipoVehiculoSection.classList.remove('disabled-section');
                     dropdownButtonAuto.style.pointerEvents = 'auto';
                     dropdownButtonAuto.style.backgroundColor = 'white';
@@ -331,421 +693,73 @@
                     selectedOptionAuto.textContent = 'Tipo de Vehículo';
                     tipoVehiculo.value = '';
                     
-                    this.removeAttribute('name');
+                    event.target.removeAttribute('name');
                     matriculaYa.setAttribute('name', 'matriculaYa');
                 }
-            });
+            },
 
-            // Event listener para matricula ya
-            matriculaYa.addEventListener('input', function() {
-                if (this.value !== "") {
+            handleMatriculaInput(event) {
+                const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+                const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+                const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+
+                if (event.target.value !== "") {
                     vehiculosDropdown.value = "default";
                     vehiculosDropdown.removeAttribute('name');
-                    this.setAttribute('name', 'matriculaYa');
+                    event.target.setAttribute('name', 'matriculaYa');
                     tipoVehiculoSection.classList.remove('disabled-section');
                     dropdownButtonAuto.style.pointerEvents = 'auto';
                     dropdownButtonAuto.style.backgroundColor = 'white';
                 } else {
-                    this.removeAttribute('name');
+                    event.target.removeAttribute('name');
                 }
-            });
-        });
-    </script>
- 
-    <script>
-        // Definir la URL antes de cargar los scripts
-        const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
-        console.log('URL configurada:', GET_BLOCKED_TIMES_URL); // Para verificar la URL
-            const TimeSlotHandler = {
-            servicioSeleccionadoDuracion: 0,
-            primerHorarioSeleccionado: null,
-
-            debug(message, data = null) {
-                const timestamp = new Date().toISOString();
-                console.log(`[${timestamp}] TimeSlotHandler: ${message}`);
-                if (data) {
-                    console.log('Data:', data);
-                }
-            },
-
-            getLocalDate(date) {
-                const d = new Date(date);
-                // Ajustar a la zona horaria local de Uruguay
-                const uruguayDate = new Date(d.toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
-                return new Date(uruguayDate.getFullYear(), uruguayDate.getMonth(), uruguayDate.getDate());
-            },
-
-            updateTimeSlots(selectedDate) {
-                this.debug('Iniciando updateTimeSlots', { selectedDate });
-                
-                const timeSlotsContainer = document.getElementById('timeSlots');
-                const serviceDurationMessage = document.getElementById('serviceDurationMessage');
-                const loadingIndicator = document.getElementById('loadingIndicator');
-                const errorContainer = document.getElementById('error-container');
-            
-                // Validar fecha
-                try {
-                    const selectedLocalDate = this.getLocalDate(selectedDate);
-                    const todayLocalDate = this.getLocalDate(new Date());
-                    
-                    this.debug('Fechas locales', {
-                        selectedLocalDate,
-                        todayLocalDate,
-                        selectedTimestamp: selectedLocalDate.getTime(),
-                        todayTimestamp: todayLocalDate.getTime()
-                    });
-            
-                    // Comparar solo las fechas sin la hora
-                    const selectedDateOnly = new Date(selectedLocalDate.setHours(0,0,0,0));
-                    const todayDateOnly = new Date(todayLocalDate.setHours(0,0,0,0));
-            
-                    if (selectedDateOnly.getTime() < todayDateOnly.getTime()) {
-                        throw new Error('No se pueden seleccionar fechas pasadas');
-                    }
-                } catch (error) {
-                    this.debug('Error en validación de fecha', { error: error.message });
-                    this.showError(error.message);
-                    return Promise.reject(error);
-                }
-                // Validaciones iniciales
-                if (!timeSlotsContainer) {
-                    this.debug('Error: No se encontró el contenedor de time slots');
-                    return Promise.reject(new Error('Error de configuración: contenedor no encontrado'));
-                }
-
-                if (!this.servicioSeleccionadoDuracion) {
-                    this.debug('Error: No se ha seleccionado un servicio');
-                    this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
-                    return Promise.reject(new Error('No se ha seleccionado un servicio'));
-                }
-
-                // Mostrar loading y limpiar estado
-                if (loadingIndicator) loadingIndicator.classList.remove('hidden');
-                if (errorContainer) errorContainer.classList.add('hidden');
-
-                this.resetState(timeSlotsContainer);
-
-                // Construir y validar URL
-                let requestUrl;
-                try {
-                    requestUrl = this.buildUrl(selectedDate);
-                    this.debug('URL construida', { url: requestUrl });
-                } catch (error) {
-                    this.debug('Error construyendo URL', { error: error.message });
-                    this.showError('Error al procesar la fecha');
-                    return Promise.reject(error);
-                }
-
-                // Hacer la petición
-                return fetch(requestUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    credentials: 'include'
-                })
-                .then(async response => {
-                    this.debug('Respuesta recibida', {
-                        status: response.status,
-                        statusText: response.statusText,
-                        headers: Object.fromEntries(response.headers.entries())
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.text();
-                        this.debug('Error en respuesta', { 
-                            status: response.status,
-                            errorData 
-                        });
-
-                        try {
-                            const parsedError = JSON.parse(errorData);
-                            throw new Error(parsedError.error || 'Error al obtener los horarios');
-                        } catch (e) {
-                            throw new Error(`Error ${response.status}: ${errorData || response.statusText}`);
-                        }
-                    }
-
-                    return response.json();
-                })
-                .then(data => {
-                    this.debug('Datos recibidos', { data });
-
-                    if (!data || !data.horariosTaller) {
-                        throw new Error('Formato de respuesta inválido');
-                    }
-
-                    const slots = Object.entries(data.horariosTaller);
-                    this.debug('Slots procesados', { 
-                        totalSlots: slots.length,
-                        firstSlot: slots[0],
-                        lastSlot: slots[slots.length - 1]
-                    });
-
-                    return this.renderTimeSlots(slots, selectedDate, serviceDurationMessage);
-                })
-                .catch(error => {
-                    this.debug('Error capturado', {
-                        message: error.message,
-                        stack: error.stack
-                    });
-                    this.showError(error.message);
-                    timeSlotsContainer.innerHTML = '';
-                    throw error;
-                })
-                .finally(() => {
-                    if (loadingIndicator) loadingIndicator.classList.add('hidden');
-                });
-            },
-
-            buildUrl(selectedDate) {
-                // Formatear fecha como YYYY-MM-DD usando la fecha local
-                const date = new Date(selectedDate);
-                const formattedDate = [
-                    date.getFullYear(),
-                    String(date.getMonth() + 1).padStart(2, '0'),
-                    String(date.getDate()).padStart(2, '0')
-                ].join('-');
-
-                this.debug('Fecha formateada para URL', {
-                    input: selectedDate,
-                    formatted: formattedDate
-                });
-                
-                return `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(formattedDate)}`;
-            },
-
-
-            resetState(container) {
-                this.debug('Reseteando estado');
-                this.primerHorarioSeleccionado = null;
-                const fechaInicio = document.getElementById('fecha_inicio');
-                if (fechaInicio) fechaInicio.value = '';
-                container.innerHTML = '';
-            },
-
-            formatDateForPHP(date) {
-                const d = new Date(date);
-                if (isNaN(d.getTime())) {
-                    throw new Error('Fecha inválida');
-                }
-                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-            },
-
-            renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
-                this.debug('Iniciando renderizado de slots', {
-                    slotsCount: slots.length,
-                    selectedDate
-                });
-
-                const container = document.getElementById('timeSlots');
-                if (!container) {
-                    throw new Error('Contenedor no encontrado');
-                }
-
-                slots
-                    .sort(([, a], [, b]) => {
-                        const timeA = a.hora_inicio || a.inicio || '';
-                        const timeB = b.hora_inicio || b.inicio || '';
-                        return timeA.localeCompare(timeB);
-                    })
-                    .forEach(([lapso, info]) => {
-                        try {
-                            const button = this.createTimeSlotButton(lapso, info, selectedDate);
-                            container.appendChild(button);
-                        } catch (error) {
-                            this.debug('Error creando botón', {
-                                lapso,
-                                info,
-                                error: error.message
-                            });
-                        }
-                    });
-
-                if (serviceDurationMessage) {
-                    serviceDurationMessage.classList[
-                        this.servicioSeleccionadoDuracion > 30 ? 'remove' : 'add'
-                    ]('hidden');
-                }
-            },
-
-            createTimeSlotButton(lapso, info, selectedDate) {
-                const button = document.createElement('button');
-                button.type = 'button';
-                
-                // Usar hora_inicio y hora_fin en lugar de inicio y fin
-                const horaInicio = info.hora_inicio || info.inicio || '';
-                const horaFin = info.hora_fin || info.fin || '';
-                
-                this.debug('Creando botón para slot', { lapso, horaInicio, horaFin, info });
-                
-                button.textContent = `${horaInicio} - ${horaFin}`;
-                button.setAttribute('data-lapso', lapso);
-                button.setAttribute('data-info', JSON.stringify({
-                    inicio: horaInicio,
-                    fin: horaFin,
-                    ocupado: info.ocupado
-                }));
-
-                let isDisabled = info.ocupado;
-
-                // Verificar si el slot ya pasó (solo para el día actual)
-                if (this.isCurrentDay(selectedDate)) {
-                    const currentTime = new Date();
-                    const [hours, minutes] = horaInicio.split(':');
-                    const slotTime = new Date(selectedDate);
-                    slotTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
-
-                    if (slotTime < currentTime) {
-                        isDisabled = true;
-                    }
-                }
-
-                button.className = `w-full p-2 rounded-md text-center transition-colors ${
-                    isDisabled 
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                        : 'bg-white border border-gray-300 hover:bg-gray-50'
-                }`;
-
-                if (!isDisabled) {
-                    button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
-                }
-
-                button.disabled = isDisabled;
-                return button;
-            },
-
-            isCurrentDay(selectedDate) {
-                const selected = new Date(selectedDate);
-                const now = new Date();
-                return selected.toDateString() === now.toDateString();
-            },
-
-            handleTimeSelection(lapso, timeInfo, button) {
-                this.debug('Manejando selección de tiempo', { lapso, timeInfo });
-                
-                const fechaInput = document.getElementById('fecha_inicio');
-                const datePicker = document.getElementById('fecha_selector');
-                
-                if (!datePicker?.value) {
-                    this.showError('Por favor, seleccione primero una fecha.');
-                    return;
-                }
-
-                if (this.servicioSeleccionadoDuracion <= 30) {
-                    this.handleSingleSelection(button, timeInfo, datePicker.value);
-                } else {
-                    this.handleDoubleSelection(lapso, button);
-                }
-            },
-
-            handleSingleSelection(button, timeInfo, selectedDate) {
-                this.debug('Manejando selección simple', { timeInfo, selectedDate });
-                
-                document.querySelectorAll('#timeSlots button').forEach(btn => {
-                    btn.classList.remove('bg-red-600', 'text-white');
-                });
-                
-                button.classList.add('bg-red-600', 'text-white');
-                const fechaInput = document.getElementById('fecha_inicio');
-                if (fechaInput) {
-                    const horaInicio = timeInfo.hora_inicio || timeInfo.inicio;
-                    fechaInput.value = `${selectedDate}T${horaInicio}`;
-                }
-            },
-
-            handleDoubleSelection(lapso, selectedButton) {
-                this.debug('Manejando selección doble', { lapso });
-                
-                const buttons = document.querySelectorAll('#timeSlots button');
-                
-                if (!this.primerHorarioSeleccionado) {
-                    this.resetSlotStyles();
-                    this.primerHorarioSeleccionado = lapso;
-                    selectedButton.classList.add('bg-red-600', 'text-white');
-                    
-                    const currentIndex = Array.from(buttons).indexOf(selectedButton);
-                    this.highlightAdjacentSlots(buttons, currentIndex);
-                } else {
-                    this.processSecondSelection(buttons, selectedButton);
-                }
-            },
-
-            resetSlotStyles() {
-                document.querySelectorAll('#timeSlots button').forEach(btn => {
-                    btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
-                });
-            },
-
-            highlightAdjacentSlots(buttons, currentIndex) {
-                if (currentIndex > 0 && !buttons[currentIndex - 1].disabled) {
-                    buttons[currentIndex - 1].classList.add('bg-yellow-200');
-                }
-                if (currentIndex < buttons.length - 1 && !buttons[currentIndex + 1].disabled) {
-                    buttons[currentIndex + 1].classList.add('bg-yellow-200');
-                }
-            },
-
-            processSecondSelection(buttons, selectedButton) {
-                const firstButton = Array.from(buttons).find(btn => 
-                    btn.getAttribute('data-lapso') === this.primerHorarioSeleccionado);
-                const firstIndex = Array.from(buttons).indexOf(firstButton);
-                const secondIndex = Array.from(buttons).indexOf(selectedButton);
-
-                if (Math.abs(firstIndex - secondIndex) === 1) {
-                    this.confirmDoubleSelection(buttons, firstIndex, secondIndex);
-                } else {
-                    this.showError('Por favor, seleccione dos horarios consecutivos');
-                }
-            },
-
-            confirmDoubleSelection(buttons, firstIndex, secondIndex) {
-                this.resetSlotStyles();
-                
-                const startIndex = Math.min(firstIndex, secondIndex);
-                const endIndex = Math.max(firstIndex, secondIndex);
-                
-                buttons[startIndex].classList.add('bg-red-600', 'text-white');
-                buttons[endIndex].classList.add('bg-red-600', 'text-white');
-
-                const startButton = buttons[startIndex];
-                const startInfo = JSON.parse(startButton.getAttribute('data-info') || '{}');
-                const fechaSelector = document.getElementById('fecha_selector');
-
-                if (fechaSelector?.value && startInfo.inicio) {
-                    const fecha = new Date(fechaSelector.value);
-                    const fechaInicio = document.getElementById('fecha_inicio');
-                    if (fechaInicio) {
-                        fechaInicio.value = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}T${startInfo.inicio}`;
-                    }
-                }
-
-                this.primerHorarioSeleccionado = null;
-            },
-
-            showError(message) {
-                this.debug('Mostrando error', { message });
-                const errorContainer = document.getElementById('error-container');
-                if (!errorContainer) return;
-
-                errorContainer.classList.remove('hidden');
-                const errorList = document.getElementById('error-list');
-                
-                if (errorList) {
-                    errorList.innerHTML = `<li>${message}</li>`;
-                } else {
-                    errorContainer.textContent = message;
-                }
-                
-                setTimeout(() => errorContainer.classList.add('hidden'), 5000);
             }
         };
 
+        // Inicialización cuando el DOM está listo
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Configurar ServiceHandler
+                ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
+
+                // Cargar servicios
+                const servicios = await ServiceHandler.cargarServicios();
+
+                // Configurar dropdowns
+                ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
+                ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
+                ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+
+                // Configurar eventos para servicios
+                document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
+                            document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                            document.getElementById('selectedServiceSubtype').value = subtype;
+                            TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
+                            document.getElementById('dropdownMenu2').classList.add('hidden');
+                            
+                            const fechaSelector = document.getElementById('fecha_selector');
+                            if (fechaSelector?.value) {
+                                TimeSlotHandler.updateTimeSlots(fechaSelector.value);
+                            }
+                        });
+                    });
+                });
+
+                // Inicializar manejadores
+                TimeSlotHandler.initialize();
+                FormHandler.initialize();
+                VehicleHandler.initialize();
+
+            } catch (error) {
+                console.error('Error en la inicialización:', error);
+                TimeSlotHandler.showError('Error al inicializar el formulario');
+            }
+        });
+
+        // Exportar para uso global
         window.TimeSlotHandler = TimeSlotHandler;
-    
-    </script>
-  
-</body>
-</html>
+        window.FormHandler = FormHandler;
+        window.VehicleHandler = VehicleHandler;
+</script>
