@@ -39,6 +39,17 @@
 <body>
     <main class="min-h-screen bg-white p-4">
         <div class="max-w-7xl mx-auto">
+            <!-- Cuadro de error -->
+            {% if response.errors is defined and response.errors is not empty %}
+                <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
+                    <ul id="error-list">
+                        {% for error in response.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
             <!-- Título principal -->
             <h2 class="text-2xl md:text-4xl text-center font-bold text-neutral-900 p-4 bg-neutral-50 border border-neutral-900 rounded-lg mb-8">
                 Gestión de Funcionarios por rol

@@ -7,6 +7,45 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        (function() {
+            // Inicializar EmailJS con tu User ID
+            emailjs.init("jv190ru0rYvsaFr2M"); 
+        })();
+
+        function sendReservationEmail() {
+            // Crear un objeto con los datos de la reserva
+            const emailData = {
+                email: "{{ sessionData.email }}",
+                id_usuario: "{{ sessionData.id }}",
+                nombre: "{{ sessionData.nombre }}",
+                apellido: "{{ sessionData.apellido }}",
+                servicio: "{{ sessionData.servicio }}",
+                telefono: "{{ sessionData.telefono }}",
+                id_servicio: "{{ sessionData.reserva.id }}",
+                matricula: "{{ sessionData.reserva.matricula }}",
+                precio: "{{ sessionData.reserva.precio }}",
+                fecha_inicio: "{{ sessionData.reserva.fecha_inicio }}",
+                fecha_final: "{{ sessionData.reserva.fecha_final }}",
+                estado: "{{ sessionData.reserva.estado }}",
+                tipo: "{{ sessionData.reserva.tipo }}",
+                descripcion: "{{ sessionData.reserva.descripcion }}",
+                tiempo_estimado: "{{ sessionData.reserva.tiempo_estimado }}"
+            };
+
+            // Enviar el correo usando EmailJS con el Service ID y Template ID
+            emailjs.send("jv190ru0rYvsaFr2M", "jv190ru0rYvsaFr2M", emailData)  // Reemplaza con tus propios IDs
+                .then(function(response) {
+                    console.log("Correo enviado exitosamente", response.status, response.text);
+                }, function(error) {
+                    console.error("Error al enviar el correo", error);
+                });
+        }
+
+        // Enviar el correo al cargar la página
+        document.addEventListener("DOMContentLoaded", sendReservationEmail);
+    </script>
     <style>
         @font-face {
             font-family: 'Teachers';
@@ -18,19 +57,20 @@
         body, input, select, button, option {
             font-family: 'Teachers', sans-serif;
         }
-             .btn{
-            background-color: #dc2626
+        .btn {
+            background-color: #dc2626;
         }
 
-        .btn:hover{
-            background-color: #b91c1c
-        }
-         .btnPark{
-            background-color: #1f3de0
+        .btn:hover {
+            background-color: #b91c1c;
         }
 
-        .btnPark:hover{
-            background-color: #233181
+        .btnPark {
+            background-color: #1f3de0;
+        }
+
+        .btnPark:hover {
+            background-color: #233181;
         }
     </style>
 </head>
@@ -95,61 +135,6 @@
         </section>
     </main>
 
-    <script>
-(function() {
-    emailjs.init('by1XUw6pUUSEFNqxt');  
-})();
-
-
-const TEMPLATE_ID = 'templateReserva';
-
-// Datos del email insertados por Twig
-const emailData = {
-    email: {{sessionData.email|json_encode|raw}},
-    id: {{sessionData.id|json_encode|raw}},
-    nombre: {{sessionData.nombre|json_encode|raw}},
-    apellido: {{sessionData.apellido|json_encode|raw}},
-    servicio: {{sessionData.servicio|json_encode|raw}},
-    telefono: {{sessionData.telefono|json_encode|raw}},
-    reserva: {
-        id: {{sessionData.reserva.id|json_encode|raw}},
-        matricula: {{sessionData.reserva.matricula|json_encode|raw}},
-        precio: {{sessionData.reserva.precio|json_encode|raw}},
-        fecha_inicio: {{sessionData.reserva.fecha_inicio|json_encode|raw}},
-        fecha_final: {{sessionData.reserva.fecha_final|json_encode|raw}},
-        estado: {{sessionData.reserva.estado|json_encode|raw}},
-        {% if sessionData.servicio == 'parking' %}
-            largo_plazo: {{ sessionData.reserva.largo_plazo ? 'Largo plazo' : 'Común'|json_encode|raw }},
-            tipo_plaza: {{sessionData.reserva.tipo_plaza|json_encode|raw}}
-        {% elseif sessionData.servicio == 'taller' %}
-            tipo: {{sessionData.reserva.tipo|json_encode|raw}},
-            descripcion: {{sessionData.reserva.descripcion|json_encode|raw}},
-            tiempo_estimado: {{sessionData.reserva.tiempo_estimado|json_encode|raw}}
-        {% endif %}
-    }
-};
-
-// Función para enviar el email
-function sendConfirmationEmail(data) {
-    emailjs.send('service_r05hm2y', TEMPLATE_ID, data)
-        .then(function(response) {
-            console.log('Email enviado exitosamente:', response);
-            window.alert('Se le ha enviado un mail con la confirmacion de la reserva a', email);
-        }, function(error) {
-            console.error('Error al enviar el email:', error);
-            // Aquí puedes agregar código para mostrar un mensaje de error al usuario
-        });
-}
-
-// Ejecutar cuando el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', function() {
-    if (emailData.reserva.id) {
-        sendConfirmationEmail(emailData);
-    } else {
-        console.error('Datos de reserva no disponibles');
-    }
-});
-</script>
     {% include 'partials/footer.html.twig' %}
 </body>
 </html>
