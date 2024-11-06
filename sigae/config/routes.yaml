@@ -264,7 +264,7 @@ deleteWorkshopChief:
   controller: Sigae\Controllers\ControladorFuncionario::deleteWorkshopChief
   methods: POST
 
-deleteCashiers:
+deleteCashier:
   path: /deleteCashier
   controller: Sigae\Controllers\ControladorFuncionario::deleteCashier
   methods: POST
