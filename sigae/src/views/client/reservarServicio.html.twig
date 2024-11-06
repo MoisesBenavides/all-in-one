@@ -407,7 +407,6 @@ const TimeSlotHandler = {
         });
         
         button.classList.add('bg-red-600', 'text-white');
-        const fechaInicio = document.getElementById('fecha_inicio');
         if (fechaInicio) {
             const horaInicio = timeInfo.hora_inicio || timeInfo.inicio;
             fechaInicio.value = `${selectedDate}T${horaInicio}`;
@@ -473,7 +472,6 @@ const TimeSlotHandler = {
         const fechaSelector = document.getElementById('fecha_selector');
 
         if (fechaSelector?.value && startInfo.inicio) {
-            const fechaInicio = document.getElementById('fecha_inicio');
             if (fechaInicio) {
                 fechaInicio.value = `${fechaSelector.value}T${startInfo.inicio}`;
             }
@@ -517,7 +515,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
 
         // Configurar fecha mínima
-        const fechaSelector = document.getElementById('fecha_selector');
         if (fechaSelector) {
             const today = DateUtils.getUruguayDate(new Date());
             const formattedDate = today.toISOString().split('T')[0];
@@ -534,7 +531,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                     document.getElementById('dropdownMenu2').classList.add('hidden');
                     
                     // Cargar horarios si hay una fecha seleccionada
-                    const fechaSelector = document.getElementById('fecha_selector');
                     if (fechaSelector && fechaSelector.value) {
                         TimeSlotHandler.updateTimeSlots(fechaSelector.value);
                     }
@@ -543,8 +539,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
 
         // Event listener para cambio de fecha
-        const fechaSelector = document.getElementById('fecha_selector');
-        const fechaInicio = document.getElementById('fecha_inicio');
         
         fechaSelector.addEventListener('change', function() {
             if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
