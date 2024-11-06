@@ -226,6 +226,9 @@ class ControladorTaller extends AbstractController{
             // Formatear la fecha
             $horaActual = $dtActual->format('Y-m-d H:i:s');
 
+            // Loguear $horariosTallerDia antes de la respuesta
+            error_log('Horarios: ' . print_r($horariosTallerDia, true));
+
             return new JsonResponse([
                 'success' => true,
                 'horariosTaller' => $horariosTallerDia,
