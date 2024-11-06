@@ -140,7 +140,7 @@ function toggleProductEdit(productId) {
 
 function confirmDelete(productId) {
     if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
-        const form = document.querySelector(`form[action="{{ path('deleteProduct') }}"] input[value="${productId}"]`).closest('form');
+        const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
         form.submit();
     }
 }
