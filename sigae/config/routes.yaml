@@ -238,7 +238,7 @@ addWorkshopChief:
   controller: Sigae\Controllers\ControladorFuncionario::addWorkshopChief
   methods: POST
 
-addCashiers:
+addCashier:
   path: /addCashier
   controller: Sigae\Controllers\ControladorFuncionario::addCashier
   methods: POST
