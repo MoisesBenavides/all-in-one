@@ -215,8 +215,20 @@
     const TimeSlotHandler = {
         servicioSeleccionadoDuracion: 0,
         primerHorarioSeleccionado: null,
-        horarioApertura: 5,
-        horarioCierre: 17,
+        horarioApertura: 5,  // 5 AM
+        horarioCierre: 17,   // 5 PM (17:00)
+
+        // Método para formatear hora para mostrar
+        formatHora(hora) {
+            const ampm = hora >= 12 ? 'PM' : 'AM';
+            const hora12 = hora > 12 ? hora - 12 : hora;
+            return `${hora12}:00 ${ampm}`;
+        },
+
+        // Método auxiliar para validar horario
+        estaEnHorarioAtencion(hora) {
+            return hora >= this.horarioApertura && hora < this.horarioCierre;
+        },
 
         initialize() {
             const fechaSelector = document.getElementById('fecha_selector');
@@ -224,8 +236,15 @@
                 const today = DateUtils.getUruguayDate(new Date());
                 fechaSelector.min = DateUtils.formatDateForUrl(today);
                 fechaSelector.addEventListener('change', (e) => this.handleDateChange(e));
+
+                // Debug horarios
+                console.log('Horarios de atención:', {
+                    apertura: this.formatHora(this.horarioApertura),
+                    cierre: this.formatHora(this.horarioCierre)
+                });
             }
         },
+
 
         handleDateChange(event) {
             const fechaInicio = document.getElementById('fecha_inicio');
@@ -244,29 +263,46 @@
     <script>
     Object.assign(TimeSlotHandler, {
         async updateTimeSlots(selectedDate) {
-            const timeSlotsContainer = document.getElementById('timeSlots');
-            const serviceDurationMessage = document.getElementById('serviceDurationMessage');
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            const errorContainer = document.getElementById('error-container');
+        const timeSlotsContainer = document.getElementById('timeSlots');
+        const serviceDurationMessage = document.getElementById('serviceDurationMessage');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorContainer = document.getElementById('error-container');
 
-            try {
-                const today = DateUtils.getUruguayDate(new Date());
-                const selected = DateUtils.getUruguayDate(selectedDate);
+        try {
+            const today = DateUtils.getUruguayDate(new Date());
+            const selected = DateUtils.getUruguayDate(selectedDate);
 
-                if (selected < today && !DateUtils.compareOnlyDates(selected, today)) {
-                    throw new Error('No se pueden seleccionar fechas pasadas');
+            console.log('Validando fechas:', {
+                today: today.toISOString(),
+                selected: selected.toISOString(),
+                isToday: DateUtils.compareOnlyDates(selected, today)
+            });
+
+            // Validar solo fechas pasadas
+            if (selected < today && !DateUtils.compareOnlyDates(selected, today)) {
+                throw new Error('No se pueden seleccionar fechas pasadas');
+            }
+
+            // Solo validar horario si es el día actual
+            if (DateUtils.compareOnlyDates(selected, today)) {
+                const currentHour = today.getHours();
+                console.log('Hora actual:', currentHour);
+
+                // Si es el día actual y la hora actual está fuera del horario de atención
+                if (currentHour >= this.horarioCierre || currentHour < this.horarioApertura) {
+                    console.log('Fuera de horario:', {
+                        horarioApertura: this.horarioApertura,
+                        horarioCierre: this.horarioCierre,
+                        horaActual: currentHour
+                    });
+                    // Solo mostrar este error si es el día actual
+                    throw new Error(`El taller está cerrado en este momento. Horario de atención: ${this.horarioApertura}:00 AM - ${this.horarioCierre}:00 PM`);
                 }
+            }
 
-                if (DateUtils.compareOnlyDates(selected, today)) {
-                    const currentHour = today.getHours();
-                    if (currentHour >= this.horarioCierre || currentHour < this.horarioApertura) {
-                        throw new Error(`El taller está cerrado. Horario de atención: ${this.horarioApertura}:00 AM - ${this.horarioCierre}:00 PM`);
-                    }
-                }
-
-                if (!this.servicioSeleccionadoDuracion) {
-                    throw new Error('Por favor, seleccione un servicio antes de elegir el horario.');
-                }
+        if (!this.servicioSeleccionadoDuracion) {
+            throw new Error('Por favor, seleccione un servicio antes de elegir el horario.');
+        }
 
                 if (loadingIndicator) loadingIndicator.classList.remove('hidden');
                 if (errorContainer) errorContainer.classList.add('hidden');
