@@ -296,7 +296,6 @@ const TimeSlotHandler = {
 
     resetState(container) {
         this.primerHorarioSeleccionado = null;
-        const fechaInicio = document.getElementById('fecha_inicio');
         if (fechaInicio) fechaInicio.value = '';
         container.innerHTML = '';
     },
@@ -469,7 +468,6 @@ const TimeSlotHandler = {
 
         const startButton = buttons[startIndex];
         const startInfo = JSON.parse(startButton.getAttribute('data-info') || '{}');
-        const fechaSelector = document.getElementById('fecha_selector');
 
         if (fechaSelector?.value && startInfo.inicio) {
             if (fechaInicio) {
@@ -502,6 +500,8 @@ window.TimeSlotHandler = TimeSlotHandler;
 
 // Inicialización y setup de event listeners
 document.addEventListener('DOMContentLoaded', async function() {
+      const fechaSelector = document.getElementById('fecha_selector');
+        const fechaInicio = document.getElementById('fecha_inicio');
     // Configurar ServiceHandler
     ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
 
