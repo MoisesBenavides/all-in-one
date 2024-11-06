@@ -210,6 +210,7 @@ class ControladorTaller extends AbstractController{
     
                         // Revisar si el horario actual del lapso está ocupado
                         if ($inicioLapso < $finOcupado && $finLapso > $inicioOcupado) {
+                            error_log("Lapso ocupado: ".$lapso);
                             $ocupado = true;
                             break; // No es necesario verificar más si ya está ocupado
                         }
