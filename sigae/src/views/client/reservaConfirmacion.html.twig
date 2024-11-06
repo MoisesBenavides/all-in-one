@@ -10,7 +10,6 @@
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
         (function() {
-            // Inicializar EmailJS con tu User ID
             emailjs.init("jv190ru0rYvsaFr2M"); 
         })();
 
@@ -28,14 +27,28 @@
                 precio: "{{ sessionData.reserva.precio }}",
                 fecha_inicio: "{{ sessionData.reserva.fecha_inicio }}",
                 fecha_final: "{{ sessionData.reserva.fecha_final }}",
-                estado: "{{ sessionData.reserva.estado }}",
-                tipo: "{{ sessionData.reserva.tipo }}",
-                descripcion: "{{ sessionData.reserva.descripcion }}",
-                tiempo_estimado: "{{ sessionData.reserva.tiempo_estimado }}"
+                estado: "{{ sessionData.reserva.estado }}"
             };
 
+            // Condicionales para incluir solo los datos disponibles
+            {% if sessionData.reserva.tipo is defined %}
+                emailData.tipo = "{{ sessionData.reserva.tipo }}";
+            {% endif %}
+            {% if sessionData.reserva.descripcion is defined %}
+                emailData.descripcion = "{{ sessionData.reserva.descripcion }}";
+            {% endif %}
+            {% if sessionData.reserva.tiempo_estimado is defined %}
+                emailData.tiempo_estimado = "{{ sessionData.reserva.tiempo_estimado }}";
+            {% endif %}
+            {% if sessionData.reserva.largo_plazo is defined %}
+                emailData.largo_plazo = "{{ sessionData.reserva.largo_plazo }}";
+            {% endif %}
+            {% if sessionData.reserva.tipo_plaza is defined %}
+                emailData.tipo_plaza = "{{ sessionData.reserva.tipo_plaza }}";
+            {% endif %}
+
             // Enviar el correo usando EmailJS con el Service ID y Template ID
-            emailjs.send("jv190ru0rYvsaFr2M", "jv190ru0rYvsaFr2M", emailData)  // Reemplaza con tus propios IDs
+            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", emailData)
                 .then(function(response) {
                     console.log("Correo enviado exitosamente", response.status, response.text);
                 }, function(error) {
@@ -43,35 +56,23 @@
                 });
         }
 
-        // Enviar el correo al cargar la página
         document.addEventListener("DOMContentLoaded", sendReservationEmail);
     </script>
     <style>
+        /* Estilos personalizados */
         @font-face {
             font-family: 'Teachers';
             src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
             font-weight: normal;
             font-style: normal;
         }
-
         body, input, select, button, option {
             font-family: 'Teachers', sans-serif;
         }
-        .btn {
-            background-color: #dc2626;
-        }
-
-        .btn:hover {
-            background-color: #b91c1c;
-        }
-
-        .btnPark {
-            background-color: #1f3de0;
-        }
-
-        .btnPark:hover {
-            background-color: #233181;
-        }
+        .btn { background-color: #dc2626; }
+        .btn:hover { background-color: #b91c1c; }
+        .btnPark { background-color: #1f3de0; }
+        .btnPark:hover { background-color: #233181; }
     </style>
 </head>
 <body class="bg-white">
@@ -91,7 +92,7 @@
                 <p class="text-black text-xl md:text-2xl"><strong>Apellido:</strong> {{sessionData.apellido}}</p>
                 <p class="text-black text-xl md:text-2xl"><strong>Servicio:</strong> {{sessionData.servicio}}</p>
 
-                {% if (sessionData.telefono) %}
+                {% if sessionData.telefono %}
                     <p class="text-black text-xl md:text-2xl"><strong>Teléfono:</strong> {{sessionData.telefono}}</p>
                 {% endif %}
             </div>
@@ -125,16 +126,4 @@
                         <p class="text-black text-xl"><strong>Descripción:</strong> {{ sessionData.reserva.descripcion }}</p>
                         <p class="text-black text-xl"><strong>Tiempo estimado:</strong> {{ sessionData.reserva.tiempo_estimado }} minutos</p>
                     </div>
-                    <a href="{{ path('services') }}" class="w-full max-w-[300px] h-[60px] duration-300 btn text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
-                        Volver a Servicios
-                    </a>
-                {% endif %}
-            {% else %}
-                <p class="text-black text-xl md:text-2xl">No hay detalles de reserva disponibles.</p>
-            {% endif %}
-        </section>
-    </main>
-
-    {% include 'partials/footer.html.twig' %}
-</body>
-</html>
+                    <a href="{{ path('services') }}" class="w-full max-w-[300px] h-[60px] duration-300 btn text-neutral-50 text-xl md:text-2xl
