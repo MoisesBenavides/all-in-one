@@ -202,6 +202,11 @@ employeeManagement:
 
 # Gestion de funcionarios
 # Consulta
+showManagers:
+  path: /managers
+  controller: Sigae\Controllers\ControladorFuncionario::showManagers
+  methods: GET
+
 showDiagnoseChiefs:
   path: /diagnoseChiefs
   controller: Sigae\Controllers\ControladorFuncionario::showDiagnoseChiefs
@@ -228,6 +233,11 @@ showServiceExecutives:
   methods: GET
 
 # Alta
+addManager:
+  path: /addManager
+  controller: Sigae\Controllers\ControladorFuncionario::addManager
+  methods: POST
+
 addDiagnoseChief:
   path: /addDiagnoseChief
   controller: Sigae\Controllers\ControladorFuncionario::addDiagnoseChief
@@ -254,6 +264,11 @@ addServiceExecutive:
   methods: POST
 
 # Baja
+deleteManager:
+  path: /deleteManager
+  controller: Sigae\Controllers\ControladorFuncionario::deleteManager
+  methods: POST
+
 deleteDiagnoseChief:
   path: /deleteDiagnoseChief
   controller: Sigae\Controllers\ControladorFuncionario::deleteDiagnoseChief
@@ -280,6 +295,11 @@ deleteServiceExecutive:
   methods: POST
 
 # Modificacion
+editManager:
+  path: /editManager
+  controller: Sigae\Controllers\ControladorFuncionario::editManager
+  methods: POST
+
 editDiagnoseChief:
   path: /editDiagnoseChief
   controller: Sigae\Controllers\ControladorFuncionario::editDiagnoseChief
@@ -306,6 +326,11 @@ editServiceExecutive:
   methods: POST
 
 # Cambio clave
+modPswdManager:
+  path: /modPasswordManager
+  controller: Sigae\Controllers\ControladorFuncionario::modPswdManager
+  methods: POST
+
 modPswdDiagnoseChief:
   path: /modPasswordDiagnoseChief
   controller: Sigae\Controllers\ControladorFuncionario::modPswdDiagnoseChief
