@@ -10,50 +10,67 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
         (function() {
-            emailjs.init("DglhVJa9EbJc5VRgg");  
-        })();
+    emailjs.init("DglhVJa9EbJc5VRgg");  // Reemplaza con tu User ID de EmailJS
+})();
 
-        function sendReservationEmail() {
-            let templateID;
-            const emailData = {
-                email: "{{ sessionData.email }}",
-                id_usuario: "{{ sessionData.id }}",
-                nombre: "{{ sessionData.nombre }}",
-                apellido: "{{ sessionData.apellido }}",
-                servicio: "{{ sessionData.servicio }}",
-                telefono: "{{ sessionData.telefono }}",
-                id_servicio: "{{ sessionData.reserva.id }}",
-                matricula: "{{ sessionData.reserva.matricula }}",
-                precio: "{{ sessionData.reserva.precio }}",
-                fecha_inicio: "{{ sessionData.reserva.fecha_inicio }}",
-                fecha_final: "{{ sessionData.reserva.fecha_final }}",
-                estado: "{{ sessionData.reserva.estado }}"
-            };
+function sendReservationEmail() {
+    let templateID;
+    const emailData = {
+        email: "{{ sessionData.email }}",
+        id_usuario: "{{ sessionData.id }}",
+        nombre: "{{ sessionData.nombre }}",
+        apellido: "{{ sessionData.apellido }}",
+        servicio: "{{ sessionData.servicio }}",
+        telefono: "{{ sessionData.telefono }}",
+        id_servicio: "{{ sessionData.reserva.id }}",
+        matricula: "{{ sessionData.reserva.matricula }}",
+        precio: "{{ sessionData.reserva.precio }}",
+        fecha_inicio: "{{ sessionData.reserva.fecha_inicio }}",
+        fecha_final: "{{ sessionData.reserva.fecha_final }}",
+        estado: "{{ sessionData.reserva.estado }}"
+    };
 
-            // Lógica para seleccionar el template y agregar datos específicos de cada servicio
-            if ("{{ sessionData.servicio }}" === "taller") {
-                templateID = "template_k45nphm"; // 
-                emailData.tipo = "{{ sessionData.reserva.tipo }}";
-                emailData.descripcion = "{{ sessionData.reserva.descripcion }}";
-                emailData.tiempo_estimado = "{{ sessionData.reserva.tiempo_estimado }}";
-            } else if ("{{ sessionData.servicio }}" === "parking") {
-                templateID = "template_thhd7ld"; 
-                emailData.largo_plazo = "{{ sessionData.reserva.largo_plazo }}";
-                emailData.tipo_plaza = "{{ sessionData.reserva.tipo_plaza }}";
-            }
+    // Verificación de servicio y datos específicos
+    if ("{{ sessionData.servicio }}" === "taller") {
+        templateID = "template_k45nphm"; // Reemplaza con el Template ID de taller
 
-            // Enviar el correo usando EmailJS con el Service ID y Template ID seleccionados
-            emailjs.send("service_rcnltqu", templateID, emailData)  // 
-                .then(function(response) {
-                    console.log("Correo enviado exitosamente", response.status, response.text);
-                    alert("Correo de confirmación enviado exitosamente.");
-                }, function(error) {
-                    console.error("Error al enviar el correo", error);
-                    alert("Ocurrió un error al enviar el correo. Por favor, intenta nuevamente.");
-                });
+        // Solo agrega estos datos si están definidos en el objeto de reserva para evitar errores
+        if ("{{ sessionData.reserva.tipo }}") {
+            emailData.tipo = "{{ sessionData.reserva.tipo }}";
+        }
+        if ("{{ sessionData.reserva.descripcion }}") {
+            emailData.descripcion = "{{ sessionData.reserva.descripcion }}";
+        }
+        if ("{{ sessionData.reserva.tiempo_estimado }}") {
+            emailData.tiempo_estimado = "{{ sessionData.reserva.tiempo_estimado }}";
         }
 
-        document.addEventListener("DOMContentLoaded", sendReservationEmail);
+    } else if ("{{ sessionData.servicio }}" === "parking") {
+        templateID = "template_thhd7ld"; // Reemplaza con el Template ID de parking
+
+        // Solo agrega estos datos si están definidos en el objeto de reserva para evitar errores
+        if ("{{ sessionData.reserva.largo_plazo }}") {
+            emailData.largo_plazo = "{{ sessionData.reserva.largo_plazo }}";
+        }
+        if ("{{ sessionData.reserva.tipo_plaza }}") {
+            emailData.tipo_plaza = "{{ sessionData.reserva.tipo_plaza }}";
+        }
+    }
+
+    // Enviar el correo usando EmailJS con el Service ID y Template ID seleccionados
+    emailjs.send("service_rcnltqu", templateID, emailData)  // Reemplaza con tu Service ID y Template ID
+        .then(function(response) {
+            console.log("Correo enviado exitosamente", response.status, response.text);
+            alert("Correo de confirmación enviado exitosamente.");
+        }, function(error) {
+            console.error("Error al enviar el correo", error);
+            alert("Ocurrió un error al enviar el correo. Por favor, intenta nuevamente.");
+        });
+}
+
+// Ejecutar la función al cargar la página
+document.addEventListener("DOMContentLoaded", sendReservationEmail);
+
     </script>
     <style>
         /* Estilos personalizados */
