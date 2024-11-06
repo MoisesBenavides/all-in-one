@@ -172,7 +172,79 @@ class ControladorTaller extends AbstractController{
         return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
     }
     
-    public function getServicesSchedule(Request $request): JsonResponse{
+    public function getServicesSchedule(Request $request): JsonResponse {
+        try {
+            // Obtener y validar el día seleccionado desde la solicitud
+            $diaSelec = $request->query->get('date');
+            if (!$diaSelec) {
+                throw new InvalidArgumentException('El día de reserva es requerido.');
+            }
+    
+            $dia = new DateTime($diaSelec);
+            $fijos = $this->horarios;
+    
+            // Verificar que los horarios fijos existen
+            if (!$fijos) {
+                throw new Exception("No se pudo cargar los horarios del taller.");
+            }
+    
+            // Obtener lapsos ocupados para el día seleccionado desde la base de datos
+            $ocupados = Taller::obtenerLapsosOcupados('cliente', $dia);
+    
+            // Inicializar array de respuesta
+            $horariosTallerDia = [];
+    
+            foreach ($fijos as $lapso => $detalles) {
+                // Convertir inicio y fin de cada lapso a DateTime para la comparación
+                $inicioLapso = new DateTime($dia->format('Y-m-d') . ' ' . $detalles['inicio']);
+                $finLapso = new DateTime($dia->format('Y-m-d') . ' ' . $detalles['fin']);
+    
+                // Establecer el estado inicial de `ocupado` como false
+                $ocupado = false;
+    
+                // Comparar con cada horario ocupado
+                foreach ($ocupados as $oc) {
+                    if (isset($oc['hora_inicio'], $oc['hora_fin'])) {  // Validar existencia de claves
+                        $inicioOcupado = new DateTime($oc['hora_inicio']);
+                        $finOcupado = new DateTime($oc['hora_fin']);
+    
+                        // Revisar si el horario actual del lapso está ocupado
+                        if ($inicioLapso < $finOcupado && $finLapso > $inicioOcupado) {
+                            $ocupado = true;
+                            break; // No es necesario verificar más si ya está ocupado
+                        }
+                    } else {
+                        error_log("Error: horario ocupado no tiene 'hora_inicio' o 'hora_fin'");
+                    }
+                }
+    
+                // Agregar los detalles de cada lapso al arreglo final, incluyendo `ocupado`
+                $horariosTallerDia[$lapso] = [
+                    'ocupado' => $ocupado,
+                    'inicio' => $detalles['inicio'],
+                    'fin' => $detalles['fin']
+                ];
+            }
+    
+            // Log para verificar la estructura de los horarios antes de devolverlos
+            error_log("Horarios Taller Procesados: " . print_r($horariosTallerDia, true));
+    
+            // Responder con los horarios del taller para el día seleccionado
+            return new JsonResponse([
+                'success' => true,
+                'horariosTaller' => $horariosTallerDia,
+            ]);
+    
+        } catch (Exception $e) {
+            // En caso de error, devolver una respuesta con el mensaje
+            return new JsonResponse([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
+    
+    public function getServicesSchedule1(Request $request): JsonResponse{
         try {
             // Obtener el día seleccionado desde el cliente
             $diaSelec = $request->query->get('date');
