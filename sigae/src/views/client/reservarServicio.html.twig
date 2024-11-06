@@ -256,62 +256,69 @@
             },
 
           async updateTimeSlots(selectedDate) {
-            const timeSlotsContainer = document.getElementById('timeSlots');
-            const serviceDurationMessage = document.getElementById('serviceDurationMessage');
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            const errorContainer = document.getElementById('error-container');
+                const timeSlotsContainer = document.getElementById('timeSlots');
+                const serviceDurationMessage = document.getElementById('serviceDurationMessage');
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                const errorContainer = document.getElementById('error-container');
 
-            try {
-                if (!this.servicioSeleccionadoDuracion) {
-                    throw new Error('Por favor, seleccione un servicio antes de elegir el horario.');
+                try {
+                    if (!this.servicioSeleccionadoDuracion) {
+                        throw new Error('Por favor, seleccione un servicio antes de elegir el horario.');
+                    }
+
+                    if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+                    if (errorContainer) errorContainer.classList.add('hidden');
+                    if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
+
+                    const timestamp = new Date().getTime();
+                    const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(DateUtils.formatDateForUrl(selectedDate))}&_=${timestamp}`;
+
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Cache-Control': 'no-cache, no-store, must-revalidate',
+                            'Pragma': 'no-cache'
+                        },
+                        credentials: 'include'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Error al obtener los horarios disponibles');
+                    }
+
+                    const data = await response.json();
+                    console.log('Respuesta del servidor:', data);
+
+                    if (!data || !data.horariosTaller) {
+                        throw new Error('No hay horarios disponibles');
+                    }
+
+                    // Procesamos cada slot y su estado
+                    const processedSlots = Object.entries(data.horariosTaller).map(([lapso, info]) => {
+                        return [lapso, {
+                            ...info,
+                            ocupado: info.ocupado === true // Aseguramos que sea booleano
+                        }];
+                    });
+
+                    const currentDateTime = new Date(data.horaActual);
+                    this.renderTimeSlots(processedSlots, selectedDate, serviceDurationMessage, currentDateTime);
+
+                } catch (error) {
+                    console.error('Error en updateTimeSlots:', error);
+                    this.showError(error.message);
+                    if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
+                } finally {
+                    if (loadingIndicator) loadingIndicator.classList.add('hidden');
                 }
-
-                if (loadingIndicator) loadingIndicator.classList.remove('hidden');
-                if (errorContainer) errorContainer.classList.add('hidden');
-                if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
-
-                const timestamp = new Date().getTime();
-                const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(DateUtils.formatDateForUrl(selectedDate))}&_=${timestamp}`;
-
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        'Pragma': 'no-cache'
-                    },
-                    credentials: 'include'
-                });
-
-                if (!response.ok) {
-                    throw new Error('Error al obtener los horarios disponibles');
-                }
-
-                const data = await response.json();
-                console.log('Respuesta del servidor:', data);
-
-                if (!data || !data.horariosTaller) {
-                    throw new Error('No hay horarios disponibles');
-                }
-
-                const slots = Object.entries(data.horariosTaller);
-                const currentDateTime = new Date(data.horaActual);
-
-                this.renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime, data.horariosTaller);
-
-            } catch (error) {
-                console.error('Error en updateTimeSlots:', error);
-                this.showError(error.message);
-                if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
-            } finally {
-                if (loadingIndicator) loadingIndicator.classList.add('hidden');
-            }
-        },
+            },
 
 
-        renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime, originalData) {
+
+        renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime) {
             const container = document.getElementById('timeSlots');
             if (!container) return;
 
@@ -323,30 +330,25 @@
                 })
                 .forEach(([lapso, info]) => {
                     const slotDateTime = this.createSlotDateTime(selectedDate, info.inicio);
-                    
-                    // Verificar si el slot está en el pasado
                     const isPastSlot = slotDateTime < currentDateTime;
-                    
-                    // Debug para ver los estados
-                    console.log(`Slot ${lapso}:`, {
+
+                    // Debug logs
+                    console.log(`Procesando slot ${lapso}:`, {
                         inicio: info.inicio,
-                        ocupadoDB: info.ocupado,
-                        isPastSlot: isPastSlot,
-                        slotTime: slotDateTime,
-                        currentTime: currentDateTime
+                        fin: info.fin,
+                        ocupadoOriginal: info.ocupado,
+                        esPasado: isPastSlot,
+                        datetime: slotDateTime
                     });
 
                     // Un slot está ocupado si:
-                    // 1. Está marcado como ocupado en el backend (info.ocupado === true)
-                    // 2. O es un horario pasado (isPastSlot === true)
-                    const isSlotOccupied = Boolean(info.ocupado) || isPastSlot;
+                    // 1. Está explícitamente marcado como ocupado en el backend
+                    // 2. O es un horario pasado
+                    const isSlotOccupied = info.ocupado || isPastSlot;
 
                     const button = this.createTimeSlotButton(
                         lapso, 
-                        { 
-                            ...info, 
-                            ocupado: isSlotOccupied 
-                        }, 
+                        { ...info, ocupado: isSlotOccupied }, 
                         selectedDate
                     );
 
@@ -359,6 +361,7 @@
                 ]('hidden');
             }
         },
+
 
         createTimeSlotButton(lapso, info, selectedDate) {
             const button = document.createElement('button');
@@ -375,13 +378,14 @@
                 ocupado: info.ocupado
             }));
 
-            // Debug para el estado del botón
+            // Debug del estado del botón
             console.log(`Creando botón ${lapso}:`, {
-                ocupado: info.ocupado,
                 inicio: horaInicio,
-                fin: horaFin
+                fin: horaFin,
+                ocupado: info.ocupado
             });
 
+            // Importante: usar === true para asegurar la comparación correcta
             const isDisabled = info.ocupado === true;
 
             button.className = `w-full p-2 rounded-md text-center transition-colors ${
@@ -539,29 +543,63 @@
 <!-- Funciones de validación del formulario -->
 <script>
     function validarFormulario(event) {
-        let isValid = true;
-        let errorMessage = '';
+    event.preventDefault(); // Prevenimos el envío tradicional del formulario
+    
+    let isValid = true;
+    let errorMessage = '';
 
-        if (!document.getElementById('selectedServiceType').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un tipo de servicio. ';
-        } else if (!document.getElementById('selectedServiceSubtype').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
-        } else if (!document.getElementById('fecha_inicio').value) {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione fecha y hora. ';
-        } else if (!document.getElementById('tipoVehiculo').value && 
-            document.getElementById('vehiculosDropdown').value === "") {
-            isValid = false;
-            errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
-        }
-
-        if (!isValid) {
-            event.preventDefault();
-            TimeSlotHandler.showError(errorMessage);
-        }
+    if (!document.getElementById('selectedServiceType').value) {
+        isValid = false;
+        errorMessage += 'Por favor, seleccione un tipo de servicio. ';
+    } else if (!document.getElementById('selectedServiceSubtype').value) {
+        isValid = false;
+        errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
+    } else if (!document.getElementById('fecha_inicio').value) {
+        isValid = false;
+        errorMessage += 'Por favor, seleccione fecha y hora. ';
+    } else if (!document.getElementById('tipoVehiculo').value && 
+        document.getElementById('vehiculosDropdown').value === "") {
+        isValid = false;
+        errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
     }
+
+    if (!isValid) {
+        TimeSlotHandler.showError(errorMessage);
+        return;
+    }
+
+    // Si todo es válido, enviamos el formulario vía fetch
+    const form = document.getElementById('servicioForm');
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Si la reserva fue exitosa, actualizamos los horarios antes de redirigir
+            const fechaSelector = document.getElementById('fecha_selector');
+            if (fechaSelector?.value) {
+                TimeSlotHandler.forceUpdateTimeSlots(fechaSelector.value)
+                    .then(() => {
+                        window.location.href = '/serviceConfirmation'; // Ajusta la URL según tu ruta
+                    });
+            } else {
+                window.location.href = '/serviceConfirmation';
+            }
+        } else {
+            TimeSlotHandler.showError(data.errors.join(' '));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        TimeSlotHandler.showError('Error al procesar la reserva');
+    });
+}
+
 </script>
 
 <!-- Manejador de vehículos -->
