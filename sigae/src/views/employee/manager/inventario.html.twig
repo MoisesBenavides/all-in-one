@@ -7,6 +7,7 @@
     <meta name="author" content="All In One">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario | AIO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @font-face {
             font-family: 'Teachers';
@@ -14,265 +15,120 @@
             font-weight: normal;
             font-style: normal;
         }
-    
         body {
             font-family: 'Teachers', sans-serif;
-            background-color: #f5f7fa;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .header-section {
-            background: linear-gradient(135deg, #000000, #333333);
-            padding: 2rem;
-            border-radius: 1rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-section h1 {
-            color: white;
-            text-align: center;
-            font-size: 2.5rem;
-            margin: 0;
-        }
-
-        .search-section {
-            max-width: 600px;
-            margin: 2rem auto;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 1rem 3rem 1rem 1.5rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 1rem;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            background-color: white;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #000;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 1rem;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 1rem;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-image {
-            height: 200px;
-            background-color: #f8fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .product-details {
-            padding: 1.5rem;
-        }
-
-        .detail-group {
-            margin-bottom: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .detail-label {
-            font-size: 0.875rem;
-            color: #64748b;
-            font-weight: 500;
-            text-transform: uppercase;
-        }
-
-        .detail-value {
-            font-size: 1rem;
-            color: #1e293b;
-            font-weight: 400;
-        }
-
-        .price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #000;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .load-more {
-            background-color: #000;
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 2rem auto;
-            display: block;
-        }
-
-        .load-more:hover {
-            background-color: #333;
-            transform: translateY(-2px);
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 3rem;
-            background-color: white;
-            border-radius: 1rem;
-            margin: 2rem auto;
-            max-width: 600px;
-        }
-
-        .no-results p {
-            color: #64748b;
-            font-size: 1.1rem;
-            margin: 0;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header-section h1 {
-                font-size: 2rem;
-            }
         }
     </style>
 </head>
 
-<body>
+<body class="bg-gray-50">
     {% include 'partials/headerGerente.html.twig' %}
 
-    <div class="container">
-        <div class="header-section">
-            <h1>Inventario</h1>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header Section -->
+        <div class="bg-gradient-to-r from-black to-gray-800 rounded-2xl shadow-lg mb-8 p-8">
+            <h1 class="text-white text-4xl font-bold text-center">Inventario</h1>
         </div>
 
-        <div class="search-section">
-            <input 
-                type="text" 
-                id="buscar" 
-                class="search-input"
-                placeholder="Buscar productos..." 
-            >
+        <!-- Search Section -->
+        <div class="max-w-2xl mx-auto mb-12">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="buscar" 
+                    placeholder="Buscar productos..." 
+                    class="w-full h-14 px-6 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-2 focus:ring-black focus:outline-none transition duration-300 ease-in-out"
+                >
+            </div>
         </div>
 
-        <div id="productosContainer" class="products-grid">
+        <!-- Products Grid -->
+        <div id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for producto in productos %}
-                <div class="product-card product">
-                    <div class="product-image">
+                <div class="product bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <!-- Product Image -->
+                    <div class="w-full h-48 bg-gray-50 rounded-t-xl overflow-hidden">
                         <img 
                             src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}"
                             alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
+                            class="w-full h-full object-contain"
                             onload="this.style.display='block'"
-                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'placeholder-image\'><p class=\'placeholder-text\'>Imagen no disponible</p></div>'"
+                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full bg-gray-50\'><p class=\'text-gray-400 text-sm\'>Imagen no disponible</p></div>'"
                         />
                     </div>
                     
-                    <div class="product-details">
-                        <div class="detail-group">
-                            <span class="detail-label">Marca</span>
-                            <span class="detail-value">{{ producto.marca }}</span>
+                    <!-- Product Details -->
+                    <div class="p-6 space-y-4">
+                        <!-- Brand -->
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-gray-500 uppercase">Marca</label>
+                            <p class="text-gray-900 font-medium">{{ producto.marca }}</p>
                         </div>
 
                         {% if producto.nombre is defined and producto.nombre %}
-                            <div class="detail-group">
-                                <span class="detail-label">Nombre</span>
-                                <span class="detail-value">{{ producto.nombre }}</span>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500 uppercase">Nombre</label>
+                                <p class="text-gray-900">{{ producto.nombre }}</p>
                             </div>
                         {% endif %}
 
                         {% if producto.modelo is defined and producto.modelo %}
-                            <div class="detail-group">
-                                <span class="detail-label">Modelo</span>
-                                <span class="detail-value">{{ producto.modelo }}</span>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500 uppercase">Modelo</label>
+                                <p class="text-gray-900">{{ producto.modelo }}</p>
                             </div>
-                            <div class="detail-group">
-                                <span class="detail-label">Tamaño</span>
-                                <span class="detail-value">{{ producto.tamano }}</span>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500 uppercase">Tamaño</label>
+                                <p class="text-gray-900">{{ producto.tamano }}</p>
                             </div>
-                            <div class="detail-group">
-                                <span class="detail-label">Tipo</span>
-                                <span class="detail-value">{{ producto.tipo }}</span>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500 uppercase">Tipo</label>
+                                <p class="text-gray-900">{{ producto.tipo }}</p>
                             </div>
                         {% endif %}
 
-                        <div class="detail-group">
-                            <span class="detail-label">ID</span>
-                            <span class="detail-value">{{ producto.id }}</span>
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-gray-500 uppercase">ID</label>
+                            <p class="text-gray-900">{{ producto.id }}</p>
                         </div>
 
-                        <div class="detail-group">
-                            <span class="detail-label">UPC</span>
-                            <span class="detail-value">{{ producto.upc }}</span>
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-gray-500 uppercase">UPC</label>
+                            <p class="text-gray-900">{{ producto.upc }}</p>
                         </div>
 
-                        <div class="detail-group">
-                            <span class="detail-label">Fecha de Creación</span>
-                            <span class="detail-value">{{ producto.fecha_creacion }}</span>
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-gray-500 uppercase">Fecha de Creación</label>
+                            <p class="text-gray-900">{{ producto.fecha_creacion }}</p>
                         </div>
 
-                        <div class="detail-group">
-                            <span class="detail-label">Stock</span>
-                            <span class="detail-value">{{ producto.stock }}</span>
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-gray-500 uppercase">Stock</label>
+                            <p class="text-gray-900">{{ producto.stock }}</p>
                         </div>
 
-                        <div class="price">${{ producto.precio }}</div>
+                        <!-- Price -->
+                        <div class="pt-4 mt-4 border-t border-gray-100">
+                            <p class="text-2xl font-bold text-black">${{ producto.precio }}</p>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
 
-        <div id="noResults" class="no-results hidden">
-            <p>No se encontraron productos que coincidan con tu búsqueda.</p>
+        <!-- No Results Message -->
+        <div id="noResults" class="hidden">
+            <div class="mt-8 text-center bg-white rounded-xl p-12 shadow-sm">
+                <p class="text-gray-600 text-lg">No se encontraron productos que coincidan con tu búsqueda.</p>
+            </div>
         </div>
 
-        <button id="verMas" class="load-more hidden">
-            Ver más productos
-        </button>
+        <!-- Load More Button -->
+        <div class="flex justify-center mt-12">
+            <button id="verMas" class="hidden bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-lg transform transition-all duration-300 hover:-translate-y-1 font-medium">
+                Ver más productos
+            </button>
+        </div>
     </div>
 
     <script>
