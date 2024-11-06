@@ -176,180 +176,41 @@
 
    
     <script src="{{ asset('js/serviceHandler.js') }}"></script>
-      <script>
-        document.addEventListener('DOMContentLoaded', async function() {
+  <script>
+// Utilidades para el manejo de fechas
+const DateUtils = {
+    getCurrentUruguayDateTime() {
+        return new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
+    },
 
+    formatToISODate(date) {
+        const d = new Date(date);
+        return d.toISOString().split('T')[0];
+    },
 
-                const fechaSelector = document.getElementById('fecha_selector');
-                const fechaInicio = document.getElementById('fecha_inicio');
-                
-                // Obtener fecha actual en Uruguay
-                const uruguayTime = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
-                const today = new Date(uruguayTime);
-                const formattedToday = today.toISOString().split('T')[0];
-                
-                fechaSelector.min = formattedToday;
-                fechaSelector.value = formattedToday;
-                
-            // Configurar URLs
-            ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
+    getUruguayDate(date) {
+        return new Date(new Date(date).toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
+    },
 
-            let servicios = {};
+    compareOnlyDates(date1, date2) {
+        const d1 = new Date(date1);
+        const d2 = new Date(date2);
+        return d1.getFullYear() === d2.getFullYear() &&
+               d1.getMonth() === d2.getMonth() &&
+               d1.getDate() === d2.getDate();
+    },
 
-    
-            try {
-                // Cargar servicios
-                servicios = await ServiceHandler.cargarServicios();
+    debug(context, ...args) {
+        console.log(`[${new Date().toISOString()}] [DateUtils] [${context}]:`, ...args);
+    }
+};
 
-                // Configurar dropdowns
-                ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
-                ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
-                ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+// URL para el servicio de horarios bloqueados
+const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
+console.log('URL configurada:', GET_BLOCKED_TIMES_URL);
 
-                // Evento para actualizar subtipos
-                document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
-                    option.addEventListener('click', () => {
-                        ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
-                            document.getElementById('selectedOption2').textContent = servicioData.descripcion;
-                            document.getElementById('selectedOption2').textContent = servicioData.descripcion;
-                            document.getElementById('selectedServiceSubtype').value = subtype;
-                            TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
-                            document.getElementById('dropdownMenu2').classList.add('hidden');
-                            
-                            // Cargar horarios inmediatamente si hay una fecha seleccionada
-                            if (fechaSelector.value) {
-                                TimeSlotHandler.updateTimeSlots(fechaSelector.value);
-                            }
-                        });
-                    });
-                });
-
-                // Cargar horarios iniciales si hay un servicio seleccionado
-                if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
-                    TimeSlotHandler.updateTimeSlots(fechaSelector.value);
-                }
-
-                // Event listener para cambio de fecha
-                fechaSelector.addEventListener('change', function() {
-                    if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
-                        TimeSlotHandler.updateTimeSlots(this.value);
-                    } else {
-                        TimeSlotHandler.showError('Por favor, seleccione un servicio antes de elegir el horario.');
-                    }
-                    // Limpiar la selección de hora cuando cambia la fecha
-                    fechaInicio.value = '';
-                });
-
-                // Event listener para el formulario
-                document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
-
-            } catch (error) {
-                console.error('Error en la inicialización:', error);
-                TimeSlotHandler.showError('Error al inicializar el formulario');
-            }
-        });
-
-        // Función de validación del formulario
-        function validarFormulario(event) {
-            let isValid = true;
-            let errorMessage = '';
-
-            if (!document.getElementById('selectedServiceType').value) {
-                isValid = false;
-                errorMessage += 'Por favor, seleccione un tipo de servicio. ';
-            } else if (!document.getElementById('selectedServiceSubtype').value) {
-                isValid = false;
-                errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
-            } else if (!document.getElementById('fecha_inicio').value) {
-                isValid = false;
-                errorMessage += 'Por favor, seleccione fecha y hora. ';
-            } else if (!document.getElementById('tipoVehiculo').value && 
-                document.getElementById('vehiculosDropdown').value === "") {
-                isValid = false;
-                errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
-            }
-
-            if (!isValid) {
-                event.preventDefault();
-                TimeSlotHandler.showError(errorMessage);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-            const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
-            const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
-            const selectedOptionAuto = document.getElementById('selectedOptionAuto');
-            const tipoVehiculo = document.getElementById('tipoVehiculo');
-            const matriculaYa = document.getElementById('matriculaYa');
-            const matriculaYaContainer = document.getElementById('matriculaYaContainer');
-            const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
-
-            // opcion default para mis vehiculos
-            const defaultOption = document.createElement('option');
-            defaultOption.value = "default";
-            defaultOption.text = "Seleccione un vehículo";
-            vehiculosDropdown.insertBefore(defaultOption, vehiculosDropdown.firstChild);
-            vehiculosDropdown.value = "default";
-
-            // Event listener para el dropdown de vehiculo
-            vehiculosDropdown.addEventListener('change', function() {
-                if (this.value !== "" && this.value !== "default") {
-                    // Conseguir el tipo de vehiculo
-                    const selectedOption = this.options[this.selectedIndex];
-                    const tipo = selectedOption.getAttribute('data-tipo');
-                    
-                    // Actualizar seccion de tipo de vehiculo
-                    selectedOptionAuto.textContent = tipo;
-                    tipoVehiculo.value = tipo.toLowerCase();
-                    
-                    // Deshabilitar seccion de tipo de vehiculo
-                    tipoVehiculoSection.classList.add('disabled-section');
-                    dropdownButtonAuto.style.pointerEvents = 'none';
-                    dropdownButtonAuto.style.backgroundColor = '#f3f4f6';
-                    dropTipoVehiculo.classList.add('hidden');
-                    
-                    // esconder matricula ya
-                    matriculaYa.value = '';
-                    matriculaYa.removeAttribute('name');
-                    matriculaYaContainer.style.display = 'none';
-                    
-                    this.setAttribute('name', 'matricula');
-                } else {
-                    // resetear cuando no hay vehiculo
-                    tipoVehiculoSection.classList.remove('disabled-section');
-                    dropdownButtonAuto.style.pointerEvents = 'auto';
-                    dropdownButtonAuto.style.backgroundColor = 'white';
-                    matriculaYaContainer.style.display = 'block';
-                    selectedOptionAuto.textContent = 'Tipo de Vehículo';
-                    tipoVehiculo.value = '';
-                    
-                    this.removeAttribute('name');
-                    matriculaYa.setAttribute('name', 'matriculaYa');
-                }
-            });
-
-            // Event listener para matricula ya
-            matriculaYa.addEventListener('input', function() {
-                if (this.value !== "") {
-                    vehiculosDropdown.value = "default";
-                    vehiculosDropdown.removeAttribute('name');
-                    this.setAttribute('name', 'matriculaYa');
-                    tipoVehiculoSection.classList.remove('disabled-section');
-                    dropdownButtonAuto.style.pointerEvents = 'auto';
-                    dropdownButtonAuto.style.backgroundColor = 'white';
-                } else {
-                    this.removeAttribute('name');
-                }
-            });
-        });
-    </script>
- 
-    <script>
-        // Definir la URL antes de cargar los scripts
-        const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
-        console.log('URL configurada:', GET_BLOCKED_TIMES_URL); // Para verificar la URL
-     const TimeSlotHandler = {
+// TimeSlotHandler
+const TimeSlotHandler = {
     servicioSeleccionadoDuracion: 0,
     primerHorarioSeleccionado: null,
 
@@ -359,14 +220,6 @@
         if (data) {
             console.log('Data:', data);
         }
-    },
-
-    getLocalDate(date) {
-        // Crear fecha con la zona horaria de Uruguay
-        const uruguayOptions = { timeZone: 'America/Montevideo' };
-        const dateString = new Date(date).toLocaleString('en-US', uruguayOptions);
-        const [month, day, year] = dateString.split(',')[0].split('/');
-        return new Date(year, month - 1, day);
     },
 
     updateTimeSlots(selectedDate) {
@@ -379,32 +232,17 @@
 
         // Validar fecha
         try {
-            // Obtener fecha actual en Uruguay
-            const uruguayTime = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
-            const today = new Date(uruguayTime);
-            
-            // Convertir la fecha seleccionada
-            const selectedDateTime = new Date(selectedDate);
-            
-            // Normalizar ambas fechas a medianoche
-            const normalizedSelected = new Date(
-                selectedDateTime.getFullYear(),
-                selectedDateTime.getMonth(),
-                selectedDateTime.getDate()
-            ).setHours(0, 0, 0, 0);
-            
-            const normalizedToday = new Date(
-                today.getFullYear(),
-                today.getMonth(),
-                today.getDate()
-            ).setHours(0, 0, 0, 0);
+            const today = DateUtils.getUruguayDate(new Date());
+            const selected = DateUtils.getUruguayDate(selectedDate);
 
-            this.debug('Fechas normalizadas', {
-                selectedDate: new Date(normalizedSelected),
-                today: new Date(normalizedToday)
+            this.debug('Comparando fechas', {
+                today: today.toISOString(),
+                selected: selected.toISOString(),
+                todayDate: today.getDate(),
+                selectedDate: selected.getDate()
             });
 
-            if (normalizedSelected < normalizedToday) {
+            if (!DateUtils.compareOnlyDates(selected, today) && selected < today) {
                 throw new Error('No se pueden seleccionar fechas pasadas');
             }
 
@@ -508,15 +346,8 @@
     },
 
     buildUrl(selectedDate) {
-        const date = new Date(selectedDate);
-        // Asegurar que usamos la zona horaria de Uruguay
-        const uruguayDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
-        
-        const formattedDate = [
-            uruguayDate.getFullYear(),
-            String(uruguayDate.getMonth() + 1).padStart(2, '0'),
-            String(uruguayDate.getDate()).padStart(2, '0')
-        ].join('-');
+        const selected = DateUtils.getUruguayDate(selectedDate);
+        const formattedDate = DateUtils.formatToISODate(selected);
 
         this.debug('Fecha formateada para URL', {
             input: selectedDate,
@@ -592,10 +423,7 @@
 
         // Verificar si el slot ya pasó (solo para el día actual)
         if (this.isCurrentDay(selectedDate)) {
-            // Obtener hora actual en Uruguay
-            const currentTimeUruguay = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
-            const currentTime = new Date(currentTimeUruguay);
-            
+            const currentTime = DateUtils.getUruguayDate(new Date());
             const [hours, minutes] = horaInicio.split(':');
             const slotTime = new Date(selectedDate);
             slotTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
@@ -620,13 +448,9 @@
     },
 
     isCurrentDay(selectedDate) {
-        const selectedUruguay = new Date(selectedDate).toLocaleString('en-US', { timeZone: 'America/Montevideo' });
-        const nowUruguay = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
-        
-        const selected = new Date(selectedUruguay);
-        const now = new Date(nowUruguay);
-        
-        return selected.toDateString() === now.toDateString();
+        const selected = DateUtils.getUruguayDate(selectedDate);
+        const now = DateUtils.getUruguayDate(new Date());
+        return DateUtils.compareOnlyDates(selected, now);
     },
 
     handleTimeSelection(lapso, timeInfo, button) {
@@ -655,10 +479,10 @@
         });
         
         button.classList.add('bg-red-600', 'text-white');
-        const fechaInput = document.getElementById('fecha_inicio');
-        if (fechaInput) {
+        const fechaInicio = document.getElementById('fecha_inicio');
+        if (fechaInicio) {
             const horaInicio = timeInfo.hora_inicio || timeInfo.inicio;
-            fechaInput.value = `${selectedDate}T${horaInicio}`;
+            fechaInicio.value = `${selectedDate}T${horaInicio}`;
         }
     },
 
@@ -747,90 +571,181 @@
         }
         
         setTimeout(() => errorContainer.classList.add('hidden'), 5000);
-        },
-
-    formatDateForDisplay(date) {
-        const d = new Date(date);
-        const uruguayDate = new Date(d.toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
-        return uruguayDate.toISOString().split('T')[0];
-    },
-
-    // Método para validar el horario contra la hora actual
-    validateTimeAgainstCurrent(timeString, selectedDate) {
-        const [hours, minutes] = timeString.split(':');
-        const selectedDateTime = new Date(selectedDate);
-        selectedDateTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
-
-        const currentTimeUruguay = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
-        const currentTime = new Date(currentTimeUruguay);
-
-        return selectedDateTime >= currentTime;
-    },
-
-    // Método para formatear la hora para mostrar
-    formatTimeForDisplay(timeString) {
-        if (!timeString) return '';
-        const [hours, minutes] = timeString.split(':');
-        const uruguayTime = new Date().setHours(parseInt(hours, 10), parseInt(minutes, 10));
-        return new Date(uruguayTime).toLocaleTimeString('es-UY', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-            timeZone: 'America/Montevideo'
-        });
-    },
-
-    // Método para validar la selección de horarios consecutivos
-    validateConsecutiveSlots(slot1, slot2) {
-        const time1 = slot1.getAttribute('data-info');
-        const time2 = slot2.getAttribute('data-info');
-        
-        if (!time1 || !time2) return false;
-        
-        const info1 = JSON.parse(time1);
-        const info2 = JSON.parse(time2);
-        
-        const end1 = info1.fin;
-        const start2 = info2.inicio;
-        
-        return end1 === start2;
-    },
-
-    // Método para limpiar la selección
-    clearSelection() {
-        this.primerHorarioSeleccionado = null;
-        this.resetSlotStyles();
-        const fechaInicio = document.getElementById('fecha_inicio');
-        if (fechaInicio) fechaInicio.value = '';
-    },
-
-    // Método para inicializar los listeners de eventos
-    initializeEventListeners() {
-        const fechaSelector = document.getElementById('fecha_selector');
-        if (fechaSelector) {
-            // Configurar fecha mínima y valor inicial
-            const uruguayTime = new Date().toLocaleString('en-US', { timeZone: 'America/Montevideo' });
-            const today = new Date(uruguayTime);
-            const formattedToday = this.formatDateForDisplay(today);
-            
-            fechaSelector.min = formattedToday;
-            fechaSelector.value = formattedToday;
-
-            // Agregar listener para cambios de fecha
-            fechaSelector.addEventListener('change', (e) => {
-                if (this.servicioSeleccionadoDuracion > 0) {
-                    this.updateTimeSlots(e.target.value);
-                } else {
-                    this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
-                }
-            });
-        }
     }
 };
 
-// Exportar el objeto TimeSlotHandler para uso global
+// Inicialización del DOM
+document.addEventListener('DOMContentLoaded', async function() {
+    // Configurar fecha inicial
+    const fechaSelector = document.getElementById('fecha_selector');
+    const fechaInicio = document.getElementById('fecha_inicio');
+    
+    if (fechaSelector) {
+        const today = DateUtils.getUruguayDate(new Date());
+        const formattedToday = DateUtils.formatToISODate(today);
+        
+        DateUtils.debug('Configuración inicial', {
+            today: today.toISOString(),
+            formattedToday});
+
+       fechaSelector.min = formattedToday;
+       fechaSelector.value = formattedToday;
+   }
+
+   // Configurar ServiceHandler
+   ServiceHandler.setJsonUrl("{{asset('js/diccionarioTaller.json')}}");
+
+   try {
+       // Cargar servicios
+       const servicios = await ServiceHandler.cargarServicios();
+
+       // Configurar dropdowns
+       ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
+       ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
+       ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
+
+       // Evento para actualizar subtipos
+       document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
+           option.addEventListener('click', () => {
+               ServiceHandler.updateServiceSubtypes(option.dataset.value, servicios, (subtype, servicioData) => {
+                   document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                   document.getElementById('selectedOption2').textContent = servicioData.descripcion;
+                   document.getElementById('selectedServiceSubtype').value = subtype;
+                   TimeSlotHandler.servicioSeleccionadoDuracion = servicioData.tiempo_estimado;
+                   document.getElementById('dropdownMenu2').classList.add('hidden');
+                   
+                   // Cargar horarios inmediatamente si hay una fecha seleccionada
+                   if (fechaSelector.value) {
+                       TimeSlotHandler.updateTimeSlots(fechaSelector.value);
+                   }
+               });
+           });
+       });
+
+       // Cargar horarios iniciales si hay un servicio seleccionado
+       if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
+           TimeSlotHandler.updateTimeSlots(fechaSelector.value);
+       }
+
+       // Event listener para cambio de fecha
+       fechaSelector.addEventListener('change', function() {
+           if (TimeSlotHandler.servicioSeleccionadoDuracion > 0) {
+               TimeSlotHandler.updateTimeSlots(this.value);
+           } else {
+               TimeSlotHandler.showError('Por favor, seleccione un servicio antes de elegir el horario.');
+           }
+           // Limpiar la selección de hora cuando cambia la fecha
+           fechaInicio.value = '';
+       });
+
+       // Event listener para el formulario
+       document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
+
+       // Configurar manejo de vehículos
+       setupVehicleHandlers();
+
+   } catch (error) {
+       console.error('Error en la inicialización:', error);
+       TimeSlotHandler.showError('Error al inicializar el formulario');
+   }
+});
+
+// Función de validación del formulario
+function validarFormulario(event) {
+   let isValid = true;
+   let errorMessage = '';
+
+   if (!document.getElementById('selectedServiceType').value) {
+       isValid = false;
+       errorMessage += 'Por favor, seleccione un tipo de servicio. ';
+   } else if (!document.getElementById('selectedServiceSubtype').value) {
+       isValid = false;
+       errorMessage += 'Por favor, seleccione un subtipo de servicio. ';
+   } else if (!document.getElementById('fecha_inicio').value) {
+       isValid = false;
+       errorMessage += 'Por favor, seleccione fecha y hora. ';
+   } else if (!document.getElementById('tipoVehiculo').value && 
+       document.getElementById('vehiculosDropdown').value === "") {
+       isValid = false;
+       errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
+   }
+
+   if (!isValid) {
+       event.preventDefault();
+       TimeSlotHandler.showError(errorMessage);
+   }
+}
+
+// Configuración del manejo de vehículos
+function setupVehicleHandlers() {
+   const vehiculosDropdown = document.getElementById('vehiculosDropdown');
+   const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
+   const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
+   const selectedOptionAuto = document.getElementById('selectedOptionAuto');
+   const tipoVehiculo = document.getElementById('tipoVehiculo');
+   const matriculaYa = document.getElementById('matriculaYa');
+   const matriculaYaContainer = document.getElementById('matriculaYaContainer');
+   const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
+
+   // Opción default para mis vehículos
+   const defaultOption = document.createElement('option');
+   defaultOption.value = "default";
+   defaultOption.text = "Seleccione un vehículo";
+   vehiculosDropdown.insertBefore(defaultOption, vehiculosDropdown.firstChild);
+   vehiculosDropdown.value = "default";
+
+   // Event listener para el dropdown de vehículo
+   vehiculosDropdown.addEventListener('change', function() {
+       if (this.value !== "" && this.value !== "default") {
+           // Conseguir el tipo de vehículo
+           const selectedOption = this.options[this.selectedIndex];
+           const tipo = selectedOption.getAttribute('data-tipo');
+           
+           // Actualizar sección de tipo de vehículo
+           selectedOptionAuto.textContent = tipo;
+           tipoVehiculo.value = tipo.toLowerCase();
+           
+           // Deshabilitar sección de tipo de vehículo
+           tipoVehiculoSection.classList.add('disabled-section');
+           dropdownButtonAuto.style.pointerEvents = 'none';
+           dropdownButtonAuto.style.backgroundColor = '#f3f4f6';
+           dropTipoVehiculo.classList.add('hidden');
+           
+           // Esconder matrícula ya
+           matriculaYa.value = '';
+           matriculaYa.removeAttribute('name');
+           matriculaYaContainer.style.display = 'none';
+           
+           this.setAttribute('name', 'matricula');
+       } else {
+           // Resetear cuando no hay vehículo
+           tipoVehiculoSection.classList.remove('disabled-section');
+           dropdownButtonAuto.style.pointerEvents = 'auto';
+           dropdownButtonAuto.style.backgroundColor = 'white';
+           matriculaYaContainer.style.display = 'block';
+           selectedOptionAuto.textContent = 'Tipo de Vehículo';
+           tipoVehiculo.value = '';
+           
+           this.removeAttribute('name');
+           matriculaYa.setAttribute('name', 'matriculaYa');
+       }
+   });
+
+   // Event listener para matrícula ya
+   matriculaYa.addEventListener('input', function() {
+       if (this.value !== "") {
+           vehiculosDropdown.value = "default";
+           vehiculosDropdown.removeAttribute('name');
+           this.setAttribute('name', 'matriculaYa');
+           tipoVehiculoSection.classList.remove('disabled-section');
+           dropdownButtonAuto.style.pointerEvents = 'auto';
+           dropdownButtonAuto.style.backgroundColor = 'white';
+       } else {
+           this.removeAttribute('name');
+       }
+   });
+}
+
+// Exportar TimeSlotHandler para uso global
 window.TimeSlotHandler = TimeSlotHandler;
-    </script>
-  
-</body>
-</html>
+</script>
