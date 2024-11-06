@@ -18,6 +18,27 @@
         body {
             font-family: 'Teachers', sans-serif;
         }
+
+        .editing-mode {
+            background-color: #f0f9ff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .editing-mode input:not([readonly]) {
+            background-color: white !important;
+            border: 1px solid #3b82f6 !important;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .edit-button {
+            display: none;
+        }
+
+        .editing-mode .edit-button {
+            display: inline-flex;
+        }
     </style>
 </head>
 
@@ -42,202 +63,199 @@
             </div>
         </div>
 
-<!-- Products Grid -->
-<div id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    {% for producto in productos %}
-        <div class="product bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-            <form class="product-form" id="product-form-{{ producto.id }}" action="" method="POST">
-                <!-- Product Image -->
-                <div class="w-full h-48 bg-gray-50 rounded-t-xl overflow-hidden">
-                    <img 
-                        src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}"
-                        alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
-                        class="w-full h-full object-contain"
-                        onload="this.style.display='block'"
-                        onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full bg-gray-50\'><p class=\'text-gray-400 text-sm\'>Imagen no disponible</p></div>'"
-                    />
-                </div>
-                
-                <!-- Product Details -->
-                <div class="p-6 space-y-4">
-                    <!-- Brand -->
-                    <div class="space-y-1">
-                        <label class="text-xs font-medium text-gray-500 uppercase">Marca</label>
-                        <input type="text" name="marca" class="w-full text-gray-900 font-medium bg-transparent border-0 editable" value="{{ producto.marca }}" readonly>
-                    </div>
-
-                    {% if producto.nombre is defined and producto.nombre %}
-                        <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase">Nombre</label>
-                            <input type="text" name="nombre" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.nombre }}" readonly>
-                        </div>
-                    {% endif %}
-
-                    {% if producto.modelo is defined and producto.modelo %}
-                        <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase">Modelo</label>
-                            <input type="text" name="modelo" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.modelo }}" readonly>
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase">Tamaño</label>
-                            <input type="text" name="tamano" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.tamano }}" readonly>
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500 uppercase">Tipo</label>
-                            <input type="text" name="tipo" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.tipo }}" readonly>
-                        </div>
-                    {% endif %}
-
-                    <div class="space-y-1">
-                        <label class="text-xs font-medium text-gray-500 uppercase">ID</label>
-                        <input type="text" name="id" class="w-full text-gray-900 bg-transparent border-0" value="{{ producto.id }}" readonly>
-                    </div>
-
-                    <div class="space-y-1">
-                        <label class="text-xs font-medium text-gray-500 uppercase">UPC</label>
-                        <input type="text" name="upc" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.upc }}" readonly>
-                    </div>
-
-                    <div class="space-y-1">
-                        <label class="text-xs font-medium text-gray-500 uppercase">Stock</label>
-                        <input type="number" name="stock" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.stock }}" readonly>
-                    </div>
-
-                    <!-- Price -->
-                    <div class="pt-4 mt-4 border-t border-gray-100">
-                        <input type="number" name="precio" class="w-full text-2xl font-bold text-black bg-transparent border-0 editable" value="{{ producto.precio }}" readonly>
-                    </div>
-
-                    <!-- Edit and Delete Buttons -->
-                    <div class="flex justify-end items-center space-x-4 mt-4">
-                        <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300" onclick="toggleProductEdit('{{ producto.id }}')">
-                            <span class="edit-icon">✏️</span>
-                            <span class="save-icon hidden">X</span>
-                        </button>
-                        <button type="submit" class="edit-button px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors hidden">
-                            Guardar
-                        </button>
-                    </div>
-                </div>
-            </form>
-            <form action="" method="POST" class="px-6 pb-4">
-                <input type="hidden" name="id" value="{{ producto.id }}">
-                <button type="button" onclick="confirmDelete('{{ producto.id }}')" class="text-2xl hover:scale-110 transition-transform duration-300 text-red-500">
-                    🗑️
-                </button>
-            </form>
+        <!-- No Results Message -->
+        <div id="noResults" class="hidden text-center py-8">
+            <p class="text-gray-500 text-lg">No se encontraron productos que coincidan con la búsqueda.</p>
         </div>
-    {% endfor %}
-</div>
 
-<style>
-.editing-mode {
-    background-color: #f0f9ff;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-}
+        <!-- Products Grid -->
+        <div id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for producto in productos %}
+                <div class="product bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <form class="product-form" id="product-form-{{ producto.id }}" action="" method="POST">
+                        <!-- Product Image -->
+                        <div class="w-full h-48 bg-gray-50 rounded-t-xl overflow-hidden">
+                            <img 
+                                src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}"
+                                alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
+                                class="w-full h-full object-contain"
+                                onload="this.style.display='block'"
+                                onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full bg-gray-50\'><p class=\'text-gray-400 text-sm\'>Imagen no disponible</p></div>'"
+                            />
+                        </div>
+                        
+                        <!-- Product Details -->
+                        <div class="p-6 space-y-4">
+                            <!-- Brand -->
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500 uppercase">Marca</label>
+                                <input type="text" name="marca" class="w-full text-gray-900 font-medium bg-transparent border-0 editable" value="{{ producto.marca }}" readonly>
+                            </div>
 
-.editing-mode input:not([readonly]) {
-    background-color: white !important;
-    border: 1px solid #3b82f6 !important;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-}
+                            {% if producto.nombre is defined and producto.nombre %}
+                                <div class="space-y-1">
+                                    <label class="text-xs font-medium text-gray-500 uppercase">Nombre</label>
+                                    <input type="text" name="nombre" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.nombre }}" readonly>
+                                </div>
+                            {% endif %}
 
-.edit-button {
-    display: none;
-}
+                            {% if producto.modelo is defined and producto.modelo %}
+                                <div class="space-y-1">
+                                    <label class="text-xs font-medium text-gray-500 uppercase">Modelo</label>
+                                    <input type="text" name="modelo" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.modelo }}" readonly>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-medium text-gray-500 uppercase">Tamaño</label>
+                                    <input type="text" name="tamano" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.tamano }}" readonly>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-medium text-gray-500 uppercase">Tipo</label>
+                                    <input type="text" name="tipo" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.tipo }}" readonly>
+                                </div>
+                            {% endif %}
 
-.editing-mode .edit-button {
-    display: inline-flex;
-}
-</style>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500 uppercase">ID</label>
+                                <input type="text" name="id" class="w-full text-gray-900 bg-transparent border-0" value="{{ producto.id }}" readonly>
+                            </div>
 
-<script>
- 
-    document.addEventListener('DOMContentLoaded', function() {
-        const inputBuscar = document.getElementById('buscar');
-        const productosContainer = document.getElementById('productosContainer');
-        const productos = document.querySelectorAll('.product');
-        const verMasBtn = document.getElementById('verMas');
-        const noResults = document.getElementById('noResults');
-        
-        let productosMostrados = 50;
-        let productosVisiblesTotales = 0;
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500 uppercase">UPC</label>
+                                <input type="text" name="upc" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.upc }}" readonly>
+                            </div>
 
-        function actualizarVisibilidad() {
-            let productosVisibles = 0;
-            productosVisiblesTotales = 0;
-            const textoBusqueda = inputBuscar.value.toLowerCase();
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500 uppercase">Stock</label>
+                                <input type="number" name="stock" class="w-full text-gray-900 bg-transparent border-0 editable" value="{{ producto.stock }}" readonly>
+                            </div>
 
-            productos.forEach((producto, index) => {
-                const textoProducto = producto.textContent.toLowerCase();
-                const coincideBusqueda = textoProducto.includes(textoBusqueda);
+                            <!-- Price -->
+                            <div class="pt-4 mt-4 border-t border-gray-100">
+                                <input type="number" name="precio" class="w-full text-2xl font-bold text-black bg-transparent border-0 editable" value="{{ producto.precio }}" readonly>
+                            </div>
+
+                            <!-- Edit and Delete Buttons -->
+                            <div class="flex justify-end items-center space-x-4 mt-4">
+                                <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300" onclick="toggleProductEdit('{{ producto.id }}')">
+                                    <span class="edit-icon">✏️</span>
+                                    <span class="save-icon hidden">✔️</span>
+                                </button>
+                                <button type="submit" class="edit-button px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors hidden">
+                                    Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <form action="" method="POST" class="px-6 pb-4">
+                        <input type="hidden" name="id" value="{{ producto.id }}">
+                        <button type="button" onclick="confirmDelete('{{ producto.id }}')" class="text-2xl hover:scale-110 transition-transform duration-300 text-red-500">
+                            🗑️
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-8">
+            <button id="verMas" class="hidden px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors duration-300">
+                Cargar más productos
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
+            const inputBuscar = document.getElementById('buscar');
+            const productosContainer = document.getElementById('productosContainer');
+            const productos = Array.from(document.querySelectorAll('.product'));
+            const verMasBtn = document.getElementById('verMas');
+            const noResults = document.getElementById('noResults');
+            
+            // Initialize variables
+            let productosMostrados = 50;
+            let productosFiltrados = productos;
+
+            // Function to filter products
+            function filtrarProductos() {
+                const textoBusqueda = inputBuscar.value.toLowerCase().trim();
                 
-                if (coincideBusqueda) {
-                    productosVisiblesTotales++;
-                    if (productosVisiblesTotales <= productosMostrados) {
-                        producto.classList.remove('hidden');
-                        productosVisibles++;
-                    } else {
-                        producto.classList.add('hidden');
-                    }
-                } else {
-                    producto.classList.add('hidden');
+                productosFiltrados = productos.filter(producto => {
+                    const textoProducto = producto.textContent.toLowerCase();
+                    return textoProducto.includes(textoBusqueda);
+                });
+
+                return productosFiltrados;
+            }
+
+            // Function to display products
+            function mostrarProductos() {
+                const productosFiltrados = filtrarProductos();
+                
+                // Hide all products first
+                productos.forEach(producto => producto.classList.add('hidden'));
+                
+                // Show filtered products up to the limit
+                productosFiltrados.slice(0, productosMostrados).forEach(producto => {
+                    producto.classList.remove('hidden');
+                });
+
+                // Update UI elements
+                noResults.classList.toggle('hidden', productosFiltrados.length > 0);
+                verMasBtn.classList.toggle('hidden', productosFiltrados.length <= productosMostrados);
+
+                // If no products match the search, show the no results message
+                if (productosFiltrados.length === 0) {
+                    noResults.classList.remove('hidden');
                 }
+            }
+
+            // Event Listeners
+            inputBuscar.addEventListener('input', function() {
+                productosMostrados = 50; // Reset to initial count when searching
+                mostrarProductos();
             });
 
-            noResults.classList.toggle('hidden', productosVisibles > 0);
-            verMasBtn.classList.toggle('hidden', productosVisiblesTotales <= productosMostrados);
-        }
+            verMasBtn.addEventListener('click', function() {
+                productosMostrados += 50;
+                mostrarProductos();
+            });
 
-        inputBuscar.addEventListener('input', function() {
-            productosMostrados = 50;
-            actualizarVisibilidad();
+            // Initial display
+            mostrarProductos();
         });
 
-        verMasBtn.addEventListener('click', function() {
-            productosMostrados += 50;
-            actualizarVisibilidad();
-        });
-
-        actualizarVisibilidad();
-    });
-function toggleProductEdit(productId) {
-    const form = document.getElementById(`product-form-${productId}`);
-    const formContainer = form.closest('.product');
-    const inputs = form.querySelectorAll('.editable');
-    const editButton = form.querySelector('.edit-button');
-    const editIcon = form.querySelector('.edit-icon');
-    const saveIcon = form.querySelector('.save-icon');
-    
-    // Toggle la clase de modo edición
-    formContainer.classList.toggle('editing-mode');
-    
-    // Toggle iconos
-    editIcon.classList.toggle('hidden');
-    saveIcon.classList.toggle('hidden');
-    
-    inputs.forEach(input => {
-        input.readOnly = !input.readOnly;
-        
-        // Añadir focus al primer input cuando se entra en modo edición
-        if (!input.readOnly) {
-            input.focus();
+        function toggleProductEdit(productId) {
+            const form = document.getElementById(`product-form-${productId}`);
+            const formContainer = form.closest('.product');
+            const inputs = form.querySelectorAll('.editable');
+            const editButton = form.querySelector('.edit-button');
+            const editIcon = form.querySelector('.edit-icon');
+            const saveIcon = form.querySelector('.save-icon');
+            
+            formContainer.classList.toggle('editing-mode');
+            editIcon.classList.toggle('hidden');
+            saveIcon.classList.toggle('hidden');
+            
+            inputs.forEach(input => {
+                input.readOnly = !input.readOnly;
+                if (!input.readOnly) {
+                    input.focus();
+                }
+            });
+            
+            editButton.classList.toggle('hidden');
         }
-    });
-    
-    // Toggle el botón de guardar
-    editButton.classList.toggle('hidden');
-}
 
-function confirmDelete(productId) {
-    if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
-        const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
-        form.submit();
-    }
-}
-</script>
+        function confirmDelete(productId) {
+            if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
+                const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
+                form.submit();
+            }
+        }
+    </script>
+
     {% include 'partials/footer.html.twig' %}
 </body>
 </html>
