@@ -1,0 +1,30 @@
+{
+    "es": {
+      "titulo_reserva": "Haz tu reserva en 3 simples pasos",
+      "paso1": "Ingresa fecha, hora y tu tipo de vehículo",
+      "paso2": "Elige la plaza que te resulte más adecuada",
+      "paso3": "Confirma el pedido y listo!",
+      "reservar": "Reservar",
+      "pregunta": "¿Te vas de viaje y no sabes donde dejar tu vehículo?",
+      "descripcion": "En AIO ofrecemos servicio de parking a largo plazo, clickea debajo para reservar una plaza."
+    },
+    "it": {
+      "titulo_reserva": "Effettua la tua prenotazione in 3 semplici passaggi",
+      "paso1": "Inserisci la data, l'ora e il tipo di veicolo",
+      "paso2": "Scegli il posto che ti sembra più adatto",
+      "paso3": "Conferma l'ordine ed è fatto!",
+      "reservar": "Prenota",
+      "pregunta": "Vai in viaggio e non sai dove lasciare il tuo veicolo?",
+      "descripcion": "In AIO offriamo un servizio di parcheggio a lungo termine, clicca qui sotto per prenotare un posto."
+    },
+    "en": {
+      "titulo_reserva": "Make your reservation in 3 simple steps",
+      "paso1": "Enter date, time, and your vehicle type",
+      "paso2": "Choose the spot that suits you best",
+      "paso3": "Confirm the order and done!",
+      "reservar": "Reserve",
+      "pregunta": "Are you traveling and don't know where to leave your vehicle?",
+      "descripcion": "At AIO we offer long-term parking service, click below to reserve a spot."
+    }
+  }
+  
