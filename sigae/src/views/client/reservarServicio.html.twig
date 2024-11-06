@@ -29,6 +29,24 @@
         .btn:hover{
             background-color: #b91c1c
         }
+
+          #timeSlots .lapso {
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    #timeSlots .ocupado {
+        background-color: #f8d7da;
+        color: #721c24;
+        pointer-events: none; /* Bloquea la selección */
+    }
+
+    #timeSlots .disponible {
+        background-color: #d4edda;
+        color: #155724;
+    }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
@@ -311,44 +329,45 @@
             }
         },
     */
-        async  updateTimeSlots(date) {
-        try {
-            const response = await fetch(`https://aio.ngrok.app/api/getServicesSchedule?date=${date}`);
-            if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+       async  updateTimeSlots(date) {
+            try {
+                const response = await fetch(`https://aio.ngrok.app/api/getServicesSchedule?date=${date}`);
+                if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
 
-            const data = await response.json();
-            if (!data.success) throw new Error(data.error || "Error desconocido en la respuesta del servidor.");
+                const data = await response.json();
+                if (!data.success) throw new Error(data.error || "Error desconocido en la respuesta del servidor.");
 
-            const horariosContainer = document.getElementById('timeSlots');
-            horariosContainer.innerHTML = '';  // Limpia el contenido previo
+                const timeSlotsContainer = document.getElementById('timeSlots');
+                timeSlotsContainer.innerHTML = '';  // Limpia el contenido previo
 
-            // Itera sobre cada lapso del JSON y crea elementos en la vista
-            Object.keys(data.horariosTaller).forEach(lapso => {
-                const { ocupado, inicio, fin } = data.horariosTaller[lapso];
+                // Itera sobre cada lapso del JSON y crea elementos en la vista
+                Object.keys(data.horariosTaller).forEach(lapso => {
+                    const { ocupado, inicio, fin } = data.horariosTaller[lapso];
 
-                // Crea el elemento de horario
-                const lapsoElement = document.createElement('div');
-                lapsoElement.classList.add('lapso');
-                lapsoElement.innerHTML = `
-                    <span class="hora">${inicio} - ${fin}</span>
-                    <span class="estado">${ocupado ? 'Ocupado' : 'Disponible'}</span>
-                `;
+                    // Crea el elemento de horario
+                    const lapsoElement = document.createElement('div');
+                    lapsoElement.classList.add('lapso');
+                    lapsoElement.innerHTML = `
+                        <span class="hora">${inicio} - ${fin}</span>
+                        <span class="estado">${ocupado ? 'Ocupado' : 'Disponible'}</span>
+                    `;
 
-                // Aplica estilos o desactiva si está ocupado
-                if (ocupado) {
-                    lapsoElement.classList.add('ocupado');
-                    lapsoElement.style.pointerEvents = 'none';  // Bloquea la selección
-                } else {
-                    lapsoElement.classList.add('disponible');
-                }
+                    // Aplica estilos o desactiva si está ocupado
+                    if (ocupado) {
+                        lapsoElement.classList.add('ocupado');
+                        lapsoElement.style.pointerEvents = 'none';  // Bloquea la selección
+                    } else {
+                        lapsoElement.classList.add('disponible');
+                    }
 
-                horariosContainer.appendChild(lapsoElement);
-            });
-        } catch (error) {
-            console.error("Error en updateTimeSlots:", error);
-            alert("No se pudo obtener el horario del taller. Revisa la consola para más detalles.");
-        }
-    },
+                    timeSlotsContainer.appendChild(lapsoElement);
+                });
+            } catch (error) {
+                console.error("Error en updateTimeSlots:", error);
+                alert("No se pudo obtener el horario del taller. Revisa la consola para más detalles.");
+            }
+        },
+
 
         renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
             const container = document.getElementById('timeSlots');
