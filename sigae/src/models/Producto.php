@@ -170,12 +170,7 @@ abstract class Producto{
         }
     }
 
-    public static function existeId($rol, $id){
-        $conn = conectarDB($rol);
-        if($conn === false){
-            throw new Exception("No se puede conectar con la base de datos.");
-        }
-
+    public static function existeId($conn, $id){
         try{
             $stmt = $conn->prepare('SELECT COUNT(*) FROM producto WHERE id = :id');
             $stmt->bindParam(':id', $id);
@@ -192,13 +187,8 @@ abstract class Producto{
         }
     }
 
-    public static function modificarStock($rol, $id, $nuevoStock){
+    public static function modificarStock($conn, $id, $nuevoStock){
         try{
-            $conn = conectarDB($rol);
-            if($conn === false){
-                throw new Exception("No se puede conectar con la base de datos.");
-            }
-
             $stmt = $conn->prepare('UPDATE producto 
                                     SET stock = :nStock 
                                     WHERE id = :id');
@@ -216,12 +206,7 @@ abstract class Producto{
         }
     }
 
-    public static function obtenerStock($rol, $id){
-        $conn = conectarDB($rol);
-        if($conn === false){
-            throw new Exception("No se puede conectar con la base de datos.");
-        }
-
+    public static function obtenerStock($conn, $id){
         try{
             $stmt = $conn->prepare('SELECT stock FROM producto WHERE id = :id');
             $stmt->bindParam(':id', $id);

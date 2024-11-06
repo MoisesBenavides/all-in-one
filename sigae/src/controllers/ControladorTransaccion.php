@@ -41,19 +41,20 @@ class ControladorTransaccion extends AbstractController{
 
                         $this->transaccion = new Transaccion(null, TipoTransaccion::tryFrom($tipoTr), $cantidad, $fecha);
 
-                        $this->transaccion->setDBConnection("gerente");
-                        $this->transaccion->comenzarTransaccion();
-
                         try{
+                            $this->transaccion->setDBConnection($rol);
+                            $this->transaccion->comenzarTransaccion();
+
                             if(!$this->transaccion->registrarTransaccion($idProd)){
                                 throw new Exception("Error al registrar la transacción.");
                             } else {
                                 $this->controladorProducto = new ControladorProducto();
+                                $this->controladorProducto->continuarTransaccion($this->transaccion->getDBConnection());
 
                                 if ($tipoTr == 'ingreso'){
-                                    $this->controladorProducto->sumarStock($rol, $idProd, $cantidad, $stockActual);
+                                    $this->controladorProducto->sumarStock($idProd, $cantidad);
                                 } elseif($tipoTr == 'egreso'){
-                                     $this->controladorProducto->restarStock($rol, $idProd, $cantidad, $stockActual);
+                                     $this->controladorProducto->restarStock($idProd, $cantidad);
                                 }
                                 
                                 $this->transaccion->confirmarTransaccion();
