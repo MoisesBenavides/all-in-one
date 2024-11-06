@@ -109,25 +109,9 @@ const SESSION_URL = "{{ path('getClientSession') }}";
         </section>
 
         <section id="productos" class="bg-neutral-50 rounded-[21px] border border-black p-8">
-            <h2 traducir="productosDestacados" class="text-center text-[#161212] text-3xl md:text-4xl lg:text-5xl font-semibold mb-8">Productos destacados</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="flex flex-col items-center">
-                    <img class="w-full h-auto mb-4" src="{{ asset('img/Cubierta Pirelli1.webp') }}" alt="Cubierta Pirelli" />
-                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Cubierta Pirelli 175/70 R14 Scorpion Atr</p>
-                </div>
-                <div class="flex flex-col items-center">
-                    <img class="w-full h-auto mb-4" src="{{ asset('img/Neumático Bridgestone1.webp') }}" alt="Neumático Bridgestone" />
-                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Neumático Bridgestone Ecopia EP150 P 185/55R16 83 V</p>
-                </div>
-                <div class="flex flex-col items-center">
-                    <img class="w-full h-auto mb-4" src="{{ asset('img/Cubierta Pirelli cinturato.webp') }}" alt="Cubierta Pirelli Cinturato" />
-                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Cubierta Pirelli 205/55 R16 91w Run Flat P7 Cinturato</p>
-                </div>
-                <div class="flex flex-col items-center">
-                    <img class="w-full h-auto mb-4" src="{{ asset('img/Aceite1.webp') }}" alt="Aceite Motul" />
-                    <p class="text-center text-[#161212] text-lg md:text-xl font-bold ">Aceite para motor Motul sintético 5W-40</p>
-                </div>
-            </div>            <div class="text-center mt-8">
+            <h2 traducir="productosDestacados" class="text-center text-[#161212] text-3xl md:text-4xl lg:text-5xl font-semibold mb-8">Nuestros productos</h2>
+            <p traducir="apartadoMisReservas" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium mb-6">Accede a nuestro catalogo de productos</p>
+            <div class="text-center mt-8">
                 <a href="{{ path('products') }}" traducir="botonProductos" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[7px] inline-block">Ver todos</a>
             </div>
         </section>
