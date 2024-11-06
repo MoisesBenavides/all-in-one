@@ -126,4 +126,16 @@
                         <p class="text-black text-xl"><strong>Descripción:</strong> {{ sessionData.reserva.descripcion }}</p>
                         <p class="text-black text-xl"><strong>Tiempo estimado:</strong> {{ sessionData.reserva.tiempo_estimado }} minutos</p>
                     </div>
-                    <a href="{{ path('services') }}" class="w-full max-w-[300px] h-[60px] duration-300 btn text-neutral-50 text-xl md:text-2xl
+                    <a href="{{ path('services') }}" class="w-full max-w-[300px] h-[60px] duration-300 btn text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
+                        Volver a Servicios
+                    </a>
+                {% endif %}
+            {% else %}
+                <p class="text-black text-xl md:text-2xl">No hay detalles de reserva disponibles.</p>
+            {% endif %}
+        </section>
+    </main>
+
+    {% include 'partials/footer.html.twig' %}
+</body>
+</html>
