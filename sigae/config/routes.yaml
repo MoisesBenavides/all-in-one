@@ -290,7 +290,7 @@ editWorkshopChief:
   controller: Sigae\Controllers\ControladorFuncionario::editWorkshopChief
   methods: POST
 
-editCashiers:
+editCashier:
   path: /editCashier
   controller: Sigae\Controllers\ControladorFuncionario::editCashier
   methods: POST
@@ -316,7 +316,7 @@ modPswdWorkshopChief:
   controller: Sigae\Controllers\ControladorFuncionario::modPswdWorkshopChief
   methods: POST
 
-modPswdCashiers:
+modPswdCashier:
   path: /modPasswordCashier
   controller: Sigae\Controllers\ControladorFuncionario::modPswdCashier
   methods: POST
