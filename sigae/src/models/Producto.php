@@ -171,6 +171,9 @@ abstract class Producto{
     }
 
     public static function existeId($conn, $id){
+        if(!$conn){
+            throw new Exception("No se ha podido iniciar una conexión.");
+        }
         try{
             $stmt = $conn->prepare('SELECT COUNT(*) FROM producto WHERE id = :id');
             $stmt->bindParam(':id', $id);
@@ -188,6 +191,9 @@ abstract class Producto{
     }
 
     public static function modificarStock($conn, $id, $nuevoStock){
+        if(!$conn){
+            throw new Exception("No se ha podido iniciar una conexión.");
+        }
         try{
             $stmt = $conn->prepare('UPDATE producto 
                                     SET stock = :nStock 
@@ -207,6 +213,9 @@ abstract class Producto{
     }
 
     public static function obtenerStock($conn, $id){
+        if(!$conn){
+            throw new Exception("No se ha podido iniciar una conexión.");
+        }
         try{
             $stmt = $conn->prepare('SELECT stock FROM producto WHERE id = :id');
             $stmt->bindParam(':id', $id);

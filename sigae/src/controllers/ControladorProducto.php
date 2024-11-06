@@ -15,7 +15,9 @@ class ControladorProducto extends AbstractController{
     public function sumarStock($id, $cantidad){
         try {
             // Verifica la existencia del ID de producto
-            $this->existeId($id);
+            if(!$this->existeId($id)){
+                throw new Exception("No existe un producto registrado con el ID: " . $id);
+            }
 
             $stockActual = Producto::obtenerStock($this->conn, $id);
             $nuevoStock = $stockActual + $cantidad;
@@ -33,8 +35,10 @@ class ControladorProducto extends AbstractController{
     public function restarStock($id, $cantidad){
         try {
             // Verifica la existencia del ID de producto
-            $this->existeId($id);
-
+            if(!$this->existeId($id)){
+                throw new Exception("No existe un producto registrado con el ID: " . $id);
+            }
+            
             $stockActual = Producto::obtenerStock($this->conn, $id);
             if ($stockActual == 0) {
                 throw new Exception("No hay disponibilidad.");
@@ -43,21 +47,22 @@ class ControladorProducto extends AbstractController{
             } else {
                 $nuevoStock = $stockActual - $cantidad;
                 Producto::modificarStock($this->conn, $id, $nuevoStock);
-            }
+            }  
+            
         } catch (Exception $e) {
             throw $e;
         }
     }
 
     public function existeId($id){
+        $existencia=false;
         try{
-            if (!Producto::existeId($this->conn, $id)){
-                throw new Exception("No existe un producto registrado con el ID: " . $id);
+            if (Producto::existeId($this->conn, $id)){
+                $existencia=true;
             }
-            return true;
+        return $existencia;
         } catch(Exception $e){
             throw $e;
-            return false;
         }
 
     }
