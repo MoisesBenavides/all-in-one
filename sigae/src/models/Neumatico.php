@@ -54,7 +54,7 @@ class Neumatico extends Producto{
         $marca = $this->getMarca();
         $fecha_creacion = $this->getFechaCreacion();
         $stock = $this->getStock();
-        $archivado = $this->getArchivado();
+        $archivado = !empty($archivado) ? (int)$archivado : 0;
 
         try {
             $stmt = $this->conn->prepare('INSERT INTO producto (upc, precio, marca, fecha_creacion, stock, archivado) 
