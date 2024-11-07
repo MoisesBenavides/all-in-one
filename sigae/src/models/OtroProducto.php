@@ -59,7 +59,7 @@ class OtroProducto extends Producto{
         $nombre = $this->getNombre();
 
         try {
-            $stmt = $this->conn->prepare('INSERT INTO neumatico (id_producto, nombre) 
+            $stmt = $this->conn->prepare('INSERT INTO otro_producto (id_producto, nombre) 
                                     VALUES (:id, :nom)');
     
             $stmt->bindParam(':id', $id);
