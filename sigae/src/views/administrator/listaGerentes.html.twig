@@ -22,14 +22,14 @@
             font-family: 'Teachers', sans-serif;
         }
 
-        .btn{
+        .btn {
             background-color: #dc2626;
-            text: white;
+            color: white;
         }
 
-        .btn:hover{
+        .btn:hover {
             background-color: #b91c1c;
-            text: white;
+            color: white;
         }
 
         .password-container {
@@ -75,7 +75,16 @@
 </head>
 
 {% include 'partials/headerAdmin.html.twig' %}
-
+<!-- Cuadro de error -->
+{% if response.errors is defined and response.errors is not empty %}
+    <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
+        <ul id="error-list">
+            {% for error in response.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
 <body>
     <main class="min-h-screen bg-white p-4">
         <div class="max-w-7xl mx-auto flex justify-center items-center">
@@ -133,17 +142,7 @@
                     </form>
                 </div>
 
-                {% if response.errors is defined and response.errors is not empty %}
-                    <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
-                        <ul id="error-list">
-                            {% for error in response.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-
-             <ul class="w-full max-w-[430px] space-y-4">
+                <ul class="w-full max-w-[430px] space-y-4">
                     {% for funcionario in funcionarios %}
                         {% if funcionario is defined and funcionario %}
                         <li class="bg-white rounded-md border border-slate-300">
@@ -249,7 +248,7 @@
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
             
-            // cambiar icono de ojo segun se quiera ver o no la contrasena
+            // Cambiar icono de ojo según se quiera ver o no la contraseña
             this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
         });
 
@@ -281,7 +280,7 @@
             editButton.classList.toggle('hidden');
         }
 
-        //toggle para cambiar contrasena
+        // Toggle para cambiar contraseña
         document.querySelectorAll('.toggle-password-form').forEach(button => {
             button.addEventListener('click', function() {
                 const form = this.closest('.password-change-form');

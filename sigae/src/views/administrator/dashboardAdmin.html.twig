@@ -35,7 +35,16 @@
 </head>
 
 {% include 'partials/headerAdmin.html.twig' %}
-
+<!-- Cuadro de error -->
+ {% if response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
 <body>
     <main class="min-h-screen bg-white p-4">
         <div class="max-w-7xl mx-auto space-y-6">

@@ -3,6 +3,7 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Funcionario;
 use Sigae\Controllers\ControladorProducto;
+use Sigae\Controllers\ControladorTaller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,6 +14,7 @@ use Exception;
 class ControladorFuncionario extends AbstractController {
     private $funcionario;
     private $controladorProducto;
+    private $controladorTaller;
 
     function loginAioEmployee(): Response{
         return $this->render('employee/loginEmpleado.html.twig');
@@ -120,11 +122,33 @@ class ControladorFuncionario extends AbstractController {
         }
     }
 
-    function workshopAvailability(): Response{
+    function showWorkshopAvailability(): Response{
         $rol=$_SESSION['rol'];
         switch($rol){
             case 'gerente':
                 return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showWorkshopServices(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                try{                    
+                    $this->controladorTaller = new ControladorTaller();
+                    $serviciosDisp = $this->controladorTaller->getServiciosDisp();
+
+                } catch(Exception $e){
+                    $response['errors'][] = "Error obteniendo los servicios disponibles: ".$e->getMessage();
+                }
+                return $this->render('employee/manager/reports/serviciosDispTaller.html.twig', [
+                    'response' => $response,
+                    'serviciosDisp' => $serviciosDisp
+                ]);
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
