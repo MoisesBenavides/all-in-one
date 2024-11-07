@@ -211,17 +211,28 @@ editAccessory:
   controller: Sigae\Controllers\ControladorOtroProducto::editAccessory
   methods: POST
 
+# Gestion de ordenes
 prepareOrder:
   path: /prepareOrder
   controller: Sigae\Controllers\ControladorFuncionario::prepareOrder
   methods: GET
 
+submitOrder:
+  path: /submitOrder
+  controller: Sigae\Controllers\ControladorOrden::submitOrder
+  methods: GET
+
+orderConfirmation:
+  path: /orderConfirmation
+  controller: Sigae\Controllers\ControladorOrden::orderConfirmation
+  methods: GET
+
+# Gestion de funcionarios
 employeeManagement:
   path: /employeeManagement
   controller: Sigae\Controllers\ControladorFuncionario::employeeManagement
   methods: GET
-
-# Gestion de funcionarios
+  
 # Consulta
 showManagers:
   path: /managers
