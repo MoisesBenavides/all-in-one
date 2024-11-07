@@ -222,9 +222,9 @@
         <div id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for producto in productos %}
                 <div class="product bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                {% if defined producto.nombre %}
+                {% if producto.nombre is defined and producto.nombre %}
                     <form class="product-form" id="product-form-{{ producto.id }}" action="{{path('editAccessory')}}" method="POST">
-                {% elseif defined producto.tamano  %}
+                {% elseif producto.tamano is defined and producto.tamano  %}
                         <form class="product-form" id="product-form-{{ producto.id }}" action="{{path('editTyre')}}" method="POST">
                 {% endif %}
                         <!-- Product Image -->
