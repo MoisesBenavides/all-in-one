@@ -38,9 +38,6 @@
                 {% if sessionData.reserva.descripcion is defined %}
                     emailData.descripcion = "{{ sessionData.reserva.descripcion }}";
                 {% endif %}
-                {% if sessionData.reserva.tiempo_estimado is defined %}
-                    emailData.tiempo_estimado = "{{ sessionData.reserva.tiempo_estimado }}";
-                {% endif %}
 
             } else if ("{{ sessionData.servicio }}" === "parking") {
                 templateID = "template_thhd7ld";
@@ -131,7 +128,6 @@
                         <h3 class="text-black text-xl md:text-2xl font-bold mb-4">Detalles Adicionales para Taller</h3>
                         <p class="text-black text-xl"><strong>Tipo:</strong> {{ sessionData.reserva.tipo }}</p>
                         <p class="text-black text-xl"><strong>Descripción:</strong> {{ sessionData.reserva.descripcion }}</p>
-                        <p class="text-black text-xl"><strong>Tiempo estimado:</strong> {{ sessionData.reserva.tiempo_estimado }} minutos</p>
                     </div>
                     <a href="{{ path('services') }}" class="w-full max-w-[300px] h-[60px] duration-300 btn text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
                         Volver a Servicios
