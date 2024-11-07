@@ -106,30 +106,56 @@
             </div>
         </div>
 
-        <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+       <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for producto in productos %}
-                <div class="product flex flex-col bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+                <div class="product flex flex-col bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300">
                     <div class="w-full h-48 bg-gray-100">
                         <img 
                             class="w-full h-full object-contain" 
                             alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
                             onload="this.style.display='block'"
-                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'placeholder-image\'><p class=\'placeholder-text\'>Imagen no disponible</p></div>'"
+                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full\'><p class=\'text-gray-400 text-sm\'>Imagen no disponible</p></div>'"
                         />
                     </div>
                     
-                    <div class="w-full p-6 flex flex-col gap-3">
-                        <p class="text-lg font-bold text-gray-900">{{ producto.marca }}</p>
+                    <div class="w-full p-6 flex flex-col gap-4">
+                        {# Marca #}
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-500 font-medium">Marca</span>
+                            <p class="text-lg font-bold text-gray-900">{{ producto.marca }}</p>
+                        </div>
                         
                         {% if producto.nombre is defined and producto.nombre %}
-                            <p class="text-base text-gray-600">{{ producto.nombre }}</p>
+                            {# Nombre del producto #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Descripción</span>
+                                <p class="text-base text-gray-600">{{ producto.nombre }}</p>
+                            </div>
                         {% elseif producto.modelo is defined and producto.modelo %}
-                            <p class="text-base text-gray-600">{{ producto.modelo }}</p>
-                            <p class="text-base text-gray-600">{{ producto.tamano }}</p>
-                            <p class="text-base text-gray-600">{{ producto.tipo }}</p>
+                            {# Modelo #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Modelo</span>
+                                <p class="text-base text-gray-600">{{ producto.modelo }}</p>
+                            </div>
+                            
+                            {# Tamaño #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Tamaño</span>
+                                <p class="text-base text-gray-600">{{ producto.tamano }}</p>
+                            </div>
+                            
+                            {# Tipo #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Tipo</span>
+                                <p class="text-base text-gray-600">{{ producto.tipo }}</p>
+                            </div>
                         {% endif %}
                         
-                        <p class="mt-auto text-2xl font-bold text-black">${{ producto.precio }}</p>
+                        {# Precio #}
+                        <div class="mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-sm text-gray-500 font-medium">Precio</span>
+                            <p class="text-2xl font-bold text-black">${{ producto.precio }}</p>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
@@ -207,6 +233,8 @@
         });
     </script>
 
-    {% include 'partials/footer.html.twig' %}
+   
 </body>
+     {% include 'partials/footer.html.twig' %}
+
 </html>
