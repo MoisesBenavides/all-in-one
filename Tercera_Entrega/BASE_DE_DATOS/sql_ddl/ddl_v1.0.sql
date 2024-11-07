@@ -38,6 +38,7 @@ CREATE TABLE producto (
     marca VARCHAR(23) NOT NULL,
     fecha_creacion DATETIME NOT NULL,
     stock INT NOT NULL,
+    archivado BOOLEAN NOT NULL,
     PRIMARY KEY (id)
 );
 
