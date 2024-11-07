@@ -191,6 +191,27 @@ abstract class Producto{
         }
     }
 
+    public static function existeUpc($rol, $upc){
+        try{
+            $conn = conectarDB($rol);
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM producto WHERE upc = :upc');
+            $stmt->bindParam(':upc', $upc);
+            $stmt->execute();
+            
+            $count = $stmt->fetchColumn();
+
+            return $count != 0;
+
+        } catch(Exception $e){
+            throw "Error al verificar un producto existente por upc: ".$e;
+        } finally {
+            $conn = null;
+        }
+    }
+
     public static function modificarStock($conn, $id, $nuevoStock){
         if(!$conn){
             throw new Exception("No se ha podido iniciar una conexión.");

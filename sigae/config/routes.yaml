@@ -180,6 +180,7 @@ showReports:
   controller: Sigae\Controllers\ControladorFuncionario::showReports
   methods: GET
 
+# Inventario y stock de productos
 stockManagement:
   path: /stockManagement
   controller: Sigae\Controllers\ControladorFuncionario::stockManagement
@@ -189,6 +190,16 @@ inventory:
   path: /inventory
   controller: Sigae\Controllers\ControladorFuncionario::inventory
   methods: GET
+
+addNewTyre:
+  path: /addNewTyre
+  controller: Sigae\Controllers\ControladorNeumatico::addNewTyre
+  methods: POST
+
+addNewAccessory:
+  path: /addNewAccessory
+  controller: Sigae\Controllers\ControladorOtroProducto::addNewAccessory
+  methods: POST
 
 prepareOrder:
   path: /prepareOrder
