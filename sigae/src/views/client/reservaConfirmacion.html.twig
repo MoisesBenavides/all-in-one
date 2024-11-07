@@ -58,7 +58,7 @@
             emailjs.send("service_rcnltqu", templateID, emailData)
                 .then(function(response) {
                     console.log("Datos de reserva enviados.", response.status, response.text);
-                    alert("Los datos de la reserva se han enviado a su correo.");
+                    alert("Reserva confirmada. Hemos enviado los detalles de tu reserva al correo asociado a tu cuenta. ¡Gracias por confiar en AIO!.");
                 }, function(error) {
                     console.error("Error al enviar el correo", error);
                     alert("Ocurrió un error al enviar el correo. Por favor, intenta nuevamente.");
