@@ -47,7 +47,7 @@ class ControladorOtroProducto extends AbstractController{
                         $fecha = $this->obtenerFechaHoraActual();
 
                         // Instancia vehiculo con datos ingresados
-                        $this->otroProducto = new OtroProducto($nombre, null, $upc, $precio, $marca, $fecha, 0);
+                        $this->otroProducto = new OtroProducto($nombre, null, $upc, $precio, $marca, $fecha, 0, false);
 
                         // Inicializar una conexión PDO como cliente
                         $this->otroProducto->setDBConnection("gerente");
@@ -128,7 +128,7 @@ class ControladorOtroProducto extends AbstractController{
                         $this->otroProducto->comenzarTransaccion();
 
                         try{
-                            $this->otroProducto->agregar();
+                            $this->otroProducto->modificar();
                             
                             // Confirmar la transacción realizada
                             $this->otroProducto->confirmarTransaccion();

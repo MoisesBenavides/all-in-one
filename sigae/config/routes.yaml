@@ -211,6 +211,11 @@ editAccessory:
   controller: Sigae\Controllers\ControladorOtroProducto::editAccessory
   methods: POST
 
+archiveProduct:
+  path: /archiveProduct
+  controller: Sigae\Controllers\ControladorProducto::archiveProduct
+  methods: POST
+
 # Gestion de ordenes
 prepareOrder:
   path: /prepareOrder

@@ -11,8 +11,8 @@ class Neumatico extends Producto{
     private $tipo;
     
         public function __construct($tamano = null, $modelo = null, $tipo = null, $id = null, $upc = null, 
-                                    $precio = null, $marca = null, $fecha_creacion = null, $stock = null){
-            parent::__construct($id, $upc, $precio, $marca, $fecha_creacion, $stock);
+                                    $precio = null, $marca = null, $fecha_creacion = null, $stock = null, $archivado = null){
+            parent::__construct($id, $upc, $precio, $marca, $fecha_creacion, $stock, $archivado);
             $this->tamano = $tamano;
             $this->modelo = $modelo;
             $this->tipo = $tipo;
@@ -54,16 +54,18 @@ class Neumatico extends Producto{
         $marca = $this->getMarca();
         $fecha_creacion = $this->getFechaCreacion();
         $stock = $this->getStock();
+        $archivado = !empty($archivado) ? (int)$archivado : 0;
 
         try {
-            $stmt = $this->conn->prepare('INSERT INTO producto (upc, precio, marca, fecha_creacion, stock) 
-                                    VALUES (:upc, :precio, :marca, :fecha_crea, :stock)');
+            $stmt = $this->conn->prepare('INSERT INTO producto (upc, precio, marca, fecha_creacion, stock, archivado) 
+                                    VALUES (:upc, :precio, :marca, :fecha_crea, :stock, :arch)');
     
             $stmt->bindParam(':upc', $upc);
             $stmt->bindParam(':precio', $precio);
             $stmt->bindParam(':marca', $marca);
             $stmt->bindParam(':fecha_crea', $fecha_creacion);
             $stmt->bindParam(':stock', $stock);
+            $stmt->bindParam(':arch', $archivado);
                 
             $stmt->execute();
             $this->setId($this->conn->lastInsertId());
@@ -164,7 +166,7 @@ class Neumatico extends Producto{
                                                 n.tamano, n.modelo, n.tipo
                                         FROM producto p 
                                         JOIN neumatico n ON p.id=n.id_producto
-                                        WHERE p.stock > 0');
+                                        WHERE p.stock > 0 AND p.archivo=0');
             $stmt->execute();
 
             $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -191,7 +193,8 @@ class Neumatico extends Producto{
                                                 p.marca, p.fecha_creacion, p.stock, 
                                                 n.tamano, n.modelo, n.tipo
                                         FROM producto p 
-                                        JOIN neumatico n ON p.id=n.id_producto
+                                        JOIN neumatico n ON p.id=n.id_producto 
+                                        WHERE p.archivado=0 
                                         ORDER BY p.id DESC');
             $stmt->execute();
             $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);

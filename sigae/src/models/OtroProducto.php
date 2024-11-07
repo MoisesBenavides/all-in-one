@@ -9,8 +9,8 @@ class OtroProducto extends Producto{
     private $nombre;
 
     public function __construct($nombre = null, $id = null, $upc = null, $precio = null, 
-                                $marca = null, $fecha_creacion = null, $stock = null){
-        parent::__construct($id, $upc, $precio, $marca, $fecha_creacion, $stock);
+                                $marca = null, $fecha_creacion = null, $stock = null, $archivado = null){
+        parent::__construct($id, $upc, $precio, $marca, $fecha_creacion, $stock, $archivado);
         $this->nombre = $nombre;
     }
 
@@ -30,16 +30,18 @@ class OtroProducto extends Producto{
         $marca = $this->getMarca();
         $fecha_creacion = $this->getFechaCreacion();
         $stock = $this->getStock();
+        $archivado = !empty($archivado) ? (int)$archivado : 0;
 
         try {
-            $stmt = $this->conn->prepare('INSERT INTO producto (upc, precio, marca, fecha_creacion, stock) 
-                                    VALUES (:upc, :precio, :marca, :fecha_crea, :stock)');
+            $stmt = $this->conn->prepare('INSERT INTO producto (upc, precio, marca, fecha_creacion, stock, archivado) 
+                                    VALUES (:upc, :precio, :marca, :fecha_crea, :stock, :arch)');
     
             $stmt->bindParam(':upc', $upc);
             $stmt->bindParam(':precio', $precio);
             $stmt->bindParam(':marca', $marca);
             $stmt->bindParam(':fecha_crea', $fecha_creacion);
             $stmt->bindParam(':stock', $stock);
+            $stmt->bindParam(':arch', $archivado);
                 
             $stmt->execute();
             $this->setId($this->conn->lastInsertId());
@@ -130,7 +132,7 @@ class OtroProducto extends Producto{
             $stmt = $conn->prepare('SELECT p.id, p.precio, p.marca, p.fecha_creacion, op.nombre 
                                         FROM producto p 
                                         JOIN otro_producto op ON p.id=op.id_producto
-                                        WHERE p.stock > 0');
+                                        WHERE p.stock > 0 AND p.archivado=0');
             $stmt->execute();
             $otrosProductos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -156,7 +158,8 @@ class OtroProducto extends Producto{
                                                 p.marca, p.fecha_creacion, p.stock, 
                                                 op.nombre 
                                         FROM producto p 
-                                        JOIN otro_producto op ON p.id=op.id_producto
+                                        JOIN otro_producto op ON p.id=op.id_producto 
+                                        WHERE p.archivado=0 
                                         ORDER BY p.id DESC');
             $stmt->execute();
             $otrosProductos = $stmt->fetchAll(PDO::FETCH_ASSOC);

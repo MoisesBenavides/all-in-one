@@ -54,7 +54,7 @@ class ControladorNeumatico extends AbstractController{
                         $fecha = $this->obtenerFechaHoraActual();
 
                         // Instancia vehiculo con datos ingresados
-                        $this->neumatico = new Neumatico($tamano, $modelo, $tipo, null, $upc, $precio, $marca, $fecha, 0);
+                        $this->neumatico = new Neumatico($tamano, $modelo, $tipo, null, $upc, $precio, $marca, $fecha, 0, false);
 
                         // Inicializar una conexión PDO como cliente
                         $this->neumatico->setDBConnection("gerente");
@@ -218,11 +218,11 @@ class ControladorNeumatico extends AbstractController{
             - A (AAA): Ancho del neumático en milímetros, de 1 a 3 dígitos
             - P (PP): Relación de aspecto del neumático, exactamente 2 dígitos
             - R (RR): Tamaño del rin en pulgadas, exactamente 2 dígitos
-            - C (CCC): Índice de carga y símbolo de velocidad, de 1 a 3 caracteres alfanuméricos
+            - C (CCC): Índice de carga, de 1 a 3 caracteres numéricos
             - V (VV): Rango de velocidad, de 1 a 2 letras
             - Longitud máxima total: 16 caracteres, incluyendo barras y guiones
         */
-        return (preg_match("/^\d{1,3}\/\d{2}-\d{2}-[a-zA-Z0-9]{1,3}-[a-zA-Z]{1,2}$/", $tamano));
+        return (preg_match("/^\d{1,3}\/\d{2}-\d{2}-[0-9]{1,3}-[a-zA-Z]{1,2}$/", $tamano));
     }
 
     private function validarId($id) {

@@ -296,7 +296,7 @@
                             </div>
                         </div>
                     </form>
-                    <form action="" method="POST" class="px-6 pb-4">
+                    <form action="{{ path('archiveProduct') }}" method="POST" class="px-6 pb-4">
                         <input type="hidden" name="id" value="{{ producto.id }}">
                         <button type="button" onclick="confirmDelete('{{ producto.id }}')" class="text-2xl hover:scale-110 transition-transform duration-300 text-red-500">
                             🗑️
