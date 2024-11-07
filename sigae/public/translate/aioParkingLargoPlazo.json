@@ -1,0 +1,38 @@
+{
+    "es": {
+      "fecha_de_inicio": "Fecha de inicio",
+      "intervalo_info": "Las fechas van en intervalos de 30 minutos, la fecha que elija se adaptará automáticamente a estos intervalos",
+      "tus_vehiculos": "Tus vehículos",
+      "seleccion_vehiculo": "Seleccione un vehículo",
+      "tipo_de_vehiculo": "Tipo de vehículo",
+      "tipo_seleccionado": "Tipo",
+      "registro_matricula": "o registra ya con Matrícula",
+      "tipo_de_reserva": "Tipo de reserva",
+      "seleccion_periodo": "Seleccione periodo",
+      "continuar": "Continuar"
+    },
+    "it": {
+      "fecha_de_inicio": "Data di inizio",
+      "intervalo_info": "Le date sono a intervalli di 30 minuti, la data scelta si adatterà automaticamente a questi intervalli",
+      "tus_vehiculos": "I tuoi veicoli",
+      "seleccion_vehiculo": "Seleziona un veicolo",
+      "tipo_de_vehiculo": "Tipo di veicolo",
+      "tipo_seleccionado": "Tipo",
+      "registro_matricula": "o registrati con il numero di targa",
+      "tipo_de_reserva": "Tipo di prenotazione",
+      "seleccion_periodo": "Seleziona periodo",
+      "continuar": "Continua"
+    },
+    "en": {
+      "fecha_de_inicio": "Start Date",
+      "intervalo_info": "Dates are in 30-minute intervals, the date you choose will automatically adjust to these intervals",
+      "tus_vehiculos": "Your Vehicles",
+      "seleccion_vehiculo": "Select a vehicle",
+      "tipo_de_vehiculo": "Vehicle Type",
+      "tipo_seleccionado": "Type",
+      "registro_matricula": "or register with Plate Number",
+      "tipo_de_reserva": "Reservation Type",
+      "seleccion_periodo": "Select period",
+      "continuar": "Continue"
+    }
+  }

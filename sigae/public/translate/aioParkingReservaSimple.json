@@ -1,0 +1,41 @@
+{
+    "es": {
+      "fecha_de_inicio": "Fecha de inicio",
+      "intervalo_info": "Las fechas van en intervalos de 30 minutos, la fecha que elija se adaptará automáticamente a estos intervalos",
+      "duracion": "Duración",
+      "duracion_seleccionada": "30m",
+      "duracion_info": "Seleccione la duración de su estacionamiento (máximo 24 horas)",
+      "tus_vehiculos": "Tus vehículos",
+      "seleccion_vehiculo": "Seleccione un vehículo",
+      "tipo_de_vehiculo": "Tipo de vehículo",
+      "tipo_seleccionado": "Tipo",
+      "registro_matricula": "o registra ya con Matrícula",
+      "continuar": "Continuar"
+    },
+    "it": {
+      "fecha_de_inicio": "Data di inizio",
+      "intervalo_info": "Le date sono a intervalli di 30 minuti, la data scelta si adatterà automaticamente a questi intervalli",
+      "duracion": "Durata",
+      "duracion_seleccionada": "30m",
+      "duracion_info": "Seleziona la durata del parcheggio (massimo 24 ore)",
+      "tus_vehiculos": "I tuoi veicoli",
+      "seleccion_vehiculo": "Seleziona un veicolo",
+      "tipo_de_vehiculo": "Tipo di veicolo",
+      "tipo_seleccionado": "Tipo",
+      "registro_matricula": "o registrati con il numero di targa",
+      "continuar": "Continua"
+    },
+    "en": {
+      "fecha_de_inicio": "Start Date",
+      "intervalo_info": "Dates are in 30-minute intervals, the date you choose will automatically adjust to these intervals",
+      "duracion": "Duration",
+      "duracion_seleccionada": "30m",
+      "duracion_info": "Select the duration of your parking (maximum 24 hours)",
+      "tus_vehiculos": "Your Vehicles",
+      "seleccion_vehiculo": "Select a vehicle",
+      "tipo_de_vehiculo": "Vehicle Type",
+      "tipo_seleccionado": "Type",
+      "registro_matricula": "or register with Plate Number",
+      "continuar": "Continue"
+    }
+  }
