@@ -51,6 +51,13 @@
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+        const archivoTraduccionReservar = "{{ asset('translate/reservarServicio.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionReservar, 'es');
+    });
+</script>
 <body>
     {% include 'partials/header.html.twig' %}
 
