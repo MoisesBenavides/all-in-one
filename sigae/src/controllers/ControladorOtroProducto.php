@@ -87,11 +87,81 @@ class ControladorOtroProducto extends AbstractController{
         }
     }
 
-    function deleteAccessory(){
+    function editAccessory(){
         $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $productos = [];
+
+        switch($rol){
+            case 'gerente':
+                if (isset($_POST["upc"], $_POST["precio"], $_POST["marca"], $_POST["nombre"], $_POST["upc"]) && 
+                    !empty($_POST["upc"]) && !empty($_POST["precio"]) && 
+                    !empty($_POST["marca"]) && !empty($_POST["nombre"])) {
+
+                    $id = $_POST["id"];
+                    $upc = $_POST["upc"];
+                    $precio = $_POST["precio"];
+                    $marca = $_POST["marca"];
+                    $nombre = $_POST["nombre"];
+
+                    if (!$this->validarId($upc)) {
+                        $response['errors'][] = "Por favor, ingrese un ID válido.";
+                    } elseif (!$this->validarUpc($upc, 13)) {
+                        $response['errors'][] = "Por favor, ingrese un código UPC válido.";
+                    } elseif (!$this->validarPrecio($precio)) {
+                        $response['errors'][] = "Por favor, ingrese un precio válido.";
+                    } elseif (!$this->validarMarcaNombre($marca, 23)) {
+                        $response['errors'][] = "Por favor, ingrese una marca válida.";
+                    } elseif (!$this->validarMarcaNombre($nombre, 23)) {
+                        $response['errors'][] = "Por favor, ingrese un nombre válido.";
+                    } elseif (!Producto::existeUpc($rol, $upc)) {
+                        $response['errors'][] = "No existe un producto con el código UPC ingresado.";
+                    } else {
+                        $fecha = $this->obtenerFechaHoraActual();
+
+                        // Instancia vehiculo con datos ingresados
+                        $this->otroProducto = new OtroProducto($nombre, $id, $upc, $precio, $marca, $fecha, 0);
+
+                        // Inicializar una conexión PDO como cliente
+                        $this->otroProducto->setDBConnection("gerente");
+                        $this->otroProducto->comenzarTransaccion();
+
+                        try{
+                            $this->otroProducto->agregar();
+                            
+                            // Confirmar la transacción realizada
+                            $this->otroProducto->confirmarTransaccion();
+                            $response['success'] = true;
+
+                        } catch(Exception $e){
+                            $this->otroProducto->deshacerTransaccion();
+                            $response['errors'][] = "Error procesando el producto: ". $e->getMessage();
+                        } finally{
+                            $this->otroProducto->cerrarDBConnection();
+                        }
+                    }
+                } else {
+                    $response['errors'][] = "Debe llenar todos los campos.";
+                }
+
+                try{
+                    $this->controladorProducto = new ControladorProducto();
+                    $productos = $this->controladorProducto->getProductosTodos('gerente');
+                } catch(Exception $e){
+                    $response['errors'][] = $e->getMessage();
+                }
+
+                return $this->render('employee/manager/inventario.html.twig', [
+                    'productos' => $productos,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
     }
 
-    function editAccessory(){
+    function deleteAccessory(){
         $response=['success' => false, 'errors' => []];
     }
 
@@ -118,6 +188,11 @@ class ControladorOtroProducto extends AbstractController{
 
         // Formatear la fecha
         return $dtActual->format('Y-m-d H:i:s');
+    }
+
+    private function validarId($id) {
+        /* Verifica si el $id es numerico */
+        return (preg_match("/^\d+$/", $id));
     }
 
     private function validarPrecio($precio) {

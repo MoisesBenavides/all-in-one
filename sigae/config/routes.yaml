@@ -201,6 +201,16 @@ addNewAccessory:
   controller: Sigae\Controllers\ControladorOtroProducto::addNewAccessory
   methods: POST
 
+editTyre:
+  path: /addNewTyre
+  controller: Sigae\Controllers\ControladorNeumatico::editTyre
+  methods: POST
+
+editAccessory:
+  path: /editAccessory
+  controller: Sigae\Controllers\ControladorOtroProducto::editAccessory
+  methods: POST
+
 prepareOrder:
   path: /prepareOrder
   controller: Sigae\Controllers\ControladorFuncionario::prepareOrder

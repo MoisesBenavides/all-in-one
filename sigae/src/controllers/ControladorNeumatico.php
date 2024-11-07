@@ -98,8 +98,84 @@ class ControladorNeumatico extends AbstractController{
         $response=['success' => false, 'errors' => []];
     }
 
-    function editTyre(){
+    function editTyre(): Response{
         $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $productos = [];
+
+        switch($rol){
+            case 'gerente':
+                if (isset($_POST["upc"], $_POST["precio"], $_POST["marca"], $_POST["id"], 
+                    $_POST["modelo"], $_POST["tamano"], $_POST["tipo"]) && 
+                    !empty($_POST["id"]) && !empty($_POST["upc"]) && !empty($_POST["precio"]) && !empty($_POST["marca"]) && 
+                    !empty($_POST["modelo"]) && !empty($_POST["tamano"]) && !empty($_POST["tipo"])) {
+
+                    $id = $_POST["id"];
+                    $upc = $_POST["upc"];
+                    $precio = $_POST["precio"];
+                    $marca = $_POST["marca"];
+                    $modelo = $_POST["modelo"];
+                    $tamano = $_POST["tamano"];
+                    $tipo = $_POST["tipo"];
+
+                    if (!$this->validarId($upc)) {
+                        $response['errors'][] = "Por favor, ingrese un ID válido.";
+                    } elseif (!$this->validarUpc($upc, 13)) {
+                        $response['errors'][] = "Por favor, ingrese un código UPC válido.";
+                    } elseif (!$this->validarPrecio($precio)) {
+                        $response['errors'][] = "Por favor, ingrese un precio válido.";
+                    } elseif (!$this->validarMarcaModelo($marca, 23)) {
+                        $response['errors'][] = "Por favor, ingrese una marca válida.";
+                    } elseif (!$this->validarMarcaModelo($modelo, 23)) {
+                        $response['errors'][] = "Por favor, ingrese un modelo válido.";
+                    } elseif (!$this->validarTamano($tamano)) {
+                        $response['errors'][] = "Por favor, ingrese un tamaño con formato válido.";
+                    } elseif (!$this->validarTipo($tipo)) {
+                        $response['errors'][] = "Por favor, ingrese un tipo válido.";
+                    } elseif (!Producto::existeUpc($rol, $upc)) {
+                        $response['errors'][] = "No existe un producto con el código UPC ingresado.";
+                    } else {
+
+                        // Instancia vehiculo con datos ingresados
+                        $this->neumatico = new Neumatico($tamano, $modelo, $tipo, $id, $upc, $precio, $marca, null, 0);
+
+                        // Inicializar una conexión PDO como cliente
+                        $this->neumatico->setDBConnection("gerente");
+                        $this->neumatico->comenzarTransaccion();
+
+                        try{
+                            $this->neumatico->modificar();
+
+                            // Confirmar la transacción realizada
+                            $this->neumatico->confirmarTransaccion();
+                            $response['success'] = true;
+
+                        } catch(Exception $e){
+                            $this->neumatico->deshacerTransaccion();
+                            $response['errors'][] = "Error procesando el producto: ". $e->getMessage();
+                        } finally{
+                            $this->neumatico->cerrarDBConnection();
+                        }
+                    }
+                } else {
+                    $response['errors'][] = "Debe llenar todos los campos.";
+                }
+
+                try{
+                    $this->controladorProducto = new ControladorProducto();
+                    $productos = $this->controladorProducto->getProductosTodos('gerente');
+                } catch(Exception $e){
+                    $response['errors'][] = $e->getMessage();
+                }
+
+                return $this->render('employee/manager/inventario.html.twig', [
+                    'productos' => $productos,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
     }
 
     function getNeumaticos($rol){
@@ -147,6 +223,11 @@ class ControladorNeumatico extends AbstractController{
             - Longitud máxima total: 16 caracteres, incluyendo barras y guiones
         */
         return (preg_match("/^\d{1,3}\/\d{2}-\d{2}-[a-zA-Z0-9]{1,3}-[a-zA-Z]{1,2}$/", $tamano));
+    }
+
+    private function validarId($id) {
+        /* Verifica si el id es numerico */
+        return (preg_match("/^\d+$/", $id));
     }
 
     private function validarMarcaModelo($str, $max) {

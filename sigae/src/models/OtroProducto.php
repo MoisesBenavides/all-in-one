@@ -73,6 +73,53 @@ class OtroProducto extends Producto{
         }
     }
 
+    public function modificar() {
+        $id = $this->getId();
+        $upc = $this->getUpc();
+        $precio = $this->getPrecio();
+        $marca = $this->getMarca();
+        $stock = $this->getStock();
+
+        try {
+            $stmt = $this->conn->prepare('UPDATE producto SET upc=:upc, precio=:precio, marca=:marca, stock=:stock) 
+                                        WHERE id=:id');
+    
+            $stmt->bindParam(':upc', $upc);
+            $stmt->bindParam(':precio', $precio);
+            $stmt->bindParam(':marca', $marca);
+            $stmt->bindParam(':stock', $stock);
+            $stmt->bindParam(':id', $id);
+                
+            $stmt->execute();
+    
+            return $this->modificarOtroProducto() !== false;
+    
+        } catch (Exception $e) {
+            throw new Exception("Error agregando el producto: ".$e->getMessage());
+            return false; 
+        }
+    }
+
+    public function modificarOtroProducto() {
+        $id_prod = $this->getId();
+        $nombre = $this->getNombre();
+
+        try {
+            $stmt = $this->conn->prepare('UPDATE otro_producto SET tamano=:nom WHERE id_producto=:id');
+    
+            $stmt->bindParam(':id', $id_prod);
+            $stmt->bindParam(':nom', $nombre);
+                
+            $stmt->execute();
+    
+            return true;
+    
+        } catch (Exception $e) {
+            throw new Exception("Error agregando el accesorio: ".$e->getMessage());
+            return false;
+        }
+    }
+
     public static function getProductosCategoriaDisp($rol){
         try{
             $conn = conectarDB($rol);
