@@ -108,7 +108,7 @@ class OtroProducto extends Producto{
         $nombre = $this->getNombre();
 
         try {
-            $stmt = $this->conn->prepare('UPDATE otro_producto SET tamano=:nom WHERE id_producto=:id');
+            $stmt = $this->conn->prepare('UPDATE otro_producto SET nombre=:nom WHERE id_producto=:id');
     
             $stmt->bindParam(':id', $id_prod);
             $stmt->bindParam(':nom', $nombre);
