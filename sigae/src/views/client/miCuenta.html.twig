@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <!--SEO-->
@@ -12,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <style>
-        @font-face {
+      @font-face {
             font-family: 'Teachers';
             src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
             font-weight: normal;
@@ -23,23 +24,42 @@
             font-family: 'Teachers', sans-serif;
         }
 
-        .btn {
-            background-color: #dc2626;
+        .btn{
+            background-color: #dc2626
         }
 
-        .btn:hover {
-            background-color: #b91c1c;
+        .btn:hover{
+            background-color: #b91c1c
         }
 
         .editable:focus {
             outline: 2px solid #4a90e2;
             padding: 2px;
         }
+        .edit-button {
+            display: none;
+            margin-left: 10px;
+            padding: 2px 5px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .editing .edit-button {
+            display: inline-block;
+        }
 
-        .editing-mode {
+            .editing-mode {
             background-color: #f0f9ff;
             border-color: #3b82f6;
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .editing-mode input:not([readonly]),
+        .editing-mode select:not([disabled]) {
+            background-color: white;
+            border-color: #3b82f6;
         }
 
         .edit-button {
@@ -60,20 +80,18 @@
         inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionMiCuenta, 'es');
     });
 </script>
-
 <body class="bg-white">
     <section class="container mx-auto px-4 py-8 max-w-2xl">
-        {% if response.errors is defined and response.errors is not empty %}
-            <div id="error-container" style="background-color: #ffcec6;" class=" text-gray-950 text-center p-4 rounded-md mb-4">
-                <ul id="error-list">
-                    {% for error in response.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
-        <!-- Foto de perfil -->
+                {% if response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" style="background-color: #ffcec6;" class=" text-gray-950 text-center  p-4 rounded-md mb-4">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+        <!-- Placeholder para foto de perfil -->
         <div class="w-32 h-32 mx-auto mb-8 bg-gray-200 rounded-full flex items-center justify-center">
             {% if (cliente.fotoPerfil) %}
                 <img src="{{ cliente.fotoPerfil }}" alt="Foto de perfil" class="w-full h-full object-cover rounded-full">
@@ -81,38 +99,55 @@
                 <span class="text-4xl text-gray-500">📷</span>
             {% endif %}
         </div>
-        
         <h1 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-8">{{ cliente.nombre }} {{ cliente.apellido }}</h1>
 
         <form id="edit-account-form" action="{{ path('editMyAccount') }}" method="POST">
             <div class="mb-6">
                 <label for="email" traducir="correo" class="block text-lg font-medium text-neutral-900 mb-2">Correo*</label>
-                <input type="email" id="email" name="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="{{ cliente.email }}" readonly aria-label="Email address" />
+                <input type="email" id="email" name="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                    value="{{ cliente.email}}" readonly aria-label="Email address" />
             </div>
 
             <div class="mb-6 relative">
                 <label for="nombre" traducir="nombre" class="block text-lg font-medium text-neutral-900 mb-2">Nombre*</label>
-                <input type="text" id="nombre" name="nombre" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="{{ cliente.nombre }}" aria-label="Nombre" />
+                <input type="text" id="nombre" name="nombre" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                    value="{{ cliente.nombre }}" aria-label="Nombre" />
             </div>
 
-            <div class="mb-6 relative">
-                <label for="apellido" traducir="apellido" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
-                <input type="text" id="apellido" name="apellido" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="{{ cliente.apellido }}" placeholder="Ingrese un apellido" aria-label="Apellido" />
-            </div>
-
-            <div class="mb-8 relative">
-                <label for="telefono" traducir="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
-                <input type="tel" id="telefono" name="telefono" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm" value="{{ cliente.telefono }}" placeholder="Ingrese un teléfono (máx. 8 dígitos)" aria-label="Número de teléfono" />
-            </div>
+            {% if  (cliente.apellido) %}
+                <div class="mb-6 relative">
+                    <label for="apellido" traducir="apellido" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                        value="{{ cliente.apellido }}" aria-label="Apellido" />
+                </div>
+            {% else %}
+                <div class="mb-6 relative">
+                    <label for="apellido" traducir="apellido" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                        placeholder="Ingrese un apellido" aria-label="Apellido" />
+                </div>
+            {% endif %}
+            {% if  (cliente.telefono) %}
+                <div class="mb-8 relative">
+                    <label for="telefono" traducir="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                        value="{{cliente.telefono}}" aria-label="Número de teléfono" />
+                </div>
+            {% else %}
+                <div class="mb-8 relative">
+                    <label for="telefono" traducir="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                        placeholder="Ingrese un teléfono (máx. 8 dígitos)" aria-label="Número de teléfono" />
+                </div>
+            {% endif %}
 
             <button type="submit" traducir="modificar" class="w-full md:w-auto px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg transition-colors mb-8">
                 Modificar
             </button>
         </form>
-
-        <!-- Sección de vehículos -->
+    
         <section class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-6">Mis vehículos</h2>
+            <h2 traducir="" class="text-2xl md:text-3xl font-bold text-center text-neutral-900 mb-6">Mis vehículos</h2>
             <div class="space-y-6">
                 {% for vehiculo in misVehiculos %}
                     <div class="bg-white rounded-md border border-slate-300 p-4">
@@ -139,7 +174,7 @@
 
                                 <div>
                                     <label class="block text-lg font-medium text-neutral-900 mb-2">Tipo*</label>
-                                    <select name="tipo" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm editable" disabled>
+                                    <select name="tipo" traducir="vehicleType" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm editable" disabled>
                                         <option traducir="auto" value="auto" {% if vehiculo.tipo == 'auto' %}selected{% endif %}>Auto</option>
                                         <option traducir="camioneta" value="camioneta" {% if vehiculo.tipo == 'camioneta' %}selected{% endif %}>Camioneta</option>
                                         <option traducir="camion" value="camion" {% if vehiculo.tipo == 'camion' %}selected{% endif %}>Pequeño camión</option>
@@ -154,21 +189,22 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-end items-center space-x-4">
-                                <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300" onclick="toggleVehicleEdit({{ loop.index }})">
-                                    <span class="edit-icon">✏️</span>
-                                    <span class="save-icon hidden">💾</span>
-                                </button>
-                                <button type="submit" traducir="guardar" class="edit-button px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
-                                    Guardar
-                                </button>
-                            </div>
+                         <div class="flex justify-end items-center space-x-4">
+                            <button type="button" class="text-2xl hover:scale-110 transition-transform duration-300" onclick="toggleVehicleEdit({{ loop.index }})">
+                                <span class="edit-icon">✏️</span>
+                                <span class="save-icon hidden">💾</span>
+                            </button>
+                            <button type="submit" traducir="guardar" class="edit-button px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
+                                Guardar
+                            </button>
+                              
+                        </div>
                         </form>
                         <form action="{{ path('unlinkVehicle') }}" method="POST" class="inline">
-                            <input type="hidden" name="matricula" value="{{ vehiculo.matricula }}">
-                            <button type="submit" class="text-2xl hover:scale-110 transition-transform duration-300 text-red-500">
-                                🗑️
-                            </button>
+                                    <input type="hidden" name="matricula" value="{{ vehiculo.matricula }}">
+                                    <button type="submit" class="text-2xl hover:scale-110 transition-transform duration-300 text-red-500">
+                                        🗑️
+                                    </button>
                         </form>
                     </div>
                 {% endfor %}
@@ -181,9 +217,266 @@
                 </button>
 
                 <form id="new-vehicle-form" action="{{ path('addVehicle')}}" class="hidden space-y-6 mt-4 p-4 border border-slate-300 rounded-md" method="POST">
-                    <!-- Formulario de nuevo vehículo aquí -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label traducir="matricula" for="matricula" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Matrícula *
+                            </label>
+                            <input type="text" id="matricula" name="matricula" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese la matrícula">
+                        </div>
+
+                        <div>
+                            <label traducir="marcaOpcional" for="makeSelect" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Marca (Opcional)
+                            </label>
+                            <select id="makeSelect" name="marca" 
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm">
+                                <option traducir="elegirMarca" value="">Seleccione una marca</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label traducir="modeloOpcional" for="modelSelect" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Modelo (Opcional)
+                            </label>
+                            <select id="modelSelect" name="modelo" 
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm">
+                                <option traducir="elegirModelo" value="">Seleccione un modelo</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label traducir="tipoVehiculo" for="tipo" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Tipo de vehículo *
+                            </label>
+                            <select id="tipo" name="tipo" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm">
+                                <option traducir="tipo" value="">Seleccione un tipo</option>
+                                <option traducir="auto" value="auto">Auto</option>
+                                <option traducir="camioneta" value="camioneta">Camioneta</option>
+                                <option traducir="camion" value="camion">Pequeño camión</option>
+                                <option traducir="utilitario" value="utilitario">Pequeño utilitario</option>
+                                <option traducir="moto" value="moto">Moto</option>
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label traducir="color" for="color" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Color *
+                            </label>
+                            <input type="color" id="color" name="color" required
+                                class="w-full h-10 px-3 py-2 bg-white rounded-md border border-slate-300">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <button traducir="guardarVehiculo" type="submit" 
+                                class="w-full md:w-auto px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg transition-colors">
+                                Guardar vehículo
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
+
+    <script>
+    // Elementos del DOM para el formulario de nuevo vehículo
+    const addVehicleBtn = document.getElementById('add-vehicle-btn');
+    const newVehicleForm = document.getElementById('new-vehicle-form');
+    const dropdownIcon = document.getElementById('dropdown-icon');
+    const makeSelect = document.getElementById('makeSelect');
+    const modelSelect = document.getElementById('modelSelect');
+
+    // Toggle del formulario de nuevo vehículo
+    addVehicleBtn.addEventListener('click', () => {
+        newVehicleForm.classList.toggle('hidden');
+        dropdownIcon.classList.toggle('rotate-180');
+        
+        // Cargar las marcas solo cuando se abre el formulario por primera vez
+        if (!newVehicleForm.classList.contains('hidden') && makeSelect.options.length <= 1) {
+            loadMakes();
+        }
+    });
+
+    // Cargar las marcas para el formulario de nuevo vehículo
+    async function loadMakes() {
+        try {
+            const response = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json');
+            const data = await response.json();
+            
+            data.Results.forEach(make => {
+                const option = document.createElement('option');
+                option.value = make.MakeName;
+                option.textContent = make.MakeName;
+                makeSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error cargando marcas:', error);
+        }
+    }
+
+    // Cargar los modelos cuando se seleccione una marca en el formulario de nuevo vehículo
+    async function loadModels(make) {
+        try {
+            modelSelect.innerHTML = '<option value="">Seleccione un modelo</option>';
+            
+            if (!make) return;
+
+            const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${make}?format=json`);
+            const data = await response.json();
+            
+            data.Results.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.Model_Name;
+                option.textContent = model.Model_Name;
+                modelSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error cargando modelos:', error);
+        }
+    }
+
+    // Event listener para el cambio de marca en el formulario de nuevo vehículo
+    makeSelect.addEventListener('change', (e) => {
+        loadModels(e.target.value);
+    });
+
+    // Funciones para el formulario de edición de vehículo
+    async function loadMakesForEdit(selectElement) {
+        try {
+            selectElement.innerHTML = '<option value="">Seleccione una marca</option>';
+            const currentValue = selectElement.getAttribute('data-current-value');
+            
+            const response = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json');
+            const data = await response.json();
+            
+            data.Results.forEach(make => {
+                const option = document.createElement('option');
+                option.value = make.MakeName;
+                option.textContent = make.MakeName;
+                if (make.MakeName.toLowerCase() === currentValue.toLowerCase()) {
+                    option.selected = true;
+                }
+                selectElement.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error cargando marcas:', error);
+        }
+    }
+
+    async function loadModelsForEdit(makeSelect, modelSelect) {
+        try {
+            modelSelect.innerHTML = '<option value="">Seleccione un modelo</option>';
+            const currentModel = modelSelect.getAttribute('data-current-value');
+            
+            if (!makeSelect.value) return;
+
+            const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${makeSelect.value}?format=json`);
+            const data = await response.json();
+            
+            data.Results.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.Model_Name;
+                option.textContent = model.Model_Name;
+                if (model.Model_Name.toLowerCase() === currentModel.toLowerCase()) {
+                    option.selected = true;
+                }
+                modelSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error cargando modelos:', error);
+        }
+    }
+
+    function validateColorFormat(color) {
+        // Si no empieza con #, añadirlo
+        if (!color.startsWith('#')) {
+            color = '#' + color;
+        }
+        
+        // Asegurarse de que tenga 6 dígitos después del #
+        if (color.length === 7 && /^#[0-9A-Fa-f]{6}$/.test(color)) {
+            return color;
+        }
+        
+        // Si no es válido, retornar negro por defecto
+        return '#000000';
+    }
+
+    function toggleVehicleEdit(index) {
+    const form = document.getElementById(`vehicle-form-${index}`);
+    const formContainer = form.closest('.bg-white');
+    const inputs = form.querySelectorAll('.editable');
+    const editButton = form.querySelector('.edit-button');
+    const makeSelect = form.querySelector('select[name="marca"]');
+    const modelSelect = form.querySelector('select[name="modelo"]');
+    const editIcon = form.querySelector('.edit-icon');
+    const saveIcon = form.querySelector('.save-icon');
+    
+    // Toggle la clase de modo edición
+    formContainer.classList.toggle('editing-mode');
+    
+    // Toggle iconos
+    editIcon.classList.toggle('hidden');
+    saveIcon.classList.toggle('hidden');
+    
+    inputs.forEach(input => {
+        if (input.type === 'color') {
+            input.value = validateColorFormat(input.value);
+            input.readOnly = !input.readOnly;
+        }
+        else if (input.tagName === 'SELECT') {
+            input.disabled = !input.disabled;
+            
+            if (!input.disabled && input.name === 'marca') {
+                loadMakesForEdit(input);
+                input.addEventListener('change', () => loadModelsForEdit(input, modelSelect));
+            }
+        } else {
+            input.readOnly = !input.readOnly;
+        }
+
+        // Añadir focus al primer input cuando se entra en modo edición
+        if (!input.readOnly && !input.disabled) {
+            input.focus();
+        }
+    });
+    
+    // Toggle el botón de guardar
+    editButton.classList.toggle('hidden');
+    
+    // Si estamos habilitando la edición, cargar los modelos para la marca actual
+    if (!makeSelect.disabled) {
+        loadModelsForEdit(makeSelect, modelSelect);
+    }
+}
+
+    // Agregar validación antes de enviar los formularios
+    document.querySelectorAll('form.vehicle-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const colorInput = this.querySelector('input[type="color"]');
+            if (colorInput) {
+                colorInput.value = validateColorFormat(colorInput.value);
+            }
+        });
+    });
+
+    document.getElementById('new-vehicle-form').addEventListener('submit', function(e) {
+        const colorInput = this.querySelector('input[type="color"]');
+        if (colorInput) {
+            colorInput.value = validateColorFormat(colorInput.value);
+        }
+    });
     </script>
+        </section>
+            <form action="{{ path('logout') }}" method="GET" class="w-full">
+                <button type="submit" traducir="cerrarSesion" name="CerrarSesion" class="w-full px-4 py-3 bg-rose-400 text-white text-lg font-bold rounded-md hover:bg-rose-500 transition-colors">
+                    Cerrar Sesión
+                </button>
+            </form>
+    </section>
+
+        {% include 'partials/footer.html.twig' %}
 </body>
 </html>
