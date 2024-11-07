@@ -202,7 +202,7 @@ addNewAccessory:
   methods: POST
 
 editTyre:
-  path: /addNewTyre
+  path: /editTyre
   controller: Sigae\Controllers\ControladorNeumatico::editTyre
   methods: POST
 
