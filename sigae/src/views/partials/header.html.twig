@@ -36,6 +36,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
 </script>
 <script src="{{ asset('js/fetchClientSession.js') }}"></script>
 <header class="w-screen bg-white">
+<header class="w-screen bg-white">
     <div class="container mx-auto px-4 py-4">
         <!-- Desktop View -->
         <div class="hidden md:flex items-center justify-between">
@@ -59,7 +60,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
                 <div>
                     <button id="languageToggleDesktop" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
                         <img src="{{ asset('img/world.png') }}" alt="Language" class="icon-size">
-                        <span class="text-base font-medium">Idioma:</span>
+                        <span class="text-base font-medium" traducir="idioma">Idioma:</span>
                         <span id="currentLanguageDesktop" class="text-base font-bold uppercase"></span>
                     </button>
                 </div>
@@ -96,12 +97,13 @@ const SESSION_URL = "{{ path('getClientSession') }}";
                         </button>
                     </div>
 
-                    <!-- User icon móvil -->
-                    <a href="{{ path('myAccount') }}" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
+                    <!-- User icon móvil - También necesita traducción en el alt -->
+                    <a href="{{ path('myAccount') }}" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-300" title="Mi Cuenta" traducir="miCuenta">
                         <img id="profile-photo" class="icon-size rounded-full" src="{{ fotoPerfil ?? asset('img/user.png') }}" alt="User">
                     </a>
                 </div>
             </div>
+
 
             <!-- Menú de idiomas móvil -->
             <div id="languageMenu" class="hidden mt-4 bg-white rounded-lg shadow-lg">
