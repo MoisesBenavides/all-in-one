@@ -45,7 +45,13 @@
             </a>
         </section>
     </main>
-
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+        const archivoTraduccionServicios = "{{ asset('translate/servicios.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionServicios, 'es');
+    });
+</script>
     {% include 'partials/footer.html.twig' %}
 </body>
 </html>

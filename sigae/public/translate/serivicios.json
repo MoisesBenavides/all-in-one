@@ -1,0 +1,18 @@
+{
+      "es": {
+        "titulo": "¿Necesitas un servicio mecánico?",
+        "descripcion": "En AIO ofrecemos diversos servicios mecánicos. Realiza tu reserva en línea y nos encargaremos de tu vehículo.",
+        "boton": "Reservar"
+      },
+      "en": {
+        "titulo": "Need a mechanical service?",
+        "descripcion": "At AIO, we offer various mechanical services. Make your reservation online, and we’ll take care of your vehicle.",
+        "boton": "Book"
+      },
+      "it": {
+        "titulo": "Hai bisogno di un servizio meccanico?",
+        "descripcion": "In AIO offriamo vari servizi meccanici. Effettua la tua prenotazione online e ci occuperemo del tuo veicolo.",
+        "boton": "Prenota"
+      }
+}
+  
