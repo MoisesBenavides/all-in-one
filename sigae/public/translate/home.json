@@ -13,9 +13,10 @@
 
       "yaReservaste": "¿Ya reservaste?",
       "apartadoMisReservas": "Si ya reservaste accede a nuestro apartado de 'Mis reservas'",
-      "botonMisReservas": "Mis reservas"
+      "botonMisReservas": "Mis reservas",
 
-
+      "nuestros_productos": "Nuestros productos",
+      "catalogo": "Accede a nuestro catalogo de productos"
      },
     "it": {
       "parkingPresentacion": "AIO PARKING, il nostro servizio di parcheggio intelligente.",
@@ -32,8 +33,11 @@
       
       "yaReservaste": "Già hai prenotato?",
       "apartadoMisReservas": "Si già hai prenotato accerdi a la nostra sezione di 'Miei prenotazioni'",
-      "botonMisReservas": "Miei prenotazioni"
+      "botonMisReservas": "Miei prenotazioni",
 
+      "nuestros_productos": "I nostri prodotti",
+      "catalogo": "Accesso al nostro catalogo di prodotti"
+      
     },
     "en": {
       "parkingPresentacion": "AIO PARKING, our smart parking service.",
@@ -49,8 +53,10 @@
       
       "yaReservaste": "Already booked?",
       "apartadoMisReservas": "If you've already booked, access our 'My bookings' section",
-      "botonMisReservas": "My bookings"
+      "botonMisReservas": "My bookings",
 
+      "nuestros_productos": "Our products",
+      "catalogo": "Access our product catalog"
 
     }
   }
