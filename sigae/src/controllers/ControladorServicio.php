@@ -31,18 +31,18 @@ class ControladorServicio extends AbstractController{
 
                 // Obtiene la hora actual en Montevideo
                 $uruguayTimezone = new DateTimeZone('America/Montevideo');
-                $ahora = new DateTime('now', $uruguayTimezone);
-                $dtActual = $ahora->format('Y-m-d H:i:s');
-                
-                //Debug 
-                error_log('Fecha y hora actual: '. $dtActual);
-                error_log('Fecha y hora del inicio: '. $dtServicio);
+                $dtActual = new DateTime('now', $uruguayTimezone);
 
-                // Comparar si fecha y hora actual es posterior a una hora antes de la fecha y hora del inicio del servicio
-                if ($dtActual > $dtServicio){
+                // Debug: Formatear las fechas para que se impriman correctamente en los logs
+                error_log('Fecha y hora actual: ' . $dtActual->format('Y-m-d H:i:s'));
+                error_log('Fecha y hora de inicio (1 hora antes): ' . $dtServicio->format('Y-m-d H:i:s'));
+
+                // Comparar si la fecha y hora actual es posterior a una hora antes del comienzo del servicio
+                if ($dtActual > $dtServicio) {
                     throw new Exception("Sólo se admite cancelar hasta una hora antes del comienzo del servicio.");
-                } else
+                } else{
                     Servicio::cancelar($rol, $id);
+                }
             }    
         } catch(Exception $e){
             throw $e;
