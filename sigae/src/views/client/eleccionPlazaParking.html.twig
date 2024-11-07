@@ -21,18 +21,18 @@
             font-family: 'Teachers', sans-serif;
         }
 
-         .btnPark{
-            background-color: #1f3de0
+        .btnPark {
+            background-color: #1f3de0;
         }
 
-        .btnPark:hover{
-            background-color: #233181
+        .btnPark:hover {
+            background-color: #233181;
         }
     </style>
 </head>
 
 <body class="bg-white">
-{% set parking_data = app.session.get('parking') %}
+    {% set parking_data = app.session.get('parking') %}
 
     {% include 'partials/headerParking.html.twig' %}
 
@@ -44,7 +44,7 @@
             <button id="incrementFloor" class="w-[30px] h-[30px] bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">&gt;</button>
         </div>
 
-        <!-- leyenda -->
+        <!-- Leyenda -->
         <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
             <p><strong>B1-20:</strong> Motos (solo primer piso)</p>
             <p><strong>A1-50:</strong> Autos, camionetas y pequeños camiones (primer piso)</p>
@@ -53,22 +53,22 @@
 
         <!-- Parking Form -->
         <form id="parkingForm" action="{{ path('submitParking') }}" method="POST" class="w-full max-w-[600px]">
-             {% if response.errors is defined and response.errors is not empty %}
-                    <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
-                        <ul id="error-list">
-                            {% for error in response.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
+            <!-- Cuadro de error -->
+            {% if response.errors is defined and response.errors is not empty %}
+                <div id="error-container" style="background-color: #ffcec6;" class="text-[#950d03] text-center p-4 rounded-md mb-4">
+                    <ul id="error-list">
+                        {% for error in response.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
-            <div id="parkingContainer" class="w-full min-h-[359px] p-4 pt-8 bg-white border border-black relative">
-            </div>
+            <div id="parkingContainer" class="w-full min-h-[359px] p-4 pt-8 bg-white border border-black relative"></div>
 
             <input type="hidden" name="plazasSeleccionadas" id="plazasSeleccionadasInput">
             <div class="w-full max-w-[388px] mx-auto flex justify-center mt-4">
-                <button type="submit" class="btnPark w-full max-w-[340px] h-[62px] px-7 py-2.5  transition-colors rounded-lg text-white text-[32px] font-bold leading-[51.78px]">
+                <button type="submit" class="btnPark w-full max-w-[340px] h-[62px] px-7 py-2.5 transition-colors rounded-lg text-white text-[32px] font-bold leading-[51.78px]">
                     Continuar
                 </button>
             </div>
@@ -76,136 +76,111 @@
     </div> 
 
     <script>    
-    const rutaRedireccion = "{{path('aioParking')}}";
+        const rutaRedireccion = "{{path('aioParking')}}";
     </script>
 
     <script src="{{ asset('js/parkingTimer.js') }}"></script>
 
     <script>
-         // Variables globales
-    const tipoVehiculo = {{ tipoVehiculo|json_encode()|raw }};
-    
-    // Convertir plazasLibres a array si viene como objeto
-    const plazasLibresData = {{ plazasLibres|json_encode()|raw }};
-    const plazasLibres = Array.isArray(plazasLibresData) ? plazasLibresData : 
-                        (typeof plazasLibresData === 'object' ? Object.values(plazasLibresData) : []);
-    
-    let plazasSeleccionadas = [];
-    let currentFloor = 1;
-    const parkingData = {{ parking_data|json_encode()|raw }};
-    
-    console.log('Parking data:', parkingData);
-    console.log('Plazas libres:', plazasLibres);
-
-    // Funciones de utilidad
-    function createDiv(className, children = []) {
-        const div = document.createElement('div');
-        div.className = className;
-        children.forEach(child => div.appendChild(child));
-        return div;
-    }
-
-    function createParkingSpot(number, prefix) {
-        const spotId = `${prefix}${number}`;
-        const spot = document.createElement('button');
+        const tipoVehiculo = {{ tipoVehiculo|json_encode()|raw }};
+        const plazasLibresData = {{ plazasLibres|json_encode()|raw }};
+        const plazasLibres = Array.isArray(plazasLibresData) ? plazasLibresData : 
+                            (typeof plazasLibresData === 'object' ? Object.values(plazasLibresData) : []);
         
-        spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
-        spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
-        spot.dataset.spot = spotId;
-        spot.type = 'button';
-
-        // Verificar si la plaza está en el array de plazas libres
-        const isAvailable = plazasLibres.includes(spotId);
-        console.log(`Plaza ${spotId}: ${isAvailable ? 'libre' : 'ocupada'}`);
-
-        if (!isAvailable) {
-            spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
-            spot.disabled = true;
-        } else {
-            spot.addEventListener('click', (e) => {
-                e.preventDefault();
-                handleSpotSelection(spot);
-            });
+        let plazasSeleccionadas = [];
+        let currentFloor = 1;
+        const parkingData = {{ parking_data|json_encode()|raw }};
+        
+        function createDiv(className, children = []) {
+            const div = document.createElement('div');
+            div.className = className;
+            children.forEach(child => div.appendChild(child));
+            return div;
         }
 
-        return spot;
-    }
+        function createParkingSpot(number, prefix) {
+            const spotId = `${prefix}${number}`;
+            const spot = document.createElement('button');
+            
+            spot.className = 'flex items-center justify-center border border-black m-0.5 cursor-pointer transition-colors w-14 h-10 hover:bg-gray-100';
+            spot.innerHTML = `<div class="text-center text-black text-xs font-bold">${spotId}</div>`;
+            spot.dataset.spot = spotId;
+            spot.type = 'button';
 
-    function handleSpotSelection(spot) {
-        if (tipoVehiculo === 'camion' || tipoVehiculo === 'utilitario') {
-            handleLargeVehicleSelection(spot);
-        } else {
-            handleRegularSelection(spot);
-        }
-    }
-
-    function handleRegularSelection(spot) {
-        plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
-        plazasSeleccionadas = [spot];
-        spot.classList.add('bg-[#5381c6]', 'text-white');
-    }
-
-    function handleLargeVehicleSelection(spot) {
-        if (plazasSeleccionadas.length === 0) {
-            plazasSeleccionadas.push(spot);
-            spot.classList.add('bg-[#5381c6]', 'text-white');
-        } else if (plazasSeleccionadas.length === 1) {
-            if (isAdjacentSpot(plazasSeleccionadas[0], spot)) {
-                plazasSeleccionadas.push(spot);
-                spot.classList.add('bg-[#5381c6]', 'text-white');
+            const isAvailable = plazasLibres.includes(spotId);
+            if (!isAvailable) {
+                spot.classList.add('bg-gray-500', 'text-white', 'cursor-not-allowed');
+                spot.disabled = true;
             } else {
-                plazasSeleccionadas[0].classList.remove('bg-[#5381c6]', 'text-white');
-                plazasSeleccionadas = [spot];
-                spot.classList.add('bg-[#5381c6]', 'text-white');
+                spot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleSpotSelection(spot);
+                });
             }
-        } else {
+
+            return spot;
+        }
+
+        function handleSpotSelection(spot) {
+            if (tipoVehiculo === 'camion' || tipoVehiculo === 'utilitario') {
+                handleLargeVehicleSelection(spot);
+            } else {
+                handleRegularSelection(spot);
+            }
+        }
+
+        function handleRegularSelection(spot) {
             plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
             plazasSeleccionadas = [spot];
             spot.classList.add('bg-[#5381c6]', 'text-white');
         }
-    }
 
-    function isAdjacentSpot(spot1, spot2) {
-        const num1 = parseInt(spot1.dataset.spot.match(/\d+/)[0]);
-        const num2 = parseInt(spot2.dataset.spot.match(/\d+/)[0]);
-        return Math.abs(num1 - num2) === 1;
-    }
+        function handleLargeVehicleSelection(spot) {
+            if (plazasSeleccionadas.length === 0) {
+                plazasSeleccionadas.push(spot);
+                spot.classList.add('bg-[#5381c6]', 'text-white');
+            } else if (plazasSeleccionadas.length === 1 && isAdjacentSpot(plazasSeleccionadas[0], spot)) {
+                plazasSeleccionadas.push(spot);
+                spot.classList.add('bg-[#5381c6]', 'text-white');
+            } else {
+                plazasSeleccionadas.forEach(s => s.classList.remove('bg-[#5381c6]', 'text-white'));
+                plazasSeleccionadas = [spot];
+                spot.classList.add('bg-[#5381c6]', 'text-white');
+            }
+        }
 
-    function generateMotoLayout(container) {
-        const motoSpots = createParkingColumn(1, 20, 'B');
-        container.appendChild(createDiv('flex justify-center', [
-            createDiv('w-1/4', [motoSpots])
-        ]));
-    }
+        function isAdjacentSpot(spot1, spot2) {
+            const num1 = parseInt(spot1.dataset.spot.match(/\d+/)[0]);
+            const num2 = parseInt(spot2.dataset.spot.match(/\d+/)[0]);
+            return Math.abs(num1 - num2) === 1;
+        }
 
-    function generateAutoLayout(container) {
-        const prefix = currentFloor === 1 ? 'A' : 'C';
-        const leftColumn = createParkingColumn(1, 20, prefix);
-        const middleColumn = createParkingColumn(21, 30, prefix);
-        const rightColumn = createParkingColumn(31, 50, prefix);
+        function generateMotoLayout(container) {
+            const motoSpots = createParkingColumn(1, 20, 'B');
+            container.appendChild(createDiv('flex justify-center', [
+                createDiv('w-1/4', [motoSpots])
+            ]));
+        }
 
-        container.appendChild(createDiv('flex justify-center gap-[150px] h-full', [
-            createDiv('flex flex-col justify-start overflow-y-auto', [leftColumn]),
-            createDiv('flex flex-col justify-end', [
-                middleColumn,
-                createDiv('w-[45px] h-[108px] border-t border-b border-l border-black')
-            ]),
-            createDiv('flex flex-col justify-start overflow-y-auto', [rightColumn])
-        ]));
-    }
+        function generateAutoLayout(container) {
+            const prefix = currentFloor === 1 ? 'A' : 'C';
+            const leftColumn = createParkingColumn(1, 20, prefix);
+            const middleColumn = createParkingColumn(21, 30, prefix);
+            const rightColumn = createParkingColumn(31, 50, prefix);
 
-    function generateLargeVehicleLayout(container) {
-        generateAutoLayout(container);
-        const message = document.createElement('div');
-        message.className = 'absolute top-0 left-0 right-0 text-center text-red-500 p-2';
-        message.textContent = 'Debe seleccionar dos espacios consecutivos';
-        container.insertBefore(message, container.firstChild);
-    }
+            container.appendChild(createDiv('flex justify-center gap-[150px] h-full', [
+                createDiv('flex flex-col justify-start overflow-y-auto', [leftColumn]),
+                createDiv('flex flex-col justify-end', [
+                    middleColumn,
+                    createDiv('w-[45px] h-[108px] border-t border-b border-l border-black')
+                ]),
+                createDiv('flex flex-col justify-start overflow-y-auto', [rightColumn])
+            ]));
+        }
 
         function generateParkingLayout() {
             const container = document.getElementById('parkingContainer');
             container.innerHTML = '';
-
             switch(tipoVehiculo) {
                 case 'moto':
                     if (currentFloor === 2) {
@@ -220,24 +195,11 @@
                     break;
                 case 'camion':
                 case 'utilitario':
-                    generateLargeVehicleLayout(container);
+                    generateAutoLayout(container);
                     break;
-                default:
-                    console.error('Tipo de vehículo no válido');
-                    return;
             }
         }
 
-        function createParkingColumn(start, end, prefix) {
-            const column = document.createElement('div');
-            column.className = 'flex flex-col items-center';
-            for (let i = start; i <= end; i++) {
-                column.appendChild(createParkingSpot(i, prefix));
-            }
-            return column;
-        }
-
-        // Event Listeners
         document.getElementById('parkingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -245,15 +207,7 @@
                 alert('Debe seleccionar al menos un espacio de estacionamiento');
                 return;
             }
-
-            // Crear un array de dos elementos, rellenando con null si es necesario
-            let plazasArray = new Array(2).fill(null);
-            plazasSeleccionadas.forEach((spot, index) => {
-                plazasArray[index] = spot.dataset.spot;
-            });
-
-            // Convertir a JSON string y asignar al input hidden
-            document.getElementById('plazasSeleccionadasInput').value = JSON.stringify(plazasArray);
+            document.getElementById('plazasSeleccionadasInput').value = JSON.stringify(plazasSeleccionadas.map(s => s.dataset.spot));
             this.submit();
         });
 
@@ -277,12 +231,10 @@
             document.getElementById('floorDisplay').textContent = `Piso ${currentFloor}`;
         }
 
-        // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             updateFloorDisplay();
             generateParkingLayout();
             new ParkingTimer();
-            console.log(plazasSeleccionadas);
         });
     </script>
 

@@ -2,71 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmación de reserva de servicio | AIO</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script>
-        (function() {
-            emailjs.init("DglhVJa9EbJc5VRgg");  // Reemplaza con tu User ID de EmailJS
-        })();
-
-        function sendReservationEmail() {
-            let templateID;
-            const emailData = {
-                email: "{{ sessionData.email }}",
-                nombre: "{{ sessionData.nombre }}",
-                apellido: "{{ sessionData.apellido }}",
-                servicio: "{{ sessionData.servicio }}",
-                id_servicio: "{{ sessionData.reserva.id }}",
-                matricula: "{{ sessionData.reserva.matricula }}",
-                precio: "{{ sessionData.reserva.precio }}",
-                fecha_inicio: "{{ sessionData.reserva.fecha_inicio }}",
-                fecha_final: "{{ sessionData.reserva.fecha_final }}"
-            };
-
-            // Verificación de servicio y datos específicos
-            if ("{{ sessionData.servicio }}" === "taller") {
-                templateID = "template_k45nphm";
-
-                // Solo agrega estos datos si están definidos en el objeto de reserva
-                {% if sessionData.reserva.tipo is defined %}
-                    emailData.tipo = "{{ sessionData.reserva.tipo }}";
-                {% endif %}
-                {% if sessionData.reserva.descripcion is defined %}
-                    emailData.descripcion = "{{ sessionData.reserva.descripcion }}";
-                {% endif %}
-
-            } else if ("{{ sessionData.servicio }}" === "parking") {
-                templateID = "template_thhd7ld";
-
-                // Solo agrega estos datos si están definidos en el objeto de reserva
-                {% if sessionData.reserva.largo_plazo is defined %}
-                    emailData.largo_plazo = "{{ sessionData.reserva.largo_plazo }}";
-                {% endif %}
-                {% if sessionData.reserva.tipo_plaza is defined %}
-                    emailData.tipo_plaza = "{{ sessionData.reserva.tipo_plaza }}";
-                {% endif %}
-                {% if sessionData.reserva.plazas is defined %}
-                    emailData.plazas = "{{ sessionData.reserva.plazas }}";
-                {% endif %}
-            }
-
-            // Enviar el correo usando EmailJS con el Service ID y Template ID seleccionados
-            emailjs.send("service_rcnltqu", templateID, emailData)
-                .then(function(response) {
-                    console.log("Datos de reserva enviados.", response.status, response.text);
-                    alert("Reserva confirmada. Hemos enviado los detalles de tu reserva al correo asociado a tu cuenta. ¡Gracias por confiar en AIO!.");
-                }, function(error) {
-                    console.error("Error al enviar el correo", error);
-                    alert("Ocurrió un error al enviar el correo. Por favor, intenta nuevamente.");
-                });
-        }
-
-        document.addEventListener("DOMContentLoaded", sendReservationEmail);
-    </script>
     <style>
         /* Estilos personalizados */
         @font-face {
@@ -82,14 +26,26 @@
         .btn:hover { background-color: #b91c1c; }
         .btnPark { background-color: #1f3de0; }
         .btnPark:hover { background-color: #233181; }
+        .notification {
+            background-color: #1f3de0;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            display: none;
+        }
     </style>
 </head>
+
+{% if sessionData.servicio == 'parking' %}
+    {% include 'partials/headerParking.html.twig'%}
+{% else %}
+    {% include 'partials/header.html.twig' %}
+{% endif %}
+
 <body class="bg-white">
-    {% if sessionData.servicio == 'parking' %}
-        {% include 'partials/headerParking.html.twig'%}
-    {% else %}
-        {% include 'partials/header.html.twig' %}
-    {% endif %}
     <main class="w-full px-4 pt-10 bg-white flex flex-col items-center gap-10">
         <section class="w-full max-w-[980px] p-6 bg-[#f0edf2] rounded-[14px] border border-black flex flex-col justify-center items-center gap-6">
             <h1 class="text-black text-3xl md:text-4xl lg:text-5xl font-bold text-center">Confirmación de Reserva</h1>
@@ -118,7 +74,6 @@
                         <h3 class="text-black text-xl md:text-2xl font-bold mb-4">Detalles Adicionales para Parking</h3>
                         <p class="text-black text-xl"><strong>Tipo de reserva:</strong> {{ sessionData.reserva.largo_plazo }}</p>
                         <p class="text-black text-xl"><strong>Plaza/s reservada/s:</strong> {{ sessionData.reserva.plazas }}</p>
-
                     </div>
                     <a href="{{ path('aioParking') }}" class="w-full max-w-[300px] h-[60px] duration-300 btnPark text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
                         Volver a AIO Parking
@@ -139,6 +94,72 @@
         </section>
     </main>
 
+    <!-- Notification -->
+    <div id="notification" class="notification">Reserva confirmada. Hemos enviado los detalles de tu reserva a tu correo.</div>
+
     {% include 'partials/footer.html.twig' %}
+
+    <!-- JavaScript para enviar email de confirmación -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Inicializar EmailJS
+            emailjs.init("DglhVJa9EbJc5VRgg");
+
+            // Mostrar notificación en lugar de alert
+            function showNotification(message) {
+                const notification = document.getElementById("notification");
+                notification.textContent = message;
+                notification.style.display = "block";
+                setTimeout(() => notification.style.display = "none", 5000);
+            }
+
+            function sendReservationEmail() {
+                let templateID;
+                const emailData = {
+                    email: "{{ sessionData.email }}",
+                    nombre: "{{ sessionData.nombre }}",
+                    apellido: "{{ sessionData.apellido }}",
+                    servicio: "{{ sessionData.servicio }}",
+                    id_servicio: "{{ sessionData.reserva.id }}",
+                    matricula: "{{ sessionData.reserva.matricula }}",
+                    precio: "{{ sessionData.reserva.precio }}",
+                    fecha_inicio: "{{ sessionData.reserva.fecha_inicio }}",
+                    fecha_final: "{{ sessionData.reserva.fecha_final }}"
+                };
+
+                if ("{{ sessionData.servicio }}" === "taller") {
+                    templateID = "template_k45nphm";
+                    {% if sessionData.reserva.tipo is defined %}
+                        emailData.tipo = "{{ sessionData.reserva.tipo }}";
+                    {% endif %}
+                    {% if sessionData.reserva.descripcion is defined %}
+                        emailData.descripcion = "{{ sessionData.reserva.descripcion }}";
+                    {% endif %}
+                } else if ("{{ sessionData.servicio }}" === "parking") {
+                    templateID = "template_thhd7ld";
+                    {% if sessionData.reserva.largo_plazo is defined %}
+                        emailData.largo_plazo = "{{ sessionData.reserva.largo_plazo }}";
+                    {% endif %}
+                    {% if sessionData.reserva.tipo_plaza is defined %}
+                        emailData.tipo_plaza = "{{ sessionData.reserva.tipo_plaza }}";
+                    {% endif %}
+                    {% if sessionData.reserva.plazas is defined %}
+                        emailData.plazas = "{{ sessionData.reserva.plazas }}";
+                    {% endif %}
+                }
+
+                emailjs.send("service_rcnltqu", templateID, emailData)
+                    .then(function(response) {
+                        console.log("Datos de reserva enviados.", response.status, response.text);
+                        showNotification("Reserva confirmada. Hemos enviado los detalles de tu reserva a tu correo.");
+                    }, function(error) {
+                        console.error("Error al enviar el correo", error);
+                        showNotification("Error al enviar el correo. Intenta nuevamente.");
+                    });
+            }
+
+            sendReservationEmail();
+        });
+    </script>
 </body>
 </html>
