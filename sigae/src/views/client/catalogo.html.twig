@@ -71,27 +71,32 @@
     {% include 'partials/header.html.twig' %}
 
     <div class="container mx-auto px-4 py-8">
-        {# Header y Búsqueda #}
-        <div class="max-w-4xl mx-auto flex flex-col items-center gap-8 mb-12">
-            <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                <h1 class="text-center text-black text-3xl md:text-4xl font-bold">Nuestros productos</h1>
+                {# Header y Búsqueda #}
+        <div class="w-full max-w-4xl mx-auto flex flex-col md:flex-row gap-4 justify-center items-center">
+            <div class="relative w-full md:w-96">
+                <input 
+                    type="text" 
+                    id="buscar" 
+                    placeholder="Buscar productos..." 
+                    class="w-full h-14 px-6 pr-12 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
+                >
+                <img 
+                    id="searchIcon" 
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer hover:opacity-75 transition-opacity duration-300" 
+                    src="{{ asset('svg/search.svg') }}" 
+                    alt="Search"
+                >
             </div>
-            <div class="w-full max-w-md">
-                <div class="relative">
-                    <input 
-                        type="text" 
-                        id="buscar" 
-                        placeholder="Buscar productos..." 
-                        class="w-full h-14 px-6 pr-12 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
-                    >
-                    <img 
-                        id="searchIcon" 
-                        class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer hover:opacity-75 transition-opacity duration-300" 
-                        src="{{ asset('svg/search.svg') }}" 
-                        alt="Search"
-                    >
-                </div>
-            </div>
+
+            {# filtrado #}
+            <select 
+                id="filtroProductos" 
+                class="w-full md:w-48 h-14 px-4 rounded-lg border border-gray-200 bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
+            >
+                <option value="todos" {% if filtro == 'todos' %}selected{% endif %}>Todos los productos</option>
+                <option value="neumaticos" {% if filtro == 'neumaticos' %}selected{% endif %}>Neumáticos</option>
+                <option value="otros" {% if filtro == 'otros' %}selected{% endif %}>Otros productos</option>
+            </select>
         </div>
         
         {# Contenedor de Productos #}
@@ -137,6 +142,18 @@
             </button>
         </div>
     </div>
+
+<script>
+    //filtro
+    document.addEventListener('DOMContentLoaded', function() {
+        const filtroSelect = document.getElementById('filtroProductos');
+        
+        // Manejar cambios en el filtro
+        filtroSelect.addEventListener('change', function() {
+            window.location.href = `{{ path('filterProducts') }}?filtro=${this.value}`;
+        });
+    });
+</script>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
