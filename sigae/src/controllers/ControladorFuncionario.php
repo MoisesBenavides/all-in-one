@@ -120,6 +120,16 @@ class ControladorFuncionario extends AbstractController {
         }
     }
 
+    function workshopAvailability(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
     function stockManagement(): Response{
         $rol=$_SESSION['rol'];
         switch($rol){
