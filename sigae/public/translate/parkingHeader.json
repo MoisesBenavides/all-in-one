@@ -1,20 +1,20 @@
 {
     "es": {
-      "home": "Home",
+      "home": "All in one",
       "reservar": "Reserva simple",
       "reservar_largo": "Reserva Largo Plazo",
       "misReservas": "Mis Reservas",
       "faq": "FAQ"
     },
     "it": {
-        "home": "Home",
+        "home": "All in one",
         "reservar": "Prenotazione Simple",
         "reservar_largo": "Prenotazione Lungo Termine",
         "misReservas": "Miei Prenotazioni",
         "faq": "FAQ"
     },
     "en": {
-        "home": "Home",
+        "home": "All in one",
         "reservar": "Simple Booking",
         "reservar_largo": "Long-term Booking",
         "misReservas": "My Bookings",

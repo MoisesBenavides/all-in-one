@@ -48,7 +48,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
 
             <!-- Navegación Principal -->
             <nav class="flex justify-center space-x-6 mx-4 flex-grow">
-                <a href="{{ path('home') }}" traducir="home" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Home</a>
+                <a href="{{ path('home') }}" traducir="home" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">All in one</a>
                 <a href="{{ path('aioParkingBookSimple') }}" traducir="reservar" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservar</a>
                 <a href="{{ path('aioParkingBookLongTerm') }}" traducir="reservar_largo" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservar a largo plazo</a>
                 <a href="{{ path('myBookedServices') }}" traducir="misReservas" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Mis Reservas</a>
@@ -151,11 +151,11 @@ const SESSION_URL = "{{ path('getClientSession') }}";
         <!-- Menú hamburguesa móvil -->
         <nav id="mobileMenu" class="hidden mt-4 bg-white rounded-lg shadow-lg">
             <div class="py-2">
-                <a href="{{ path('home') }}" traducir="" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">All in one</a>
-                <a href="{{ path('aioParkingBookSimple') }}" traducir="" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservar</a>
-                <a href="{{ path('aioParkingBookLongTerm') }}" traducir="" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservar a largo plazo</a>
-                <a href="{{ path('myBookedServices') }}" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Mis Reservas</a>
-                <a href="{{ path('faq') }}" traducir="" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">FAQ</a>
+                <a href="{{ path('home') }}" traducir="home" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">All in one</a>
+                <a href="{{ path('aioParkingBookSimple') }}" traducir="reservar" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservar</a>
+                <a href="{{ path('aioParkingBookLongTerm') }}" traducir="reservar_largo" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Reservar a largo plazo</a>
+                <a href="{{ path('myBookedServices') }}" traducir="MisReservas" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Mis Reservas</a>
+                <a href="{{ path('faq') }}" traducir="faq" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">FAQ</a>
             </div>
         </nav>
     </div>
