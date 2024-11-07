@@ -54,7 +54,7 @@ class ControladorNeumatico extends AbstractController{
                         $fecha = $this->obtenerFechaHoraActual();
 
                         // Instancia vehiculo con datos ingresados
-                        $this->neumatico = new Neumatico($tamano, $modelo, $tipo, null, $upc, $precio, $marca, $fecha, 0);
+                        $this->neumatico = new Neumatico($tamano, $modelo, $tipo, null, $upc, $precio, $marca, $fecha, 0, false);
 
                         // Inicializar una conexión PDO como cliente
                         $this->neumatico->setDBConnection("gerente");

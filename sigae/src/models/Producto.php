@@ -14,15 +14,17 @@ abstract class Producto{
     protected $marca;
     protected $fecha_creacion;
     protected $stock;
+    protected $archivado;
 
     public function __construct($id = null, $upc = null, $precio = null, 
-                                $marca = null, $fecha_creacion = null, $stock = null) {
+                                $marca = null, $fecha_creacion = null, $stock = null, $archivado = null) {
         $this->id = $id;
         $this->upc = $upc;
         $this->precio = $precio;
         $this->marca = $marca;
         $this->fecha_creacion = $fecha_creacion;
         $this->stock = $stock;
+        $this->archivado = $archivado;
     }
     
     public function getId(){
@@ -71,6 +73,14 @@ abstract class Producto{
 
     public function setStock($stock){
         $this->stock = $stock;
+    }
+
+    public function setArchivado($archivado){
+        $this->archivado = $archivado;
+    }
+
+    public function getArchivado(){
+        return $this->archivado;
     }
 
     public function setDBConnection($rol){
@@ -124,7 +134,7 @@ abstract class Producto{
                                         FROM producto p 
                                         LEFT JOIN neumatico n ON p.id=n.id_producto 
                                         LEFT JOIN otro_producto op ON p.id=op.id_producto 
-                                        WHERE p.stock > 0');
+                                        WHERE p.stock > 0 AND p.archivado=0');
             $stmt->execute();
 
             $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -154,6 +164,7 @@ abstract class Producto{
                                         FROM producto p 
                                         LEFT JOIN neumatico n ON p.id=n.id_producto 
                                         LEFT JOIN otro_producto op ON p.id=op.id_producto 
+                                        WHERE p.archivado=0 
                                         ORDER BY p.id DESC');
             $stmt->execute();
 
