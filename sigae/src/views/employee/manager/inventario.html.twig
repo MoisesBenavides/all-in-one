@@ -199,7 +199,12 @@
                 </form>
             </div>
         </div>
-
+    <div id="successAlert" class="hidden fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg transition-opacity duration-500">
+        <p class="flex items-center">
+            <span class="mr-2">✓</span>
+            <span id="alertMessage">Producto agregado exitosamente</span>
+        </p>
+    </div>
 
         <!-- No Results Message -->
         <div id="noResults" class="hidden text-center py-8">
@@ -301,6 +306,57 @@
             </button>
         </div>
     </div>
+
+    <script>
+        // Función para mostrar la alerta
+        function showSuccessAlert(message) {
+            const alert = document.getElementById('successAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            alertMessage.textContent = message;
+            
+            // Mostrar la alerta
+            alert.classList.remove('hidden');
+            alert.classList.add('opacity-100');
+            
+            // Ocultar después de 3 segundos
+            setTimeout(() => {
+                alert.classList.add('opacity-0');
+                setTimeout(() => {
+                    alert.classList.add('hidden');
+                }, 500);
+            }, 3000);
+        }
+
+        // Verificar si hay mensaje de éxito en la respuesta
+        {% if response is defined and response.success is defined %}
+            showSuccessAlert("{{ response.success }}");
+        {% endif %}
+
+        // Agregar event listeners a los formularios
+        document.getElementById('new-tire-form').addEventListener('submit', function(e) {
+            // El formulario se enviará normalmente, y la alerta se mostrará en la siguiente carga
+            // si el servidor responde con éxito
+            localStorage.setItem('showAlert', 'tire');
+        });
+
+        document.getElementById('new-product-form').addEventListener('submit', function(e) {
+            localStorage.setItem('showAlert', 'product');
+        });
+
+        // Verificar si hay una alerta pendiente al cargar la página
+        window.addEventListener('load', function() {
+            const pendingAlert = localStorage.getItem('showAlert');
+            if (pendingAlert) {
+                if (pendingAlert === 'tire') {
+                    showSuccessAlert('Neumático agregado exitosamente');
+                } else if (pendingAlert === 'product') {
+                    showSuccessAlert('Producto agregado exitosamente');
+                }
+                localStorage.removeItem('showAlert');
+            }
+        });
+    </script>
+
     <script>
         // Toggle Tire form visibility
         const addTireBtn = document.getElementById('add-tire-btn');
