@@ -37,17 +37,101 @@
 {% include 'partials/headerCajero.html.twig' %}
 
 <body>
+    <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <!-- Form principal -->
+        <div class="p-6 space-y-6">
+        <form method="POST" action="{{ path('process_reservation') }}" class="space-y-6">
+            <!-- input de ID de reserva -->
+            <div>
+            <input type="text" 
+                    name="reservation_ids[]" 
+                    id="reservation_id"
+                    class="block w-full rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                    placeholder="ID de Reserva">
+            </div>
 
+            <!-- Seccion de productos -->
+            <div id="products-container" class="space-y-4">
+            <div class="flex items-center space-x-2">
+                <input type="text" 
+                    name="product_ids[]"
+                    class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                    placeholder="Agregar Producto">
+                <button type="button" 
+                        onclick="addProductInput()"
+                        class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                +
+                </button>
+            </div>
+            </div>
 
-<section class="flex overflow-hidden flex-col justify-center items-center py-60 pr-16 pl-20 font-bold whitespace-nowrap bg-white max-md:px-5 max-md:py-24">
-  <div class="flex flex-col max-w-full w-[1297px]">
-    <article class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
-      <h2 class="text-4xl text-neutral-900">Preparar Orden</h2>
-    </article>
-  </div>
-</section>
+            <!-- Display -->
+            <div class="bg-gray-50 rounded-md p-4 space-y-3">
+            <div class="text-sm">
+                <span class="text-gray-600">RESERVA ID:</span>
+                <span id="display_reservation" class="ml-2 font-medium">-</span>
+            </div>
+            <div class="text-sm">
+                <span class="text-gray-600">PRODUCTOS ID:</span>
+                <div id="display_products" class="mt-1 ml-2 font-medium space-y-1">
+                -
+                </div>
+            </div>
+            </div>
 
-  </main>
+            <!-- Submit Button -->
+            <button type="submit"
+                    class="w-full rounded-md border border-transparent bg-red-500 py-3 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+           Preparar orden
+            </button>
+        </form>
+        </div>
+    </div>
+    </div>
+
+    <script>
+    function addProductInput() {
+    const container = document.getElementById('products-container');
+    const newInput = document.createElement('div');
+    newInput.className = 'flex items-center space-x-2';
+    newInput.innerHTML = `
+        <input type="text" 
+            name="product_ids[]"
+            class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            placeholder="Agregar Producto">
+    `;
+    container.appendChild(newInput);
+    }
+
+    // Update display when inputs change
+    document.addEventListener('input', function(e) {
+    if (e.target.name === 'reservation_ids[]') {
+        document.getElementById('display_reservation').textContent = e.target.value || '-';
+    }
+    if (e.target.name === 'product_ids[]') {
+        updateProductsDisplay();
+    }
+    });
+
+    function updateProductsDisplay() {
+    const productInputs = document.getElementsByName('product_ids[]');
+    const displayContainer = document.getElementById('display_products');
+    displayContainer.innerHTML = '';
+    
+    productInputs.forEach(input => {
+        if (input.value) {
+        const div = document.createElement('div');
+        div.textContent = input.value;
+        displayContainer.appendChild(div);
+        }
+    });
+    
+    if (displayContainer.children.length === 0) {
+        displayContainer.innerHTML = '-';
+    }
+    }
+    </script>
 
     {% include 'partials/footer.html.twig' %}
 
