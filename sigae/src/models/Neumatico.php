@@ -166,7 +166,7 @@ class Neumatico extends Producto{
                                                 n.tamano, n.modelo, n.tipo
                                         FROM producto p 
                                         JOIN neumatico n ON p.id=n.id_producto
-                                        WHERE p.stock > 0 AND p.archivo=0');
+                                        WHERE p.stock > 0 AND p.archivado=0');
             $stmt->execute();
 
             $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);
