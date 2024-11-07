@@ -37,101 +37,167 @@
 {% include 'partials/headerCajero.html.twig' %}
 
 <body>
-    <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <!-- Form principal -->
-        <div class="p-6 space-y-6">
-        <form method="POST" action="" class="space-y-6"> <!-- {{ path('prepareOrder') }} -->
-            <!-- input de ID de reserva -->
-            <div>
-            <input type="text" 
-                    name="reservation_ids[]" 
-                    id="reservation_id"
-                    class="block w-full rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                    placeholder="ID de Reserva">
-            </div>
+   <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-6 space-y-6">
+      <form id="billing-form" method="POST" action="{{ path('process_reservation') }}" class="space-y-6">
+        <!-- Hidden inputs to store the arrays -->
+        <div id="hidden-reservations"></div>
+        <div id="hidden-products"></div>
 
-            <!-- Seccion de productos -->
-            <div id="products-container" class="space-y-4">
-            <div class="flex items-center space-x-2">
-                <input type="text" 
-                    name="product_ids[]"
-                    class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                    placeholder="Agregar Producto">
-                <button type="button" 
-                        onclick="addProductInput()"
-                        class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
-                +
-                </button>
-            </div>
-            </div>
-
-            <!-- Display -->
-            <div class="bg-gray-50 rounded-md p-4 space-y-3">
-            <div class="text-sm">
-                <span class="text-gray-600">RESERVA ID:</span>
-                <span id="display_reservation" class="ml-2 font-medium">-</span>
-            </div>
-            <div class="text-sm">
-                <span class="text-gray-600">PRODUCTOS ID:</span>
-                <div id="display_products" class="mt-1 ml-2 font-medium space-y-1">
-                -
-                </div>
-            </div>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit"
-                    class="w-full rounded-md border border-transparent bg-red-500 py-3 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
-           Preparar orden
-            </button>
-        </form>
+        <!-- Reservation ID Input -->
+        <div class="flex items-center space-x-2">
+          <input type="text" 
+                 id="reservation_id"
+                 class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                 placeholder="ID de Reserva">
+          <button type="button" 
+                  onclick="addReservation()"
+                  class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+            +
+          </button>
         </div>
-    </div>
-    </div>
 
-    <script>
-    function addProductInput() {
-    const container = document.getElementById('products-container');
-    const newInput = document.createElement('div');
-    newInput.className = 'flex items-center space-x-2';
-    newInput.innerHTML = `
-        <input type="text" 
-            name="product_ids[]"
-            class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            placeholder="Agregar Producto">
-    `;
-    container.appendChild(newInput);
+        <!-- Product Section -->
+        <div class="space-y-4">
+          <div class="flex items-center space-x-2">
+            <input type="text" 
+                   id="product_id"
+                   class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                   placeholder="Agregar Producto">
+            <button type="button" 
+                    onclick="addProduct()"
+                    class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- Display Section -->
+        <div class="bg-gray-50 rounded-md p-4 space-y-3">
+          <div class="text-sm">
+            <span class="text-gray-600">RESERVAS ID:</span>
+            <div id="display_reservations" class="mt-1 ml-2 font-medium space-y-1">
+              -
+            </div>
+          </div>
+          <div class="text-sm">
+            <span class="text-gray-600">PRODUCTOS ID:</span>
+            <div id="display_products" class="mt-1 ml-2 font-medium space-y-1">
+              -
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit"
+                class="w-full rounded-md border border-transparent bg-red-500 py-3 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+          Enviar a facturar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    let reservations = [];
+    let products = [];
+
+    function updateHiddenInputs() {
+    const reservationsContainer = document.getElementById('hidden-reservations');
+    const productsContainer = document.getElementById('hidden-products');
+    
+    reservationsContainer.innerHTML = reservations.map(id => 
+        `<input type="hidden" name="reservation_ids[]" value="${id}">`
+    ).join('');
+    
+    productsContainer.innerHTML = products.map(id => 
+        `<input type="hidden" name="product_ids[]" value="${id}">`
+    ).join('');
     }
 
-    // Update display when inputs change
-    document.addEventListener('input', function(e) {
-    if (e.target.name === 'reservation_ids[]') {
-        document.getElementById('display_reservation').textContent = e.target.value || '-';
+    function addReservation() {
+    const input = document.getElementById('reservation_id');
+    const value = input.value.trim();
+    
+    if (value) {
+        reservations.push(value);
+        updateDisplay();
+        updateHiddenInputs();
+        input.value = '';
     }
-    if (e.target.name === 'product_ids[]') {
-        updateProductsDisplay();
+    }
+
+    function addProduct() {
+    const input = document.getElementById('product_id');
+    const value = input.value.trim();
+    
+    if (value) {
+        products.push(value);
+        updateDisplay();
+        updateHiddenInputs();
+        input.value = '';
+    }
+    }
+
+    function updateDisplay() {
+    const reservationsDisplay = document.getElementById('display_reservations');
+    const productsDisplay = document.getElementById('display_products');
+    
+    if (reservations.length > 0) {
+        reservationsDisplay.innerHTML = reservations.map(id => 
+        `<div class="flex items-center justify-between">
+            <span>${id}</span>
+            <button type="button" onclick="removeReservation('${id}')" class="text-red-500 hover:text-red-700 text-sm">
+            ×
+            </button>
+        </div>`
+        ).join('');
+    } else {
+        reservationsDisplay.innerHTML = '-';
+    }
+    
+    if (products.length > 0) {
+        productsDisplay.innerHTML = products.map(id => 
+        `<div class="flex items-center justify-between">
+            <span>${id}</span>
+            <button type="button" onclick="removeProduct('${id}')" class="text-red-500 hover:text-red-700 text-sm">
+            ×
+            </button>
+        </div>`
+        ).join('');
+    } else {
+        productsDisplay.innerHTML = '-';
+    }
+    }
+
+    function removeReservation(id) {
+    reservations = reservations.filter(r => r !== id);
+    updateDisplay();
+    updateHiddenInputs();
+    }
+
+    function removeProduct(id) {
+    products = products.filter(p => p !== id);
+    updateDisplay();
+    updateHiddenInputs();
+    }
+
+    // Allow Enter key to trigger add buttons
+    document.getElementById('reservation_id').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        addReservation();
     }
     });
 
-    function updateProductsDisplay() {
-    const productInputs = document.getElementsByName('product_ids[]');
-    const displayContainer = document.getElementById('display_products');
-    displayContainer.innerHTML = '';
-    
-    productInputs.forEach(input => {
-        if (input.value) {
-        const div = document.createElement('div');
-        div.textContent = input.value;
-        displayContainer.appendChild(div);
-        }
+    document.getElementById('product_id').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        addProduct();
+    }
     });
-    
-    if (displayContainer.children.length === 0) {
-        displayContainer.innerHTML = '-';
-    }
-    }
-    </script>
+</script>
 
     {% include 'partials/footer.html.twig' %}
 
