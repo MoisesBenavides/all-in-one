@@ -57,8 +57,8 @@
             // Enviar el correo usando EmailJS con el Service ID y Template ID seleccionados
             emailjs.send("service_rcnltqu", templateID, emailData)
                 .then(function(response) {
-                    console.log("Los datos de la reserva se han enviado a su correo.", response.status, response.text);
-                    alert("Se ha enviado ");
+                    console.log("Datos de reserva enviados.", response.status, response.text);
+                    alert("Los datos de la reserva se han enviado a su correo.");
                 }, function(error) {
                     console.error("Error al enviar el correo", error);
                     alert("Ocurrió un error al enviar el correo. Por favor, intenta nuevamente.");
