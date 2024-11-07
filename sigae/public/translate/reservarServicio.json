@@ -1,0 +1,116 @@
+{
+    "es": {
+      "titulo_pagina": "Reserva de Servicio Mecánico | AIO",
+      "seleccione_servicio": "Seleccione el servicio",
+      "tipo_servicio": "Tipo de Servicio",
+      "subtipo_servicio": "Subtipo de Servicio",
+      "fecha_hora": "Fecha y Hora",
+      "tipo_vehiculo": "Tipo de vehículo",
+      "sus_vehiculos": "Tus vehículos",
+      "seleccione_vehiculo": "Seleccione un vehículo",
+      "no_vehiculos": "No tienes vehículos vinculados",
+      "matricula_placeholder": "O registra ya con Matrícula",
+      "continuar": "Continuar",
+      "horario_atencion": "Horario de atención: 5:00 AM - 5:00 PM",
+      "servicio_dos_horarios": "Este servicio requiere seleccionar dos horarios consecutivos",
+      "servicios": {
+        "alineacion": "Alineación",
+        "balanceo": "Balanceo",
+        "neumaticos": "Servicios neumáticos",
+        "diagnostico": "Diagnóstico",
+        "completo": "Servicio completo (Alineación y Balanceo)"
+      },
+      "tipos_vehiculo": {
+        "auto": "Auto",
+        "moto": "Motocicleta",
+        "camion": "Pequeño camión",
+        "camioneta": "Camioneta",
+        "utilitario": "Pequeño utilitario"
+      },
+      "errores": {
+        "seleccione_servicio": "Por favor, seleccione un tipo de servicio",
+        "seleccione_subservicio": "Por favor, seleccione un subtipo de servicio",
+        "seleccione_fecha_hora": "Por favor, seleccione fecha y hora",
+        "seleccione_vehiculo": "Por favor, seleccione un tipo de vehículo o un vehículo existente",
+        "horarios_consecutivos": "Por favor, seleccione dos horarios consecutivos",
+        "error_reserva": "Error al procesar la reserva",
+        "error_form": "Error al inicializar el formulario"
+      }
+    },
+    "en": {
+      "titulo_pagina": "Mechanical Service Booking | AIO",
+      "seleccione_servicio": "Select service",
+      "tipo_servicio": "Service Type",
+      "subtipo_servicio": "Service Subtype",
+      "fecha_hora": "Date and Time",
+      "tipo_vehiculo": "Vehicle type",
+      "sus_vehiculos": "Your vehicles",
+      "seleccione_vehiculo": "Select a vehicle",
+      "no_vehiculos": "You have no linked vehicles",
+      "matricula_placeholder": "Or register now with License Plate",
+      "continuar": "Continue",
+      "horario_atencion": "Service hours: 5:00 AM - 5:00 PM",
+      "servicio_dos_horarios": "This service requires selecting two consecutive time slots",
+      "servicios": {
+        "alineacion": "Alignment",
+        "balanceo": "Balancing",
+        "neumaticos": "Tire services",
+        "diagnostico": "Diagnosis",
+        "completo": "Complete service (Alignment and Balancing)"
+      },
+      "tipos_vehiculo": {
+        "auto": "Car",
+        "moto": "Motorcycle",
+        "camion": "Small truck",
+        "camioneta": "Van",
+        "utilitario": "Small utility vehicle"
+      },
+      "errores": {
+        "seleccione_servicio": "Please select a service type",
+        "seleccione_subservicio": "Please select a service subtype",
+        "seleccione_fecha_hora": "Please select date and time",
+        "seleccione_vehiculo": "Please select a vehicle type or an existing vehicle",
+        "horarios_consecutivos": "Please select two consecutive time slots",
+        "error_reserva": "Error processing the reservation",
+        "error_form": "Error initializing the form"
+      }
+    },
+    "it": {
+      "titulo_pagina": "Prenotazione Servizio Meccanico | AIO",
+      "seleccione_servicio": "Seleziona il servizio",
+      "tipo_servicio": "Tipo di Servizio",
+      "subtipo_servicio": "Sottotipo di Servizio",
+      "fecha_hora": "Data e Ora",
+      "tipo_vehiculo": "Tipo di veicolo",
+      "sus_vehiculos": "I tuoi veicoli",
+      "seleccione_vehiculo": "Seleziona un veicolo",
+      "no_vehiculos": "Non hai veicoli collegati",
+      "matricula_placeholder": "O registra ora con Targa",
+      "continuar": "Continua",
+      "horario_atencion": "Orario di servizio: 5:00 - 17:00",
+      "servicio_dos_horarios": "Questo servizio richiede la selezione di due fasce orarie consecutive",
+      "servicios": {
+        "alineacion": "Allineamento",
+        "balanceo": "Bilanciamento",
+        "neumaticos": "Servizi pneumatici",
+        "diagnostico": "Diagnostica",
+        "completo": "Servizio completo (Allineamento e Bilanciamento)"
+      },
+      "tipos_vehiculo": {
+        "auto": "Auto",
+        "moto": "Motocicletta",
+        "camion": "Piccolo camion",
+        "camioneta": "Furgone",
+        "utilitario": "Piccolo veicolo utilitario"
+      },
+      "errores": {
+        "seleccione_servicio": "Seleziona un tipo di servizio",
+        "seleccione_subservicio": "Seleziona un sottotipo di servizio",
+        "seleccione_fecha_hora": "Seleziona data e ora",
+        "seleccione_vehiculo": "Seleziona un tipo di veicolo o un veicolo esistente",
+        "horarios_consecutivos": "Seleziona due fasce orarie consecutive",
+        "error_reserva": "Errore durante l'elaborazione della prenotazione",
+        "error_form": "Errore durante l'inizializzazione del modulo"
+      }
+    }
+  }
