@@ -33,6 +33,10 @@ class ControladorServicio extends AbstractController{
                 $uruguayTimezone = new DateTimeZone('America/Montevideo');
                 $ahora = new DateTime('now', $uruguayTimezone);
                 $dtActual = $ahora->format('Y-m-d H:i:s');
+                
+                //Debug 
+                error_log('Fecha y hora actual: '. $dtActual);
+                error_log('Fecha y hora del inicio: '. $dtServicio);
 
                 // Comparar si fecha y hora actual es posterior a una hora antes de la fecha y hora del inicio del servicio
                 if ($dtActual > $dtServicio){
