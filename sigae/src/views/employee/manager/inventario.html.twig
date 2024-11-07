@@ -308,6 +308,31 @@
     </div>
 
     <script>
+        // traer el neumatico
+        const newTireForm = document.getElementById('new-tire-form');
+
+        // Aevent listener de submit de el tire form
+        newTireForm.addEventListener('submit', function(e) {
+            // conseguir las fields de tamano y tipo
+            const tamanoInput = document.getElementById('tire-tamano');
+            const tipoInput = document.getElementById('tire-tipo');
+            
+            // hacer qeu sean mayus
+            tamanoInput.value = tamanoInput.value.toUpperCase();
+            tipoInput.value = tipoInput.value.toUpperCase();
+        });
+
+        // Optional: hacerlo mayus mientras se escribe a tiempo real
+        document.getElementById('tire-tamano').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        document.getElementById('tire-tipo').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+    </script>
+
+    <script>
         // Función para mostrar la alerta
         function showSuccessAlert(message) {
             const alert = document.getElementById('successAlert');
