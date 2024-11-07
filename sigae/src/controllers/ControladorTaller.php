@@ -26,7 +26,14 @@ class ControladorTaller extends AbstractController{
     public function __construct(){
         $this->cargarServicios(self::PATH_SERVICIOS_JSON);
         $this->cargarHorarios(self::PATH_HORARIOS_JSON);
-        $this->controladorVehiculo = new ControladorVehiculo();
+    }
+
+    public function getServiciosDisp(){
+        return $this->serviciosDisp;
+    }
+
+    public function getHorarios(){
+        return $this->horarios;
     }
 
     function bookService(): Response{
@@ -63,6 +70,8 @@ class ControladorTaller extends AbstractController{
     
             if (isset($matricula)) { // Verifica que la matrícula se haya definido correctamente
                 $matricula = strtoupper($matricula);
+
+                $this->controladorVehiculo = new ControladorVehiculo();
 
                 // Validaciones
                 if (!$this->validarFecha($fecha_inicio)) {
