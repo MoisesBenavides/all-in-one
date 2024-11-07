@@ -73,7 +73,13 @@
 </head>
 
 {% include 'partials/header.html.twig' %}
-
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+        const archivoTraduccionMiCuenta = "{{ asset('translate/miCuenta.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionMiCuenta, 'es');
+    });
+</script>
 <body class="bg-white">
     <section class="container mx-auto px-4 py-8 max-w-2xl">
                 {% if response.errors is defined and response.errors is not empty %}
@@ -97,45 +103,45 @@
 
         <form id="edit-account-form" action="{{ path('editMyAccount') }}" method="POST">
             <div class="mb-6">
-                <label for="email" class="block text-lg font-medium text-neutral-900 mb-2">Correo*</label>
+                <label for="email" traducir="correo" class="block text-lg font-medium text-neutral-900 mb-2">Correo*</label>
                 <input type="email" id="email" name="email" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
                     value="{{ cliente.email}}" readonly aria-label="Email address" />
             </div>
 
             <div class="mb-6 relative">
-                <label for="nombre" class="block text-lg font-medium text-neutral-900 mb-2">Nombre*</label>
+                <label for="nombre" traducir="nombre" class="block text-lg font-medium text-neutral-900 mb-2">Nombre*</label>
                 <input type="text" id="nombre" name="nombre" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
                     value="{{ cliente.nombre }}" aria-label="Nombre" />
             </div>
 
             {% if  (cliente.apellido) %}
                 <div class="mb-6 relative">
-                    <label for="apellido" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
+                    <label for="apellido" traducir="apellido" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
                     <input type="text" id="apellido" name="apellido" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
                         value="{{ cliente.apellido }}" aria-label="Apellido" />
                 </div>
             {% else %}
                 <div class="mb-6 relative">
-                    <label for="apellido" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
+                    <label for="apellido" traducir="apellido" class="block text-lg font-medium text-neutral-900 mb-2">Apellido</label>
                     <input type="text" id="apellido" name="apellido" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
                         placeholder="Ingrese un apellido" aria-label="Apellido" />
                 </div>
             {% endif %}
             {% if  (cliente.telefono) %}
                 <div class="mb-8 relative">
-                    <label for="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
+                    <label for="telefono" traducir="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
                     <input type="tel" id="telefono" name="telefono" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
                         value="{{cliente.telefono}}" aria-label="Número de teléfono" />
                 </div>
             {% else %}
                 <div class="mb-8 relative">
-                    <label for="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
+                    <label for="telefono" traducir="telefono" class="block text-lg font-medium text-neutral-900 mb-2">Teléfono</label>
                     <input type="tel" id="telefono" name="telefono" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
                         placeholder="Ingrese un teléfono (máx. 8 dígitos)" aria-label="Número de teléfono" />
                 </div>
             {% endif %}
 
-            <button type="submit" class="w-full md:w-auto px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg transition-colors mb-8">
+            <button type="submit" traducir="modificar" class="w-full md:w-auto px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg transition-colors mb-8">
                 Modificar
             </button>
         </form>
@@ -148,19 +154,19 @@
                         <form class="vehicle-form" id="vehicle-form-{{ loop.index }}" action="{{ path('editVehicle') }}" method="POST">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div>
-                                    <label class="block text-lg font-medium text-neutral-900 mb-2">Matrícula*</label>
+                                    <label traducir="matricula" class="block text-lg font-medium text-neutral-900 mb-2">Matrícula*</label>
                                     <input type="text" name="matricula" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm editable" value="{{ vehiculo.matricula }}" readonly>
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-lg font-medium text-neutral-900 mb-2">Marca</label>
+                                    <label traducir="marca" class="block text-lg font-medium text-neutral-900 mb-2">Marca</label>
                                     <select name="marca" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm editable" disabled data-current-value="{{ vehiculo.marca }}">
                                         <option value="{{ vehiculo.marca }}">{{ vehiculo.marca }}</option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label class="block text-lg font-medium text-neutral-900 mb-2">Modelo</label>
+                                    <label traducir="modelo" class="block text-lg font-medium text-neutral-900 mb-2">Modelo</label>
                                     <select name="modelo" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm editable" disabled data-current-value="{{ vehiculo.modelo }}">
                                         <option value="{{ vehiculo.modelo }}">{{ vehiculo.modelo }}</option>
                                     </select>
@@ -169,16 +175,16 @@
                                 <div>
                                     <label class="block text-lg font-medium text-neutral-900 mb-2">Tipo*</label>
                                     <select name="tipo" class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm editable" disabled>
-                                        <option value="auto" {% if vehiculo.tipo == 'auto' %}selected{% endif %}>Auto</option>
-                                        <option value="camioneta" {% if vehiculo.tipo == 'camioneta' %}selected{% endif %}>Camioneta</option>
-                                        <option value="camion" {% if vehiculo.tipo == 'camion' %}selected{% endif %}>Pequeño camión</option>
-                                        <option value="utilitario" {% if vehiculo.tipo == 'utilitario' %}selected{% endif %}>Pequeño utilitario</option>
-                                        <option value="moto" {% if vehiculo.tipo == 'moto' %}selected{% endif %}>Moto</option>
+                                        <option traducir="auto" value="auto" {% if vehiculo.tipo == 'auto' %}selected{% endif %}>Auto</option>
+                                        <option traducir="camioneta" value="camioneta" {% if vehiculo.tipo == 'camioneta' %}selected{% endif %}>Camioneta</option>
+                                        <option traducir="camion" value="camion" {% if vehiculo.tipo == 'camion' %}selected{% endif %}>Pequeño camión</option>
+                                        <option traducir="utilitario" value="utilitario" {% if vehiculo.tipo == 'utilitario' %}selected{% endif %}>Pequeño utilitario</option>
+                                        <option traducir="moto" value="moto" {% if vehiculo.tipo == 'moto' %}selected{% endif %}>Moto</option>
                                     </select>
                                 </div>
 
                                 <div class="md:col-span-2">
-                                    <label class="block text-lg font-medium text-neutral-900 mb-2">Color</label>
+                                    <label traducir="color" class="block text-lg font-medium text-neutral-900 mb-2">Color</label>
                                     <input type="color" name="color" class="w-full h-10 px-3 py-2 bg-white rounded-md border border-slate-300 text-sm editable" value="#{{ vehiculo.color }}" readonly>
                                 </div>
                             </div>
@@ -188,7 +194,7 @@
                                 <span class="edit-icon">✏️</span>
                                 <span class="save-icon hidden">💾</span>
                             </button>
-                            <button type="submit" class="edit-button px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
+                            <button type="submit" traducir="guardar" class="edit-button px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
                                 Guardar
                             </button>
                               
@@ -206,14 +212,14 @@
 
             <div class="space-y-4 mt-8 mb-16">
                 <button id="add-vehicle-btn" type="button" class="btn w-full flex justify-between items-center px-4 py-3 duration-300 text-white text-xl font-semibold rounded-md transition-colors">
-                    <span>Ingrese vehículo</span>
+                    <span traducir="ingresarVehiculo">Ingrese vehículo</span>
                     <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" class="w-5 h-5 transform transition-transform duration-300" id="dropdown-icon">
                 </button>
 
                 <form id="new-vehicle-form" action="{{ path('addVehicle')}}" class="hidden space-y-6 mt-4 p-4 border border-slate-300 rounded-md" method="POST">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="matricula" class="block text-lg font-medium text-neutral-900 mb-2">
+                            <label traducir="matricula" for="matricula" class="block text-lg font-medium text-neutral-900 mb-2">
                                 Matrícula *
                             </label>
                             <input type="text" id="matricula" name="matricula" required
@@ -222,42 +228,42 @@
                         </div>
 
                         <div>
-                            <label for="makeSelect" class="block text-lg font-medium text-neutral-900 mb-2">
+                            <label traducir="marcaOpcional" for="makeSelect" class="block text-lg font-medium text-neutral-900 mb-2">
                                 Marca (Opcional)
                             </label>
                             <select id="makeSelect" name="marca" 
                                 class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm">
-                                <option value="">Seleccione una marca</option>
+                                <option traducir="elegirMarca" value="">Seleccione una marca</option>
                             </select>
                         </div>
 
                         <div>
-                            <label for="modelSelect" class="block text-lg font-medium text-neutral-900 mb-2">
+                            <label traducir="modeloOpcional" for="modelSelect" class="block text-lg font-medium text-neutral-900 mb-2">
                                 Modelo (Opcional)
                             </label>
                             <select id="modelSelect" name="modelo" 
                                 class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm">
-                                <option value="">Seleccione un modelo</option>
+                                <option traducir="elegirModelo" value="">Seleccione un modelo</option>
                             </select>
                         </div>
 
                         <div>
-                            <label for="tipo" class="block text-lg font-medium text-neutral-900 mb-2">
+                            <label traducir="tipoVehiculo" for="tipo" class="block text-lg font-medium text-neutral-900 mb-2">
                                 Tipo de vehículo *
                             </label>
                             <select id="tipo" name="tipo" required
                                 class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm">
-                                <option value="">Seleccione un tipo</option>
-                                <option value="auto">Auto</option>
-                                <option value="camioneta">Camioneta</option>
-                                <option value="camion">Pequeño camión</option>
-                                <option value="utilitario">Pequeño utilitario</option>
-                                <option value="moto">Moto</option>
+                                <option traducir="tipo" value="">Seleccione un tipo</option>
+                                <option traducir="auto" value="auto">Auto</option>
+                                <option traducir="camioneta" value="camioneta">Camioneta</option>
+                                <option traducir="camion" value="camion">Pequeño camión</option>
+                                <option traducir="utilitario" value="utilitario">Pequeño utilitario</option>
+                                <option traducir="moto" value="moto">Moto</option>
                             </select>
                         </div>
 
                         <div class="md:col-span-2">
-                            <label for="color" class="block text-lg font-medium text-neutral-900 mb-2">
+                            <label traducir="color" for="color" class="block text-lg font-medium text-neutral-900 mb-2">
                                 Color *
                             </label>
                             <input type="color" id="color" name="color" required
@@ -265,7 +271,7 @@
                         </div>
 
                         <div class="md:col-span-2">
-                            <button type="submit" 
+                            <button traducir="guardarVehiculo" type="submit" 
                                 class="w-full md:w-auto px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg transition-colors">
                                 Guardar vehículo
                             </button>
