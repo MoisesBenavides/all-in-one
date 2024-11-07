@@ -307,87 +307,27 @@
         </div>
     </div>
 
-    <script>
-        // traer el neumatico
-        const newTireForm = document.getElementById('new-tire-form');
-
-        // Aevent listener de submit de el tire form
-        newTireForm.addEventListener('submit', function(e) {
-            // conseguir las fields de tamano y tipo
-            const tamanoInput = document.getElementById('tire-tamano');
-            const tipoInput = document.getElementById('tire-tipo');
-            
-            // hacer qeu sean mayus
-            tamanoInput.value = tamanoInput.value.toUpperCase();
-            tipoInput.value = tipoInput.value.toUpperCase();
-        });
-
-        // Optional: hacerlo mayus mientras se escribe a tiempo real
-        document.getElementById('tire-tamano').addEventListener('input', function(e) {
-            this.value = this.value.toUpperCase();
-        });
-
-        document.getElementById('tire-tipo').addEventListener('input', function(e) {
-            this.value = this.value.toUpperCase();
-        });
-    </script>
-
-    <script>
-        // Función para mostrar la alerta
-        function showSuccessAlert(message) {
-            const alert = document.getElementById('successAlert');
-            const alertMessage = document.getElementById('alertMessage');
-            alertMessage.textContent = message;
-            
-            // Mostrar la alerta
-            alert.classList.remove('hidden');
-            alert.classList.add('opacity-100');
-            
-            // Ocultar después de 3 segundos
-            setTimeout(() => {
-                alert.classList.add('opacity-0');
-                setTimeout(() => {
-                    alert.classList.add('hidden');
-                }, 500);
-            }, 3000);
-        }
-
-        // Verificar si hay mensaje de éxito en la respuesta
-        {% if response is defined and response.success is defined %}
-            showSuccessAlert("{{ response.success }}");
-        {% endif %}
-
-        // Agregar event listeners a los formularios
-        document.getElementById('new-tire-form').addEventListener('submit', function(e) {
-            // El formulario se enviará normalmente, y la alerta se mostrará en la siguiente carga
-            // si el servidor responde con éxito
-            localStorage.setItem('showAlert', 'tire');
-        });
-
-        document.getElementById('new-product-form').addEventListener('submit', function(e) {
-            localStorage.setItem('showAlert', 'product');
-        });
-
-        // Verificar si hay una alerta pendiente al cargar la página
-        window.addEventListener('load', function() {
-            const pendingAlert = localStorage.getItem('showAlert');
-            if (pendingAlert) {
-                if (pendingAlert === 'tire') {
-                    showSuccessAlert('Neumático agregado exitosamente');
-                } else if (pendingAlert === 'product') {
-                    showSuccessAlert('Producto agregado exitosamente');
-                }
-                localStorage.removeItem('showAlert');
-            }
-        });
-    </script>
-
-    <script>
-        // Toggle Tire form visibility
+<script>
+    // DOM Content Loaded - Manejo de formularios y UI
+    document.addEventListener('DOMContentLoaded', function() {
+        // Variables para los forms y botones
         const addTireBtn = document.getElementById('add-tire-btn');
+        const addProductBtn = document.getElementById('add-product-btn');
         const newTireForm = document.getElementById('new-tire-form');
+        const newProductForm = document.getElementById('new-product-form');
         const tireDropdownIcon = document.getElementById('tire-dropdown-icon');
+        const productDropdownIcon = document.getElementById('product-dropdown-icon');
+        const inputBuscar = document.getElementById('buscar');
+        const productosContainer = document.getElementById('productosContainer');
+        const productos = Array.from(document.querySelectorAll('.product'));
+        const verMasBtn = document.getElementById('verMas');
+        const noResults = document.getElementById('noResults');
+        
+        // Variables para la paginación
+        let productosMostrados = 50;
+        let productosFiltrados = productos;
 
+        // Toggle Tire form visibility
         addTireBtn.addEventListener('click', () => {
             newTireForm.classList.toggle('hidden');
             tireDropdownIcon.classList.toggle('rotate-180');
@@ -399,10 +339,6 @@
         });
 
         // Toggle Product form visibility
-        const addProductBtn = document.getElementById('add-product-btn');
-        const newProductForm = document.getElementById('new-product-form');
-        const productDropdownIcon = document.getElementById('product-dropdown-icon');
-
         addProductBtn.addEventListener('click', () => {
             newProductForm.classList.toggle('hidden');
             productDropdownIcon.classList.toggle('rotate-180');
@@ -411,6 +347,30 @@
                 newTireForm.classList.add('hidden');
                 tireDropdownIcon.classList.remove('rotate-180');
             }
+        });
+
+        // Convertir a mayúsculas para el formulario de neumáticos
+        newTireForm.addEventListener('submit', function(e) {
+            const tamanoInput = document.getElementById('tire-tamano');
+            const tipoInput = document.getElementById('tire-tipo');
+            
+            tamanoInput.value = tamanoInput.value.toUpperCase();
+            tipoInput.value = tipoInput.value.toUpperCase();
+            localStorage.setItem('showAlert', 'tire');
+        });
+
+        // Convertir a mayúsculas mientras se escribe
+        document.getElementById('tire-tamano').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        document.getElementById('tire-tipo').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        // Event listener para el formulario de productos
+        newProductForm.addEventListener('submit', function(e) {
+            localStorage.setItem('showAlert', 'product');
         });
 
         // Form validation
@@ -431,124 +391,132 @@
                 }
             });
         });
-    </script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-    // Get DOM elements
-    const inputBuscar = document.getElementById('buscar');
-    const productosContainer = document.getElementById('productosContainer');
-    const productos = Array.from(document.querySelectorAll('.product'));
-    const verMasBtn = document.getElementById('verMas');
-    const noResults = document.getElementById('noResults');
-    
-    // Inicialixar variables
-    let productosMostrados = 50;
-    let productosFiltrados = productos;
 
-    // chequear la busqueda
-    function productoCoincideConBusqueda(producto, textoBusqueda) {
-        // get todos los campos de texto
-        const marca = producto.querySelector('[name="marca"]')?.value || '';
-        const nombre = producto.querySelector('[name="nombre"]')?.value || '';
-        const modelo = producto.querySelector('[name="modelo"]')?.value || '';
-        const tipo = producto.querySelector('[name="tipo"]')?.value || '';
-        const id = producto.querySelector('[name="id"]')?.value || '';
-        const upc = producto.querySelector('[name="upc"]')?.value || '';
-
-        // todo a minuscula
-        const textoProducto = [marca, nombre, modelo, tipo, id, upc]
-            .map(text => text.toLowerCase())
-            .join(' ');
-
-        // separar a busqueda de palabras para busqueda parcial
-        const palabrasBusqueda = textoBusqueda.toLowerCase().split(' ');
-
-        // producto matchea si coinciden todas las palabras
-        return palabrasBusqueda.every(palabra => textoProducto.includes(palabra));
-    }
-
-    // Function to filter products
-    function filtrarProductos() {
-        const textoBusqueda = inputBuscar.value.toLowerCase().trim();
-        
-        if (textoBusqueda === '') {
-            productosFiltrados = productos;
-        } else {
-            productosFiltrados = productos.filter(producto => 
-                productoCoincideConBusqueda(producto, textoBusqueda)
-            );
+        // Función para mostrar alertas
+        function showSuccessAlert(message) {
+            const alert = document.getElementById('successAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            alertMessage.textContent = message;
+            
+            alert.classList.remove('hidden');
+            alert.classList.add('opacity-100');
+            
+            setTimeout(() => {
+                alert.classList.add('opacity-0');
+                setTimeout(() => {
+                    alert.classList.add('hidden');
+                }, 500);
+            }, 3000);
         }
 
-        return productosFiltrados;
-    }
-
-    // Function  display productos
-    function mostrarProductos() {
-        const productosFiltrados = filtrarProductos();
-        
-        productos.forEach(producto => producto.classList.add('hidden'));
-        
-        // Show filtered products up to the limit
-        productosFiltrados.slice(0, productosMostrados).forEach(producto => {
-            producto.classList.remove('hidden');
-        });
-
-        // Update UI elements
-        const hayResultados = productosFiltrados.length > 0;
-        noResults.classList.toggle('hidden', hayResultados);
-        verMasBtn.classList.toggle('hidden', productosFiltrados.length <= productosMostrados);
-    }
-
-    // Function to toggle edit mode
-    function toggleProductEdit(productId) {
-        const form = document.getElementById(`product-form-${productId}`);
-        const formContainer = form.closest('.product');
-        const inputs = form.querySelectorAll('.editable');
-        const editButton = form.querySelector('.edit-button');
-        const editIcon = form.querySelector('.edit-icon');
-        const saveIcon = form.querySelector('.save-icon');
-        
-        formContainer.classList.toggle('editing-mode');
-        editIcon.classList.toggle('hidden');
-        saveIcon.classList.toggle('hidden');
-        
-        inputs.forEach(input => {
-            input.readOnly = !input.readOnly;
-            if (!input.readOnly) {
-                input.focus();
+        // Verificar alertas pendientes al cargar
+        const pendingAlert = localStorage.getItem('showAlert');
+        if (pendingAlert) {
+            if (pendingAlert === 'tire') {
+                showSuccessAlert('Neumático agregado exitosamente');
+            } else if (pendingAlert === 'product') {
+                showSuccessAlert('Producto agregado exitosamente');
             }
-        });
-        
-        editButton.classList.toggle('hidden');
-    }
-
-    //  product deletion
-    function confirmDelete(productId) {
-        if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
-            const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
-            form.submit();
+            localStorage.removeItem('showAlert');
         }
-    }
 
-    // Event Listeners
-    inputBuscar.addEventListener('input', function() {
-        productosMostrados = 50; // resetear a cantidad inicial al buscar
+        // Funciones de búsqueda y filtrado
+        function productoCoincideConBusqueda(producto, textoBusqueda) {
+            const marca = producto.querySelector('[name="marca"]')?.value || '';
+            const nombre = producto.querySelector('[name="nombre"]')?.value || '';
+            const modelo = producto.querySelector('[name="modelo"]')?.value || '';
+            const tipo = producto.querySelector('[name="tipo"]')?.value || '';
+            const id = producto.querySelector('[name="id"]')?.value || '';
+            const upc = producto.querySelector('[name="upc"]')?.value || '';
+
+            const textoProducto = [marca, nombre, modelo, tipo, id, upc]
+                .map(text => text.toLowerCase())
+                .join(' ');
+
+            const palabrasBusqueda = textoBusqueda.toLowerCase().split(' ');
+
+            return palabrasBusqueda.every(palabra => textoProducto.includes(palabra));
+        }
+
+        function filtrarProductos() {
+            const textoBusqueda = inputBuscar.value.toLowerCase().trim();
+            
+            if (textoBusqueda === '') {
+                productosFiltrados = productos;
+            } else {
+                productosFiltrados = productos.filter(producto => 
+                    productoCoincideConBusqueda(producto, textoBusqueda)
+                );
+            }
+
+            return productosFiltrados;
+        }
+
+        function mostrarProductos() {
+            const productosFiltrados = filtrarProductos();
+            
+            productos.forEach(producto => producto.classList.add('hidden'));
+            
+            productosFiltrados.slice(0, productosMostrados).forEach(producto => {
+                producto.classList.remove('hidden');
+            });
+
+            const hayResultados = productosFiltrados.length > 0;
+            noResults.classList.toggle('hidden', hayResultados);
+            verMasBtn.classList.toggle('hidden', productosFiltrados.length <= productosMostrados);
+        }
+
+        // Función para editar productos
+        window.toggleProductEdit = function(productId) {
+            const form = document.getElementById(`product-form-${productId}`);
+            const formContainer = form.closest('.product');
+            const inputs = form.querySelectorAll('.editable');
+            const editButton = form.querySelector('.edit-button');
+            const editIcon = form.querySelector('.edit-icon');
+            const saveIcon = form.querySelector('.save-icon');
+            
+            formContainer.classList.toggle('editing-mode');
+            editIcon.classList.toggle('hidden');
+            saveIcon.classList.toggle('hidden');
+            
+            inputs.forEach(input => {
+                input.readOnly = !input.readOnly;
+                if (!input.readOnly) {
+                    input.focus();
+                }
+            });
+            
+            editButton.classList.toggle('hidden');
+        }
+
+        // Función para eliminar productos
+        window.confirmDelete = function(productId) {
+            if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
+                const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
+                form.submit();
+            }
+        }
+
+        // Event Listeners para búsqueda y paginación
+        inputBuscar.addEventListener('input', function() {
+            productosMostrados = 50;
+            mostrarProductos();
+        });
+
+        verMasBtn.addEventListener('click', function() {
+            productosMostrados += 50;
+            mostrarProductos();
+        });
+
+        // Mostrar productos iniciales
         mostrarProductos();
+
+        // Verificar mensaje de éxito en la respuesta
+        {% if response is defined and response.success is defined %}
+            showSuccessAlert("{{ response.success }}");
+        {% endif %}
     });
-
-    verMasBtn.addEventListener('click', function() {
-        productosMostrados += 50;
-        mostrarProductos();
-    });
-
-    window.toggleProductEdit = toggleProductEdit;
-    window.confirmDelete = confirmDelete;
-
-    // Initial display
-    mostrarProductos();
-});
-
-    </script>
+</script>
 
     {% include 'partials/footer.html.twig' %}
 </body>
