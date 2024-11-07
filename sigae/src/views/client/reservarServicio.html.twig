@@ -230,19 +230,19 @@
 
 <script>
             // TimeSlotHandler - Funciones principales
-            const TimeSlotHandler = {
-                servicioSeleccionadoDuracion: 0,
-                primerHorarioSeleccionado: null,
+          const TimeSlotHandler = {
+            servicioSeleccionadoDuracion: 0,
+            primerHorarioSeleccionado: null,
 
-                initialize() {
-                    const fechaSelector = document.getElementById('fecha_selector');
-                    if (fechaSelector) {
-                        fechaSelector.addEventListener('change', (e) => this.handleDateChange(e));
-                        
-                        // La fecha mínima se establecerá cuando se reciban los datos del backend
+            initialize() {
+                const fechaSelector = document.getElementById('fecha_selector');
+                if (fechaSelector) {
+                    fechaSelector.addEventListener('change', (e) => this.handleDateChange(e));
+                    if (fechaSelector.value) {
                         this.updateTimeSlots(fechaSelector.value);
                     }
-                },
+                }
+            },
 
 
 
@@ -257,7 +257,7 @@
                 }
             },
 
-         async updateTimeSlots(selectedDate) {
+        async updateTimeSlots(selectedDate) {
             const timeSlotsContainer = document.getElementById('timeSlots');
             const serviceDurationMessage = document.getElementById('serviceDurationMessage');
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -273,8 +273,7 @@
                 if (errorContainer) errorContainer.classList.add('hidden');
                 if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
 
-                const timestamp = new Date().getTime();
-                const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(selectedDate)}&_=${timestamp}`;
+                const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(selectedDate)}&_=${Date.now()}`;
                 
                 const response = await fetch(url, {
                     method: 'GET',
@@ -282,8 +281,7 @@
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest',
-                        'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        'Pragma': 'no-cache'
+                        'Cache-Control': 'no-cache'
                     },
                     credentials: 'include'
                 });
@@ -293,48 +291,57 @@
                 }
 
                 const data = await response.json();
-                console.log('Respuesta del servidor:', data);
-
+                
                 if (!data || !data.horariosTaller) {
                     throw new Error('No hay horarios disponibles');
                 }
 
-                // Obtener y formatear la hora actual del servidor
+                // Fecha y hora del servidor
                 const serverDateTime = new Date(data.horaActual);
-                console.log('Hora del servidor:', serverDateTime);
+                console.log('Hora del servidor:', data.horaActual, 'Hora parseada:', serverDateTime);
 
-                // Establecer la fecha mínima en el selector basada en la fecha del servidor
-                if (fechaSelector) {
-                    const minDate = serverDateTime.toISOString().split('T')[0];
-                    fechaSelector.min = minDate;
-                    console.log('Fecha mínima establecida:', minDate);
-                }
+                // Formatear fecha seleccionada
+                const selectedDateObj = new Date(selectedDate + 'T00:00:00');
 
-                const selectedDateObj = new Date(selectedDate);
-                const serverDateOnly = new Date(serverDateTime.getFullYear(), serverDateTime.getMonth(), serverDateTime.getDate());
-                const selectedDateOnly = new Date(selectedDateObj.getFullYear(), selectedDateObj.getMonth(), selectedDateObj.getDate());
+                // Obtener solo las fechas para comparación de días
+                const serverDateStr = serverDateTime.toISOString().split('T')[0];
+                const selectedDateStr = selectedDateObj.toISOString().split('T')[0];
 
-                // Procesar los slots y su estado
+                console.log('Comparación de fechas:', {
+                    fechaServidor: serverDateStr,
+                    fechaSeleccionada: selectedDateStr,
+                    esHoy: serverDateStr === selectedDateStr
+                });
+
+                // Procesar los slots
                 const processedSlots = Object.entries(data.horariosTaller).map(([lapso, info]) => {
+                    // Extraer hora y minutos del slot
                     const [hours, minutes] = info.inicio.split(':').map(Number);
-                    const slotDateTime = new Date(selectedDate);
-                    slotDateTime.setHours(hours, minutes, 0, 0);
+                    
+                    let isOccupied = info.ocupado;
 
-                    // Un slot está ocupado si:
-                    // 1. Está marcado como ocupado en el backend
-                    // 2. Es una fecha anterior a la actual
-                    // 3. Es el día actual y la hora ya pasó
-                    const isOccupied = info.ocupado || 
-                        selectedDateOnly < serverDateOnly ||
-                        (selectedDateOnly.getTime() === serverDateOnly.getTime() && slotDateTime < serverDateTime);
+                    // Si es un día anterior al del servidor, todo está ocupado
+                    if (selectedDateStr < serverDateStr) {
+                        isOccupied = true;
+                    }
+                    // Si es el día actual, comparar con la hora actual
+                    else if (selectedDateStr === serverDateStr) {
+                        const slotTime = hours * 60 + minutes;
+                        const currentTime = serverDateTime.getHours() * 60 + serverDateTime.getMinutes();
+                        
+                        if (slotTime <= currentTime) {
+                            isOccupied = true;
+                        }
+                    }
 
-                    console.log(`Procesando slot ${lapso}:`, {
-                        inicio: info.inicio,
-                        slotDateTime,
+                    // Debug del slot
+                    console.log(`Slot ${lapso}:`, {
+                        horaInicio: `${hours}:${minutes}`,
+                        horaServidor: `${serverDateTime.getHours()}:${serverDateTime.getMinutes()}`,
                         ocupadoOriginal: info.ocupado,
                         ocupadoFinal: isOccupied,
-                        esFechaPasada: selectedDateOnly < serverDateOnly,
-                        esHoraPasada: selectedDateOnly.getTime() === serverDateOnly.getTime() && slotDateTime < serverDateTime
+                        esDiaAnterior: selectedDateStr < serverDateStr,
+                        esHoy: selectedDateStr === serverDateStr
                     });
 
                     return [lapso, {
@@ -344,6 +351,11 @@
                 });
 
                 this.renderTimeSlots(processedSlots, selectedDate, serviceDurationMessage);
+
+                // Establecer fecha mínima en el selector si es necesario
+                if (fechaSelector && !fechaSelector.min) {
+                    fechaSelector.min = serverDateStr;
+                }
 
             } catch (error) {
                 console.error('Error en updateTimeSlots:', error);
@@ -355,13 +367,11 @@
         },
 
 
-
-
-
         renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
         const container = document.getElementById('timeSlots');
         if (!container) return;
 
+        // Ordenar slots por hora
         slots
             .sort(([, a], [, b]) => {
                 const timeA = a.inicio || '';
@@ -379,6 +389,7 @@
             ]('hidden');
         }
     },
+
 
 
 
