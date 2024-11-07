@@ -106,21 +106,21 @@ const SESSION_URL = "{{ path('getClientSession') }}";
 
 
             <!-- Menú de idiomas móvil -->
-            <div id="languageMenu" class="hidden mt-4 bg-white rounded-lg shadow-lg">
+           <div id="languageMenu" class="hidden mt-4 bg-white rounded-lg shadow-lg">
                 <div class="py-2">
                     <button data-idioma="es" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                         <img src="{{ asset('img/es.png') }}" alt="Español" class="flag-size mr-3">
-                        <span class="text-base">Español</span>
+                        <span class="text-base" traducir="espanol">Español</span>
                         <span class="text-sm text-gray-500 ml-auto">ES</span>
                     </button>
                     <button data-idioma="it" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                         <img src="{{ asset('img/it.png') }}" alt="Italiano" class="flag-size mr-3">
-                        <span class="text-base">Italiano</span>
+                        <span class="text-base" traducir="italiano">Italiano</span>
                         <span class="text-sm text-gray-500 ml-auto">IT</span>
                     </button>
                     <button data-idioma="en" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                         <img src="{{ asset('img/en.png') }}" alt="English" class="flag-size mr-3">
-                        <span class="text-base">English</span>
+                        <span class="text-base" traducir="english">English</span>
                         <span class="text-sm text-gray-500 ml-auto">EN</span>
                     </button>
                 </div>
@@ -132,17 +132,17 @@ const SESSION_URL = "{{ path('getClientSession') }}";
             <div class="py-2">
                 <button data-idioma="es" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                     <img src="{{ asset('img/es.png') }}" alt="Español" class="flag-size mr-6">
-                    <span class="text-base ">Español</span>
+                    <span class="text-base " traducir="espanol">Español</span>
                     <span class="text-sm text-gray-500 ml-auto">ES</span>
                 </button>
                 <button data-idioma="it" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                     <img src="{{ asset('img/it.png') }}" alt="Italiano" class="flag-size mr-6">
-                    <span class="text-base">Italiano</span>
+                    <span class="text-base" traducir="italiano">Italiano</span>
                     <span class="text-sm text-gray-500 ml-auto">IT</span>
                 </button>
                 <button data-idioma="en" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                     <img src="{{ asset('img/en.png') }}" alt="English" class="flag-size mr-6">
-                    <span class="text-base">English</span>
+                    <span class="text-base" traducir="English">English</span>
                     <span class="text-sm text-gray-500 ml-auto">EN</span>
                 </button>
             </div>
@@ -153,7 +153,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
             <div class="py-2">
                 <a href="{{ path('services') }}" traducir="services" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Servicios</a>
                 <a href="{{ path('aioParking') }}" traducir="aioParking" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">AIO Parking</a>
-                <a href="{{ path('myBookedServices') }}" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Mis Reservas</a>
+                <a href="{{ path('myBookedServices') }}" traducir="misReservas" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Mis Reservas</a>
                 <a href="{{ path('products') }}" traducir="products" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Repuestos y accesorios</a>
                 <a href="{{ path('faq') }}" traducir="faq" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">FAQ</a>
             </div>
