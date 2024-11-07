@@ -4,6 +4,8 @@ namespace Sigae\Controllers;
 use Sigae\Models\Servicio;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Exception;
+use DateTime;
+use DateTimeZone;
 
 class ControladorServicio extends AbstractController{
 
@@ -20,7 +22,23 @@ class ControladorServicio extends AbstractController{
             } elseif($estadoServicio == 'cancelado'){
                 throw new Exception("El servicio ya fue cancelado.");
             } elseif($estadoServicio == 'pendiente'){
-                Servicio::cancelar($rol, $id);
+                // Obtiene la fecha y hora de comienzo del servicio
+                $fechaInicio = Servicio::obtenerFechaInicio($rol, $id);
+                $dtServicio = new DateTime($fechaInicio);
+
+                // Calcula y asigna una hora antes del comienzo
+                $dtServicio->modify('-1 hour');
+
+                // Obtiene la hora actual en Montevideo
+                $uruguayTimezone = new DateTimeZone('America/Montevideo');
+                $ahora = new DateTime('now', $uruguayTimezone);
+                $dtActual = $ahora->format('Y-m-d H:i:s');
+
+                // Comparar si fecha y hora actual es posterior a una hora antes de la fecha y hora del inicio del servicio
+                if ($dtActual > $dtServicio){
+                    throw new Exception("Sólo se admite cancelar hasta una hora antes del comienzo del servicio.");
+                } else
+                    Servicio::cancelar($rol, $id);
             }    
         } catch(Exception $e){
             throw $e;
