@@ -231,17 +231,20 @@
 <script>
             // TimeSlotHandler - Funciones principales
             const TimeSlotHandler = {
-            servicioSeleccionadoDuracion: 0,
-            primerHorarioSeleccionado: null,
+                servicioSeleccionadoDuracion: 0,
+                primerHorarioSeleccionado: null,
 
-            initialize() {
-                const fechaSelector = document.getElementById('fecha_selector');
-                if (fechaSelector) {
-                    const today = DateUtils.getUruguayDate(new Date());
-                    fechaSelector.min = DateUtils.formatDateForUrl(today);
-                    fechaSelector.addEventListener('change', (e) => this.handleDateChange(e));
-                }
-            },
+                initialize() {
+                    const fechaSelector = document.getElementById('fecha_selector');
+                    if (fechaSelector) {
+                        fechaSelector.addEventListener('change', (e) => this.handleDateChange(e));
+                        
+                        // La fecha mínima se establecerá cuando se reciban los datos del backend
+                        this.updateTimeSlots(fechaSelector.value);
+                    }
+                },
+
+
 
             handleDateChange(event) {
                 const fechaInicio = document.getElementById('fecha_inicio');
@@ -254,159 +257,159 @@
                 }
             },
 
-          async updateTimeSlots(selectedDate) {
-                const timeSlotsContainer = document.getElementById('timeSlots');
-                const serviceDurationMessage = document.getElementById('serviceDurationMessage');
-                const loadingIndicator = document.getElementById('loadingIndicator');
-                const errorContainer = document.getElementById('error-container');
+         async updateTimeSlots(selectedDate) {
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            const serviceDurationMessage = document.getElementById('serviceDurationMessage');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const errorContainer = document.getElementById('error-container');
+            const fechaSelector = document.getElementById('fecha_selector');
 
-                try {
-                    if (!this.servicioSeleccionadoDuracion) {
-                        throw new Error('Por favor, seleccione un servicio antes de elegir el horario.');
-                    }
-
-                    if (loadingIndicator) loadingIndicator.classList.remove('hidden');
-                    if (errorContainer) errorContainer.classList.add('hidden');
-                    if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
-
-                    const timestamp = new Date().getTime();
-                    const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(DateUtils.formatDateForUrl(selectedDate))}&_=${timestamp}`;
-
-                    console.log(url);
-
-                    const response = await fetch(url, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Cache-Control': 'no-cache, no-store, must-revalidate',
-                            'Pragma': 'no-cache'
-                        },
-                        credentials: 'include'
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Error al obtener los horarios disponibles');
-                    }
-
-                    const data = await response.json();
-                    console.log('Respuesta del servidor:', data);
-
-                    if (!data || !data.horariosTaller) {
-                        throw new Error('No hay horarios disponibles');
-                    }
-
-                    // Procesamos cada slot y su estado
-                    const processedSlots = Object.entries(data.horariosTaller).map(([lapso, info]) => {
-                        return [lapso, {
-                            ...info,
-                            ocupado: info.ocupado === true // Aseguramos que sea booleano
-                        }];
-                    });
-
-                    const currentDateTime = new Date(data.horaActual);
-                    this.renderTimeSlots(processedSlots, selectedDate, serviceDurationMessage, currentDateTime);
-
-                } catch (error) {
-                    console.error('Error en updateTimeSlots:', error);
-                    this.showError(error.message);
-                    if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
-                } finally {
-                    if (loadingIndicator) loadingIndicator.classList.add('hidden');
+            try {
+                if (!this.servicioSeleccionadoDuracion) {
+                    throw new Error('Por favor, seleccione un servicio antes de elegir el horario.');
                 }
-            },
 
+                if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+                if (errorContainer) errorContainer.classList.add('hidden');
+                if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
 
-
-        renderTimeSlots(slots, selectedDate, serviceDurationMessage, currentDateTime) {
-            const container = document.getElementById('timeSlots');
-            if (!container) return;
-
-            slots
-                .sort(([, a], [, b]) => {
-                    const timeA = a.inicio || '';
-                    const timeB = b.inicio || '';
-                    return timeA.localeCompare(timeB);
-                })
-                .forEach(([lapso, info]) => {
-                    const slotDateTime = this.createSlotDateTime(selectedDate, info.inicio);
-                    const isPastSlot = slotDateTime < currentDateTime;
-
-                    // Debug logs
-                    console.log(`Procesando slot ${lapso}:`, {
-                        inicio: info.inicio,
-                        fin: info.fin,
-                        ocupadoOriginal: info.ocupado,
-                        esPasado: isPastSlot,
-                        datetime: slotDateTime
-                    });
-
-                    // Un slot está ocupado si:
-                    // 1. Está explícitamente marcado como ocupado en el backend
-                    // 2. O es un horario pasado
-                    const isSlotOccupied = info.ocupado || isPastSlot;
-
-                    const button = this.createTimeSlotButton(
-                        lapso, 
-                        { ...info, ocupado: isSlotOccupied }, 
-                        selectedDate
-                    );
-
-                    if (button) container.appendChild(button);
+                const timestamp = new Date().getTime();
+                const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(selectedDate)}&_=${timestamp}`;
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    },
+                    credentials: 'include'
                 });
 
-            if (serviceDurationMessage) {
-                serviceDurationMessage.classList[
-                    this.servicioSeleccionadoDuracion > 30 ? 'remove' : 'add'
-                ]('hidden');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los horarios disponibles');
+                }
+
+                const data = await response.json();
+                console.log('Respuesta del servidor:', data);
+
+                if (!data || !data.horariosTaller) {
+                    throw new Error('No hay horarios disponibles');
+                }
+
+                // Obtener y formatear la hora actual del servidor
+                const serverDateTime = new Date(data.horaActual);
+                console.log('Hora del servidor:', serverDateTime);
+
+                // Establecer la fecha mínima en el selector basada en la fecha del servidor
+                if (fechaSelector) {
+                    const minDate = serverDateTime.toISOString().split('T')[0];
+                    fechaSelector.min = minDate;
+                    console.log('Fecha mínima establecida:', minDate);
+                }
+
+                const selectedDateObj = new Date(selectedDate);
+                const serverDateOnly = new Date(serverDateTime.getFullYear(), serverDateTime.getMonth(), serverDateTime.getDate());
+                const selectedDateOnly = new Date(selectedDateObj.getFullYear(), selectedDateObj.getMonth(), selectedDateObj.getDate());
+
+                // Procesar los slots y su estado
+                const processedSlots = Object.entries(data.horariosTaller).map(([lapso, info]) => {
+                    const [hours, minutes] = info.inicio.split(':').map(Number);
+                    const slotDateTime = new Date(selectedDate);
+                    slotDateTime.setHours(hours, minutes, 0, 0);
+
+                    // Un slot está ocupado si:
+                    // 1. Está marcado como ocupado en el backend
+                    // 2. Es una fecha anterior a la actual
+                    // 3. Es el día actual y la hora ya pasó
+                    const isOccupied = info.ocupado || 
+                        selectedDateOnly < serverDateOnly ||
+                        (selectedDateOnly.getTime() === serverDateOnly.getTime() && slotDateTime < serverDateTime);
+
+                    console.log(`Procesando slot ${lapso}:`, {
+                        inicio: info.inicio,
+                        slotDateTime,
+                        ocupadoOriginal: info.ocupado,
+                        ocupadoFinal: isOccupied,
+                        esFechaPasada: selectedDateOnly < serverDateOnly,
+                        esHoraPasada: selectedDateOnly.getTime() === serverDateOnly.getTime() && slotDateTime < serverDateTime
+                    });
+
+                    return [lapso, {
+                        ...info,
+                        ocupado: isOccupied
+                    }];
+                });
+
+                this.renderTimeSlots(processedSlots, selectedDate, serviceDurationMessage);
+
+            } catch (error) {
+                console.error('Error en updateTimeSlots:', error);
+                this.showError(error.message);
+                if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
+            } finally {
+                if (loadingIndicator) loadingIndicator.classList.add('hidden');
             }
         },
 
 
-        createTimeSlotButton(lapso, info, selectedDate) {
-            const button = document.createElement('button');
-            button.type = 'button';
-            
-            const horaInicio = info.inicio;
-            const horaFin = info.fin;
-            
-            button.textContent = `${horaInicio} - ${horaFin}`;
-            button.setAttribute('data-lapso', lapso);
-            button.setAttribute('data-info', JSON.stringify({
-                inicio: horaInicio,
-                fin: horaFin,
-                ocupado: info.ocupado
-            }));
 
-            // Debug del estado del botón
-            console.log(`Creando botón ${lapso}:`, {
-                inicio: horaInicio,
-                fin: horaFin,
-                ocupado: info.ocupado
+
+
+        renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
+        const container = document.getElementById('timeSlots');
+        if (!container) return;
+
+        slots
+            .sort(([, a], [, b]) => {
+                const timeA = a.inicio || '';
+                const timeB = b.inicio || '';
+                return timeA.localeCompare(timeB);
+            })
+            .forEach(([lapso, info]) => {
+                const button = this.createTimeSlotButton(lapso, info, selectedDate);
+                if (button) container.appendChild(button);
             });
 
-            // Importante: usar === true para asegurar la comparación correcta
-            const isDisabled = info.ocupado === true;
+        if (serviceDurationMessage) {
+            serviceDurationMessage.classList[
+                this.servicioSeleccionadoDuracion > 30 ? 'remove' : 'add'
+            ]('hidden');
+        }
+    },
 
-            button.className = `w-full p-2 rounded-md text-center transition-colors ${
-                isDisabled 
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                    : 'bg-white border border-gray-300 hover:bg-gray-50'
-            }`;
 
-            if (!isDisabled) {
-                button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
-            }
 
-            button.disabled = isDisabled;
+       createTimeSlotButton(lapso, info, selectedDate) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = `${info.inicio} - ${info.fin}`;
+        button.setAttribute('data-lapso', lapso);
+        button.setAttribute('data-info', JSON.stringify(info));
 
-            if (info.ocupado) {
-                button.title = "Este horario no está disponible";
-            }
+        const isDisabled = info.ocupado === true;
 
-            return button;
-        },
+        button.className = `w-full p-2 rounded-md text-center transition-colors ${
+            isDisabled 
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                : 'bg-white border border-gray-300 hover:bg-gray-50'
+        }`;
+
+        if (!isDisabled) {
+            button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
+        }
+
+        button.disabled = isDisabled;
+
+        if (info.ocupado) {
+            button.title = "Este horario no está disponible";
+        }
+
+        return button;
+    },
+
 
         handleTimeSelection(lapso, timeInfo, button) {
             const fechaSelector = document.getElementById('fecha_selector');
