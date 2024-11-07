@@ -169,15 +169,21 @@ doLoginAioEmployee:
   controller: Sigae\Controllers\ControladorFuncionario::doLoginAioEmployee
   methods: POST
 
-# Home y apartados principales
+# Home
 showDashboard:
   path: /dashboard
   controller: Sigae\Controllers\ControladorFuncionario::showDashboard
   methods: GET
 
+# Informes
 showReports:
   path: /reports
   controller: Sigae\Controllers\ControladorFuncionario::showReports
+  methods: GET
+
+workshopAvailability:
+  path: /workshopAvailability
+  controller: Sigae\Controllers\ControladorFuncionario::workshopAvailability
   methods: GET
 
 # Inventario y stock de productos
