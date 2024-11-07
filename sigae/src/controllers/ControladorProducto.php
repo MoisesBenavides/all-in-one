@@ -3,6 +3,7 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Producto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Exception;
 
 class ControladorProducto extends AbstractController{
@@ -10,6 +11,51 @@ class ControladorProducto extends AbstractController{
 
     public function continuarTransaccion($conn){
         $this->conn = $conn;
+    }
+
+    public function archiveProduct(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        $productos = [];
+
+        switch($rol){
+            case 'gerente':
+                if (isset($_POST["id"]) && !empty($_POST["id"])) {
+
+                    $id = $_POST["id"];
+
+                    if (!$this->validarId($id)) {
+                        $response['errors'][] = "Por favor, ingrese un ID válido.";
+                    } else {
+                        try{
+                            if (!Producto::existeId($rol, $id)){
+                                throw new Exception("No existe un producto registrado con el ID: " . $id);
+                            } else{
+                                Producto::archivar($rol, $id); 
+                                $response['success'] = true;
+                            }
+                        } catch(Exception $e){
+                            $response['errors'][] = "Error al archivar el producto: ".$e->getMessage();
+                        }
+                    }
+                } else {
+                    $response['errors'][] = "Debe ingresar el ID del producto.";
+                }
+
+                try{
+                    $productos = $this->getProductosTodos('gerente');
+                } catch(Exception $e){
+                    $response['errors'][] = $e->getMessage();
+                }
+
+                return $this->render('employee/manager/inventario.html.twig', [
+                    'productos' => $productos,
+                    'response' => $response  // Aquí pasa la respuesta a la vista
+                ]);
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
     }
 
     public function sumarStock($id, $cantidad){
@@ -62,6 +108,11 @@ class ControladorProducto extends AbstractController{
         } finally {
             return $neumaticos;
         }
+    }
+
+    private function validarId($id) {
+        /* Verifica si el id es numerico */
+        return (preg_match("/^\d+$/", $id));
     }
 
 }

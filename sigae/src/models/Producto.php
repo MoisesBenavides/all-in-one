@@ -121,6 +121,29 @@ abstract class Producto{
 
     abstract public static function getProductosCategoriaDetallados($rol);
 
+    public static function archivar($rol, $id){
+        $conn = conectarDB($rol);
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
+        try{
+            $stmt = $conn->prepare('UPDATE producto 
+                                    SET archivado = 1
+                                    WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return true;
+
+        } catch(Exception $e){
+            error_log("Error al archivar el producto: ".$e->getMessage());
+            throw $e;
+            return false;
+        } finally {
+            $conn = null;
+        }
+    }
+
     public static function getProductosDisp($rol){
         try{
             $conn = conectarDB($rol);
