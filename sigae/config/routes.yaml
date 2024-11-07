@@ -181,9 +181,14 @@ showReports:
   controller: Sigae\Controllers\ControladorFuncionario::showReports
   methods: GET
 
-workshopAvailability:
+showWorkshopAvailability:
   path: /workshopAvailability
-  controller: Sigae\Controllers\ControladorFuncionario::workshopAvailability
+  controller: Sigae\Controllers\ControladorFuncionario::showWorkshopAvailability
+  methods: GET
+
+showWorkshopServices:
+  path: /workshopServices
+  controller: Sigae\Controllers\ControladorFuncionario::showWorkshopServices
   methods: GET
 
 # Inventario y stock de productos
