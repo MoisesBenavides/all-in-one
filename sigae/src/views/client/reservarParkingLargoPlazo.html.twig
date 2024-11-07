@@ -36,7 +36,13 @@
         }
     </style>
 </head>
-
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+        const archivoTraduccionReservaLarga = "{{ asset('translate/aioParkingLargoPlazo.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionReservaLarga, 'es');
+    });
+</script>
 <body>
     {% include 'partials/headerParking.html.twig' %}
 
@@ -45,22 +51,22 @@
             <form id="servicioForm" action="{{ path('bookParkingLongTerm') }}" method="POST" class="w-full max-w-[340px] mx-auto">
                 <!-- Fecha de inicio -->
                 <section>
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
+                    <h2 traducir="fecha_de_inicio" class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
                     <div class="w-full max-w-[340px] mx-auto">
                         <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" required 
                             class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
                     </div>
                     <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm">
-                        <p>Las fechas van en intervalos de 30 minutos, la fecha que elija se adaptará automáticamente a estos intervalos</p> 
+                        <p traducir="intervalo_info">Las fechas van en intervalos de 30 minutos, la fecha que elija se adaptará automáticamente a estos intervalos</p> 
                     </div>
                 </section>
 
                 <!-- Tus vehículos -->
                 <section>
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
+                    <h2 traducir="tus_vehiculos" class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tus vehículos</h2>
                     <div class="relative w-full max-w-[340px] mx-auto">
                         <select id="vehiculosDropdown" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold">
-                            <option value="">Seleccione un vehículo</option>
+                            <option traducir="seleccion_vehiculo" value="">Seleccione un vehículo</option>
                             {% if misVehiculos is defined and misVehiculos is not empty %}
                                 {% for vehiculo in misVehiculos %}
                                     <option value="{{ vehiculo.matricula }}" data-tipo="{{ vehiculo.tipo }}">
@@ -74,11 +80,11 @@
 
                 <!-- Tipo de vehículo -->
                 <section id="tipoVehiculoSection">
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
+                    <h2 traducir="tipo_de_vehiculo" class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de vehículo</h2>
                     <div class="relative mb-2">
                         <div id="dropdownButtonAuto" 
                             class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                            <div id="selectedOptionAuto" class="text-center text-black text-xl font-semibold">Tipo</div>
+                            <div id="selectedOptionAuto" traducir="tipo_seleccionado" class="text-center text-black text-xl font-semibold">Tipo</div>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" 
                                 class="w-6 h-6 transition-transform duration-300">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -101,17 +107,17 @@
                 <!-- Matrícula manual -->
                 <div id="matriculaManualSection" class="h-[52px] relative mt-4">
                     <input id="matriculaYa" type="text" 
-                        placeholder="O registra ya con Matrícula" 
+                        traducir="registro_matricula" placeholder="O registra ya con Matrícula" 
                         class="space-x-6 p-2 w-[340px] h-[50px] text-[#2f353c] text-[22px] font-normal tracking-wide bg-white rounded-md border border-[#2f353c] text-left">
                 </div>
 
                 <!-- Tipo de reserva -->
                 <section>
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de reserva</h2>
+                    <h2 traducir="tipo_de_reserva" class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Tipo de reserva</h2>
                     <div class="relative mb-2">
                         <div id="dropdownButtonReserva" 
                             class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                            <div id="selectedOptionReserva" class="text-center text-black text-xl font-semibold">Seleccione período</div>
+                            <div id="selectedOptionReserva" traducir="seleccion_periodo" class="text-center text-black text-xl font-semibold">Seleccione período</div>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" 
                                 class="w-6 h-6 transition-transform duration-300">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -142,7 +148,7 @@
                 {% endif %}
 
                 <!-- Botón de continuar -->
-                <button type="submit" 
+                <button type="submit" traducir="continuar"
                     class="w-full max-w-[340px] h-[62px] px-7 py-2.5 duration-300 btnPark rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px] mt-4">
                     Continuar
                 </button>
