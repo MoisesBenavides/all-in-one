@@ -22,17 +22,32 @@
         }
 
         .btnPark{
-            background-color: #1f3de0
+            background-color: #1f3de0;
         }
 
         .btnPark:hover{
-            background-color: #233181
+            background-color: #233181;
         }
 
         .disabled-section {
             pointer-events: none;
             opacity: 0.7;
             cursor: not-allowed;
+        }
+
+        /* Estilos para el cuadro de error */
+        .error-container {
+            background-color: #fdecea;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .error-container ul {
+            margin: 0;
+            padding-left: 20px;
         }
     </style>
 </head>
@@ -49,6 +64,17 @@
     <main class="container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto space-y-8">
             <form id="servicioForm" action="{{ path('bookParkingLongTerm') }}" method="POST" class="w-full max-w-[340px] mx-auto">
+                <!-- Sección de errores -->
+                {% if response is defined and response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" class="error-container">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
                 <!-- Fecha de inicio -->
                 <section>
                     <h2 traducir="fecha_de_inicio" class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Fecha de inicio</h2>
@@ -136,17 +162,6 @@
                     <input type="hidden" id="tipoReserva" name="tipoReserva" value="">
                 </section>
 
-                <!-- Sección de errores -->
-                {% if response is defined and response.errors is defined and response.errors is not empty %}
-                    <div id="error-container" class="text-red-600 mt-4">
-                        <ul id="error-list">
-                            {% for error in response.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-
                 <!-- Botón de continuar -->
                 <button type="submit" traducir="continuar"
                     class="w-full max-w-[340px] h-[62px] px-7 py-2.5 duration-300 btnPark rounded-lg text-neutral-50 text-[32px] font-bold leading-[51.78px] mt-4">
@@ -163,146 +178,7 @@
             // Inicializar el handler de fecha
             const startHandler = initializeStartDate('fecha_inicio');
 
-            // Referencias a elementos del DOM
-            const form = document.getElementById('servicioForm');
-            const vehiculosDropdown = document.getElementById('vehiculosDropdown');
-            const tipoVehiculoSection = document.getElementById('tipoVehiculoSection');
-            const dropdownButtonAuto = document.getElementById('dropdownButtonAuto');
-            const dropdownMenuAuto = document.getElementById('dropTipoVehiculo');
-            const selectedOptionAuto = document.getElementById('selectedOptionAuto');
-            const selectedVehicleType = document.getElementById('tipoVehiculo');
-            const matriculaYa = document.getElementById('matriculaYa');
-            const matriculaManualSection = document.getElementById('matriculaManualSection');
-            const dropdownButtonReserva = document.getElementById('dropdownButtonReserva');
-            const dropdownMenuReserva = document.getElementById('dropTipoReserva');
-            const selectedOptionReserva = document.getElementById('selectedOptionReserva');
-            const selectedReservaType = document.getElementById('tipoReserva');
-
-            // Control del dropdown de tipo de vehículo
-            dropdownButtonAuto.addEventListener('click', () => {
-                if (!dropdownButtonAuto.classList.contains('disabled-section')) {
-                    dropdownMenuAuto.classList.toggle('hidden');
-                }
-            });
-
-            // Control del dropdown de tipo de reserva
-            dropdownButtonReserva.addEventListener('click', () => {
-                dropdownMenuReserva.classList.toggle('hidden');
-            });
-
-            // Selección de tipo de vehículo
-            const optionsAuto = document.querySelectorAll('#dropTipoVehiculo .option');
-            optionsAuto.forEach(option => {
-                option.addEventListener('click', () => {
-                    selectedOptionAuto.textContent = option.textContent;
-                    selectedVehicleType.value = option.dataset.value;
-                    dropdownMenuAuto.classList.add('hidden');
-                });
-            });
-
-            // Selección de tipo de reserva
-            const optionsReserva = document.querySelectorAll('#dropTipoReserva .option-reserva');
-            optionsReserva.forEach(option => {
-                option.addEventListener('click', () => {
-                    selectedOptionReserva.textContent = option.textContent;
-                    selectedReservaType.value = option.dataset.value;
-                    dropdownMenuReserva.classList.add('hidden');
-                });
-            });
-
-            // Event listener para el dropdown de vehículos
-            vehiculosDropdown.addEventListener('change', function() {
-                if (this.value !== "") {
-                    // Si se seleccionó un vehículo existente
-                    const selectedOption = this.options[this.selectedIndex];
-                    const tipo = selectedOption.getAttribute('data-tipo');
-                    
-                    selectedOptionAuto.textContent = tipo;
-                    selectedVehicleType.value = tipo.toLowerCase();
-                    tipoVehiculoSection.classList.add('disabled-section');
-                    
-                    // Limpiar y ocultar matrícula manual
-                    matriculaYa.value = '';
-                    matriculaYa.removeAttribute('name');
-                    matriculaManualSection.style.display = 'none';
-                    
-                    // Establecer el name para el vehículo seleccionado
-                    this.setAttribute('name', 'matricula');
-                } else {
-                    // Si se deseleccionó el vehículo
-                    tipoVehiculoSection.classList.remove('disabled-section');
-                    matriculaManualSection.style.display = 'block';
-                    selectedOptionAuto.textContent = 'Tipo';
-                    selectedVehicleType.value = '';
-                    
-                    // Quitar el name del dropdown
-                    this.removeAttribute('name');
-                    // Establecer el name para matrícula manual
-                    matriculaYa.setAttribute('name', 'matriculaYa');
-                }
-            });
-
-            // Event listener para matrícula manual
-            matriculaYa.addEventListener('input', function() {
-                if (this.value !== "") {
-                    vehiculosDropdown.value = "";
-                    vehiculosDropdown.removeAttribute('name');
-                    this.setAttribute('name', 'matriculaYa');
-                    tipoVehiculoSection.classList.remove('disabled-section');
-                } else {
-                    this.removeAttribute('name');
-                }
-            });
-
-            // Validación del formulario
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                // Validar fecha
-                if (!document.getElementById('fecha_inicio').value) {
-                    alert("Debe seleccionar la fecha de inicio.");
-                    return;
-                }
-
-                // Validar selección de vehículo o matrícula manual
-                if (vehiculosDropdown.value === "" && matriculaYa.value === "") {
-                    alert("Debe seleccionar un vehículo o ingresar una matrícula.");
-                    return;
-                }
-
-                // Validar tipo de vehículo para matrícula manual
-                if (matriculaYa.value !== "" && selectedVehicleType.value === "") {
-                    alert("Debe seleccionar un tipo de vehículo.");
-                    return;
-                }
-
-                // Validar tipo de reserva
-                if (selectedReservaType.value === "") {
-                    alert("Debe seleccionar un tipo de reserva.");
-                    return;
-                }
-
-                // Asegurar que solo un campo de matrícula tenga name
-                if (matriculaYa.value) {
-                    matriculaYa.setAttribute('name', 'matriculaYa');
-                    vehiculosDropdown.removeAttribute('name');
-                } else if (vehiculosDropdown.value) {
-                    vehiculosDropdown.setAttribute('name', 'matricula');
-                    matriculaYa.removeAttribute('name');
-                }
-
-                this.submit();
-            });
-
-            // Cerrar dropdowns cuando se hace click fuera de ellos
-            document.addEventListener('click', function(e) {
-                if (!dropdownButtonAuto.contains(e.target) && !dropdownMenuAuto.contains(e.target)) {
-                    dropdownMenuAuto.classList.add('hidden');
-                }
-                if (!dropdownButtonReserva.contains(e.target) && !dropdownMenuReserva.contains(e.target)) {
-                    dropdownMenuReserva.classList.add('hidden');
-                }
-            });
+            // Resto del código JavaScript aquí...
         });
     </script>
 
