@@ -59,7 +59,7 @@ class OtroProducto extends Producto{
         $nombre = $this->getNombre();
 
         try {
-            $stmt = $this->conn->prepare('INSERT INTO neumatico (id_producto, nombre) 
+            $stmt = $this->conn->prepare('INSERT INTO otro_producto (id_producto, nombre) 
                                     VALUES (:id, :nom)');
     
             $stmt->bindParam(':id', $id);
@@ -83,8 +83,9 @@ class OtroProducto extends Producto{
         $stock = $this->getStock();
 
         try {
-            $stmt = $this->conn->prepare('UPDATE producto SET upc=:upc, precio=:precio, marca=:marca, stock=:stock) 
-                                        WHERE id=:id');
+            $stmt = $this->conn->prepare('UPDATE producto 
+                                            SET upc=:upc, precio=:precio, marca=:marca, stock=:stock 
+                                            WHERE id=:id');
     
             $stmt->bindParam(':upc', $upc);
             $stmt->bindParam(':precio', $precio);
@@ -107,7 +108,7 @@ class OtroProducto extends Producto{
         $nombre = $this->getNombre();
 
         try {
-            $stmt = $this->conn->prepare('UPDATE otro_producto SET tamano=:nom WHERE id_producto=:id');
+            $stmt = $this->conn->prepare('UPDATE otro_producto SET nombre=:nom WHERE id_producto=:id');
     
             $stmt->bindParam(':id', $id_prod);
             $stmt->bindParam(':nom', $nombre);

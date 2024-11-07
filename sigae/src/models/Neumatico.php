@@ -86,7 +86,7 @@ class Neumatico extends Producto{
 
         try {
             $stmt = $this->conn->prepare('INSERT INTO neumatico (id_producto, tamano, modelo, tipo) 
-                                    VALUES (:id, :taman :mod, :tip)');
+                                    VALUES (:id, :taman, :mod, :tip)');
     
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':taman', $tamano);
@@ -111,8 +111,9 @@ class Neumatico extends Producto{
         $stock = $this->getStock();
 
         try {
-            $stmt = $this->conn->prepare('UPDATE producto SET upc=:upc, precio=:precio, marca=:marca, stock=:stock) 
-                                        WHERE id=:id');
+            $stmt = $this->conn->prepare('UPDATE producto 
+                                            SET upc=:upc, precio=:precio, marca=:marca, stock=:stock 
+                                            WHERE id=:id');
     
             $stmt->bindParam(':upc', $upc);
             $stmt->bindParam(':precio', $precio);
@@ -166,7 +167,7 @@ class Neumatico extends Producto{
                                                 n.tamano, n.modelo, n.tipo
                                         FROM producto p 
                                         JOIN neumatico n ON p.id=n.id_producto
-                                        WHERE p.stock > 0 AND p.archivo=0');
+                                        WHERE p.stock > 0 AND p.archivado=0');
             $stmt->execute();
 
             $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);

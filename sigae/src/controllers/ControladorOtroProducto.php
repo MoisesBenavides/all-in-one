@@ -37,9 +37,9 @@ class ControladorOtroProducto extends AbstractController{
                         $response['errors'][] = "Por favor, ingrese un código UPC válido.";
                     } elseif (!$this->validarPrecio($precio)) {
                         $response['errors'][] = "Por favor, ingrese un precio válido.";
-                    } elseif (!$this->validarMarcaNombre($marca, 23)) {
+                    } elseif (!$this->validarMarca($marca, 23)) {
                         $response['errors'][] = "Por favor, ingrese una marca válida.";
-                    } elseif (!$this->validarMarcaNombre($nombre, 23)) {
+                    } elseif (!$this->validarNombre($nombre, 23)) {
                         $response['errors'][] = "Por favor, ingrese un nombre válido.";
                     } elseif (Producto::existeUpc($rol, $upc)) {
                         $response['errors'][] = "Ya existe un producto con el código UPC ingresado.";
@@ -95,9 +95,9 @@ class ControladorOtroProducto extends AbstractController{
 
         switch($rol){
             case 'gerente':
-                if (isset($_POST["upc"], $_POST["precio"], $_POST["marca"], $_POST["nombre"], $_POST["upc"]) && 
-                    !empty($_POST["upc"]) && !empty($_POST["precio"]) && 
-                    !empty($_POST["marca"]) && !empty($_POST["nombre"])) {
+                if (isset($_POST["upc"], $_POST["precio"], $_POST["marca"], $_POST["nombre"], $_POST["upc"], $_POST["id"]) && 
+                    !empty($_POST["id"]) && !empty($_POST["upc"]) && !empty($_POST["precio"]) && 
+                    !empty($_POST["marca"]) && !empty($_POST["nombre"]) ) {
 
                     $id = $_POST["id"];
                     $upc = $_POST["upc"];
@@ -111,9 +111,9 @@ class ControladorOtroProducto extends AbstractController{
                         $response['errors'][] = "Por favor, ingrese un código UPC válido.";
                     } elseif (!$this->validarPrecio($precio)) {
                         $response['errors'][] = "Por favor, ingrese un precio válido.";
-                    } elseif (!$this->validarMarcaNombre($marca, 23)) {
+                    } elseif (!$this->validarMarca($marca, 23)) {
                         $response['errors'][] = "Por favor, ingrese una marca válida.";
-                    } elseif (!$this->validarMarcaNombre($nombre, 23)) {
+                    } elseif (!$this->validarNombre($nombre, 23)) {
                         $response['errors'][] = "Por favor, ingrese un nombre válido.";
                     } elseif (!Producto::existeUpc($rol, $upc)) {
                         $response['errors'][] = "No existe un producto con el código UPC ingresado.";
@@ -205,10 +205,16 @@ class ControladorOtroProducto extends AbstractController{
         return (preg_match("/^(?!0\d)(\d{1,10})(\.\d{2})?$/", $precio));
     }
 
-    private function validarMarcaNombre($str, $max) {
+    private function validarMarca($str, $max) {
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene alfabético, admite guiones)
         y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */
         return (preg_match("/^[a-zA-Z -]+$/", $str) && strlen($str) <= $max);
+    }
+
+    private function validarNombre($str, $max) {
+        /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene letras, espacios, tildes, apostrofes o guiones)
+        y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */
+        return (preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $max);
     }
 
     private function validarUpc($upc){
