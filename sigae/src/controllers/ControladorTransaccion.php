@@ -38,7 +38,7 @@ class ControladorTransaccion extends AbstractController{
                         $response['errors'][] = "Por favor, seleccione un tipo de transacción válido.";
                     } elseif(!$this->validarIdProd($idProd)){
                         $response['errors'][] = "Por favor, seleccione un ID de producto válido.";
-                    } elseif(!$this->validarCantidad($cantidad)){
+                    } elseif(!$this->validarCantidad($cantidad, 6)){
                         $response['errors'][] = "Por favor, ingrese una cantidad de productos válida.";
                     } elseif(!$this->controladorProducto->existeId($rol, $idProd)){
                         $response['errors'][] = "No existe un producto con el ID ingresado.";
@@ -110,10 +110,12 @@ class ControladorTransaccion extends AbstractController{
         return $dtActual->format('Y-m-d H:i:s');
     }
 
-    // TODO: validar
-    private function validarCantidad($cantidad){
-        return true;
+    private function validarCantidad($cantidad, $max) {
+        // Valida si la cantidad (sin ceros iniciales) es menor o igual al máximo $max de dígitos
+        $numeroSinCeros = ltrim($cantidad, '0');
+        return filter_var($numeroSinCeros, FILTER_VALIDATE_INT) !== false && strlen($numeroSinCeros) <= $max;
     }
+    
 
     // TODO: validar
     private function validarIdProd($id){
