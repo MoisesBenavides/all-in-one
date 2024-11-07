@@ -40,7 +40,7 @@
    <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
     <div class="p-6 space-y-6">
-      <form id="billing-form" method="POST" action="{{ path('process_reservation') }}" class="space-y-6">
+        <form method="POST" action="{{ path('prepareOrder') }}" class="space-y-6"> <!--  -->
         <!-- Hidden inputs to store the arrays -->
         <div id="hidden-reservations"></div>
         <div id="hidden-products"></div>
