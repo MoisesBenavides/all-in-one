@@ -41,6 +41,15 @@
   <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
     <div class="p-6 space-y-6">
         <form method="POST" action="{{ path('prepareOrder') }}" class="space-y-6"> <!--  -->
+            {% if response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
         <!-- Hidden inputs to store the arrays -->
         <div id="hidden-reservations"></div>
         <div id="hidden-products"></div>
