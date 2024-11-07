@@ -48,6 +48,59 @@ class Neumatico extends Producto{
         return $this;
     }
 
+    public function agregar() {
+        $upc = $this->getUpc();
+        $precio = $this->getPrecio();
+        $marca = $this->getMarca();
+        $fecha_creacion = $this->getFechaCreacion();
+        $stock = $this->getStock();
+
+        try {
+            $stmt = $this->conn->prepare('INSERT INTO producto (upc, precio, marca, fecha_creacion, stock) 
+                                    VALUES (:upc, :precio, :marca, :fecha_crea, :stock)');
+    
+            $stmt->bindParam(':upc', $upc);
+            $stmt->bindParam(':precio', $precio);
+            $stmt->bindParam(':marca', $marca);
+            $stmt->bindParam(':fecha_crea', $fecha_creacion);
+            $stmt->bindParam(':stock', $stock);
+                
+            $stmt->execute();
+            $this->setId($this->conn->lastInsertId());
+    
+            return $this->agregarNeumatico() !== false;
+    
+        } catch (Exception $e) {
+            throw new Exception("Error agregando el producto: ".$e->getMessage());
+            return false; 
+        }
+    }
+
+    public function agregarNeumatico() {
+        $id = $this->getId();
+        $tamano = $this->getTamano();
+        $modelo = $this->getModelo();
+        $tipo = $this->getTipo();
+
+        try {
+            $stmt = $this->conn->prepare('INSERT INTO neumatico (id_producto, tamano, modelo, tipo) 
+                                    VALUES (:id, :taman :mod, :tip)');
+    
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':taman', $tamano);
+            $stmt->bindParam(':mod', $modelo);
+            $stmt->bindParam(':tip', $tipo);
+                
+            $stmt->execute();
+    
+            return true;
+    
+        } catch (Exception $e) {
+            throw new Exception("Error agregando el neumatico: ".$e->getMessage());
+            return false;
+        }
+    }
+
     public static function getProductosCategoriaDisp($rol){
         try{
             $conn = conectarDB($rol);

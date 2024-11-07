@@ -2,8 +2,7 @@
 
 namespace Sigae\Controllers;
 use Sigae\Models\Funcionario;
-use Sigae\Controllers\ControladorNeumatico;
-use Sigae\Controllers\ControladorOtroProducto;
+use Sigae\Controllers\ControladorProducto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,8 +12,7 @@ use Exception;
 
 class ControladorFuncionario extends AbstractController {
     private $funcionario;
-    private $controladorNeumatico;
-    private $controladorOtroProducto;
+    private $controladorProducto;
 
     function loginAioEmployee(): Response{
         return $this->render('employee/loginEmpleado.html.twig');
@@ -152,14 +150,8 @@ class ControladorFuncionario extends AbstractController {
         switch($rol){
             case 'gerente':
                 try{
-                    $this->controladorNeumatico = new ControladorNeumatico();
-                    $this->controladorOtroProducto = new ControladorOtroProducto();
-                    // Obtiene neumaticos
-                    $neumaticos = $this->controladorNeumatico->getNeumaticos('gerente');
-                    // Obtiene otros
-                    $otrosProductos = $this->controladorOtroProducto->getOtrosProductos('gerente');
-                    // Combina productos de ambas categorías
-                    $productos = array_merge($otrosProductos, $neumaticos);
+                    $this->controladorProducto = new ControladorProducto();
+                    $productos = $this->controladorProducto->getProductosTodos('gerente');
                 } catch(Exception $e){
                     $response['errors'][] = $e->getMessage();
                 }
@@ -169,14 +161,8 @@ class ControladorFuncionario extends AbstractController {
                 ]);
             case 'cajero':
                 try{
-                    $this->controladorNeumatico = new ControladorNeumatico();
-                    $this->controladorOtroProducto = new ControladorOtroProducto();
-                    // Obtiene neumaticos
-                    $neumaticos = $this->controladorNeumatico->getNeumaticos('cajero');
-                    // Obtiene otros
-                    $otrosProductos = $this->controladorOtroProducto->getOtrosProductos('cajero');
-                    // Combina productos de ambas categorías
-                    $productos = array_merge($otrosProductos, $neumaticos);
+                    $this->controladorProducto = new ControladorProducto();
+                    $productos = $this->controladorProducto->getProductosTodos('cajero');
                 } catch(Exception $e){
                     $response['errors'][] = $e->getMessage();
                 }
