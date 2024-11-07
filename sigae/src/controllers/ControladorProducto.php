@@ -36,7 +36,7 @@ class ControladorProducto extends AbstractController{
                                 $response['success'] = true;
                             }
                         } catch(Exception $e){
-                            $response['errors'][] = "Error al archivar el producto: ".$e->getMessage();
+                            throw new Exception("Error al archivar el producto: ".$e->getMessage());
                         }
                     }
                 } else {
