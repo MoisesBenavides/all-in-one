@@ -86,7 +86,7 @@ class Neumatico extends Producto{
 
         try {
             $stmt = $this->conn->prepare('INSERT INTO neumatico (id_producto, tamano, modelo, tipo) 
-                                    VALUES (:id, :taman :mod, :tip)');
+                                    VALUES (:id, :taman, :mod, :tip)');
     
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':taman', $tamano);
