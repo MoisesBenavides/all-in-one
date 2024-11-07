@@ -503,7 +503,7 @@
         // Función para eliminar productos
         window.confirmDelete = function(productId) {
             if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
-                const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
+                const form = document.querySelector(`form[action="{{ path('archiveProduct') }}"] input[value="${productId}"]`).closest('form');
                 form.submit();
             }
         }
