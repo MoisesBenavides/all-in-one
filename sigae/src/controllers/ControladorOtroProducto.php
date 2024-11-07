@@ -95,9 +95,9 @@ class ControladorOtroProducto extends AbstractController{
 
         switch($rol){
             case 'gerente':
-                if (isset($_POST["upc"], $_POST["precio"], $_POST["marca"], $_POST["nombre"], $_POST["upc"]) && 
-                    !empty($_POST["upc"]) && !empty($_POST["precio"]) && 
-                    !empty($_POST["marca"]) && !empty($_POST["nombre"])) {
+                if (isset($_POST["upc"], $_POST["precio"], $_POST["marca"], $_POST["nombre"], $_POST["upc"], $_POST["id"]) && 
+                    !empty($_POST["id"]) && !empty($_POST["upc"]) && !empty($_POST["precio"]) && 
+                    !empty($_POST["marca"]) && !empty($_POST["nombre"]) ) {
 
                     $id = $_POST["id"];
                     $upc = $_POST["upc"];
