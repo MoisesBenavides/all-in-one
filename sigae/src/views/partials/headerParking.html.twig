@@ -32,6 +32,11 @@
     }
 </style>
 
+<script>
+const SESSION_URL = "{{ path('getClientSession') }}";
+</script>
+<script src="{{ asset('js/fetchClientSession.js') }}"></script>
+
 <header class="w-screen bg-white">
     <div class="container mx-auto px-4 py-4">
         <!-- Desktop View -->
@@ -80,7 +85,7 @@
 
                 <!-- Logo móvil -->
                 <a href="{{ path('aioParking') }}" class="shrink-0">
-                <img class="logo-size-mobile transition-all duration-300" src="{{ asset('img/AIO Parking positivo.png') }}" alt="AIO Logo" />
+                    <img class="logo-size-mobile transition-all duration-300" src="{{ asset('img/AIO Parking positivo.png') }}" alt="AIO Logo" />
                 </a>
 
                 <!-- Iconos móviles -->
@@ -127,7 +132,7 @@
             <div class="py-2">
                 <button data-idioma="es" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                     <img src="{{ asset('img/es.png') }}" alt="Español" class="flag-size mr-6">
-                    <span class="text-base ">Español</span>
+                    <span class="text-base">Español</span>
                     <span class="text-sm text-gray-500 ml-auto">ES</span>
                 </button>
                 <button data-idioma="it" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
@@ -154,161 +159,151 @@
             </div>
         </nav>
     </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-        fetch("{{ path('getClientProfilePhoto') }}")
-            .then(response => response.json())
-            .then(data => {
-                if (data.fotoPerfil) {
-                    // Actualiza el src de la imagen con el ID 'profile-photo'
-                    document.getElementById("profile-photo").src = data.fotoPerfil;
-                }
-            })
-            .catch(error => console.error("Error al cargar la foto de perfil:", error));
+            fetch("{{ path('getClientProfilePhoto') }}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.fotoPerfil) {
+                        document.getElementById("profile-photo").src = data.fotoPerfil;
+                    }
+                })
+                .catch(error => console.error("Error al cargar la foto de perfil:", error));
         });
     </script>
-    <script src="{{ asset('js/traduccion.js') }}"></script>
+    <script src="{{ asset('js/traduccionDebug.js') }}"></script>
     <script>
-   // Elementos del DOM
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobileMenu');
-const languageToggle = document.getElementById('languageToggle');
-const languageToggleDesktop = document.getElementById('languageToggleDesktop');
-const languageMenu = document.getElementById('languageMenu');
-const languageMenuDesktop = document.getElementById('languageMenuDesktop');
-const currentLanguage = document.getElementById('currentLanguage');
-const currentLanguageDesktop = document.getElementById('currentLanguageDesktop');
+        // Elementos del DOM
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const languageToggle = document.getElementById('languageToggle');
+        const languageToggleDesktop = document.getElementById('languageToggleDesktop');
+        const languageMenu = document.getElementById('languageMenu');
+        const languageMenuDesktop = document.getElementById('languageMenuDesktop');
+        const currentLanguage = document.getElementById('currentLanguage');
+        const currentLanguageDesktop = document.getElementById('currentLanguageDesktop');
 
-// Objeto con los nombres de los idiomas
-const languageNames = {
-    'es': 'ESPAÑOL',
-    'it': 'ITALIANO',
-    'en': 'ENGLISH'
-};
+        // Objeto con los nombres de los idiomas
+        const languageNames = {
+            'es': 'ESPAÑOL',
+            'it': 'ITALIANO',
+            'en': 'ENGLISH'
+        };
 
-// Función para obtener el valor de una cookie
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-        return parts.pop().split(';').shift();
-    }
-    return 'es'; // Idioma por defecto si no hay cookie
-}
-
-// Función para establecer una cookie
-function setCookie(name, value, days = 365) {
-    const date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    const expires = `expires=${date.toUTCString()}`;
-    document.cookie = `${name}=${value};${expires};path=/`;
-}
-
-// Función para actualizar el texto del idioma
-function updateLanguageDisplay(idioma) {
-    if (languageNames[idioma]) {
-        if (currentLanguage) {
-            currentLanguage.textContent = idioma.toUpperCase();
+        // Función para obtener el valor de una cookie
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) {
+                return parts.pop().split(';').shift();
+            }
+            return 'es'; // Idioma por defecto si no hay cookie
         }
-        if (currentLanguageDesktop) {
-            currentLanguageDesktop.textContent = languageNames[idioma];
+
+        // Función para establecer una cookie
+        function setCookie(name, value, days = 365) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value};${expires};path=/`;
         }
-    }
-}
 
-// Función para cambiar el idioma
-function cambiarIdioma(idioma) {
-    setCookie('idioma', idioma);
-    updateLanguageDisplay(idioma);
-    inicializarTraduccion(archivoTraduccionHeader, idioma);
-}
-
-// Lógica del menú hamburguesa
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-        // Cerrar menús de idiomas si están abiertos
-        languageMenu?.classList.add('hidden');
-        languageMenuDesktop?.classList.add('hidden');
-    });
-}
-
-// Función para manejar los toggles de idioma
-function handleLanguageToggle(toggle, menu, otherMenu) {
-    if (!toggle || !menu) return;
-    
-    toggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        menu.classList.toggle('hidden');
-        // Cerrar el otro menú de idiomas si está abierto
-        otherMenu?.classList.add('hidden');
-        // Cerrar el menú hamburguesa si está abierto
-        mobileMenu?.classList.add('hidden');
-    });
-}
-
-// Configurar los toggles de idioma
-handleLanguageToggle(languageToggle, languageMenu, languageMenuDesktop);
-handleLanguageToggle(languageToggleDesktop, languageMenuDesktop, languageMenu);
-
-// Cerrar menús al hacer click fuera
-document.addEventListener('click', (event) => {
-    const menus = [
-        { menu: mobileMenu, toggle: hamburger },
-        { menu: languageMenu, toggle: languageToggle },
-        { menu: languageMenuDesktop, toggle: languageToggleDesktop }
-    ];
-
-    menus.forEach(({ menu, toggle }) => {
-        if (menu && !toggle?.contains(event.target) && !menu.contains(event.target)) {
-            menu.classList.add('hidden');
+        // Función para actualizar el texto del idioma
+        function updateLanguageDisplay(idioma) {
+            if (languageNames[idioma]) {
+                if (currentLanguage) {
+                    currentLanguage.textContent = idioma.toUpperCase();
+                }
+                if (currentLanguageDesktop) {
+                    currentLanguageDesktop.textContent = languageNames[idioma];
+                }
+            }
         }
-    });
-});
 
-// Configurar botones de idioma
-function setupLanguageButtons(menuElement) {
-    if (!menuElement) return;
-    
-    menuElement.querySelectorAll('button[data-idioma]').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const idioma = e.currentTarget.getAttribute('data-idioma');
-            cambiarIdioma(idioma);
-            // Cerrar todos los menús
-            languageMenu?.classList.add('hidden');
-            languageMenuDesktop?.classList.add('hidden');
+        // Función para cambiar el idioma
+        function handleLanguageChange(idioma) {
+            setCookie('idioma', idioma);
+            updateLanguageDisplay(idioma);
+            if (window.cambiarIdioma) {
+                window.cambiarIdioma(idioma);
+            }
+        }
+
+        // Lógica del menú hamburguesa
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                languageMenu?.classList.add('hidden');
+                languageMenuDesktop?.classList.add('hidden');
+            });
+        }
+
+        // Función para manejar los toggles de idioma
+        function handleLanguageToggle(toggle, menu, otherMenu) {
+            if (!toggle || !menu) return;
+            
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.toggle('hidden');
+                otherMenu?.classList.add('hidden');
+                mobileMenu?.classList.add('hidden');
+            });
+        }
+
+        // Configurar los toggles de idioma
+        handleLanguageToggle(languageToggle, languageMenu, languageMenuDesktop);
+        handleLanguageToggle(languageToggleDesktop, languageMenuDesktop, languageMenu);
+
+        // Cerrar menús al hacer click fuera
+        document.addEventListener('click', (event) => {
+            const menus = [
+                { menu: mobileMenu, toggle: hamburger },
+                { menu: languageMenu, toggle: languageToggle },
+                { menu: languageMenuDesktop, toggle: languageToggleDesktop }
+            ];
+
+            menus.forEach(({ menu, toggle }) => {
+                if (menu && !toggle?.contains(event.target) && !menu.contains(event.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
         });
-    });
-}
 
-// Configurar los botones en ambos menús
-setupLanguageButtons(languageMenu);
-setupLanguageButtons(languageMenuDesktop);
+        // Configurar botones de idioma
+        function setupLanguageButtons(menuElement) {
+            if (!menuElement) return;
+            
+            menuElement.querySelectorAll('button[data-idioma]').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const idioma = e.currentTarget.getAttribute('data-idioma');
+                    handleLanguageChange(idioma);
+                    languageMenu?.classList.add('hidden');
+                    languageMenuDesktop?.classList.add('hidden');
+                });
+            });
+        }
 
-// Cerrar menús al redimensionar
-window.addEventListener('resize', () => {
-    if (window.innerWidth >= 768) {
-        mobileMenu?.classList.add('hidden');
-        languageMenu?.classList.add('hidden');
-        languageMenuDesktop?.classList.add('hidden');
-    }
-});
+        // Configurar los botones en ambos menús
+        setupLanguageButtons(languageMenu);
+        setupLanguageButtons(languageMenuDesktop);
 
-// Cerrar menús con Escape
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        [mobileMenu, languageMenu, languageMenuDesktop].forEach(menu => {
-            menu?.classList.add('hidden');
+        // Cerrar menús al redimensionar
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                mobileMenu?.classList.add('hidden');
+                languageMenu?.classList.add('hidden');
+                languageMenuDesktop?.classList.add('hidden');
+            }
         });
-    }
-});
 
-// Inicializar con el idioma guardado
-document.addEventListener('DOMContentLoaded', () => {
-    const savedLanguage = getCookie('idioma');
-    updateLanguageDisplay(savedLanguage);
-    inicializarTraduccion(archivoTraduccionHeader, savedLanguage);
-});
-inicializarTraduccion(archivoTraduccionHeader, savedLanguage);
+        // Cerrar menús con Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                [mobileMenu, languageMenu, languageMenuDesktop].forEach(menu => {
+                    menu?.classList.add('hidden');
+                });
+            }
+        });
     </script>
 </header>
