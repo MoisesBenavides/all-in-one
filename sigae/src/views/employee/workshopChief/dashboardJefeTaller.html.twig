@@ -21,47 +21,44 @@
         body, input, select, button, option {
             font-family: 'Teachers', sans-serif;
         }
-
-        .btn{
-            background-color: #dc2626;
-            text: white;
-        }
-
-        .btn:hover{
-            background-color: #b91c1c;
-            text: white;
-        }
     </style>
 </head>
 
 {% include 'partials/headerJefeTaller.html.twig' %}
-<body>
-    <main class="min-h-screen bg-white p-4">
-        <div class="max-w-7xl mx-auto space-y-6">
-            <section class="flex overflow-hidden flex-col justify-center items-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
-                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Informes de taller</h2>
-                <a href="#" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
-                    Ingresar
-                </a>
-            </section>
 
-            <section class="flex overflow-hidden flex-col justify-center items-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
-                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Lista de Ejecutivos</h2>
-                <a href="#" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
-                    Ingresar
-                </a>
-            </section>
+<body>
+    <main class="min-h-screen bg-white py-8 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Grid de secciones -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Sección Informes de Taller -->
+                <section class="bg-neutral-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <h2 class="text-2xl md:text-3xl text-neutral-900 mb-6 text-center font-bold">Informes de taller</h2>
+                    <a href="#" 
+                       class="block w-full bg-red-600 hover:bg-red-700 text-white text-xl md:text-2xl font-bold py-4 px-6 rounded-lg text-center transition-colors duration-300">
+                        Ingresar
+                    </a>
+                </section>
+
+                <!-- Sección Lista de Ejecutivos -->
+                <section class="bg-neutral-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <h2 class="text-2xl md:text-3xl text-neutral-900 mb-6 text-center font-bold">Lista de Ejecutivos</h2>
+                    <a href="#" 
+                       class="block w-full bg-red-600 hover:bg-red-700 text-white text-xl md:text-2xl font-bold py-4 px-6 rounded-lg text-center transition-colors duration-300">
+                        Ingresar
+                    </a>
+                </section>
+            </div>
         </div>
     </main>
+
+    {% include 'partials/footer.html.twig' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+            inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+        });
+    </script>
 </body>
-
-{% include 'partials/footer.html.twig' %}
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
-        // const archivoTraduccionHome = "{{ asset('translate/.json') }}";
-        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
-    });
-</script>
 </html>

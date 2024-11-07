@@ -62,6 +62,149 @@
                 >
             </div>
         </div>
+        <div class="max-w-7xl mx-auto flex gap-4 mb-12">
+            <!-- Neumático Form -->
+            <div class="flex-1">
+                <button id="add-tire-btn" type="button" 
+                        class="w-full px-7 py-3 bg-neutral-50 border border-black rounded-lg text-lg font-semibold hover:bg-neutral-100 transition-colors duration-200 flex justify-between items-center">
+                    <span>Ingresar Nuevo Neumático</span>
+                    <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" 
+                        class="w-5 h-5 transform transition-transform duration-300" id="tire-dropdown-icon">
+                </button>
+            <!-- AGREGAR PATH -->
+                <form id="new-tire-form" action="" method="POST" 
+                    class="hidden space-y-6 mt-4 p-4 border border-slate-300 rounded-md">
+                    <div class="space-y-4">
+                        <!-- Producto Fields -->
+                        <div>
+                            <label for="tire-upc" class="block text-lg font-medium text-neutral-900 mb-2">
+                                UPC *
+                            </label>
+                            <input type="text" id="tire-upc" name="upc" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el UPC">
+                        </div>
+
+                        <div>
+                            <label for="tire-precio" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Precio *
+                            </label>
+                            <input type="number" id="tire-precio" name="precio" required step="0.01"
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el precio">
+                        </div>
+
+                        <div>
+                            <label for="tire-marca" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Marca *
+                            </label>
+                            <input type="text" id="tire-marca" name="marca" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese la marca">
+                        </div>
+
+                        <!-- Neumático Fields -->
+                        <div>
+                            <label for="tire-tamano" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Tamaño *
+                            </label>
+                            <input type="text" id="tire-tamano" name="tamano" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el tamaño">
+                        </div>
+
+                        <div>
+                            <label for="tire-modelo" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Modelo *
+                            </label>
+                            <input type="text" id="tire-modelo" name="modelo" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el modelo">
+                        </div>
+
+                        <div>
+                            <label for="tire-tipo" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Tipo *
+                            </label>
+                            <input type="text" id="tire-tipo" name="tipo" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el tipo">
+                        </div>
+
+                        <div>
+                            <button type="submit" 
+                                    class="w-full px-6 py-3 duration-300 bg-red-600 hover:bg-red-700 text-white text-xl font-bold rounded-lg transition-colors">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Other Product Form -->
+            <div class="flex-1">
+                <button id="add-product-btn" type="button" 
+                        class="w-full px-7 py-3 bg-neutral-50 border border-black rounded-lg text-lg font-semibold hover:bg-neutral-100 transition-colors duration-200 flex justify-between items-center">
+                    <span>Ingresar Nuevo Producto</span>
+                    <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" 
+                        class="w-5 h-5 transform transition-transform duration-300" id="product-dropdown-icon">
+                </button>
+            <!-- AGREGAR PATH -->
+                <form id="new-product-form" action="" method="POST" 
+                    class="hidden space-y-6 mt-4 p-4 border border-slate-300 rounded-md">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="product-upc" class="block text-lg font-medium text-neutral-900 mb-2">
+                                UPC *
+                            </label>
+                            <input type="text" id="product-upc" name="upc" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el UPC">
+                        </div>
+
+                        <div>
+                            <label for="product-precio" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Precio *
+                            </label>
+                            <input type="number" id="product-precio" name="precio" required step="0.01"
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el precio">
+                        </div>
+
+                        <div>
+                            <label for="product-marca" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Marca *
+                            </label>
+                            <input type="text" id="product-marca" name="marca" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese la marca">
+                        </div>
+
+                        <div>
+                            <label for="product-nombre" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Nombre *
+                            </label>
+                            <input type="text" id="product-nombre" name="nombre" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el nombre">
+                        </div>
+
+                        <div>
+                            <button type="submit" 
+                                    class="w-full px-6 py-3 duration-300 bg-red-600 hover:bg-red-700 text-white text-xl font-bold rounded-lg transition-colors">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <div id="successAlert" class="hidden fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg transition-opacity duration-500">
+        <p class="flex items-center">
+            <span class="mr-2">✓</span>
+            <span id="alertMessage">Producto agregado exitosamente</span>
+        </p>
+    </div>
 
         <!-- No Results Message -->
         <div id="noResults" class="hidden text-center py-8">
@@ -165,6 +308,106 @@
     </div>
 
     <script>
+        // Función para mostrar la alerta
+        function showSuccessAlert(message) {
+            const alert = document.getElementById('successAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            alertMessage.textContent = message;
+            
+            // Mostrar la alerta
+            alert.classList.remove('hidden');
+            alert.classList.add('opacity-100');
+            
+            // Ocultar después de 3 segundos
+            setTimeout(() => {
+                alert.classList.add('opacity-0');
+                setTimeout(() => {
+                    alert.classList.add('hidden');
+                }, 500);
+            }, 3000);
+        }
+
+        // Verificar si hay mensaje de éxito en la respuesta
+        {% if response is defined and response.success is defined %}
+            showSuccessAlert("{{ response.success }}");
+        {% endif %}
+
+        // Agregar event listeners a los formularios
+        document.getElementById('new-tire-form').addEventListener('submit', function(e) {
+            // El formulario se enviará normalmente, y la alerta se mostrará en la siguiente carga
+            // si el servidor responde con éxito
+            localStorage.setItem('showAlert', 'tire');
+        });
+
+        document.getElementById('new-product-form').addEventListener('submit', function(e) {
+            localStorage.setItem('showAlert', 'product');
+        });
+
+        // Verificar si hay una alerta pendiente al cargar la página
+        window.addEventListener('load', function() {
+            const pendingAlert = localStorage.getItem('showAlert');
+            if (pendingAlert) {
+                if (pendingAlert === 'tire') {
+                    showSuccessAlert('Neumático agregado exitosamente');
+                } else if (pendingAlert === 'product') {
+                    showSuccessAlert('Producto agregado exitosamente');
+                }
+                localStorage.removeItem('showAlert');
+            }
+        });
+    </script>
+
+    <script>
+        // Toggle Tire form visibility
+        const addTireBtn = document.getElementById('add-tire-btn');
+        const newTireForm = document.getElementById('new-tire-form');
+        const tireDropdownIcon = document.getElementById('tire-dropdown-icon');
+
+        addTireBtn.addEventListener('click', () => {
+            newTireForm.classList.toggle('hidden');
+            tireDropdownIcon.classList.toggle('rotate-180');
+            // cerrar otro form si esta abierto
+            if (!newProductForm.classList.contains('hidden')) {
+                newProductForm.classList.add('hidden');
+                productDropdownIcon.classList.remove('rotate-180');
+            }
+        });
+
+        // Toggle Product form visibility
+        const addProductBtn = document.getElementById('add-product-btn');
+        const newProductForm = document.getElementById('new-product-form');
+        const productDropdownIcon = document.getElementById('product-dropdown-icon');
+
+        addProductBtn.addEventListener('click', () => {
+            newProductForm.classList.toggle('hidden');
+            productDropdownIcon.classList.toggle('rotate-180');
+            // cerrar otro form si esta abierto
+            if (!newTireForm.classList.contains('hidden')) {
+                newTireForm.classList.add('hidden');
+                tireDropdownIcon.classList.remove('rotate-180');
+            }
+        });
+
+        // Form validation
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const requiredInputs = this.querySelectorAll('input[required]');
+                let isValid = true;
+
+                requiredInputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Por favor, complete todos los campos requeridos.');
+                }
+            });
+        });
+    </script>
+    <script>
       document.addEventListener('DOMContentLoaded', function() {
     // Get DOM elements
     const inputBuscar = document.getElementById('buscar');
@@ -173,13 +416,13 @@
     const verMasBtn = document.getElementById('verMas');
     const noResults = document.getElementById('noResults');
     
-    // Initialize variables
+    // Inicialixar variables
     let productosMostrados = 50;
     let productosFiltrados = productos;
 
-    // Function to check if a product matches search criteria
+    // chequear la busqueda
     function productoCoincideConBusqueda(producto, textoBusqueda) {
-        // Get all text fields from the product
+        // get todos los campos de texto
         const marca = producto.querySelector('[name="marca"]')?.value || '';
         const nombre = producto.querySelector('[name="nombre"]')?.value || '';
         const modelo = producto.querySelector('[name="modelo"]')?.value || '';
@@ -187,15 +430,15 @@
         const id = producto.querySelector('[name="id"]')?.value || '';
         const upc = producto.querySelector('[name="upc"]')?.value || '';
 
-        // Convert everything to lowercase for search
+        // todo a minuscula
         const textoProducto = [marca, nombre, modelo, tipo, id, upc]
             .map(text => text.toLowerCase())
             .join(' ');
 
-        // Split search text into words for partial search
+        // separar a busqueda de palabras para busqueda parcial
         const palabrasBusqueda = textoBusqueda.toLowerCase().split(' ');
 
-        // Product matches if it contains all search words
+        // producto matchea si coinciden todas las palabras
         return palabrasBusqueda.every(palabra => textoProducto.includes(palabra));
     }
 
@@ -214,11 +457,10 @@
         return productosFiltrados;
     }
 
-    // Function to display products
+    // Function  display productos
     function mostrarProductos() {
         const productosFiltrados = filtrarProductos();
         
-        // Hide all products first
         productos.forEach(producto => producto.classList.add('hidden'));
         
         // Show filtered products up to the limit
@@ -255,7 +497,7 @@
         editButton.classList.toggle('hidden');
     }
 
-    // Function to handle product deletion
+    //  product deletion
     function confirmDelete(productId) {
         if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
             const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
@@ -265,7 +507,7 @@
 
     // Event Listeners
     inputBuscar.addEventListener('input', function() {
-        productosMostrados = 50; // Reset to initial count when searching
+        productosMostrados = 50; // resetear a cantidad inicial al buscar
         mostrarProductos();
     });
 
@@ -274,7 +516,6 @@
         mostrarProductos();
     });
 
-    // Make functions globally available
     window.toggleProductEdit = toggleProductEdit;
     window.confirmDelete = confirmDelete;
 
