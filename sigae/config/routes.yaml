@@ -180,6 +180,7 @@ showReports:
   controller: Sigae\Controllers\ControladorFuncionario::showReports
   methods: GET
 
+# Inventario y stock de productos
 stockManagement:
   path: /stockManagement
   controller: Sigae\Controllers\ControladorFuncionario::stockManagement
@@ -190,18 +191,54 @@ inventory:
   controller: Sigae\Controllers\ControladorFuncionario::inventory
   methods: GET
 
+addNewTyre:
+  path: /addNewTyre
+  controller: Sigae\Controllers\ControladorNeumatico::addNewTyre
+  methods: POST
+
+addNewAccessory:
+  path: /addNewAccessory
+  controller: Sigae\Controllers\ControladorOtroProducto::addNewAccessory
+  methods: POST
+
+editTyre:
+  path: /addNewTyre
+  controller: Sigae\Controllers\ControladorNeumatico::editTyre
+  methods: POST
+
+editAccessory:
+  path: /editAccessory
+  controller: Sigae\Controllers\ControladorOtroProducto::editAccessory
+  methods: POST
+
+# Gestion de ordenes
 prepareOrder:
   path: /prepareOrder
   controller: Sigae\Controllers\ControladorFuncionario::prepareOrder
   methods: GET
 
+submitOrder:
+  path: /submitOrder
+  controller: Sigae\Controllers\ControladorOrden::submitOrder
+  methods: GET
+
+orderConfirmation:
+  path: /orderConfirmation
+  controller: Sigae\Controllers\ControladorOrden::orderConfirmation
+  methods: GET
+
+# Gestion de funcionarios
 employeeManagement:
   path: /employeeManagement
   controller: Sigae\Controllers\ControladorFuncionario::employeeManagement
   methods: GET
-
-# Gestion de funcionarios
+  
 # Consulta
+showManagers:
+  path: /managers
+  controller: Sigae\Controllers\ControladorFuncionario::showManagers
+  methods: GET
+
 showDiagnoseChiefs:
   path: /diagnoseChiefs
   controller: Sigae\Controllers\ControladorFuncionario::showDiagnoseChiefs
@@ -228,6 +265,11 @@ showServiceExecutives:
   methods: GET
 
 # Alta
+addManager:
+  path: /addManager
+  controller: Sigae\Controllers\ControladorFuncionario::addManager
+  methods: POST
+
 addDiagnoseChief:
   path: /addDiagnoseChief
   controller: Sigae\Controllers\ControladorFuncionario::addDiagnoseChief
@@ -254,6 +296,11 @@ addServiceExecutive:
   methods: POST
 
 # Baja
+deleteManager:
+  path: /deleteManager
+  controller: Sigae\Controllers\ControladorFuncionario::deleteManager
+  methods: POST
+
 deleteDiagnoseChief:
   path: /deleteDiagnoseChief
   controller: Sigae\Controllers\ControladorFuncionario::deleteDiagnoseChief
@@ -280,6 +327,11 @@ deleteServiceExecutive:
   methods: POST
 
 # Modificacion
+editManager:
+  path: /editManager
+  controller: Sigae\Controllers\ControladorFuncionario::editManager
+  methods: POST
+
 editDiagnoseChief:
   path: /editDiagnoseChief
   controller: Sigae\Controllers\ControladorFuncionario::editDiagnoseChief
@@ -306,6 +358,11 @@ editServiceExecutive:
   methods: POST
 
 # Cambio clave
+modPswdManager:
+  path: /modPasswordManager
+  controller: Sigae\Controllers\ControladorFuncionario::modPswdManager
+  methods: POST
+
 modPswdDiagnoseChief:
   path: /modPasswordDiagnoseChief
   controller: Sigae\Controllers\ControladorFuncionario::modPswdDiagnoseChief

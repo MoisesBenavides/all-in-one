@@ -37,50 +37,57 @@
 {% include 'partials/headerGerente.html.twig' %}
 
 <body>
-    <main class="min-h-screen bg-white p-4">
-        <div class="max-w-7xl mx-auto space-y-6">
+     <main class="min-h-screen bg-white py-8 px-4">
+        <div class="max-w-7xl mx-auto grid gap-6">
             <!-- Cuadro de Error -->
-            <section class="w-full max-w-[700px] min-h-[520px] p-8 bg-white rounded-md border border-neutral-900 flex flex-col items-center">
-                {% if response.errors is defined and response.errors is not empty %}
-                    <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
-                        <ul id="error-list">
-                            {% for error in response.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-            <!-- Sección de Informes -->
-            <section class="flex flex-col items-center justify-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
-                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Informes disponibles</h2>
-                <a href="{{ path('showReports') }}" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
-                    Ingresar
-                </a>
-            </section>
+            {% if response.errors is defined and response.errors is not empty %}
+                <div class="w-full max-w-2xl mx-auto bg-red-100 text-gray-950 text-center p-4 rounded-lg">
+                    <ul>
+                        {% for error in response.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
-            <!-- Sección de Stock -->
-            <section class="flex flex-col items-center justify-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
-                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Gestión de Stock</h2>
-                <a href="{{ path('stockManagement') }}" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
-                    Ingresar
-                </a>
-            </section>
+            <!-- Grid de secciones -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Sección de Informes -->
+                <section class="bg-neutral-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <h2 class="text-2xl md:text-3xl text-neutral-900 mb-6 text-center font-bold">Informes disponibles</h2>
+                    <a href="{{ path('showReports') }}" 
+                       class="block w-full bg-red-600 hover:bg-red-700 text-white text-xl md:text-2xl font-bold py-4 px-6 rounded-lg text-center transition-colors duration-300">
+                        Ingresar
+                    </a>
+                </section>
 
-            <!-- Sección de Inventario -->
-            <section class="flex flex-col items-center justify-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
-                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Inventario</h2>
-                <a href="{{ path('inventory') }}" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
-                    Ingresar
-                </a>
-            </section>
+                <!-- Sección de Stock -->
+                <section class="bg-neutral-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <h2 class="text-2xl md:text-3xl text-neutral-900 mb-6 text-center font-bold">Gestión de Stock</h2>
+                    <a href="{{ path('stockManagement') }}" 
+                       class="block w-full bg-red-600 hover:bg-red-700 text-white text-xl md:text-2xl font-bold py-4 px-6 rounded-lg text-center transition-colors duration-300">
+                        Ingresar
+                    </a>
+                </section>
 
-            <!-- Sección de Funcionarios -->
-            <section class="flex flex-col items-center justify-center p-8 rounded-2xl border border-neutral-900 bg-neutral-50 min-h-[300px] w-full">
-                <h2 class="text-2xl md:text-4xl text-neutral-900 mb-8 text-center font-bold">Lista de Funcionarios</h2>
-                <a href="{{ path('employeeManagement') }}" class="btn flex items-center justify-center w-full md:w-[600px] px-4 py-6 text-xl md:text-3xl font-bold rounded-xl text-white transition-colors duration-300">
-                    Ingresar
-                </a>
-            </section>
+                <!-- Sección de Inventario -->
+                <section class="bg-neutral-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <h2 class="text-2xl md:text-3xl text-neutral-900 mb-6 text-center font-bold">Inventario</h2>
+                    <a href="{{ path('inventory') }}" 
+                       class="block w-full bg-red-600 hover:bg-red-700 text-white text-xl md:text-2xl font-bold py-4 px-6 rounded-lg text-center transition-colors duration-300">
+                        Ingresar
+                    </a>
+                </section>
+
+                <!-- Sección de Funcionarios -->
+                <section class="bg-neutral-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <h2 class="text-2xl md:text-3xl text-neutral-900 mb-6 text-center font-bold">Lista de Funcionarios</h2>
+                    <a href="{{ path('employeeManagement') }}" 
+                       class="block w-full bg-red-600 hover:bg-red-700 text-white text-xl md:text-2xl font-bold py-4 px-6 rounded-lg text-center transition-colors duration-300">
+                        Ingresar
+                    </a>
+                </section>
+            </div>
         </div>
     </main>
 

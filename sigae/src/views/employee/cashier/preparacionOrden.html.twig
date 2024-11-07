@@ -37,17 +37,176 @@
 {% include 'partials/headerCajero.html.twig' %}
 
 <body>
+   <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-6 space-y-6">
+        <form method="POST" action="{{ path('prepareOrder') }}" class="space-y-6"> <!--  -->
+            {% if response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+        <!-- Hidden inputs to store the arrays -->
+        <div id="hidden-reservations"></div>
+        <div id="hidden-products"></div>
 
+        <!-- Reservation ID Input -->
+        <div class="flex items-center space-x-2">
+          <input type="text" 
+                 id="reservation_id"
+                 class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                 placeholder="ID de Reserva">
+          <button type="button" 
+                  onclick="addReservation()"
+                  class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+            +
+          </button>
+        </div>
 
-<section class="flex overflow-hidden flex-col justify-center items-center py-60 pr-16 pl-20 font-bold whitespace-nowrap bg-white max-md:px-5 max-md:py-24">
-  <div class="flex flex-col max-w-full w-[1297px]">
-    <article class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
-      <h2 class="text-4xl text-neutral-900">Preparar Orden</h2>
-    </article>
+        <!-- Product Section -->
+        <div class="space-y-4">
+          <div class="flex items-center space-x-2">
+            <input type="text" 
+                   id="product_id"
+                   class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                   placeholder="Agregar Producto">
+            <button type="button" 
+                    onclick="addProduct()"
+                    class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- Display Section -->
+        <div class="bg-gray-50 rounded-md p-4 space-y-3">
+          <div class="text-sm">
+            <span class="text-gray-600">RESERVAS ID:</span>
+            <div id="display_reservations" class="mt-1 ml-2 font-medium space-y-1">
+              -
+            </div>
+          </div>
+          <div class="text-sm">
+            <span class="text-gray-600">PRODUCTOS ID:</span>
+            <div id="display_products" class="mt-1 ml-2 font-medium space-y-1">
+              -
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit"
+                class="w-full rounded-md border border-transparent bg-red-500 py-3 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+          Enviar a facturar
+        </button>
+      </form>
+    </div>
   </div>
-</section>
+</div>
 
-  </main>
+<script>
+    let reservations = [];
+    let products = [];
+
+    function updateHiddenInputs() {
+    const reservationsContainer = document.getElementById('hidden-reservations');
+    const productsContainer = document.getElementById('hidden-products');
+    
+    reservationsContainer.innerHTML = reservations.map(id => 
+        `<input type="hidden" name="reservation_ids[]" value="${id}">`
+    ).join('');
+    
+    productsContainer.innerHTML = products.map(id => 
+        `<input type="hidden" name="product_ids[]" value="${id}">`
+    ).join('');
+    }
+
+    function addReservation() {
+    const input = document.getElementById('reservation_id');
+    const value = input.value.trim();
+    
+    if (value) {
+        reservations.push(value);
+        updateDisplay();
+        updateHiddenInputs();
+        input.value = '';
+    }
+    }
+
+    function addProduct() {
+    const input = document.getElementById('product_id');
+    const value = input.value.trim();
+    
+    if (value) {
+        products.push(value);
+        updateDisplay();
+        updateHiddenInputs();
+        input.value = '';
+    }
+    }
+
+    function updateDisplay() {
+    const reservationsDisplay = document.getElementById('display_reservations');
+    const productsDisplay = document.getElementById('display_products');
+    
+    if (reservations.length > 0) {
+        reservationsDisplay.innerHTML = reservations.map(id => 
+        `<div class="flex items-center justify-between">
+            <span>${id}</span>
+            <button type="button" onclick="removeReservation('${id}')" class="text-red-500 hover:text-red-700 text-sm">
+            ×
+            </button>
+        </div>`
+        ).join('');
+    } else {
+        reservationsDisplay.innerHTML = '-';
+    }
+    
+    if (products.length > 0) {
+        productsDisplay.innerHTML = products.map(id => 
+        `<div class="flex items-center justify-between">
+            <span>${id}</span>
+            <button type="button" onclick="removeProduct('${id}')" class="text-red-500 hover:text-red-700 text-sm">
+            ×
+            </button>
+        </div>`
+        ).join('');
+    } else {
+        productsDisplay.innerHTML = '-';
+    }
+    }
+
+    function removeReservation(id) {
+    reservations = reservations.filter(r => r !== id);
+    updateDisplay();
+    updateHiddenInputs();
+    }
+
+    function removeProduct(id) {
+    products = products.filter(p => p !== id);
+    updateDisplay();
+    updateHiddenInputs();
+    }
+
+    // Allow Enter key to trigger add buttons
+    document.getElementById('reservation_id').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        addReservation();
+    }
+    });
+
+    document.getElementById('product_id').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        addProduct();
+    }
+    });
+</script>
 
     {% include 'partials/footer.html.twig' %}
 

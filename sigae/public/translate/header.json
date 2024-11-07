@@ -1,23 +1,38 @@
 {
-    "es": {
-      "services": "Servicios",
-      "aioParking": "AIO Parking",
-      "misReservas": "Mis Reservas",
-      "products": "Repuestos y accesorios",
-      "faq": "FAQ"
-    },
-    "it": {
-      "services": "Servizi",
-      "aioParking": "AIO Parcheggio",
-      "misReservas": "Miei Prenotazioni",
-      "products": "Ricambi e accessori",
-      "faq": "FAQ"
-    },
-    "en": {
-      "services": "Services",
-      "aioParking": "AIO Parking",
-      "misReservas": "My Bookings",
-      "products": "Parts and accessories",
-      "faq": "FAQ"
-    }
+  "es": {
+    "services": "Servicios",
+    "aioParking": "AIO Parking",
+    "misReservas": "Mis Reservas",
+    "products": "Repuestos y accesorios",
+    "faq": "FAQ",
+    "miCuenta": "Mi Cuenta",
+    "idioma": "Idioma:",
+    "espanol": "Español",
+    "italiano": "Italiano",
+    "english": "Inglés"
+  },
+  "it": {
+    "services": "Servizi",
+    "aioParking": "AIO Parcheggio",
+    "misReservas": "Miei Prenotazioni",
+    "products": "Ricambi e accessori",
+    "faq": "FAQ",
+    "miCuenta": "Mio Account",
+    "idioma": "Lingua:",
+    "espanol": "Spagnolo",
+    "italiano": "Italiano",
+    "english": "Inglese"
+  },
+  "en": {
+    "services": "Services",
+    "aioParking": "AIO Parking",
+    "misReservas": "My Bookings",
+    "products": "Parts and accessories",
+    "faq": "FAQ",
+    "miCuenta": "My Account",
+    "idioma": "Language:",
+    "espanol": "Spanish",
+    "italiano": "Italian",
+    "english": "English"
   }
+}

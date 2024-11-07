@@ -337,6 +337,7 @@ class ControladorParking extends AbstractController{
 
                     // Guardar la reserva en la sesión
                     $_SESSION['reserva'] = $this->parking;
+                    $_SESSION['plazasReservadas'] = strtoupper(implode(', ', $plazasValidas));
                     $_SESSION['servicio'] = 'parking';
                     $_SESSION['matricula'] = $_SESSION['parking']['matricula'];
 
@@ -362,10 +363,8 @@ class ControladorParking extends AbstractController{
     function parkingConfirmation(): Response{
         $sessionData = [
             'email' => $_SESSION['email'],
-            'id' => $_SESSION['id'],
             'nombre' => $_SESSION['nombre'],
             'apellido' => $_SESSION['apellido'],
-            'telefono' => isset($_SESSION['telefono']),
             'servicio' => $_SESSION['servicio'],
             'reserva' => isset($_SESSION['reserva']) ? [
                 'id' => $_SESSION['reserva']->getId(),
@@ -373,9 +372,9 @@ class ControladorParking extends AbstractController{
                 'precio' => $_SESSION['reserva']->getPrecio(),
                 'fecha_inicio' => $_SESSION['reserva']->getFecha_inicio(),
                 'fecha_final' => $_SESSION['reserva']->getFecha_final(),
-                'estado' => $_SESSION['reserva']->getEstado(),
-                'largo_plazo' => $_SESSION['reserva']->getLargo_plazo(),
-                'tipo_plaza' => $_SESSION['reserva']->getTipo_plaza()
+                'tipo_plaza' => $_SESSION['reserva']->getTipo_plaza(),
+                'largo_plazo' => ($_SESSION['reserva']->getLargo_plazo()==true) ? "Largo Plazo" : "Regular",
+                'plazas' => $_SESSION['plazasReservadas']
             ] : null,
         ];
         // Imprimir los datos en pagina de confirmacion

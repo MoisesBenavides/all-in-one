@@ -36,6 +36,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
 </script>
 <script src="{{ asset('js/fetchClientSession.js') }}"></script>
 <header class="w-screen bg-white">
+<header class="w-screen bg-white">
     <div class="container mx-auto px-4 py-4">
         <!-- Desktop View -->
         <div class="hidden md:flex items-center justify-between">
@@ -59,7 +60,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
                 <div>
                     <button id="languageToggleDesktop" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
                         <img src="{{ asset('img/world.png') }}" alt="Language" class="icon-size">
-                        <span class="text-base font-medium">Idioma:</span>
+                        <span class="text-base font-medium" traducir="idioma">Idioma:</span>
                         <span id="currentLanguageDesktop" class="text-base font-bold uppercase"></span>
                     </button>
                 </div>
@@ -67,7 +68,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
                 <!-- User icon Desktop -->
                 <a href="{{ path('myAccount') }}" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
                     <img id="profile-photo" class="icon-size rounded-full" src="{{ fotoPerfil ?? asset('img/user.png') }}" alt="User">
-                    <span class="text-base font-medium">Mi Cuenta</span>
+                    <span traducir="miCuenta" class="text-base font-medium">Mi Cuenta</span>
                 </a>
             </div>
         </div>
@@ -96,29 +97,30 @@ const SESSION_URL = "{{ path('getClientSession') }}";
                         </button>
                     </div>
 
-                    <!-- User icon móvil -->
-                    <a href="{{ path('myAccount') }}" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
+                    <!-- User icon móvil - También necesita traducción en el alt -->
+                    <a href="{{ path('myAccount') }}" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-300" title="Mi Cuenta" traducir="miCuenta">
                         <img id="profile-photo" class="icon-size rounded-full" src="{{ fotoPerfil ?? asset('img/user.png') }}" alt="User">
                     </a>
                 </div>
             </div>
 
+
             <!-- Menú de idiomas móvil -->
-            <div id="languageMenu" class="hidden mt-4 bg-white rounded-lg shadow-lg">
+           <div id="languageMenu" class="hidden mt-4 bg-white rounded-lg shadow-lg">
                 <div class="py-2">
                     <button data-idioma="es" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                         <img src="{{ asset('img/es.png') }}" alt="Español" class="flag-size mr-3">
-                        <span class="text-base">Español</span>
+                        <span class="text-base" traducir="espanol">Español</span>
                         <span class="text-sm text-gray-500 ml-auto">ES</span>
                     </button>
                     <button data-idioma="it" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                         <img src="{{ asset('img/it.png') }}" alt="Italiano" class="flag-size mr-3">
-                        <span class="text-base">Italiano</span>
+                        <span class="text-base" traducir="italiano">Italiano</span>
                         <span class="text-sm text-gray-500 ml-auto">IT</span>
                     </button>
                     <button data-idioma="en" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                         <img src="{{ asset('img/en.png') }}" alt="English" class="flag-size mr-3">
-                        <span class="text-base">English</span>
+                        <span class="text-base" traducir="english">English</span>
                         <span class="text-sm text-gray-500 ml-auto">EN</span>
                     </button>
                 </div>
@@ -130,17 +132,17 @@ const SESSION_URL = "{{ path('getClientSession') }}";
             <div class="py-2">
                 <button data-idioma="es" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                     <img src="{{ asset('img/es.png') }}" alt="Español" class="flag-size mr-6">
-                    <span class="text-base ">Español</span>
+                    <span class="text-base " traducir="espanol">Español</span>
                     <span class="text-sm text-gray-500 ml-auto">ES</span>
                 </button>
                 <button data-idioma="it" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                     <img src="{{ asset('img/it.png') }}" alt="Italiano" class="flag-size mr-6">
-                    <span class="text-base">Italiano</span>
+                    <span class="text-base" traducir="italiano">Italiano</span>
                     <span class="text-sm text-gray-500 ml-auto">IT</span>
                 </button>
                 <button data-idioma="en" class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
                     <img src="{{ asset('img/en.png') }}" alt="English" class="flag-size mr-6">
-                    <span class="text-base">English</span>
+                    <span class="text-base" traducir="English">English</span>
                     <span class="text-sm text-gray-500 ml-auto">EN</span>
                 </button>
             </div>
@@ -151,7 +153,7 @@ const SESSION_URL = "{{ path('getClientSession') }}";
             <div class="py-2">
                 <a href="{{ path('services') }}" traducir="services" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Servicios</a>
                 <a href="{{ path('aioParking') }}" traducir="aioParking" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">AIO Parking</a>
-                <a href="{{ path('myBookedServices') }}" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Mis Reservas</a>
+                <a href="{{ path('myBookedServices') }}" traducir="misReservas" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Mis Reservas</a>
                 <a href="{{ path('products') }}" traducir="products" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">Repuestos y accesorios</a>
                 <a href="{{ path('faq') }}" traducir="faq" class="block text-black text-base font-bold px-4 py-3 hover:bg-gray-100">FAQ</a>
             </div>

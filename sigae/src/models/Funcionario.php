@@ -117,6 +117,26 @@ class Funcionario{
         }
     }
 
+    public function altaGerente($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL alta_gerente(:usr, :host, :pswd);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':pswd', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
     public function altaJefeDiagnostico($contrasena){
         $usuario=$this->getUsuario();
         $host=$this->getHost();
@@ -217,6 +237,25 @@ class Funcionario{
 
     }
 
+    public function bajaGerente(){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL baja_gerente(:usr, :host);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
     public function bajaJefeDiagnostico(){
         $usuario=$this->getUsuario();
         $host=$this->getHost();
@@ -301,6 +340,27 @@ class Funcionario{
 
             $stmt->bindParam(':usr', $usuario);
             $stmt->bindParam(':host', $host);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modGerente($usuarioNuevo, $hostNuevo){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL modificar_gerente(:usr, :host, :usrNuevo, :hostNuevo);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':usrNuevo', $usuarioNuevo);
+            $stmt->bindParam(':hostNuevo', $hostNuevo);
 
             $stmt->execute();
 
@@ -412,6 +472,27 @@ class Funcionario{
             return true;
 
         } catch(PDOException $e){
+            throw $e;
+        }
+
+    }
+
+    public function modContraGerente($contrasena){
+        $usuario=$this->getUsuario();
+        $host=$this->getHost();
+        try{
+            $stmt = $this->conn->prepare('CALL mod_contra_gerente(:usr, :host, :contraNueva);');
+
+            $stmt->bindParam(':usr', $usuario);
+            $stmt->bindParam(':host', $host);
+            $stmt->bindParam(':contraNueva', $contrasena);
+
+            $stmt->execute();
+
+            return true;
+
+        } catch(PDOException $e){
+            error_log("Error cambiando la contraseña".$e->getMessage());
             throw $e;
         }
 

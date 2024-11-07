@@ -47,7 +47,7 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Header Section -->
-        <div class="bg-gradient-to-r from-black to-gray-800 rounded-2xl shadow-lg mb-8 p-8">
+        <div class="bg-neutral-400 rounded-2xl shadow-lg mb-8 p-8">
             <h1 class="text-white text-4xl font-bold text-center">Inventario</h1>
         </div>
 
@@ -62,6 +62,156 @@
                 >
             </div>
         </div>
+            {% if response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+        <div class="max-w-7xl mx-auto flex gap-4 mb-12">
+            <!-- Neumático Form -->
+            <div class="flex-1">
+                <button id="add-tire-btn" type="button" 
+                        class="text-neutral-100 w-full px-7 py-3 bg-neutral-400 border border-black rounded-lg text-lg font-semibold hover:bg-neutral-600 transition-colors duration-200 flex justify-between items-center">
+                    <span>Agregar Neumático</span>
+                    <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" 
+                        class="w-5 h-5 transform transition-transform duration-300" id="tire-dropdown-icon">
+                </button>
+                <form id="new-tire-form" action="{{ path('addNewTyre') }}" method="POST" 
+                    class="hidden space-y-6 mt-4 p-4 border border-slate-300 rounded-md">
+                    <div class="space-y-4">
+                        <!-- Producto Fields -->
+                        <div>
+                            <label for="tire-upc" class="block text-lg font-medium text-neutral-900 mb-2">
+                                UPC *
+                            </label>
+                            <input type="text" id="tire-upc" name="upc" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el UPC">
+                        </div>
+
+                        <div>
+                            <label for="tire-precio" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Precio *
+                            </label>
+                            <input type="number" id="tire-precio" name="precio" required step="0.01"
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el precio">
+                        </div>
+
+                        <div>
+                            <label for="tire-marca" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Marca *
+                            </label>
+                            <input type="text" id="tire-marca" name="marca" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese la marca">
+                        </div>
+
+                        <!-- Neumático Fields -->
+                        <div>
+                            <label for="tire-tamano" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Tamaño *
+                            </label>
+                            <input type="text" id="tire-tamano" name="tamano" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el tamaño">
+                        </div>
+
+                        <div>
+                            <label for="tire-modelo" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Modelo *
+                            </label>
+                            <input type="text" id="tire-modelo" name="modelo" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el modelo">
+                        </div>
+
+                        <div>
+                            <label for="tire-tipo" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Tipo *
+                            </label>
+                            <input type="text" id="tire-tipo" name="tipo" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el tipo">
+                        </div>
+
+                        <div>
+                            <button type="submit" 
+                                    class="w-full px-6 py-3 duration-300 bg-red-600 hover:bg-red-700 text-white text-xl font-bold rounded-lg transition-colors">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Other Product Form -->
+            <div class="flex-1">
+                <button id="add-product-btn" type="button" 
+                        class="text-neutral-100 w-full px-7 py-3 bg-neutral-400 border border-black rounded-lg text-lg font-semibold hover:bg-neutral-600 transition-colors duration-200 flex justify-between items-center">
+                    <span>Agregar Accesorio o Repuesto</span>
+                    <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" 
+                        class="w-5 h-5 transform transition-transform duration-300" id="product-dropdown-icon">
+                </button>
+                <form id="new-product-form" action="{{ path('addNewAccessory') }}" method="POST" 
+                    class="hidden space-y-6 mt-4 p-4 border border-slate-300 rounded-md">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="product-upc" class="block text-lg font-medium text-neutral-900 mb-2">
+                                UPC *
+                            </label>
+                            <input type="text" id="product-upc" name="upc" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el UPC">
+                        </div>
+
+                        <div>
+                            <label for="product-precio" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Precio *
+                            </label>
+                            <input type="number" id="product-precio" name="precio" required step="0.01"
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el precio">
+                        </div>
+
+                        <div>
+                            <label for="product-marca" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Marca *
+                            </label>
+                            <input type="text" id="product-marca" name="marca" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese la marca">
+                        </div>
+
+                        <div>
+                            <label for="product-nombre" class="block text-lg font-medium text-neutral-900 mb-2">
+                                Nombre *
+                            </label>
+                            <input type="text" id="product-nombre" name="nombre" required
+                                class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                placeholder="Ingrese el nombre">
+                        </div>
+
+                        <div>
+                            <button type="submit" 
+                                    class="w-full px-6 py-3 duration-300 bg-red-600 hover:bg-red-700 text-white text-xl font-bold rounded-lg transition-colors">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <div id="successAlert" class="hidden fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg transition-opacity duration-500">
+        <p class="flex items-center">
+            <span class="mr-2">✓</span>
+            <span id="alertMessage">Producto agregado exitosamente</span>
+        </p>
+    </div>
 
         <!-- No Results Message -->
         <div id="noResults" class="hidden text-center py-8">
@@ -164,125 +314,216 @@
         </div>
     </div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-    // Get DOM elements
-    const inputBuscar = document.getElementById('buscar');
-    const productosContainer = document.getElementById('productosContainer');
-    const productos = Array.from(document.querySelectorAll('.product'));
-    const verMasBtn = document.getElementById('verMas');
-    const noResults = document.getElementById('noResults');
-    
-    // Initialize variables
-    let productosMostrados = 50;
-    let productosFiltrados = productos;
-
-    // Function to check if a product matches search criteria
-    function productoCoincideConBusqueda(producto, textoBusqueda) {
-        // Get all text fields from the product
-        const marca = producto.querySelector('[name="marca"]')?.value || '';
-        const nombre = producto.querySelector('[name="nombre"]')?.value || '';
-        const modelo = producto.querySelector('[name="modelo"]')?.value || '';
-        const tipo = producto.querySelector('[name="tipo"]')?.value || '';
-        const id = producto.querySelector('[name="id"]')?.value || '';
-        const upc = producto.querySelector('[name="upc"]')?.value || '';
-
-        // Convert everything to lowercase for search
-        const textoProducto = [marca, nombre, modelo, tipo, id, upc]
-            .map(text => text.toLowerCase())
-            .join(' ');
-
-        // Split search text into words for partial search
-        const palabrasBusqueda = textoBusqueda.toLowerCase().split(' ');
-
-        // Product matches if it contains all search words
-        return palabrasBusqueda.every(palabra => textoProducto.includes(palabra));
-    }
-
-    // Function to filter products
-    function filtrarProductos() {
-        const textoBusqueda = inputBuscar.value.toLowerCase().trim();
+<script>
+    // DOM Content Loaded - Manejo de formularios y UI
+    document.addEventListener('DOMContentLoaded', function() {
+        // Variables para los forms y botones
+        const addTireBtn = document.getElementById('add-tire-btn');
+        const addProductBtn = document.getElementById('add-product-btn');
+        const newTireForm = document.getElementById('new-tire-form');
+        const newProductForm = document.getElementById('new-product-form');
+        const tireDropdownIcon = document.getElementById('tire-dropdown-icon');
+        const productDropdownIcon = document.getElementById('product-dropdown-icon');
+        const inputBuscar = document.getElementById('buscar');
+        const productosContainer = document.getElementById('productosContainer');
+        const productos = Array.from(document.querySelectorAll('.product'));
+        const verMasBtn = document.getElementById('verMas');
+        const noResults = document.getElementById('noResults');
         
-        if (textoBusqueda === '') {
-            productosFiltrados = productos;
-        } else {
-            productosFiltrados = productos.filter(producto => 
-                productoCoincideConBusqueda(producto, textoBusqueda)
-            );
-        }
+        // Variables para la paginación
+        let productosMostrados = 50;
+        let productosFiltrados = productos;
 
-        return productosFiltrados;
-    }
-
-    // Function to display products
-    function mostrarProductos() {
-        const productosFiltrados = filtrarProductos();
-        
-        // Hide all products first
-        productos.forEach(producto => producto.classList.add('hidden'));
-        
-        // Show filtered products up to the limit
-        productosFiltrados.slice(0, productosMostrados).forEach(producto => {
-            producto.classList.remove('hidden');
-        });
-
-        // Update UI elements
-        const hayResultados = productosFiltrados.length > 0;
-        noResults.classList.toggle('hidden', hayResultados);
-        verMasBtn.classList.toggle('hidden', productosFiltrados.length <= productosMostrados);
-    }
-
-    // Function to toggle edit mode
-    function toggleProductEdit(productId) {
-        const form = document.getElementById(`product-form-${productId}`);
-        const formContainer = form.closest('.product');
-        const inputs = form.querySelectorAll('.editable');
-        const editButton = form.querySelector('.edit-button');
-        const editIcon = form.querySelector('.edit-icon');
-        const saveIcon = form.querySelector('.save-icon');
-        
-        formContainer.classList.toggle('editing-mode');
-        editIcon.classList.toggle('hidden');
-        saveIcon.classList.toggle('hidden');
-        
-        inputs.forEach(input => {
-            input.readOnly = !input.readOnly;
-            if (!input.readOnly) {
-                input.focus();
+        // Toggle Tire form visibility
+        addTireBtn.addEventListener('click', () => {
+            newTireForm.classList.toggle('hidden');
+            tireDropdownIcon.classList.toggle('rotate-180');
+            // cerrar otro form si esta abierto
+            if (!newProductForm.classList.contains('hidden')) {
+                newProductForm.classList.add('hidden');
+                productDropdownIcon.classList.remove('rotate-180');
             }
         });
-        
-        editButton.classList.toggle('hidden');
-    }
 
-    // Function to handle product deletion
-    function confirmDelete(productId) {
-        if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
-            const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
-            form.submit();
+        // Toggle Product form visibility
+        addProductBtn.addEventListener('click', () => {
+            newProductForm.classList.toggle('hidden');
+            productDropdownIcon.classList.toggle('rotate-180');
+            // cerrar otro form si esta abierto
+            if (!newTireForm.classList.contains('hidden')) {
+                newTireForm.classList.add('hidden');
+                tireDropdownIcon.classList.remove('rotate-180');
+            }
+        });
+
+        // Convertir a mayúsculas para el formulario de neumáticos
+        newTireForm.addEventListener('submit', function(e) {
+            const tamanoInput = document.getElementById('tire-tamano');
+            const tipoInput = document.getElementById('tire-tipo');
+            
+            tamanoInput.value = tamanoInput.value.toUpperCase();
+            tipoInput.value = tipoInput.value.toUpperCase();
+            localStorage.setItem('showAlert', 'tire');
+        });
+
+        // Convertir a mayúsculas mientras se escribe
+        document.getElementById('tire-tamano').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        document.getElementById('tire-tipo').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        // Event listener para el formulario de productos
+        newProductForm.addEventListener('submit', function(e) {
+            localStorage.setItem('showAlert', 'product');
+        });
+
+        // Form validation
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const requiredInputs = this.querySelectorAll('input[required]');
+                let isValid = true;
+
+                requiredInputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Por favor, complete todos los campos requeridos.');
+                }
+            });
+        });
+
+        // Función para mostrar alertas
+        function showSuccessAlert(message) {
+            const alert = document.getElementById('successAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            alertMessage.textContent = message;
+            
+            alert.classList.remove('hidden');
+            alert.classList.add('opacity-100');
+            
+            setTimeout(() => {
+                alert.classList.add('opacity-0');
+                setTimeout(() => {
+                    alert.classList.add('hidden');
+                }, 500);
+            }, 3000);
         }
-    }
 
-    // Event Listeners
-    inputBuscar.addEventListener('input', function() {
-        productosMostrados = 50; // Reset to initial count when searching
+        // Verificar alertas pendientes al cargar
+        const pendingAlert = localStorage.getItem('showAlert');
+        if (pendingAlert) {
+            if (pendingAlert === 'tire') {
+                showSuccessAlert('Neumático agregado exitosamente');
+            } else if (pendingAlert === 'product') {
+                showSuccessAlert('Producto agregado exitosamente');
+            }
+            localStorage.removeItem('showAlert');
+        }
+
+        // Funciones de búsqueda y filtrado
+        function productoCoincideConBusqueda(producto, textoBusqueda) {
+            const marca = producto.querySelector('[name="marca"]')?.value || '';
+            const nombre = producto.querySelector('[name="nombre"]')?.value || '';
+            const modelo = producto.querySelector('[name="modelo"]')?.value || '';
+            const tipo = producto.querySelector('[name="tipo"]')?.value || '';
+            const id = producto.querySelector('[name="id"]')?.value || '';
+            const upc = producto.querySelector('[name="upc"]')?.value || '';
+
+            const textoProducto = [marca, nombre, modelo, tipo, id, upc]
+                .map(text => text.toLowerCase())
+                .join(' ');
+
+            const palabrasBusqueda = textoBusqueda.toLowerCase().split(' ');
+
+            return palabrasBusqueda.every(palabra => textoProducto.includes(palabra));
+        }
+
+        function filtrarProductos() {
+            const textoBusqueda = inputBuscar.value.toLowerCase().trim();
+            
+            if (textoBusqueda === '') {
+                productosFiltrados = productos;
+            } else {
+                productosFiltrados = productos.filter(producto => 
+                    productoCoincideConBusqueda(producto, textoBusqueda)
+                );
+            }
+
+            return productosFiltrados;
+        }
+
+        function mostrarProductos() {
+            const productosFiltrados = filtrarProductos();
+            
+            productos.forEach(producto => producto.classList.add('hidden'));
+            
+            productosFiltrados.slice(0, productosMostrados).forEach(producto => {
+                producto.classList.remove('hidden');
+            });
+
+            const hayResultados = productosFiltrados.length > 0;
+            noResults.classList.toggle('hidden', hayResultados);
+            verMasBtn.classList.toggle('hidden', productosFiltrados.length <= productosMostrados);
+        }
+
+        // Función para editar productos
+        window.toggleProductEdit = function(productId) {
+            const form = document.getElementById(`product-form-${productId}`);
+            const formContainer = form.closest('.product');
+            const inputs = form.querySelectorAll('.editable');
+            const editButton = form.querySelector('.edit-button');
+            const editIcon = form.querySelector('.edit-icon');
+            const saveIcon = form.querySelector('.save-icon');
+            
+            formContainer.classList.toggle('editing-mode');
+            editIcon.classList.toggle('hidden');
+            saveIcon.classList.toggle('hidden');
+            
+            inputs.forEach(input => {
+                input.readOnly = !input.readOnly;
+                if (!input.readOnly) {
+                    input.focus();
+                }
+            });
+            
+            editButton.classList.toggle('hidden');
+        }
+
+        // Función para eliminar productos
+        window.confirmDelete = function(productId) {
+            if (window.confirm('¿Está seguro que desea eliminar este producto?')) {
+                const form = document.querySelector(`form[action=""] input[value="${productId}"]`).closest('form');
+                form.submit();
+            }
+        }
+
+        // Event Listeners para búsqueda y paginación
+        inputBuscar.addEventListener('input', function() {
+            productosMostrados = 50;
+            mostrarProductos();
+        });
+
+        verMasBtn.addEventListener('click', function() {
+            productosMostrados += 50;
+            mostrarProductos();
+        });
+
+        // Mostrar productos iniciales
         mostrarProductos();
+
+        // Verificar mensaje de éxito en la respuesta
+        {% if response is defined and response.success is defined %}
+            showSuccessAlert("{{ response.success }}");
+        {% endif %}
     });
-
-    verMasBtn.addEventListener('click', function() {
-        productosMostrados += 50;
-        mostrarProductos();
-    });
-
-    // Make functions globally available
-    window.toggleProductEdit = toggleProductEdit;
-    window.confirmDelete = confirmDelete;
-
-    // Initial display
-    mostrarProductos();
-});
-
-    </script>
+</script>
 
     {% include 'partials/footer.html.twig' %}
 </body>

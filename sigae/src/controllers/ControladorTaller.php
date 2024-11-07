@@ -139,10 +139,8 @@ class ControladorTaller extends AbstractController{
     function serviceConfirmation(): Response{
         $sessionData = [
             'email' => $_SESSION['email'],
-            'id' => $_SESSION['id'],
             'nombre' => $_SESSION['nombre'],
             'apellido' => $_SESSION['apellido'],
-            'telefono' => isset($_SESSION['telefono']),
             'servicio' => $_SESSION['servicio'], 
             'reserva' => isset($_SESSION['reserva']) ? [
                 'id' => $_SESSION['reserva']->getId(),
@@ -150,10 +148,8 @@ class ControladorTaller extends AbstractController{
                 'precio' => $_SESSION['reserva']->getPrecio(),
                 'fecha_inicio' => $_SESSION['reserva']->getFecha_inicio(),
                 'fecha_final' => $_SESSION['reserva']->getFecha_final(),
-                'estado' => $_SESSION['reserva']->getEstado(),
                 'tipo' => $_SESSION['reserva']->getTipo(),
-                'descripcion' => $_SESSION['reserva']->getDescripcion(),
-                'tiempo_estimado' => $_SESSION['reserva']->getTiempo_estimado(),
+                'descripcion' => $_SESSION['reserva']->getDescripcion()
             ] : null,
         ];
         // Imprimir los datos en pagina de confirmacion

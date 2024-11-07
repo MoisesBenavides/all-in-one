@@ -71,66 +71,100 @@
     {% include 'partials/header.html.twig' %}
 
     <div class="container mx-auto px-4 py-8">
-        {# Header y Búsqueda #}
         <div class="max-w-4xl mx-auto flex flex-col items-center gap-8 mb-12">
             <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                 <h1 class="text-center text-black text-3xl md:text-4xl font-bold">Nuestros productos</h1>
             </div>
-            <div class="w-full max-w-md">
-                <div class="relative">
+
+        <div class="w-full max-w-4xl flex flex-col md:flex-row gap-4 justify-center items-center">
+            {# Barra de búsqueda #}
+            <div class="relative w-full md:w-96">
+                <div class="relative flex items-center">
+                    
                     <input 
                         type="text" 
                         id="buscar" 
                         placeholder="Buscar productos..." 
-                        class="w-full h-14 px-6 pr-12 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
-                    >
-                    <img 
-                        id="searchIcon" 
-                        class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer hover:opacity-75 transition-opacity duration-300" 
-                        src="{{ asset('svg/search.svg') }}" 
-                        alt="Search"
+                        class="w-full h-12 pl-10 pr-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
                     >
                 </div>
             </div>
+
+            {# Filtro con icono #}
+            <div class="relative w-full md:w-48">
+                <div class="relative flex items-center">
+                   
+                    <select 
+                        id="filtroProductos" 
+                        class="w-full h-12 pl-10 pr-4 rounded-lg border border-gray-200 bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
+                    >
+                        <option value="todos" {% if filtro == 'todos' %}selected{% endif %}>Todos los productos</option>
+                        <option value="neumaticos" {% if filtro == 'neumaticos' %}selected{% endif %}>Neumáticos</option>
+                        <option value="otros" {% if filtro == 'otros' %}selected{% endif %}>Otros productos</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        
-        {# Contenedor de Productos #}
-        <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+       <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for producto in productos %}
-                <div class="product flex flex-col bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+                <div class="product flex flex-col bg-white rounded-lg border-neutral-900 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300">
                     <div class="w-full h-48 bg-gray-100">
                         <img 
                             class="w-full h-full object-contain" 
-                            {# src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" #}
                             alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
                             onload="this.style.display='block'"
-                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'placeholder-image\'><p class=\'placeholder-text\'>Imagen no disponible</p></div>'"
+                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full\'><p class=\'text-gray-400 text-sm\'>Imagen no disponible</p></div>'"
                         />
                     </div>
                     
-                    <div class="w-full p-6 flex flex-col gap-3">
-                        <p class="text-lg font-bold text-gray-900">{{ producto.marca }}</p>
+                    <div class="w-full p-6 flex flex-col gap-4">
+                        {# Marca #}
+                        <div class="flex flex-col">
+                           <span class="text-sm text-gray-500 font-medium">Marca</span> 
+                            <p class="text-lg font-bold text-gray-900">{{ producto.marca }}</p>
+                        </div>
                         
                         {% if producto.nombre is defined and producto.nombre %}
-                            <p class="text-base text-gray-600">{{ producto.nombre }}</p>
+                            {# Nombre del producto #}
+                            <div class="flex flex-col">
+                              <span class="text-sm text-gray-500 font-medium">Descripción</span> 
+                                <p class="text-lg font-bold text-gray-900">{{ producto.nombre }}</p>
+                            </div>
                         {% elseif producto.modelo is defined and producto.modelo %}
-                            <p class="text-base text-gray-600">{{ producto.modelo }}</p>
-                            <p class="text-base text-gray-600">{{ producto.tamano }}</p>
-                            <p class="text-base text-gray-600">{{ producto.tipo }}</p>
+                            {# Modelo #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Modelo</span> 
+                                <p class="text-lg font-bold text-gray-900">{{ producto.modelo }}</p>
+                            </div>
+                            
+                            {# Tamaño #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Tamaño</span> 
+                                <p class="text-lg font-bold text-gray-900">{{ producto.tamano }}</p>
+                            </div>
+                            
+                            {# Tipo #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Tipo</span> 
+                                <p class="text-lg font-bold text-gray-900">{{ producto.tipo }}</p>
+                            </div>
                         {% endif %}
                         
-                        <p class="mt-auto text-2xl font-bold text-black">${{ producto.precio }}</p>
+                        {# Precio #}
+                        <div class="mt-auto pt-4 border-t border-gray-100">
+                        <strong>    <span class="text-sm text-gray-500 font-medium">Precio</span> </strong>
+                            <p class="text-2xl font-bold text-black">${{ producto.precio }}</p>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
 
-        {# Mensajes de estado #}
         <div id="noResults" class="hidden no-results mt-8">
             <p class="text-gray-600 text-lg">No se encontraron productos que coincidan con tu búsqueda.</p>
         </div>
 
-        {# Botón Ver Más #}
         <div class="flex justify-center mt-12">
             <button id="verMas" class="btn-ver-mas hidden">
                 Ver más productos
@@ -139,63 +173,68 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const inputBuscar = document.getElementById('buscar');
-        const searchIcon = document.getElementById('searchIcon');
-        const productosContainer = document.getElementById('productosContainer');
-        const productos = document.querySelectorAll('.product');
-        const verMasBtn = document.getElementById('verMas');
-        const noResults = document.getElementById('noResults');
-        
-        let productosMostrados = 50;
-        let productosVisiblesTotales = 0;
+        document.addEventListener('DOMContentLoaded', function() {
+            const filtroSelect = document.getElementById('filtroProductos');
+            
+            filtroSelect.addEventListener('change', function() {
+                window.location.href = `{{ path('filterProducts') }}?filtro=${this.value}`;
+            });
+        });
+    </script>
 
-        function actualizarVisibilidad() {
-            let productosVisibles = 0;
-            productosVisiblesTotales = 0;
-            const textoBusqueda = inputBuscar.value.toLowerCase();
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputBuscar = document.getElementById('buscar');
+            const productosContainer = document.getElementById('productosContainer');
+            const productos = document.querySelectorAll('.product');
+            const verMasBtn = document.getElementById('verMas');
+            const noResults = document.getElementById('noResults');
+            
+            let productosMostrados = 50;
+            let productosVisiblesTotales = 0;
 
-            productos.forEach((producto, index) => {
-                const textoProducto = producto.textContent.toLowerCase();
-                const coincideBusqueda = textoProducto.includes(textoBusqueda);
-                
-                if (coincideBusqueda) {
-                    productosVisiblesTotales++;
-                    if (productosVisiblesTotales <= productosMostrados) {
-                        producto.classList.remove('hidden');
-                        productosVisibles++;
+            function actualizarVisibilidad() {
+                let productosVisibles = 0;
+                productosVisiblesTotales = 0;
+                const textoBusqueda = inputBuscar.value.toLowerCase();
+
+                productos.forEach((producto, index) => {
+                    const textoProducto = producto.textContent.toLowerCase();
+                    const coincideBusqueda = textoProducto.includes(textoBusqueda);
+                    
+                    if (coincideBusqueda) {
+                        productosVisiblesTotales++;
+                        if (productosVisiblesTotales <= productosMostrados) {
+                            producto.classList.remove('hidden');
+                            productosVisibles++;
+                        } else {
+                            producto.classList.add('hidden');
+                        }
                     } else {
                         producto.classList.add('hidden');
                     }
-                } else {
-                    producto.classList.add('hidden');
-                }
+                });
+
+                noResults.classList.toggle('hidden', productosVisibles > 0);
+                verMasBtn.classList.toggle('hidden', productosVisiblesTotales <= productosMostrados);
+            }
+
+            inputBuscar.addEventListener('input', function() {
+                productosMostrados = 50;
+                actualizarVisibilidad();
             });
 
-            // Mostrar/ocultar mensaje de no resultados
-            noResults.classList.toggle('hidden', productosVisibles > 0);
-            
-            // Actualizar visibilidad del botón Ver Más
-            verMasBtn.classList.toggle('hidden', productosVisiblesTotales <= productosMostrados);
-        }
+            verMasBtn.addEventListener('click', function() {
+                productosMostrados += 50;
+                actualizarVisibilidad();
+            });
 
-        // Evento de búsqueda
-        inputBuscar.addEventListener('input', function() {
-            productosMostrados = 50; // Reset al buscar
             actualizarVisibilidad();
         });
-
-        // Click en botón Ver Más
-        verMasBtn.addEventListener('click', function() {
-            productosMostrados += 50;
-            actualizarVisibilidad();
-        });
-
-        // Inicialización
-        actualizarVisibilidad();
-    });
     </script>
 
-    {% include 'partials/footer.html.twig' %}
+   
 </body>
+     {% include 'partials/footer.html.twig' %}
+
 </html>

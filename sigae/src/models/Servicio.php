@@ -170,5 +170,25 @@ abstract class Servicio{
         }
     }
 
+    public static function obtenerFechaInicio($rol, $id){
+        $conn = conectarDB($rol);
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
+        try{
+            $stmt = $conn->prepare('SELECT fecha_inicio FROM servicio WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            
+            $inicio = $stmt->fetchColumn();
+
+            return $inicio;
+
+        } catch(Exception $e){
+            throw $e;
+        }
+    }
+
     abstract public function getServicios();
 }

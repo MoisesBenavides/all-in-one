@@ -46,13 +46,19 @@
         }
     </style>
 </head>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+        const archivoTraduccionMisReservas = "{{ asset('translate/misReservas.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionMisReservas, 'es');
+    });
+</script>
 <body>
     {% include 'partials/header.html.twig' %}
 
     <section class="flex overflow-hidden flex-col justify-center items-center px-6 md:px-24 py-20 md:py-40 text-lg font-semibold leading-tight bg-white text-neutral-900">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Tus reservas</h2>
+        <h2 traducir="titulo_reservas" class="text-3xl md:text-4xl font-bold text-center mb-12">Tus reservas</h2>
 
-        
         <!-- Mostrar errores si existen -->
         {% if response.errors is not empty %}
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
@@ -61,6 +67,7 @@
                 {% endfor %}
             </div>
         {% endif %}
+
         <!-- Contenedor de Reservas -->
         <div class="w-full max-w-4xl mb-2">
             {% if misReservasParking is empty and misReservasTaller is empty %}
@@ -68,49 +75,48 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h3 class="text-2xl md:text-3xl font-bold text-gray-700 mb-2">No tienes reservas en este momento</h3>
-                    <p class="text-gray-500 mb-8">Visita aioParking para reservar una plaza en nuestro parking 24hs o reserva un horario en el taller de All In One</p>
+                    <h3 traducir="sin_reservas_titulo" class="text-2xl md:text-3xl font-bold text-gray-700 mb-2">No tienes reservas en este momento</h3>
+                    <p traducir="sin_reservas_descripcion" class="text-gray-500 mb-8">Visita aioParking para reservar una plaza en nuestro parking 24hs o reserva un horario en el taller de All In One</p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="{{ path('services') }}" class="px-8 py-3 text-white btn rounded-lg hover:bg-red-700 transition-colors text-center">
+                        <a traducir="boton_reservar_taller" href="{{ path('services') }}" class="px-8 py-3 text-white btn rounded-lg hover:bg-red-700 transition-colors text-center">
                             Reservar Taller
                         </a>
-                        <a href="{{ path('aioParking') }}" class="px-8 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-center">
+                        <a traducir="boton_reservar_parking" href="{{ path('aioParking') }}" class="px-8 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-center">
                             Reservar Parking
                         </a>
                     </div>
                 </div>
             {% else %}
-
                 {# Mostrar reservas de parking #}
                 {% for reserva in misReservasParking %}
                     <div class="reserva-card bg-gray-50 rounded-lg shadow-md p-6 parking mb-4">
                         <!-- Datos comunes -->
                         <div class="flex flex-col md:flex-row justify-between mb-4">
                             <div class="mb-4 md:mb-0">
-                                <p class="text-sm text-gray-500">ID Reserva</p>
+                                <p traducir="id_reserva" class="text-sm text-gray-500">ID Reserva</p>
                                 <p class="font-bold">{{ reserva.id }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Matrícula</p>
+                                <p traducir="matricula" class="text-sm text-gray-500">Matrícula</p>
                                 <p class="font-bold">{{ reserva.matricula }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Estado</p>
+                                <p traducir="estado" class="text-sm text-gray-500">Estado</p>
                                 <p class="font-bold">{{ reserva.estado }}</p>
                             </div>
                         </div>
 
                         <div class="flex flex-col md:flex-row justify-between mb-4">
                             <div class="mb-4 md:mb-0">
-                                <p class="text-sm text-gray-500">Fecha Inicio</p>
+                                <p traducir="fecha_inicio" class="text-sm text-gray-500">Fecha Inicio</p>
                                 <p>{{ reserva.fecha_inicio }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Fecha Final</p>
+                                <p traducir="fecha_final" class="text-sm text-gray-500">Fecha Final</p>
                                 <p>{{ reserva.fecha_final }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Precio</p>
+                                <p traducir="precio" class="text-sm text-gray-500">Precio</p>
                                 <p class="font-bold">${{ reserva.precio }}</p>
                             </div>
                         </div>
@@ -118,15 +124,15 @@
                         <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
                             <div class="flex space-x-8">
                                 <div>
-                                    <p class="text-sm text-gray-500">Tipo de Plaza</p>
+                                    <p traducir="tipo_plaza" class="text-sm text-gray-500">Tipo de Plaza</p>
                                     <p>{{ reserva.tipo_plaza }}</p>
                                 </div>
                                 <div class="ml-2">
-                                    <p class="text-sm text-gray-500 ">Tipo de Reserva</p>
-                                    <p>{{ reserva.largo_plazo ? 'Largo plazo' : 'Regular' }}</p>
+                                    <p traducir="tipo_reserva" class="text-sm text-gray-500">Tipo de Reserva</p>
+                                    <p>{{ reserva.largo_plazo  }}</p>
                                 </div>
                                 <div class="ml-2">
-                                    <p class="text-sm text-gray-500 ml-2">Plaza Asignada</p>
+                                    <p traducir="plaza_asignada" class="text-sm text-gray-500">Plaza/s Asignada/s</p>
                                     <p>{{ reserva.plazas }}</p>
                                 </div>
                             </div>
@@ -149,30 +155,30 @@
                         <!-- Datos comunes -->
                         <div class="flex flex-col md:flex-row justify-between mb-4">
                             <div class="mb-4 md:mb-0">
-                                <p class="text-sm text-gray-500">ID Reserva</p>
+                                <p traducir="id_reserva" class="text-sm text-gray-500">ID Reserva</p>
                                 <p class="font-bold">{{ reserva.id }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Matrícula</p>
+                                <p traducir="matricula" class="text-sm text-gray-500">Matrícula</p>
                                 <p class="font-bold">{{ reserva.matricula }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Estado</p>
+                                <p traducir="estado" class="text-sm text-gray-500">Estado</p>
                                 <p class="font-bold">{{ reserva.estado }}</p>
                             </div>
                         </div>
 
                         <div class="flex flex-col md:flex-row justify-between mb-4">
                             <div class="mb-4 md:mb-0">
-                                <p class="text-sm text-gray-500">Fecha Inicio</p>
+                                <p traducir="fecha_inicio" class="text-sm text-gray-500">Fecha Inicio</p>
                                 <p>{{ reserva.fecha_inicio }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Fecha Final</p>
+                                <p traducir="fecha_final" class="text-sm text-gray-500">Fecha Final</p>
                                 <p>{{ reserva.fecha_final_estimada }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Precio</p>
+                                <p traducir="precio" class="text-sm text-gray-500">Precio</p>
                                 <p class="font-bold">${{ reserva.precio }}</p>
                             </div>
                         </div>
@@ -180,16 +186,16 @@
                         <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
                             <div class="flex space-x-8">
                                 <div>
-                                    <p class="text-sm text-gray-500">Tipo de Servicio</p>
+                                    <p traducir="tipo_servicio" class="text-sm text-gray-500">Tipo de Servicio</p>
                                     <p>{{ reserva.tipo }}</p>
                                 </div>
                                 <div class="ml-2">
-                                    <p class="text-sm text-gray-500 ">Descripción</p>
+                                    <p traducir="descripcion" class="text-sm text-gray-500">Descripción</p>
                                     <p>{{ reserva.descripcion }}</p>
                                 </div>
                                 <div class="ml-2">
-                                    <p class="text-sm text-gray-500">Tiempo Estimado</p>
-                                    <p>{{ reserva.tiempo_estimado }} minutos</p>
+                                    <p traducir="tiempo_estimado" class="text-sm text-gray-500">Tiempo Estimado</p>
+                                    <p>{{ reserva.tiempo_estimado }} <span traducir="minutos">minutos</span></p>
                                 </div>
                             </div>
                             <form action="{{ path('cancelService') }}" method="POST">
