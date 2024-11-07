@@ -13,6 +13,8 @@ CREATE ROLE 'verificador_credenciales';
 -- admin
 GRANT ALL PRIVILEGES ON aio_db.* TO 'admin_rol' WITH GRANT OPTION;
 GRANT CREATE USER ON *.* TO 'admin_rol';
+GRANT SELECT ON mysql.role_edges TO 'admin_rol';
+GRANT SELECT ON mysql.user TO 'admin_rol';
 
 -- cliente
 GRANT SELECT, INSERT, UPDATE, DELETE ON aio_db.cliente TO 'cliente';
