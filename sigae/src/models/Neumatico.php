@@ -111,8 +111,9 @@ class Neumatico extends Producto{
         $stock = $this->getStock();
 
         try {
-            $stmt = $this->conn->prepare('UPDATE producto SET upc=:upc, precio=:precio, marca=:marca, stock=:stock) 
-                                        WHERE id=:id');
+            $stmt = $this->conn->prepare('UPDATE producto 
+                                            SET upc=:upc, precio=:precio, marca=:marca, stock=:stock 
+                                            WHERE id=:id');
     
             $stmt->bindParam(':upc', $upc);
             $stmt->bindParam(':precio', $precio);
