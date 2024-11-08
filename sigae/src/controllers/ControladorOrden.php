@@ -5,6 +5,7 @@ use Sigae\Models\Orden;
 use Sigae\Models\Producto;
 use Sigae\Models\Servicio;
 use Sigae\Models\EstadoPagoOrden;
+use Sigae\Controllers\ControladorProducto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ use Exception;
 
 class ControladorOrden extends AbstractController{
     private $orden;
+    private $controladorProducto;
 
     function submitOrder(): Response{
         $response=['success' => false, 'errors' => []];
@@ -24,71 +26,95 @@ class ControladorOrden extends AbstractController{
 
         switch($rol){
             case 'cajero':
-                if((isset($_POST["product_ids"]) && !empty($_POST["product_ids"])) || 
-                    (isset($_POST["reservation_ids"]) && !empty($_POST["reservation_ids"]))) {
+                $incluyeProductos = isset($_POST["product_ids"]) && !empty($_POST["product_ids"]);
+                $contieneServicios = isset($_POST["reservation_ids"]) && !empty($_POST["reservation_ids"]);
+
+                if($incluyeProductos || $contieneServicios) {
 
                     if(isset($_POST["id_cliente"]) && !empty($_POST["id_cliente"])){
-                        $productosId = $_POST["product_ids"];
-                        $serviciosId = $_POST["reservation_ids"];
+                        $productosId = $_POST["product_ids"] ?? null;
+                        $serviciosId = $_POST["reservation_ids"] ?? null;
                         $idCliente = $_POST["id_cliente"];
                         $fecha = $this->obtenerFechaHoraActual();
 
-                        if (!$this->validarFormatoIds($productosId) || !$this->validarFormatoIds($serviciosId)) {
+                        
+
+                        if ($incluyeProductos && !$this->validarFormatoIds($productosId) || 
+                            $contieneServicios && !$this->validarFormatoIds($serviciosId)) {
                             $response['errors'][] = "Lista de IDs contiene datos inválidos.";
-                        } elseif (!$this->contieneRepeticionesIds($serviciosId)){
+                        } elseif ($contieneServicios && !$this->contieneRepeticionesIds($serviciosId)){
                             $response['errors'][] = "Lista de servicios contiene IDs repetidos.";
                         } else {
                             try {
-                                // Almacenar en arreglo asociativo los IDs recibidos y sus repeticiones
                                 $productosDetalle = [];
-                                $conteoProductos = array_count_values($productosId);
-                                foreach ($conteoProductos as $id_producto => $cantidad) {
-                                    $productosDetalle[] = ['id' => $id_producto, 'cantidad' => $cantidad];
-                                }
-    
                                 $serviciosDetalle = [];
-                                foreach ($serviciosId as $id_servicio) {
-                                    $serviciosDetalle[] = ['id' => $id_servicio];
-                                }
-    
-                                // Verificar existencia de IDs de productos y servicios
                                 $idsNoExistentes = [];
-                                foreach ($productosDetalle as $producto){
-                                    if (!Producto::existeId($rol, $producto['id'])) {
-                                        $idsNoExistentes[] = $producto['id'];
+
+                                if ($incluyeProductos){
+                                    $conteoProductos = array_count_values($productosId);
+                                    foreach ($conteoProductos as $id_producto => $cantidad) {
+                                        $productosDetalle[] = ['id' => $id_producto, 'cantidad' => $cantidad];
+                                    }
+                                    foreach ($productosDetalle as $producto){
+                                        // Verificar existencia de IDs de productos
+                                        if (!Producto::existeId($rol, $producto['id'])) {
+                                            $idsNoExistentes[] = $producto['id'];
+                                        }
                                     }
                                 }
-                                foreach ($serviciosDetalle as $servicio){
-                                    if (!Servicio::existeId($rol, $servicio['id'])){
-                                        $idsNoExistentes[]= $servicio['id'];
+                                
+                                if ($contieneServicios){
+                                    foreach ($serviciosId as $id_servicio) {
+                                        $serviciosDetalle[] = ['id' => $id_servicio];
+                                    }
+                                    foreach ($serviciosDetalle as $servicio){
+                                        // Verificar existencia de IDs de servicios
+                                        if (!Servicio::existeId($rol, $servicio['id'])){
+                                            $idsNoExistentes[]= $servicio['id'];
+                                        }
                                     }
                                 }
-    
+
                                 if (!empty($idsNoExistentes)) {
                                     throw new Exception("Los IDs: " . var_dump($idsNoExistentes) . " no se encuentran registrados");
                                 } else{
                                     // Calcular el total por cada producto y servicio
                                     $total = 0.00;
-                                    foreach ($productosDetalle as $producto) {
-                                        $total += Producto::obtenerPrecio($rol, $producto['id']) * $producto['cantidad'];
+
+                                    if ($incluyeProductos){
+                                        foreach ($productosDetalle as $producto) {
+                                            $total += Producto::obtenerPrecio($rol, $producto['id']) * $producto['cantidad'];
+                                        }
                                     }
-                                    foreach ($serviciosDetalle as $servicio) {
-                                        $total += Servicio::obtenerPrecio($rol, $servicio['id']);
+                                    if ($contieneServicios){
+                                        foreach ($serviciosDetalle as $servicio) {
+                                            $total += Servicio::obtenerPrecio($rol, $servicio['id']);
+                                        }
                                     }
-    
+
                                     $this->orden = new Orden(null, $total, $fecha, EstadoPagoOrden::tryFrom('pago'));
                                     $this->orden->setDBConnection($rol);
                                     $this->orden->comenzarTransaccion();
                                     try {
                                         $this->orden->preparar($idCliente);
 
-                                        // Agregar detalles de la orden
-                                        foreach ($productosDetalle as $producto){
-                                            $this->orden->agregarDetalleProducto($producto['id'], $producto['cantidad']);
+                                        // Agregar detalles de la orden y modificar stock si se incluyen productos
+                                        if ($incluyeProductos){
+                                            $this->controladorProducto=new ControladorProducto();
+                                            $this->controladorProducto->setDBConnection($this->orden->getDBConnection());
+                                            foreach ($productosDetalle as $producto){
+                                                $this->orden->agregarDetalleProducto($producto['id'], $producto['cantidad']);
+                                                // Hacer baja de stock de productos
+                                                $this->controladorProducto->restarStock($producto['id'], $producto['cantidad']);
+    
+                                            }
                                         }
-                                        foreach ($serviciosDetalle as $servicio){
-                                            $this->orden->agregarDetalleServicio($servicio['id']);
-                                        }
+                                        
+                                        if ($contieneServicios){
+                                            foreach ($serviciosDetalle as $servicio){
+                                                $this->orden->agregarDetalleServicio($servicio['id']);
+                                            }
+                                        }                
 
                                         $this->orden->confirmarTransaccion();
                                         $response['success'] = true;
@@ -97,7 +123,9 @@ class ControladorOrden extends AbstractController{
                                             'id' => $this->orden->getId(),
                                             'id_cliente' => $idCliente,
                                             'total' => $this->orden->getTotal(),
-                                            'fecha_orden' => $this->orden->getFecha_orden()
+                                            'fecha_orden' => $this->orden->getFecha_orden(),
+                                            'productos' => ($incluyeProductos) ? $productosDetalle : null,
+                                            'servicios' => ($contieneServicios) ? $serviciosDetalle : null,
                                         ];
 
                                         return $this->render('employee/cashier/confirmacionOrden.html.twig', [
