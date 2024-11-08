@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIO - Taller, neumáticos, reservas y más</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     <style>
         @font-face {
@@ -31,6 +31,46 @@
             background-color: #b91c1c;
             text: white;
         }
+
+        .password-container {
+            position: relative;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .editing-mode {
+            background-color: #f0f9ff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .editing-mode input:not([readonly]) {
+            background-color: white;
+            border-color: #3b82f6;
+        }
+
+        .edit-button {
+            display: none;
+        }
+
+        .editing-mode .edit-button {
+            display: inline-flex;
+        }
+        
+        .editing-mode .delete-user-form {
+            display: none;
+        }
+        
+        .editing-mode .password-change-form {
+            display: none;
+        }
     </style>
 </head>
 
@@ -39,32 +79,138 @@
 <body>
     <main class="min-h-screen bg-white p-4">
         <div class="max-w-7xl mx-auto flex justify-center items-center">
-            <!-- Contenedor principal -->
             <section class="w-full max-w-[700px] min-h-[520px] p-8 bg-white rounded-md border border-neutral-900 flex flex-col items-center">
-                <!-- Título -->
-                <h2 class="text-2xl font-bold text-neutral-900 mb-8">Lista de Ejecutivos</h2>
+                <h2 class="text-2xl font-bold text-neutral-900 mb-8">Ejecutivos de Servicios</h2>
 
-                <!-- Botón Ingresar Nuevo -->
-                <div class="w-full max-w-[290px] mb-8">
-                    <button class="w-full px-7 py-3 bg-neutral-50 border border-black rounded-lg text-lg font-semibold hover:bg-neutral-100 transition-colors duration-200">
-                        Ingresar Nuevo
+                <div class="w-full max-w-[430px] mb-8">
+                    <button id="add-user-btn" type="button" 
+                            class="w-full px-7 py-3 bg-neutral-50 border border-black rounded-lg text-lg font-semibold hover:bg-neutral-100 transition-colors duration-200 flex justify-between items-center">
+                        <span>Ingresar Nuevo</span>
+                        <img src="{{ asset('svg/iconDropDown.svg') }}" alt="Dropdown icon" 
+                             class="w-5 h-5 transform transition-transform duration-300" id="dropdown-icon">
                     </button>
+
+                    <form id="new-user-form" action="{{ path('addServiceExecutive') }}" method="POST" 
+                          class="hidden space-y-6 mt-4 p-4 border border-slate-300 rounded-md">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="usuario" class="block text-lg font-medium text-neutral-900 mb-2">
+                                    Usuario *
+                                </label>
+                                <input type="text" id="usuario" name="usuario" required
+                                    class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                    placeholder="Ingrese el nombre de usuario">
+                            </div>
+
+                            <div>
+                                <label for="host" class="block text-lg font-medium text-neutral-900 mb-2">
+                                    Host *
+                                </label>
+                                <input type="text" id="host" name="host" required
+                                    class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                    placeholder="Ingrese el host">
+                            </div>
+
+                            <div>
+                                <label for="contrasena" class="block text-lg font-medium text-neutral-900 mb-2">
+                                    Contraseña *
+                                </label>
+                                <div class="password-container">
+                                    <input type="password" id="contrasena" name="contrasena" required
+                                        class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                        placeholder="Ingrese la contraseña">
+                                    <span class="eye-icon" id="togglePassword">👁️</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <button type="submit" 
+                                    class="w-full px-6 py-3 duration-300 btn text-white text-xl font-bold rounded-lg transition-colors">
+                                    Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
-                <!-- Lista de ejecutivos -->
-                <ul class="w-full max-w-[430px] space-y-4">
-                    {% for ejecutivo in ejecutivos %}
-                        {% if ejecutivo is defined and ejecutivo %}
-                        <li>
-                            <div class="flex justify-between items-center px-6 py-2.5">
-                                <p class="text-lg font-semibold text-black">{{ ejecutivo.usuario }}@{{ ejecutivo.host }}</p>
-                                <div class="flex gap-7">
-                                    <button class="transform hover:scale-110 transition-transform duration-200">
-                                        <img src="{{ asset('svg/pencil.svg') }}" alt="Editar" class="w-6 h-6"/>
-                                    </button>
-                                    <button class="transform hover:scale-110 transition-transform duration-200">
-                                        <img src="{{ asset('svg/trashCan.svg') }}" alt="Eliminar" class="w-6 h-6"/>
-                                    </button>
+                {% if response.errors is defined and response.errors is not empty %}
+                    <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
+                        <ul id="error-list">
+                            {% for error in response.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+             <ul class="w-full max-w-[430px] space-y-4">
+                    {% for funcionario in funcionarios %}
+                        {% if funcionario is defined and funcionario %}
+                        <li class="bg-white rounded-md border border-slate-300">
+                            <div class="px-6 py-2.5">
+                                <form class="user-form" id="user-form-{{ loop.index }}" action="{{ path('editServiceExecutive') }}" method="POST">
+                                    <div class="flex flex-col space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-neutral-900">Usuario</label>
+                                            <input type="text" name="usuarioNuevo" 
+                                                   class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm editable" 
+                                                   value="{{ funcionario.usuario }}" readonly>
+                                            <input type="hidden" name="usuarioActual" value="{{ funcionario.usuario }}">
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="block text-sm font-medium text-neutral-900">Host</label>
+                                            <input type="text" name="hostNuevo" 
+                                                   class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm editable" 
+                                                   value="{{ funcionario.host }}" readonly>
+                                            <input type="hidden" name="hostActual" value="{{ funcionario.host }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end items-center gap-7 mt-4">
+                                        <button type="button" class="transform hover:scale-110 transition-transform duration-200" 
+                                                onclick="toggleUserEdit({{ loop.index }})">
+                                            <span class="edit-icon">
+                                                <img src="{{ asset('svg/pencil.svg') }}" alt="Editar" class="w-6 h-6"/>
+                                            </span>
+                                            <span class="save-icon hidden ">X</span>
+                                        </button>
+                                        <button type="submit" 
+                                                class="edit-button hidden px-6 py-2 duration-300 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </form>
+
+                                    <form action="{{ path('modPswdServiceExecutive') }}" method="POST" class="password-change-form">
+                                        <input type="hidden" name="usuario" value="{{ funcionario.usuario }}">
+                                        <input type="hidden" name="host" value="{{ funcionario.host }}">
+                                        <div class="password-form-content hidden space-y-2">
+                                            <div class="password-container">
+                                                <input type="password" name="contraNueva" required
+                                                       class="w-full px-3 py-2 bg-white rounded-md border border-slate-300 text-sm"
+                                                       placeholder="Nueva contraseña">
+                                                <span class="eye-icon toggle-password">👁️</span>
+                                            </div>
+                                            <button type="submit" 
+                                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors">
+                                                Cambiar
+                                            </button>
+                                        </div>
+                                        <button type="button" class="text-blue-600 hover:text-blue-800 text-sm font-medium toggle-password-form">
+                                            Cambiar contraseña
+                                        </button>
+                                    </form>
+
+                                <div class="flex justify-end gap-4 mt-4">
+                                    <form action="{{ path('deleteServiceExecutive') }}" method="POST" class="delete-user-form">
+                                        <input type="hidden" name="usuario" value="{{ funcionario.usuario }}">
+                                        <input type="hidden" name="host" value="{{ funcionario.host }}">
+                                        <button type="submit" class="transform hover:scale-110 transition-transform duration-200">
+                                            <img src="{{ asset('svg/trashCan.svg') }}" alt="Eliminar" class="w-6 h-6"/>
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
                             <div class="w-full h-[1px] bg-neutral-200 my-2"></div>
@@ -73,7 +219,6 @@
                     {% endfor %}
                 </ul>
 
-                <!-- Botón Volver -->
                 <div class="mt-8 w-full max-w-[290px]">
                     <a href="{{ path('employeeManagement') }}" class="btn flex items-center justify-center w-full px-7 py-3.5 rounded-lg text-lg font-semibold text-white transition-colors duration-200">
                         Volver
@@ -86,10 +231,97 @@
     {% include 'partials/footer.html.twig' %}
 
     <script>
+        // Toggle form visibility
+        const addUserBtn = document.getElementById('add-user-btn');
+        const newUserForm = document.getElementById('new-user-form');
+        const dropdownIcon = document.getElementById('dropdown-icon');
+
+        addUserBtn.addEventListener('click', () => {
+            newUserForm.classList.toggle('hidden');
+            dropdownIcon.classList.toggle('rotate-180');
+        });
+
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('contrasena');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // cambiar icono de ojo segun se quiera ver o no la contrasena
+            this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+        });
+
+        function toggleUserEdit(index) {
+            const form = document.getElementById(`user-form-${index}`);
+            const formContainer = form.closest('.bg-white');
+            const inputs = form.querySelectorAll('.editable');
+            const editButton = form.querySelector('.edit-button');
+            const editIcon = form.querySelector('.edit-icon');
+            const saveIcon = form.querySelector('.save-icon');
+            
+            // Toggle la clase de modo edición
+            formContainer.classList.toggle('editing-mode');
+            
+            // Toggle iconos
+            editIcon.classList.toggle('hidden');
+            saveIcon.classList.toggle('hidden');
+            
+            inputs.forEach(input => {
+                input.readOnly = !input.readOnly;
+                
+                // Añadir focus al primer input cuando se entra en modo edición
+                if (!input.readOnly) {
+                    input.focus();
+                }
+            });
+            
+            // Toggle el botón de guardar
+            editButton.classList.toggle('hidden');
+        }
+
+        //toggle para cambiar contrasena
+        document.querySelectorAll('.toggle-password-form').forEach(button => {
+            button.addEventListener('click', function() {
+                const form = this.closest('.password-change-form');
+                const content = form.querySelector('.password-form-content');
+                content.classList.toggle('hidden');
+                this.classList.toggle('hidden');
+            });
+        });
+
+        // Validación del formulario antes de enviar
+        document.querySelectorAll('form.user-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const userInput = this.querySelector('input[name="usuarioNuevo"]');
+                const hostInput = this.querySelector('input[name="hostNuevo"]');
+                
+                if (!userInput.value.trim() || !hostInput.value.trim()) {
+                    e.preventDefault();
+                    alert('Por favor, complete todos los campos requeridos.');
+                }
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
-            // const archivoTraduccionHome = "{{ asset('translate/.json') }}";
             inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
+        });
+    </script>
+
+    <script>
+        // Confirmación antes de eliminar usuario
+        document.querySelectorAll('form.delete-user-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const usuario = this.querySelector('input[name="usuario"]').value;
+                const host = this.querySelector('input[name="host"]').value;
+                
+                if (confirm(`¿Está seguro que desea eliminar al usuario ${usuario}@${host}?`)) {
+                    this.submit();
+                }
+            });
         });
     </script>
 </body>
