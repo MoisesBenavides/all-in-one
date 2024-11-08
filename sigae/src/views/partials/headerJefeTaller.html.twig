@@ -18,10 +18,9 @@
             </a>
 
             <!-- Desktop Navigation -->
-            <!-- AGREGAR href-->
             <nav class="hidden md:flex items-center space-x-6">
-                <a href="" traducir="" class="text-black text-sm font-bold hover:text-gray-600">Informes Taller</a>
-                <a href="{{ path('showReports') }}" traducir="" class="text-black text-sm font-bold hover:text-gray-600">Funcionarios</a>
+                <a href="{{ path('showReports') }}" traducir="" class="text-black text-sm font-bold hover:text-gray-600">Informes Taller</a>
+                <a href="{{ path('employeeManagement') }}" traducir="" class="text-black text-sm font-bold hover:text-gray-600">Funcionarios</a>
             </nav>
 
             <!-- Right Side Controls -->
@@ -54,11 +53,6 @@
                 </form>
             </div>
         </div>
-
-        <!-- Mobile Menu -->
-        <nav id="mobileMenu" class="hidden md:hidden mt-4 flex flex-col space-y-3 items-center">
-            <a href="{{ path('showServiceDiagnosisRecords') }}" traducir="" class="text-black text-sm font-bold">Ver Diagnosticos</a>
-        </nav>
     </div>
 
     <script src="{{ asset('js/traduccion.js') }}"></script>
