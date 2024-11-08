@@ -26,9 +26,7 @@ class ControladorOrden extends AbstractController{
                     $productos = $_POST["product_ids"];
                     $servicios = $_POST["reservation_ids"];
 
-                    if (!is_array($productos) || !is_array($servicios)) {
-                       $response['errors'][] = "Lista de IDs contiene datos inválidos";
-                    } elseif(!$this->validarIds($productos) || !$this->validarIds($servicios)){
+                    if(!$this->validarListaIds($productos) || !$this->validarListaIds($servicios)){
                        $response['errors'][] = "Lista de IDs contiene datos inválidos";
                     }
 
@@ -50,7 +48,7 @@ class ControladorOrden extends AbstractController{
         }
     }
 
-    private function validarIds($array){
+    private function validarListaIds($array){
         return is_array($array);
     }
 
