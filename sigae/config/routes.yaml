@@ -407,7 +407,7 @@ modPswdServiceExecutive:
 # Agenda de servicios de taller para ejecutivo
 showServiceAgenda:
   path: /serviceAgenda
-  controller: Sigae\Controllers\ControladorFuncionario::showServiceAgenda
+  controller: Sigae\Controllers\ControladorTaller::showServiceAgenda
   methods: GET
 
 updateWorkshopService:
