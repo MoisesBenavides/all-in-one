@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Orden</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+        .btn { 
+            background-color: #dc2626; 
+        }
+        .btn:hover { 
+            background-color: #b91c1c; 
+        }
+    </style>
+</head>
+<body class="bg-white">
+    {% include 'partials/headerCajero.html.twig' %}
+    
+    <main class="w-full px-4 pt-10 bg-white flex flex-col items-center gap-10">
+        <section class="w-full max-w-[980px] p-6 bg-[#f0edf2] rounded-[14px] border border-black flex flex-col justify-center items-center gap-6">
+            <h1 class="text-black text-3xl md:text-4xl lg:text-5xl font-bold text-center">Confirmación de Orden</h1>
+
+            <div class="w-full mt-6">
+                <h2 class="text-black text-2xl md:text-3xl font-bold mb-4">Detalles de la Orden</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p class="text-black text-xl"><strong>ID de Orden:</strong> {{ orden.id }}</p>
+                    <p class="text-black text-xl"><strong>ID de Cliente:</strong> {{ orden.id_cliente }}</p>
+                    <p class="text-black text-xl"><strong>Total:</strong> ${{ orden.total }}</p>
+                    <p class="text-black text-xl"><strong>Fecha de Orden:</strong> {{ orden.fecha_orden }}</p>
+                </div>
+            </div>
+
+            <a href="{{ path('showDashboard') }}" class="w-full max-w-[300px] h-[60px] duration-300 btn text-neutral-50 text-xl md:text-2xl font-bold rounded-[10px] flex items-center justify-center mt-6">
+                Volver a home
+            </a>
+        </section>
+    </main>
+
+    {% include 'partials/footer.html.twig' %}
+</body>
+</html>
