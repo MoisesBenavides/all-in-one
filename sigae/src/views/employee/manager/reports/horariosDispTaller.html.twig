@@ -105,6 +105,8 @@
                     <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Seleccione la fecha</h2>
                     <div class="w-full max-w-[340px] mx-auto">
                         <input type="date" id="fecha_selector" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold mb-4" required>
+                        
+                        <div id="timeSlots"></div>
 
                         <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm mt-4">
                             <p>Horario de atención: 5:00 AM - 5:00 PM</p>
@@ -176,12 +178,10 @@
 
         async updateTimeSlots(selectedDate) {
             const timeSlotsContainer = document.getElementById('timeSlots');
-            const loadingIndicator = document.getElementById('loadingIndicator');
             const errorContainer = document.getElementById('error-container');
 
             try {
-                // Mostrar el indicador de carga y limpiar contenidos previos
-                if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+                // Limpiar contenidos previos
                 if (errorContainer) errorContainer.classList.add('hidden');
                 if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
 
@@ -248,8 +248,6 @@
                 console.error('Error en updateTimeSlots:', error);
                 this.showError(error.message);
                 if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
-            } finally {
-                if (loadingIndicator) loadingIndicator.classList.add('hidden');
             }
         },
 
