@@ -146,10 +146,8 @@ class Taller extends Servicio{
         try{
             $stmt = $conn->prepare('SELECT s.id, s.fecha_inicio, s.fecha_final, s.matricula , s.estado, 
                                             t.tipo, t.descripcion, t.diagnostico, 
-                                            ti.id_cliente 
                                         FROM servicio s 
-                                        JOIN taller t ON s.id=t.id_servicio 
-                                        JOIN tiene ti ON ti.matricula=s.matricula 
+                                        JOIN taller t ON s.id=t.id_servicio  
                                         WHERE t.diagnostico <> "" 
                                         ORDER BY s.fecha_inicio DESC');
             $stmt->bindParam(':fecha', $fecha);
