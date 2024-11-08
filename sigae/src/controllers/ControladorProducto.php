@@ -9,7 +9,7 @@ use Exception;
 class ControladorProducto extends AbstractController{
     private $conn;
 
-    public function continuarTransaccion($conn){
+    public function setDBConnection($conn){
         $this->conn = $conn;
     }
 
