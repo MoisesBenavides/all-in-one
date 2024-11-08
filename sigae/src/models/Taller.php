@@ -150,7 +150,6 @@ class Taller extends Servicio{
                                         JOIN taller t ON s.id=t.id_servicio  
                                         WHERE t.diagnostico <> "" 
                                         ORDER BY s.fecha_inicio DESC');
-            $stmt->bindParam(':fecha', $fecha);
             $stmt->execute();
 
             $servicios = $stmt->fetchAll(PDO::FETCH_ASSOC);
