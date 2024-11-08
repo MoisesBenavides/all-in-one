@@ -195,6 +195,32 @@ class ControladorTaller extends AbstractController{
         }
     }
 
+    function showServiceDiagnosisRecords(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'jefe_diagnostico':
+                try{
+                    $diagnosticos = Taller::cargarTodosDiagnosticos($rol);
+                    $response['success'] = true;
+
+                    return $this->render('employee/diagnoseChief/reports/listaDiagnosticos.html.twig', [
+                        'diagnosticos' => $diagnosticos,
+                        'response' => $response
+                    ]);
+                } catch(Exception $e){
+                    $response['errors'][] = $e->getMessage();
+                }
+
+                return $this->render('employee/diagnoseChief/dashboardJefeDiagnostico.html.twig', [
+                    'response' => $response
+                ]);
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
     public function updateWorkshopService(){
         $response=['success' => false, 'errors' => []];
 

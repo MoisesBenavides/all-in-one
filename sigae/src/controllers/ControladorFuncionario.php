@@ -2905,16 +2905,6 @@ class ControladorFuncionario extends AbstractController {
         
     }
 
-    function showServiceDiagnosisRecords(): Response{
-        $rol=$_SESSION['rol'];
-        switch($rol){
-            case 'gerente':
-            case 'jefe_taller':
-            default:
-                return $this->render('errors/errorAcceso.html.twig');
-        }
-    }
-
     private function validarFormAltaFuncionario($usuario, $host, $contrasena){
         $resultado = ['exito' => false, 'msj_error' => ""];
 

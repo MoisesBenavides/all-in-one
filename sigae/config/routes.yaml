@@ -424,7 +424,7 @@ createTransaction:
 # Registros de diagnosticos para jefe de diagnostico
 showServiceDiagnosisRecords:
   path: /serviceDiagnosisRecords
-  controller: Sigae\Controllers\ControladorFuncionario::showServiceDiagnosisRecords
+  controller: Sigae\Controllers\ControladorTaller::showServiceDiagnosisRecords
   methods: GET
 
 # Rutas de API

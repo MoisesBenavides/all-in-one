@@ -134,7 +134,39 @@ class Taller extends Servicio{
         } finally{
             $conn = null;
         }
-    }   
+    }
+
+    
+    public static function cargarTodosDiagnosticos($rol){
+        $conn = conectarDB($rol);
+
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+        try{
+            $stmt = $conn->prepare('SELECT s.id, s.fecha_inicio, s.fecha_final, s.matricula , s.estado, 
+                                            t.tipo, t.descripcion, t.diagnostico, 
+                                            ti.id_cliente 
+                                        FROM servicio s 
+                                        JOIN taller t ON s.id=t.id_servicio 
+                                        JOIN tiene ti ON ti.matricula=s.matricula 
+                                        WHERE t.diagnostico <> "" 
+                                        ORDER BY s.fecha_inicio DESC');
+            $stmt->bindParam(':fecha', $fecha);
+            $stmt->execute();
+
+            $servicios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $servicios;
+
+        } catch(Exception $e){
+            // Debug
+            error_log("Error al cargar la agenda: ".$e->getMessage());
+            throw new Exception ("Error al cargar la agenda: ".$e->getMessage());
+        } finally{
+            $conn = null;
+        }
+    }
 
     private function reservarTaller(){
         $id=$this->getId();
