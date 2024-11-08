@@ -64,13 +64,12 @@
                     #}
                     
                     {# Select de estado #}
-                    {# TODO: AGREGAR ESTADO QUE ESTA SETTEADO #}
                     <div class="flex-grow">
                         <select name="estado" 
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <option value="pendiente">Pendiente</option>
-                            <option value="realizado">Realizado</option>
-                            <option value="cancelado">Cancelado</option>
+                            <option value="pendiente" {% if servicio.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                            <option value="realizado" {% if servicio.estado == 'realizado' %}selected{% endif %}>Realizado</option>
+                            <option value="cancelado" {% if servicio.estado == 'cancelado' %}selected{% endif %}>Cancelado</option>
                         </select>
                     </div>
                     
