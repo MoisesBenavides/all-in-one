@@ -115,7 +115,7 @@ class Taller extends Servicio{
             throw new Exception("No se puede conectar con la base de datos.");
         }
         try{
-            $stmt = $conn->prepare('SELECT s.fecha_inicio, s.fecha_final, s.matricula , s.estado, 
+            $stmt = $conn->prepare('SELECT s.id, s.fecha_inicio, s.fecha_final, s.matricula , s.estado, 
                                             t.tipo, t.descripcion, t.diagnostico 
                                         FROM servicio s 
                                         JOIN taller t ON s.id=t.id_servicio 
