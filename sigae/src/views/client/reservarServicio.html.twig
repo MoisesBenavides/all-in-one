@@ -29,20 +29,17 @@
         .btn:hover{
             background-color: #b91c1c
         }
-
         /*  #timeSlots .lapso {
         padding: 10px;
         margin: 5px;
         border: 1px solid #ddd;
         border-radius: 4px;
     }
-
     #timeSlots .ocupado {
         background-color: #f8d7da;
         color: #721c24;
         pointer-events: none; 
     }
-
     #timeSlots .disponible {
         background-color: #d4edda;
         color: #155724;
@@ -88,21 +85,7 @@
                 </section>
 
                 <!-- Sección de Subtipo de Servicio -->
-                <section class="mb-6">
-                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2" traducir="subtipo_servicio">Subtipo de Servicio</h2>
-                    <div class="relative mb-2">
-                        <div id="dropdownButton2" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] flex justify-between items-center cursor-pointer">
-                            <div id="selectedOption2" class="text-center text-black text-xl font-semibold" traducir="subtipo_servicio">Subtipo de Servicio</div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 transition-transform duration-300">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
-                        <div id="dropdownMenu2" class="dropdown-menu absolute z-10 left-0 w-full mt-1 bg-white rounded-lg border border-[#161212] shadow-lg hidden">
-                            <div id="tipoServicioOptions" class="py-1">
-                                <!-- Options will be dynamically populated -->
-                            </div>
-                        </div>
-                    </div>
+@@ -106,633 +90,98 @@
                     <input type="hidden" id="selectedServiceSubtype" name="tipoServicio" value="">
                 </section>
 
@@ -112,7 +95,7 @@
                     <div class="w-full max-w-[340px] mx-auto">
                         <input type="hidden" id="fecha_inicio" name="fecha_inicio" value="">
                         <input type="date" id="fecha_selector" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold mb-4" required>
-                        
+
                         <div id="loadingIndicator" class="hidden">
                             <div class="flex items-center justify-center py-4">
                                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
@@ -200,12 +183,10 @@
         getUruguayDate(date) {
             return new Date(new Date(date).toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
         },
-
         formatDateForUrl(date) {
             const d = new Date(date);
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         },
-
         compareOnlyDates(date1, date2) {
             const d1 = new Date(date1);
             const d2 = new Date(date2);
@@ -213,7 +194,6 @@
                 d1.getMonth() === d2.getMonth() &&
                 d1.getDate() === d2.getDate();
         },
-
         parseTimeToDate(timeString, baseDate) {
             const [hours, minutes] = timeString.split(':').map(Number);
             const date = new Date(baseDate);
@@ -222,18 +202,15 @@
         }
     };
 </script>
-
 <!-- URL del servicio -->
 <script>
     const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
 </script>
-
 <script>
             // TimeSlotHandler - Funciones principales
           const TimeSlotHandler = {
             servicioSeleccionadoDuracion: 0,
             primerHorarioSeleccionado: null,
-
             initialize() {
                 const fechaSelector = document.getElementById('fecha_selector');
                 if (fechaSelector) {
@@ -243,36 +220,28 @@
                     }
                 }
             },
-
-
-
             handleDateChange(event) {
                 const fechaInicio = document.getElementById('fecha_inicio');
                 if (fechaInicio) fechaInicio.value = '';
-
                 if (this.servicioSeleccionadoDuracion > 0) {
                     this.updateTimeSlots(event.target.value);
                 } else {
                     this.showError('Por favor, seleccione un servicio antes de elegir el horario.');
                 }
             },
-
         async updateTimeSlots(selectedDate) {
             const timeSlotsContainer = document.getElementById('timeSlots');
             const serviceDurationMessage = document.getElementById('serviceDurationMessage');
             const loadingIndicator = document.getElementById('loadingIndicator');
             const errorContainer = document.getElementById('error-container');
             const fechaSelector = document.getElementById('fecha_selector');
-
             try {
                 if (!this.servicioSeleccionadoDuracion) {
                     throw new Error('Por favor, seleccione un servicio antes de elegir el horario.');
                 }
-
                 if (loadingIndicator) loadingIndicator.classList.remove('hidden');
                 if (errorContainer) errorContainer.classList.add('hidden');
                 if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
-
                 const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(selectedDate)}&_=${Date.now()}`;
                 
                 const response = await fetch(url, {
@@ -285,41 +254,33 @@
                     },
                     credentials: 'include'
                 });
-
                 if (!response.ok) {
                     throw new Error('Error al obtener los horarios disponibles');
                 }
-
                 const data = await response.json();
                 
                 if (!data || !data.horariosTaller) {
                     throw new Error('No hay horarios disponibles');
                 }
-
                 // Fecha y hora del servidor
                 const serverDateTime = new Date(data.horaActual);
                 console.log('Hora del servidor:', data.horaActual, 'Hora parseada:', serverDateTime);
-
                 // Formatear fecha seleccionada
                 const selectedDateObj = new Date(selectedDate + 'T00:00:00');
-
                 // Obtener solo las fechas para comparación de días
                 const serverDateStr = serverDateTime.toISOString().split('T')[0];
                 const selectedDateStr = selectedDateObj.toISOString().split('T')[0];
-
                 console.log('Comparación de fechas:', {
                     fechaServidor: serverDateStr,
                     fechaSeleccionada: selectedDateStr,
                     esHoy: serverDateStr === selectedDateStr
                 });
-
                 // Procesar los slots
                 const processedSlots = Object.entries(data.horariosTaller).map(([lapso, info]) => {
                     // Extraer hora y minutos del slot
                     const [hours, minutes] = info.inicio.split(':').map(Number);
                     
                     let isOccupied = info.ocupado;
-
                     // Si es un día anterior al del servidor, todo está ocupado
                     if (selectedDateStr < serverDateStr) {
                         isOccupied = true;
@@ -333,7 +294,6 @@
                             isOccupied = true;
                         }
                     }
-
                     // Debug del slot
                     console.log(`Slot ${lapso}:`, {
                         horaInicio: `${hours}:${minutes}`,
@@ -343,20 +303,16 @@
                         esDiaAnterior: selectedDateStr < serverDateStr,
                         esHoy: selectedDateStr === serverDateStr
                     });
-
                     return [lapso, {
                         ...info,
                         ocupado: isOccupied
                     }];
                 });
-
                 this.renderTimeSlots(processedSlots, selectedDate, serviceDurationMessage);
-
                 // Establecer fecha mínima en el selector si es necesario
                 if (fechaSelector && !fechaSelector.min) {
                     fechaSelector.min = serverDateStr;
                 }
-
             } catch (error) {
                 console.error('Error en updateTimeSlots:', error);
                 this.showError(error.message);
@@ -365,12 +321,9 @@
                 if (loadingIndicator) loadingIndicator.classList.add('hidden');
             }
         },
-
-
         renderTimeSlots(slots, selectedDate, serviceDurationMessage) {
         const container = document.getElementById('timeSlots');
         if (!container) return;
-
         // Ordenar slots por hora
         slots
             .sort(([, a], [, b]) => {
@@ -382,46 +335,33 @@
                 const button = this.createTimeSlotButton(lapso, info, selectedDate);
                 if (button) container.appendChild(button);
             });
-
         if (serviceDurationMessage) {
             serviceDurationMessage.classList[
                 this.servicioSeleccionadoDuracion > 30 ? 'remove' : 'add'
             ]('hidden');
         }
     },
-
-
-
-
        createTimeSlotButton(lapso, info, selectedDate) {
         const button = document.createElement('button');
         button.type = 'button';
         button.textContent = `${info.inicio} - ${info.fin}`;
         button.setAttribute('data-lapso', lapso);
         button.setAttribute('data-info', JSON.stringify(info));
-
         const isDisabled = info.ocupado === true;
-
         button.className = `w-full p-2 rounded-md text-center transition-colors ${
             isDisabled 
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
                 : 'bg-white border border-gray-300 hover:bg-gray-50'
         }`;
-
         if (!isDisabled) {
             button.addEventListener('click', () => this.handleTimeSelection(lapso, info, button));
         }
-
         button.disabled = isDisabled;
-
         if (info.ocupado) {
             button.title = "Este horario no está disponible";
         }
-
         return button;
     },
-
-
         handleTimeSelection(lapso, timeInfo, button) {
             const fechaSelector = document.getElementById('fecha_selector');
             
@@ -429,14 +369,12 @@
                 this.showError('Por favor, seleccione primero una fecha.');
                 return;
             }
-
             if (this.servicioSeleccionadoDuracion <= 30) {
                 this.handleSingleSelection(button, timeInfo, fechaSelector.value);
             } else {
                 this.handleDoubleSelection(lapso, button);
             }
         },
-
         handleSingleSelection(button, timeInfo, selectedDate) {
             document.querySelectorAll('#timeSlots button').forEach(btn => {
                 btn.classList.remove('bg-red-600', 'text-white');
@@ -449,7 +387,6 @@
                 fechaInicio.value = `${selectedDate}T${horaInicio}`;
             }
         },
-
         handleDoubleSelection(lapso, selectedButton) {
             const buttons = document.querySelectorAll('#timeSlots button');
             
@@ -464,13 +401,11 @@
                 this.processSecondSelection(buttons, selectedButton);
             }
         },
-
         resetSlotStyles() {
             document.querySelectorAll('#timeSlots button').forEach(btn => {
                 btn.classList.remove('bg-red-600', 'text-white', 'bg-yellow-200');
             });
         },
-
         highlightAdjacentSlots(buttons, currentIndex) {
             [-1, 1].forEach(offset => {
                 const adjacentButton = buttons[currentIndex + offset];
@@ -479,13 +414,11 @@
                 }
             });
         },
-
         processSecondSelection(buttons, selectedButton) {
             const firstButton = Array.from(buttons).find(btn => 
                 btn.getAttribute('data-lapso') === this.primerHorarioSeleccionado);
             const firstIndex = Array.from(buttons).indexOf(firstButton);
             const secondIndex = Array.from(buttons).indexOf(selectedButton);
-
             if (Math.abs(firstIndex - secondIndex) === 1) {
                 this.confirmDoubleSelection(buttons, firstIndex, secondIndex);
             } else {
@@ -494,7 +427,6 @@
                 this.primerHorarioSeleccionado = null;
             }
         },
-
         confirmDoubleSelection(buttons, firstIndex, secondIndex) {
             this.resetSlotStyles();
             
@@ -503,19 +435,15 @@
             
             buttons[startIndex].classList.add('bg-red-600', 'text-white');
             buttons[endIndex].classList.add('bg-red-600', 'text-white');
-
             const startButton = buttons[startIndex];
             const startInfo = JSON.parse(startButton.getAttribute('data-info') || '{}');
             const fechaSelector = document.getElementById('fecha_selector');
             const fechaInicio = document.getElementById('fecha_inicio');
-
             if (fechaSelector?.value && startInfo.inicio && fechaInicio) {
                 fechaInicio.value = `${fechaSelector.value}T${startInfo.inicio}`;
             }
-
             this.primerHorarioSeleccionado = null;
         },
-
         createSlotDateTime(selectedDate, timeString) {
             try {
                 const [hours, minutes] = timeString.split(':').map(Number);
@@ -527,11 +455,9 @@
                 return new Date();
             }
         },
-
         showError(message) {
             const errorContainer = document.getElementById('error-container');
             if (!errorContainer) return;
-
             errorContainer.classList.remove('hidden');
             const errorList = document.getElementById('error-list');
             
@@ -550,17 +476,14 @@
             }, 5000);
         }
     };
-
     // Export TimeSlotHandler for global use
     window.TimeSlotHandler = TimeSlotHandler;
 </script>
-
 <!-- Funciones de validación del formulario -->
 <script>
  function validarFormulario(event) {
     let isValid = true;
     let errorMessage = '';
-
     if (!document.getElementById('selectedServiceType').value) {
         isValid = false;
         errorMessage += 'Por favor, seleccione un tipo de servicio. ';
@@ -575,16 +498,13 @@
         isValid = false;
         errorMessage += 'Por favor, seleccione un tipo de vehículo o un vehículo existente. ';
     }
-
     if (!isValid) {
         event.preventDefault();
         TimeSlotHandler.showError(errorMessage);
     }
-
     // Si todo es válido, enviamos el formulario vía fetch
     const form = document.getElementById('servicioForm');
     const formData = new FormData(form);
-
     fetch(form.action, {
         method: 'POST',
         body: formData,
@@ -612,9 +532,7 @@
         TimeSlotHandler.showError('Error al procesar la reserva');
     });
 }
-
 </script>
-
 <!-- Manejador de vehículos -->
 <script>
     function setupVehicleHandlers() {
@@ -626,14 +544,12 @@
         const matriculaYa = document.getElementById('matriculaYa');
         const matriculaYaContainer = document.getElementById('matriculaYaContainer');
         const dropTipoVehiculo = document.getElementById('dropTipoVehiculo');
-
         // Opción default para mis vehículos
         const defaultOption = document.createElement('option');
         defaultOption.value = "default";
         defaultOption.text = "Seleccione un vehículo";
         vehiculosDropdown.insertBefore(defaultOption, vehiculosDropdown.firstChild);
         vehiculosDropdown.value = "default";
-
         // Event listener para el dropdown de vehículo
         vehiculosDropdown.addEventListener('change', function() {
             if (this.value !== "" && this.value !== "default") {
@@ -665,7 +581,6 @@
                 matriculaYa.setAttribute('name', 'matriculaYa');
             }
         });
-
         // Event listener para matrícula ya
         matriculaYa.addEventListener('input', function() {
             if (this.value !== "") {
@@ -681,7 +596,6 @@
         });
     }
 </script>
-
 <!-- Inicialización -->
 <script>
     document.addEventListener('DOMContentLoaded', async function() {
@@ -691,15 +605,12 @@
             
             // Cargar servicios
             const servicios = await ServiceHandler.cargarServicios();
-
             // Configurar dropdowns
             ServiceHandler.setupDropdown('dropdownButton1', 'dropdownMenu1', '#dropdownMenu1 .option', 'selectedOption1', 'selectedServiceType');
             ServiceHandler.setupDropdown('dropdownButton2', 'dropdownMenu2', '#tipoServicioOptions .option', 'selectedOption2', 'selectedServiceSubtype');
             ServiceHandler.setupDropdown('dropdownButtonAuto', 'dropTipoVehiculo', '#dropTipoVehiculo .option', 'selectedOptionAuto', 'tipoVehiculo');
-
             // Inicializar TimeSlotHandler
             TimeSlotHandler.initialize();
-
             // Configurar eventos para servicios
             document.querySelectorAll('#dropdownMenu1 .option').forEach(option => {
                 option.addEventListener('click', () => {
@@ -716,23 +627,18 @@
                     });
                 });
             });
-
             // Event listener para el formulario
             document.getElementById('servicioForm').addEventListener('submit', validarFormulario);
-
             // Setup de manejo de vehículos
             setupVehicleHandlers();
-
         } catch (error) {
             console.error('Error en la inicialización:', error);
             TimeSlotHandler.showError('Error al inicializar el formulario');
         }
     });
-
     // Exportar TimeSlotHandler para uso global
     window.TimeSlotHandler = TimeSlotHandler;
 </script>
 
 </body>
-
 </html>
