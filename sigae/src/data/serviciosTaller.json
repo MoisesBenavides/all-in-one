@@ -1,67 +1,67 @@
 {
     "D01": {
       "descripcion": "Diagnóstico general del vehículo",
-      "precio": 2000.00,
-      "tiempo_estimado": 45
+      "precio": 300.00,
+      "tiempo_estimado": 15
     },
     "A01": {
       "descripcion": "Alineación delantera",
-      "precio": 2000.00,
-      "tiempo_estimado": 35
+      "precio": 900.00,
+      "tiempo_estimado": 15
     },
     "A02": {
       "descripcion": "Alineación trasera",
-      "precio": 2000.00,
-      "tiempo_estimado": 35
+      "precio": 900.00,
+      "tiempo_estimado": 15
     },
     "A03": {
       "descripcion": "Alineación completa (delantera y trasera)",
-      "precio": 3500.00,
-      "tiempo_estimado": 55
+      "precio": 1600.00,
+      "tiempo_estimado": 30
     },
     "B01": {
       "descripcion": "Balanceo estático de auto",
-      "precio": 900.00,
+      "precio": 340.00,
       "tiempo_estimado": 15
     },
     "B02": {
       "descripcion": "Balanceo dinámico de auto",
-      "precio": 1100.00,
+      "precio": 480.00,
       "tiempo_estimado": 20
     },
     "B03": {
       "descripcion": "Balanceo estático de camioneta",
-      "precio": 1300.00,
-      "tiempo_estimado": 20
+      "precio": 420.00,
+      "tiempo_estimado": 15
     },
     "B04": {
       "descripcion": "Balanceo dinámico de camioneta",
-      "precio": 1500.00,
-      "tiempo_estimado": 25
+      "precio": 510.00,
+      "tiempo_estimado": 20
     },
     "N01": {
       "descripcion": "Montaje de neumáticos",
-      "precio": 900.00,
-      "tiempo_estimado": 20
+      "precio": 200.00,
+      "tiempo_estimado": 15
     },
     "N02": {
       "descripcion": "Desmontaje de neumáticos",
-      "precio": 800.00,
+      "precio": 200.00,
       "tiempo_estimado": 15
     },
     "N03": {
       "descripcion": "Rotación de neumáticos",
-      "precio": 1200.00,
+      "precio": 350.00,
       "tiempo_estimado": 25
     },
     "N04": {
       "descripcion": "Inflado de neumáticos",
-      "precio": 300.00,
+      "precio": 40.00,
       "tiempo_estimado": 10
     },
     "SVC": {
     "descripcion": "Servicio completo (neumáticos, alineación, balanceo)",
-    "precio": 8500.00,
+    "precio": 4500.00,
     "tiempo_estimado": 110
     }
     
