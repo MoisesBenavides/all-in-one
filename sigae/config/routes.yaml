@@ -410,6 +410,11 @@ showServiceAgenda:
   controller: Sigae\Controllers\ControladorFuncionario::showServiceAgenda
   methods: GET
 
+updateWorkshopService:
+  path: /updateWorkshopService
+  controller: Sigae\Controllers\ControladorTaller::updateWorkshopService
+  methods: POST
+
 # Transacciones
 createTransaction:
   path: /createTransaction

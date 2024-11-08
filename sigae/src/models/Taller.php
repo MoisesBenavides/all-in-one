@@ -103,6 +103,36 @@ class Taller extends Servicio{
             error_log("Error al obtener los lapsos ocupados: ".$e->getMessage());
             throw $e;
             return;
+        } finally{
+            $conn = null;
+        }
+    }   
+
+    public static function cargarAgenda($rol, $fecha){
+        $conn = conectarDB($rol);
+
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+        try{
+            $stmt = $conn->prepare('SELECT s.fecha_inicio, s.fecha_final, s.matricula , s.estado, 
+                                            t.tipo, t.descripcion, t.diagnostico 
+                                        FROM servicio s 
+                                        JOIN taller t ON s.id=t.id_servicio 
+                                        WHERE DATE(s.fecha_inicio) = :fecha AND s.estado <> "cancelado"');
+            $stmt->bindParam(':fecha', $fecha);
+            $stmt->execute();
+
+            $servicios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $servicios;
+
+        } catch(Exception $e){
+            // Debug
+            error_log("Error al cargar la agenda: ".$e->getMessage());
+            throw new Exception ("Error al cargar la agenda: ".$e->getMessage());
+        } finally{
+            $conn = null;
         }
     }   
 
@@ -129,7 +159,44 @@ class Taller extends Servicio{
         
     }
 
-    public function modificar(){
+    public function actualizar(){
+        $id = $this->getId();
+        $estado = $this->getEstado();
+
+        try {
+            $stmt = $this->conn->prepare('UPDATE servicio SET estado = :est WHERE id = :id');
+            
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':est', $estado);
+                
+            $stmt->execute();
+
+            return true;
+
+        } catch (Exception $e) {
+            error_log("Error al actualizar servicio: " . $e->getMessage());
+            throw new Exception("Error al actualizar el servicio: " . $e->getMessage());
+        }
+    }
+
+    public function actualizarDiagnostico(){
+        $id = $this->getId();
+        $diagnostico = $this->getDiagnostico();
+
+        try {
+            $stmt = $this->conn->prepare('UPDATE taller SET diagnostico = :diag WHERE id_servicio = :id');
+            
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':diag', $diagnostico);
+                
+            $stmt->execute();
+      
+            return true;
+
+        } catch (Exception $e) {
+            error_log("Error al actualizar el diagnostico: " . $e->getMessage());
+            throw new Exception("Error al actualizar el diagnóstico: " . $e->getMessage());
+        }
     }
 
     public function getServicios(){

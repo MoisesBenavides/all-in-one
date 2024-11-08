@@ -107,7 +107,7 @@ abstract class Servicio{
 
     abstract public function reservar($matricula);
 
-    abstract public function modificar();
+    abstract public function actualizar();
 
     public static function cancelar($rol, $id){
         $conn = conectarDB($rol);

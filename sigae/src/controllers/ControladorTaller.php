@@ -3,6 +3,7 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Taller;
 use Sigae\Models\Cliente;
+use Sigae\Models\EstadoServicio;
 use Sigae\Controllers\ControladorVehiculo;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -165,6 +166,109 @@ class ControladorTaller extends AbstractController{
         return $this->render('client/reservaConfirmacion.html.twig', ['sessionData' => $sessionData]);
     }
     
+    function showServiceAgenda(): Response{
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        
+        switch($rol){
+            case 'ejecutivo':
+                $fechaActual = $this->obtenerFechaActual();
+                try{
+                    $serviciosHoy = Taller::cargarAgenda($rol, $fechaActual);
+                    $response['success'] = true;
+
+                    return $this->render('employee/serviceExecutive/agendaServicios.html.twig', [
+                        'serviciosHoy' => $serviciosHoy,
+                        'response' => $response
+                    ]);
+                } catch(Exception $e){
+                    $response['errors'][] = $e->getMessage();
+                }
+
+                return $this->render('employee/dashboardEjecutivoServicios.html.twig', [
+                    'response' => $response
+                ]);
+                
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    public function updateWorkshopService(){
+        $response=['success' => false, 'errors' => []];
+
+        $rol=$_SESSION['rol'];
+        
+        switch($rol){
+            case 'ejecutivo':
+        
+                // Validacion de campos vacios
+                if (isset($_POST["id"], $_POST["estado"]) && !empty($_POST["id"]) && !empty($_POST["estado"])) {
+        
+                    $id = $_POST["id"];
+                    $estado = $_POST["estado"];
+                    $diagnostico = isset($_POST['diagnostico']) ? $_POST['diagnostico'] : null;
+                    
+                    if (!$this->validarId($id)) {
+                        $response['errors'][] = "Por favor, ingrese un ID de servicio válido.";
+                    } elseif (!$this->validarEstado($estado)) {
+                        $response['errors'][] = "Por favor, ingrese una marca válida.";
+                    } elseif($diagnostico !== null && strlen($diagnostico) > 65535){
+                        $response['errors'][] = "Ha excedido el límite de caracteres para el diagnóstico (máximo 65535 caracteres)";
+                    } elseif (!Taller::existeId($rol, $id)){
+                        $response['errors'][] = "No existe un servicio con el ID seleccionado.";
+                    }else {
+                        // Crear una instancia del vehículo modificado
+                        $this->taller = new Taller(null, null, $diagnostico, null, $id, null, null, null);
+        
+                        // Inicializar una conexión PDO como cliente
+                        $this->taller->setDBConnection("ejecutivo");
+                        $this->taller->comenzarTransaccion();
+        
+                        try{
+                            $this->taller->setEstado(EstadoServicio::tryFrom($estado));
+                            $this->taller->actualizar();
+
+                            $this->taller->setDiagnostico($diagnostico);            
+                            $this->taller->actualizarDiagnostico();
+            
+                            // Confirmar la transacción realizada
+                            $this->taller->confirmarTransaccion();
+                            $response['success'] = true;
+            
+                        } catch (Exception $e) {
+                            $this->taller->deshacerTransaccion();
+                            $response['errors'][] = "Error procesando el servicio: " . $e->getMessage();
+                        } finally{
+                            // Desconectar de la base de datos
+                            $this->taller->cerrarDBConnection();
+                        }
+                    }
+                } else {
+                    $response['errors'][] = "Debe seleccionar un servicio.";
+                }
+
+                // Recargar agenda
+                $fechaActual = $this->obtenerFechaActual();
+                try{
+                    $serviciosHoy = Taller::cargarAgenda($rol, $fechaActual);
+                    $response['success'] = true;
+                } catch(Exception $e){
+                    $response['errors'][] = $e->getMessage();
+                }
+
+                return $this->render('employee/serviceExecutive/agendaServicios.html.twig', [
+                    'serviciosHoy' => $serviciosHoy,
+                    'response' => $response
+                ]);
+
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+
+    }
+    
     public function getServicesSchedule(Request $request): JsonResponse {
         try {
             $diaSelec = $request->query->get('date');
@@ -236,6 +340,14 @@ class ControladorTaller extends AbstractController{
         }
     }
 
+    private function obtenerFechaActual(){
+        $uruguayTimezone = new DateTimeZone('America/Montevideo');
+        $diaActual = new DateTime('now', $uruguayTimezone);
+
+        // Formatear la fecha
+        return $diaActual->format('Y-m-d');
+    }
+
     private function estimarFechaFinal($fecha, $minutos) {
         $formato = 'Y-m-d\TH:i';
         $dt = DateTime::createFromFormat($formato, $fecha);
@@ -263,6 +375,16 @@ class ControladorTaller extends AbstractController{
     private function validarTipoServicio($tipoServicio){
         // Validar si el código seleccionado existe en la lista de servicios disponibles
         return isset($this->serviciosDisp[$tipoServicio]);
+    }
+
+    private function validarId($id) {
+        /* Verifica si el id es numerico */
+        return (preg_match("/^\d+$/", $id));
+    }
+
+    private function validarEstado($estado){
+        // Valida si es un estado del enum EstadoServicio
+        return EstadoServicio::tryFrom($estado) !== null;
     }
 
     private function obtenerTipoRegistroMat($matRegistrarYa, $matVehiculoSelect){

@@ -37,9 +37,9 @@
 {% include 'partials/headerEjecutivo.html.twig' %}
 
 <div class="container mx-auto px-4 py-8">
-    {% for servicio in servicios %}
+    {% for servicio in serviciosHoy %}
         <div class="mb-6 bg-white rounded-lg shadow-md p-6">
-            <form action="{{ path('') }}" method="POST">
+            <form action="{{ path('updateWorkshopService') }}" method="POST">
                 <input type="hidden" name="servicio_id" value="{{ servicio.id }}">
                 
                 {# Fila superior con ID, select y botón #}
@@ -48,8 +48,15 @@
                     <div class="flex-none">
                         <span class="text-gray-700 font-medium">ID: {{ servicio.id }}</span>
                     </div>
+
+                    {# TODO: MOSTRAR LOS SIGUIENTES DATOS (SIEMPRE SETTEADOS)
+                        servicio.id, servicio.fecha_inicio, servicio.fecha_final, servicio.matricula, 
+                        servicio.estado, servicio.tipo, servicio.descripcion, 
+                        servicio.diagnostico (MOSTRAR SI ESTA SETTEADO))
+                    #}
                     
-                    {# Select de estad #}
+                    {# Select de estado #}
+                    {# TODO: AGREGAR ESTADO QUE ESTA SETTEADO #}
                     <div class="flex-grow">
                         <select name="estado" 
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
@@ -68,11 +75,12 @@
                     </div>
                 </div>
                 
-                {# Campo de descripción #}
+                {# Campo de diagnóstico #}
+                {# TODO: AGREGAR DIAGNOSTICO SI ESTA SETTEADO #}
                 <div>
-                    <textarea name="descripcion" 
+                    <textarea name="diagnostico" 
                              rows="6" 
-                             placeholder="Descripción" 
+                             placeholder="Diagnóstico" 
                              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
             </form>

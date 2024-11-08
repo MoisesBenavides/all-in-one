@@ -161,10 +161,6 @@ class ControladorOtroProducto extends AbstractController{
         }
     }
 
-    function deleteAccessory(){
-        $response=['success' => false, 'errors' => []];
-    }
-
 
     function getOtrosProductos($rol){
         $otrosProd=[];

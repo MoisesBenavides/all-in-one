@@ -2905,19 +2905,6 @@ class ControladorFuncionario extends AbstractController {
         
     }
 
-    function showServiceAgenda(): Response{
-        $response=['success' => false, 'errors' => []];
-
-        $rol=$_SESSION['rol'];
-        
-        switch($rol){
-            case 'gerente':
-            case 'jefe_taller':
-            default:
-                return $this->render('errors/errorAcceso.html.twig');
-        }
-    }
-
     function showServiceDiagnosisRecords(): Response{
         $rol=$_SESSION['rol'];
         switch($rol){

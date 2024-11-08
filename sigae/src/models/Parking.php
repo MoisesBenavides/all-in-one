@@ -142,7 +142,7 @@ class Parking extends Servicio {
         
     }
 
-    public function modificar(){
+    public function actualizar(){
     }
 
     public function getServicios(){
