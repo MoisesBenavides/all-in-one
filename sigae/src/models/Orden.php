@@ -135,7 +135,7 @@ class Orden{
         $id_orden = $this->getId();
         try {
             $stmt = $this->conn->prepare('INSERT INTO detalle_orden_servicio (id_servicio, id_orden) 
-                                        VALUES (:id_serv :id_ord)');
+                                        VALUES (:id_serv, :id_ord)');
 
             $stmt->bindParam(':id_serv', $id_servicio);
             $stmt->bindParam(':id_ord', $id_orden);
