@@ -76,103 +76,99 @@
                 <h1 class="text-center text-black text-3xl md:text-4xl font-bold">Nuestros productos</h1>
             </div>
 
-            <!-- Cuadro de error -->
-            {% if response.errors is defined and response.errors is not empty %}
-                <div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
-                    <ul id="error-list">
-                        {% for error in response.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-
-            <div class="w-full max-w-4xl flex flex-col md:flex-row gap-4 justify-center items-center">
-                <!-- Barra de búsqueda -->
-                <div class="relative w-full md:w-96">
-                    <div class="relative flex items-center">
-                        <input 
-                            type="text" 
-                            id="buscar" 
-                            placeholder="Buscar productos..." 
-                            class="w-full h-12 pl-10 pr-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
-                        >
-                    </div>
-                </div>
-
-                <!-- Filtro -->
-                <div class="relative w-full md:w-48">
-                    <div class="relative flex items-center">
-                        <select 
-                            id="filtroProductos" 
-                            class="w-full h-12 pl-10 pr-4 rounded-lg border border-gray-200 bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
-                        >
-                            <option value="todos" {% if filtro == 'todos' %}selected{% endif %}>Todos los productos</option>
-                            <option value="neumaticos" {% if filtro == 'neumaticos' %}selected{% endif %}>Neumáticos</option>
-                            <option value="otros" {% if filtro == 'otros' %}selected{% endif %}>Otros productos</option>
-                        </select>
-                    </div>
+        <div class="w-full max-w-4xl flex flex-col md:flex-row gap-4 justify-center items-center">
+            {# Barra de búsqueda #}
+            <div class="relative w-full md:w-96">
+                <div class="relative flex items-center">
+                    
+                    <input 
+                        type="text" 
+                        id="buscar" 
+                        placeholder="Buscar productos..." 
+                        class="w-full h-12 pl-10 pr-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
+                    >
                 </div>
             </div>
 
-            <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {% for producto in productos %}
-                    <div class="product flex flex-col bg-white rounded-lg border-neutral-900 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300">
-                        <div class="w-full h-48 bg-gray-100">
-                            <img 
-                                class="w-full h-full object-contain" 
-                                alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
-                                onload="this.style.display='block'"
-                                onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full\'><p class=\'text-gray-400 text-sm\'>Imagen no disponible</p></div>'"
-                            />
+            {# Filtro con icono #}
+            <div class="relative w-full md:w-48">
+                <div class="relative flex items-center">
+                   
+                    <select 
+                        id="filtroProductos" 
+                        class="w-full h-12 pl-10 pr-4 rounded-lg border border-gray-200 bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
+                    >
+                        <option value="todos" {% if filtro == 'todos' %}selected{% endif %}>Todos los productos</option>
+                        <option value="neumaticos" {% if filtro == 'neumaticos' %}selected{% endif %}>Neumáticos</option>
+                        <option value="otros" {% if filtro == 'otros' %}selected{% endif %}>Otros productos</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+       <div id="productosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for producto in productos %}
+                <div class="product flex flex-col bg-white rounded-lg border-neutral-900 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300">
+                    <div class="w-full h-48 bg-gray-100">
+                        <img 
+                            class="w-full h-full object-contain" 
+                            alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
+                            onload="this.style.display='block'"
+                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full\'><p class=\'text-gray-400 text-sm\'>Imagen no disponible</p></div>'"
+                        />
+                    </div>
+                    
+                    <div class="w-full p-6 flex flex-col gap-4">
+                        {# Marca #}
+                        <div class="flex flex-col">
+                           <span class="text-sm text-gray-500 font-medium">Marca</span> 
+                            <p class="text-lg font-bold text-gray-900">{{ producto.marca }}</p>
                         </div>
                         
-                        <div class="w-full p-6 flex flex-col gap-4">
+                        {% if producto.nombre is defined and producto.nombre %}
+                            {# Nombre del producto #}
                             <div class="flex flex-col">
-                               <span class="text-sm text-gray-500 font-medium">Marca</span> 
-                                <p class="text-lg font-bold text-gray-900">{{ producto.marca }}</p>
+                              <span class="text-sm text-gray-500 font-medium">Descripción</span> 
+                                <p class="text-lg font-bold text-gray-900">{{ producto.nombre }}</p>
+                            </div>
+                        {% elseif producto.modelo is defined and producto.modelo %}
+                            {# Modelo #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Modelo</span> 
+                                <p class="text-lg font-bold text-gray-900">{{ producto.modelo }}</p>
                             </div>
                             
-                            {% if producto.nombre is defined and producto.nombre %}
-                                <div class="flex flex-col">
-                                  <span class="text-sm text-gray-500 font-medium">Descripción</span> 
-                                    <p class="text-lg font-bold text-gray-900">{{ producto.nombre }}</p>
-                                </div>
-                            {% elseif producto.modelo is defined and producto.modelo %}
-                                <div class="flex flex-col">
-                                    <span class="text-sm text-gray-500 font-medium">Modelo</span> 
-                                    <p class="text-lg font-bold text-gray-900">{{ producto.modelo }}</p>
-                                </div>
-                                
-                                <div class="flex flex-col">
-                                    <span class="text-sm text-gray-500 font-medium">Tamaño</span> 
-                                    <p class="text-lg font-bold text-gray-900">{{ producto.tamano }}</p>
-                                </div>
-                                
-                                <div class="flex flex-col">
-                                    <span class="text-sm text-gray-500 font-medium">Tipo</span> 
-                                    <p class="text-lg font-bold text-gray-900">{{ producto.tipo }}</p>
-                                </div>
-                            {% endif %}
-                            
-                            <div class="mt-auto pt-4 border-t border-gray-100">
-                                <span class="text-sm text-gray-500 font-medium">Precio</span>
-                                <p class="text-2xl font-bold text-black">${{ producto.precio }}</p>
+                            {# Tamaño #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Tamaño</span> 
+                                <p class="text-lg font-bold text-gray-900">{{ producto.tamano }}</p>
                             </div>
+                            
+                            {# Tipo #}
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-medium">Tipo</span> 
+                                <p class="text-lg font-bold text-gray-900">{{ producto.tipo }}</p>
+                            </div>
+                        {% endif %}
+                        
+                        {# Precio #}
+                        <div class="mt-auto pt-4 border-t border-gray-100">
+                        <strong>    <span class="text-sm text-gray-500 font-medium">Precio</span> </strong>
+                            <p class="text-2xl font-bold text-black">${{ producto.precio }}</p>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
+        </div>
 
-            <div id="noResults" class="hidden no-results mt-8">
-                <p class="text-gray-600 text-lg">No se encontraron productos que coincidan con tu búsqueda.</p>
-            </div>
+        <div id="noResults" class="hidden no-results mt-8">
+            <p class="text-gray-600 text-lg">No se encontraron productos que coincidan con tu búsqueda.</p>
+        </div>
 
-            <div class="flex justify-center mt-12">
-                <button id="verMas" class="btn-ver-mas hidden">
-                    Ver más productos
-                </button>
-            </div>
+        <div class="flex justify-center mt-12">
+            <button id="verMas" class="btn-ver-mas hidden">
+                Ver más productos
+            </button>
         </div>
     </div>
 
@@ -237,6 +233,8 @@
         });
     </script>
 
+   
 </body>
-{% include 'partials/footer.html.twig' %}
+     {% include 'partials/footer.html.twig' %}
+
 </html>

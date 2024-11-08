@@ -60,7 +60,7 @@
         <h2 traducir="titulo_reservas" class="text-3xl md:text-4xl font-bold text-center mb-12">Tus reservas</h2>
 
         <!-- Mostrar errores si existen -->
-        {% if response.errors is defined and response.errors is not empty %}
+        {% if response.errors is not empty %}
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
                 {% for error in response.errors %}
                     <p>{{ error }}</p>

@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- SEO -->
+    <!--SEO-->
     <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
     <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
     <meta name="author" content="All In One">
-    <!-- Responsivo -->
+    <!--Es responsivo-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIO - Taller, neumáticos, reservas y más</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
@@ -24,31 +24,25 @@
             font-family: 'Teachers', sans-serif;
         }
 
-        .btn {
-            background-color: #dc2626;
+           .btn{
+            background-color: #dc2626
         }
 
-        .btn:hover {
-            background-color: #b91c1c;
+        .btn:hover{
+            background-color: #b91c1c
         }
 
-        .btnPark {
-            background-color: #1f3de0;
+        .btnPark{
+            background-color: #1f3de0
         }
 
-        .btnPark:hover {
-            background-color: #233181;
-        }
-
-        /* Indicador Activo */
-        .indicator.active {
-            background-color: #ffffff;
+        .btnPark:hover{
+            background-color: #233181
         }
     </style>
 </head>
-
 <script>
-    const SESSION_URL = "{{ path('getClientSession') }}";
+const SESSION_URL = "{{ path('getClientSession') }}";
 </script>
 <script src="{{ asset('js/fetchClientSession.js') }}"></script>
 <script>
@@ -58,20 +52,23 @@
         inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionHome, 'es');
     });
 </script>
+        {% include 'partials/header.html.twig' %}
 
 <body class="bg-gray-100">
-    {% include 'partials/header.html.twig' %}
 
     <main class="container mx-auto px-4 py-8">
-        <!-- Carousel Section -->
         <section id="carousel" class="relative mb-12">
             <div class="overflow-hidden rounded-lg">
                 <div id="slide-container" class="relative w-full h-64 md:h-96 lg:h-[700px] overflow-hidden">
-                    {% for i in 1..3 %}
-                        <div class="slide absolute w-full h-full">
-                            <img src="{{ asset('img/ImagenNuevaSlider' ~ i ~ '.jpg') }}" class="w-full h-full object-cover" alt="Slide {{ i }}">
-                        </div>
-                    {% endfor %}
+                    <div class="slide absolute w-full h-full">
+                        <img src="{{ asset('img/ImagenNuevaSlider3.jpg') }}" class="w-full h-full object-cover" alt="Slide 1">
+                    </div>
+                    <div class="slide absolute w-full h-full">
+                        <img src="{{ asset('img/ImagenNuevaSlider2.jpg') }}" class="w-full h-full object-cover" alt="Slide 2">
+                    </div>
+                    <div class="slide absolute w-full h-full">
+                        <img src="{{ asset('img/ImagenNuevaSlider4.jpg') }}" class="w-full h-full object-cover" alt="Slide 3">
+                    </div>
                 </div>
             </div>
             <button id="prevBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-r-lg hover:bg-opacity-75 transition-all">
@@ -86,104 +83,110 @@
             </button>
             <div id="indicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"></div>
         </section>
-
-        <!-- Parking Section -->
         <section id="parking" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
             <div class="flex flex-col items-center text-center">
                 <img class="w-48 md:w-64 lg:w-80 mb-6" src="{{ asset('img/AIO Parking positivo.png') }}" alt="AIO Parking" />
                 <p traducir="parkingPresentacion" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold mb-6">AIO PARKING es nuestro servicio de parking inteligente.</p>
-                <p traducir="reservarPlaza" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold mb-6">Clickea Abajo para más información</p>
+                <p traducir="reservarPlaza" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-semibold mb-6">clickea Abajo para mas informacion</p>
                 <a href="{{ path('aioParking') }}" traducir="botonParking" class="btnPark text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[10px]">AIO PARKING</a>
             </div>
         </section>
 
-        <!-- Services Section -->
         <section id="servicios" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
             <div class="flex flex-col items-center text-center">
                 <h2 traducir="nuestrosServicios" class="text-[#161212] text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Nuestros Servicios</h2>
                 <p traducir="entra" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium mb-6">Entra para saber todos los servicios que ofrecemos en AIO</p>
-                <a href="{{ path('services') }}" traducir="botonServicios" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[10px]">Servicios</a>
+                <a href="{{path('services')}}" traducir="botonServicios" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[10px]">Servicios</a>
             </div>
         </section>
 
-        <!-- Reservations Section -->
         <section id="reservas" class="bg-neutral-50 rounded-[21px] border border-black p-8 mb-12">
             <div class="flex flex-col items-center text-center">
                 <h2 traducir="yaReservaste" class="text-[#161212] text-3xl md:text-4xl lg:text-5xl font-bold mb-4">¿Ya reservaste?</h2>
-                <p traducir="apartadoMisReservas" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium mb-6">Si ya reservaste, accede a nuestro apartado de "Mis reservas"</p>
+                <p traducir="apartadoMisReservas" class="text-[#161212] text-xl md:text-2xl lg:text-3xl font-medium mb-6">Si ya reservaste accede a nuestro apartado de "Mis reservas"</p>
                 <a href="{{ path('myBookedServices') }}" traducir="botonMisReservas" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[10px]">Mis reservas</a>
             </div>
         </section>
 
-        <!-- Products Section -->
-        <section id="productos" class="bg-neutral-50 rounded-[21px] border border-black p-8">
+        <section id="productos" class="bg-neutral-50 justify-center align-center rounded-[21px] border border-black p-8">
             <h2 traducir="nuestros_productos" class="text-center text-[#161212] text-3xl md:text-4xl lg:text-5xl font-semibold mb-8">Nuestros productos</h2>
-            <p traducir="catalogo" class="text-[#161212] text-center text-xl md:text-2xl lg:text-3xl font-medium mb-6">Accede a nuestro catálogo de productos</p>
+            <p traducir="catalogo" class="text-[#161212] text-center text-xl md:text-2xl lg:text-3xl font-medium mb-6">Accede a nuestro catalogo de productos</p>
             <div class="text-center mt-8">
                 <a href="{{ path('products') }}" traducir="botonProductos" class="duration-300 btn text-neutral-50 text-xl md:text-2xl lg:text-3xl font-bold py-3 px-6 rounded-[7px] inline-block">Ver todos</a>
             </div>
         </section>
     </main>
 
-    {% include 'partials/footer.html.twig' %}
 
-    <!-- Carousel Script -->
-    <script>
-        const slideContainer = document.getElementById('slide-container');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const indicators = document.getElementById('indicators');
+        {% include 'partials/footer.html.twig' %}
+
+
+      
+
     
-        let currentIndex = 0;
-        const slides = slideContainer.children;
-        const totalSlides = slides.length;
-    
-        // Inicializar posiciones de las diapositivas
-        Array.from(slides).forEach((slide, i) => slide.style.transform = `translateX(${100 * i}%)`);
-    
-        // Crear indicadores
-        Array.from({ length: totalSlides }, (_, i) => {
-            const dot = document.createElement('button');
-            dot.classList.add('w-3', 'h-3', 'rounded-full', 'bg-gray-400', 'indicator');
-            if (i === currentIndex) dot.classList.add('active');
-            dot.addEventListener('click', () => goToSlide(i));
-            indicators.appendChild(dot);
-        });
-    
-        function updateCarousel() {
-            Array.from(slides).forEach((slide, i) => slide.style.transform = `translateX(${100 * (i - currentIndex)}%)`);
-            updateIndicators();
-        }
-    
-        function updateIndicators() {
-            Array.from(indicators.children).forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentIndex);
-            });
-        }
-    
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % totalSlides;
-            updateCarousel();
-        }
-    
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-            updateCarousel();
-        }
-    
-        function goToSlide(index) {
-            currentIndex = index;
-            updateCarousel();
-        }
-    
-        nextBtn.addEventListener('click', nextSlide);
-        prevBtn.addEventListener('click', prevSlide);
-    
-        // Inicializar el carrusel
-        updateCarousel();
-    
-        // Cambio automático de diapositivas
-        setInterval(nextSlide, 5000);
     </script>
+        <script>
+            const carousel = document.getElementById('carousel');
+            const slideContainer = document.getElementById('slide-container');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicators = document.getElementById('indicators');
+    
+            let currentIndex = 0;
+            const slides = slideContainer.children;
+            const totalSlides = slides.length;
+    
+            // Inicializar posiciones de las diapositivas
+            for (let i = 0; i < totalSlides; i++) {
+                slides[i].style.transform = `translateX(${100 * i}%)`;
+            }
+    
+            // Crear indicadores
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('w-3', 'h-3', 'rounded-full', 'bg-gray-400');
+                dot.addEventListener('click', () => goToSlide(i));
+                indicators.appendChild(dot);
+            }
+    
+            function updateCarousel() {
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].style.transform = `translateX(${100 * (i - currentIndex)}%)`;
+                }
+                updateIndicators();
+            }
+    
+            function updateIndicators() {
+                const dots = indicators.children;
+                for (let i = 0; i < dots.length; i++) {
+                    dots[i].classList.toggle('bg-white', i === currentIndex);
+                    dots[i].classList.toggle('bg-gray-400', i !== currentIndex);
+                }
+            }
+    
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateCarousel();
+            }
+    
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+    
+            function goToSlide(index) {
+                currentIndex = index;
+                updateCarousel();
+            }
+    
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+    
+            // Inicializar el carrusel
+            updateCarousel();
+    
+            // Opcional: Cambio automático de diapositivas
+            setInterval(nextSlide, 5000);
+        </script>
 </body>
 </html>
