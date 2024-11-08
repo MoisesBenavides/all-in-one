@@ -186,7 +186,7 @@ class ControladorTaller extends AbstractController{
                     $response['errors'][] = $e->getMessage();
                 }
 
-                return $this->render('employee/dashboardEjecutivoServicios.html.twig', [
+                return $this->render('employee/serviceExecutive/dashboardEjecutivoServicios.html.twig', [
                     'response' => $response
                 ]);
                 
