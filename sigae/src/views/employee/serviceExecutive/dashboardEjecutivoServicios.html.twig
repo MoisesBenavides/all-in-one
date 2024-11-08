@@ -25,6 +25,8 @@
 </head>
 
 {% include 'partials/headerEjecutivo.html.twig' %}
+
+<body>
 {% if response.errors is defined and response.errors is not empty %}
 	<div id="error-container" style="background-color: #ffcec6;" class="text-gray-950 text-center p-4 rounded-md mb-4">
 		<ul id="error-list">
@@ -35,7 +37,6 @@
 	</div>
 {% endif %}
 
-<body>
     <main class="min-h-screen bg-white py-8 px-4">
         <div class="max-w-7xl mx-auto">
             <!-- Sección única centrada -->
