@@ -36,18 +36,49 @@
 
 {% include 'partials/headerEjecutivo.html.twig' %}
 
-<body>
-
-
-<section class="flex overflow-hidden flex-col justify-center items-center py-60 pr-16 pl-20 font-bold whitespace-nowrap bg-white max-md:px-5 max-md:py-24">
-  <div class="flex flex-col max-w-full w-[1297px]">
-    <article class="flex overflow-hidden flex-col justify-center items-center px-16 py-28 w-full rounded-2xl border border-solid bg-neutral-50 border-neutral-900 min-h-[400px] max-md:px-5 max-md:py-24 max-md:max-w-full">
-      <h2 class="text-4xl text-neutral-900">AGENDA</h2>
-    </article>
-  </div>
-</section>
-
-  </main>
+<div class="container mx-auto px-4 py-8">
+    {% for servicio in servicios %}
+        <div class="mb-6 bg-white rounded-lg shadow-md p-6">
+            <form action="{{ path('') }}" method="POST">
+                <input type="hidden" name="servicio_id" value="{{ servicio.id }}">
+                
+                {# Fila superior con ID, select y botón #}
+                <div class="flex items-center space-x-4 mb-4">
+                    {# ID del servicio #}
+                    <div class="flex-none">
+                        <span class="text-gray-700 font-medium">ID: {{ servicio.id }}</span>
+                    </div>
+                    
+                    {# Select de estad #}
+                    <div class="flex-grow">
+                        <select name="estado" 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="pendiente">Pendiente</option>
+                            <option value="realizado">Realizado</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    
+                    {# Botón de enviar #}
+                    <div class="flex-none">
+                        <button type="submit" 
+                                class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            Enviar
+                        </button>
+                    </div>
+                </div>
+                
+                {# Campo de descripción #}
+                <div>
+                    <textarea name="descripcion" 
+                             rows="6" 
+                             placeholder="Descripción" 
+                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+            </form>
+        </div>
+    {% endfor %}
+</div>
 
     {% include 'partials/footer.html.twig' %}
 
