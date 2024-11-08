@@ -283,4 +283,23 @@ abstract class Producto{
             throw "Error al obtener stock del producto: ".$e;
         }
     }
+    public static function obtenerPrecio($rol, $id){
+        $conn = conectarDB($rol);
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
+        try{
+            $stmt = $conn->prepare('SELECT precio FROM producto WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            
+            $precio = $stmt->fetchColumn();
+
+            return $precio;
+
+        } catch(Exception $e){
+            throw $e;
+        }
+    }
 }

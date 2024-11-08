@@ -190,5 +190,25 @@ abstract class Servicio{
         }
     }
 
+    public static function obtenerPrecio($rol, $id){
+        $conn = conectarDB($rol);
+        if($conn === false){
+            throw new Exception("No se puede conectar con la base de datos.");
+        }
+
+        try{
+            $stmt = $conn->prepare('SELECT precio FROM servicio WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            
+            $precio = $stmt->fetchColumn();
+
+            return $precio;
+
+        } catch(Exception $e){
+            throw $e;
+        }
+    }
+
     abstract public function getServicios();
 }
