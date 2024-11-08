@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <title>All In One - SIGAE</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+        .dropdown-menu {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .btn{
+            background-color: #dc2626
+        }
+        .btn:hover{
+            background-color: #b91c1c
+        }
+        
+        /* Estilos especificos para los lapsos de tiempo */
+        .time-slot {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            border: 1px solid;
+        }
+
+        .time-slot.occupied {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .time-slot.available {
+            background-color: white;
+            border-color: #d1d5db;
+            color: #374151;
+        }
+
+        /* Estilos para el contenedor de lapsos */
+        #timeSlots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            padding: 1rem 0;
+        }
+
+        /* Estilos para el indicador de carga */
+        #loadingIndicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #dc2626;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const archivoTraduccionHeader = "{{ asset('translate/header.json') }}";
+        const archivoTraduccionReservar = "{{ asset('translate/reservarServicio.json') }}";
+        inicializarTraduccion(archivoTraduccionHeader, archivoTraduccionReservar, 'es');
+    });
+</script>
+
+<body>
+    {% include 'partials/headerJefeTaller.html.twig' %}
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto space-y-8">
+            <div class="w-full max-w-[340px] mx-auto">
+                <!-- Sección de Fecha -->
+                <section class="mb-6">
+                    <h2 class="text-center text-black text-2xl font-semibold mb-4 bg-neutral-200 rounded-[5px] border border-black py-2">Seleccione la fecha</h2>
+                    <div class="w-full max-w-[340px] mx-auto">
+                        <input type="date" id="fecha_selector" class="w-full h-[60px] px-[22px] py-3.5 bg-white rounded-[10px] border border-[#161212] text-center text-black text-xl font-semibold mb-4" required>
+                        
+                        <div id="timeSlots"></div>
+
+                        <div class="w-full flex flex-col space-y-2 justify-center items-center text-sm mt-4">
+                            <p>Horario de atención: 5:00 AM - 5:00 PM</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección de errores -->
+                <div id="error-container" class="text-red-600 mt-4 hidden">
+                    <ul id="error-list"></ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'partials/footer.html.twig' %}
+
+    <!-- Utilidades de Fecha -->
+<script>
+    const DateUtils = {
+        getUruguayDate(date) {
+            return new Date(new Date(date).toLocaleString('en-US', { timeZone: 'America/Montevideo' }));
+        },
+
+        formatDateForUrl(date) {
+            const d = new Date(date);
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        },
+
+        compareOnlyDates(date1, date2) {
+            const d1 = new Date(date1);
+            const d2 = new Date(date2);
+            return d1.getFullYear() === d2.getFullYear() &&
+                d1.getMonth() === d2.getMonth() &&
+                d1.getDate() === d2.getDate();
+        },
+
+        parseTimeToDate(timeString, baseDate) {
+            const [hours, minutes] = timeString.split(':').map(Number);
+            const date = new Date(baseDate);
+            date.setHours(hours, minutes, 0, 0);
+            return date;
+        }
+    };
+</script>
+
+<!-- URL del servicio -->
+<script>
+    const GET_BLOCKED_TIMES_URL = "{{ path('getServicesSchedule') }}";
+</script>
+
+<!-- TimeSlotHandler principal -->
+<script>
+    const TimeSlotHandler = {
+        initialize() {
+            const fechaSelector = document.getElementById('fecha_selector');
+            if (fechaSelector) {
+                fechaSelector.addEventListener('change', (e) => this.handleDateChange(e));
+                // Establecer la fecha actual por defecto
+                const today = new Date();
+                fechaSelector.value = today.toISOString().split('T')[0];
+                this.updateTimeSlots(fechaSelector.value);
+            }
+        },
+
+        handleDateChange(event) {
+            this.updateTimeSlots(event.target.value);
+        },
+
+        async updateTimeSlots(selectedDate) {
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            const errorContainer = document.getElementById('error-container');
+
+            try {
+                // Limpiar contenidos previos
+                if (errorContainer) errorContainer.classList.add('hidden');
+                if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
+
+                const url = `${GET_BLOCKED_TIMES_URL}?date=${encodeURIComponent(selectedDate)}&_=${Date.now()}`;
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Cache-Control': 'no-cache'
+                    },
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al obtener los horarios');
+                }
+
+                const data = await response.json();
+                
+                if (!data || !data.horariosTaller) {
+                    throw new Error('No hay horarios disponibles');
+                }
+
+                // Procesar los datos
+                const serverDateTime = new Date(data.horaActual);
+                const selectedDateObj = new Date(selectedDate + 'T00:00:00');
+                const serverDateStr = serverDateTime.toISOString().split('T')[0];
+                const selectedDateStr = selectedDateObj.toISOString().split('T')[0];
+
+                const processedSlots = Object.entries(data.horariosTaller).map(([lapso, info]) => {
+                    const [hours, minutes] = info.inicio.split(':').map(Number);
+                    let isOccupied = info.ocupado;
+
+                    if (selectedDateStr < serverDateStr) {
+                        isOccupied = true;
+                    }
+                    else if (selectedDateStr === serverDateStr) {
+                        const slotTime = hours * 60 + minutes;
+                        const currentTime = serverDateTime.getHours() * 60 + serverDateTime.getMinutes();
+                        
+                        if (slotTime <= currentTime) {
+                            isOccupied = true;
+                        }
+                    }
+
+                    return [lapso, {
+                        ...info,
+                        ocupado: isOccupied
+                    }];
+                });
+
+                this.renderTimeSlots(processedSlots);
+
+                // Establecer fecha mínima en el selector si es necesario
+                const fechaSelector = document.getElementById('fecha_selector');
+                if (fechaSelector && !fechaSelector.min) {
+                    fechaSelector.min = serverDateStr;
+                }
+
+            } catch (error) {
+                console.error('Error en updateTimeSlots:', error);
+                this.showError(error.message);
+                if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
+            }
+        },
+
+        renderTimeSlots(slots) {
+            const container = document.getElementById('timeSlots');
+            if (!container) return;
+
+            // Limpiar el contenedor antes de renderizar
+            container.innerHTML = '';
+
+            // Renderizar los slots ordenados por hora
+            slots
+                .sort(([, a], [, b]) => {
+                    const timeA = a.inicio || '';
+                    const timeB = b.inicio || '';
+                    return timeA.localeCompare(timeB);
+                })
+                .forEach(([lapso, info]) => {
+                    const div = document.createElement('div');
+                    div.className = `time-slot ${info.ocupado ? 'occupied' : 'available'}`;
+                    div.textContent = `${info.inicio} - ${info.fin}`;
+                    div.title = info.ocupado ? "Horario ocupado" : "Horario disponible";
+                    container.appendChild(div);
+                });
+        },
+
+        showError(message) {
+            const errorContainer = document.getElementById('error-container');
+            if (!errorContainer) return;
+
+            errorContainer.classList.remove('hidden');
+            const errorList = document.getElementById('error-list');
+            
+            if (errorList) {
+                errorList.innerHTML = `<li>${message}</li>`;
+            } else {
+                errorContainer.textContent = message;
+            }
+            
+            errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            setTimeout(() => {
+                if (errorContainer) {
+                    errorContainer.classList.add('hidden');
+                }
+            }, 5000);
+        }
+    };
+
+    // Inicialización cuando el DOM está listo
+    document.addEventListener('DOMContentLoaded', function() {
+        TimeSlotHandler.initialize();
+    });
+</script>
+
+</body>
+</html>

@@ -127,6 +127,8 @@ class ControladorFuncionario extends AbstractController {
         switch($rol){
             case 'gerente':
                 return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
+            case 'jefe_taller':
+                return $this->render('employee/workshopChief/reports/horariosDispTaller.html.twig');
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
@@ -146,6 +148,18 @@ class ControladorFuncionario extends AbstractController {
                     $response['errors'][] = "Error obteniendo los servicios disponibles: ".$e->getMessage();
                 }
                 return $this->render('employee/manager/reports/serviciosDispTaller.html.twig', [
+                    'response' => $response,
+                    'serviciosDisp' => $serviciosDisp
+                ]);
+            case 'jefe_taller':
+                try{                    
+                    $this->controladorTaller = new ControladorTaller();
+                    $serviciosDisp = $this->controladorTaller->getServiciosDisp();
+    
+                } catch(Exception $e){
+                    $response['errors'][] = "Error obteniendo los servicios disponibles: ".$e->getMessage();
+                }
+                return $this->render('employee/workshopChief/reports/serviciosDispTaller.html.twig', [
                     'response' => $response,
                     'serviciosDisp' => $serviciosDisp
                 ]);

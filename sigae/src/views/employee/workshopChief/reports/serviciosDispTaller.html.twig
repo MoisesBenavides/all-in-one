@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AIO taller mecanico en montevideo, Estacionamiento 24 horas y mas">
+    <meta name="keywords" content="Taller mecanico, taller mecanico montevideo, taller mecanico cerca de mi, estacionamiento 24 horas, venta de neumaticos">
+    <meta name="author" content="All In One">
+    <title>All In One - SIGAE</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('ico/logo-positivo.ico') }}">
+    <style>
+        @font-face {
+            font-family: 'Teachers';
+            src: url("{{ asset('font/Teachers-VariableFont_wght.ttf') }}");
+            font-weight: normal;
+            font-style: normal;
+        }
+        body, input, select, button, option {
+            font-family: 'Teachers', sans-serif;
+        }
+        .dropdown-menu {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .btn{
+            background-color: #dc2626
+        }
+        .btn:hover{
+            background-color: #b91c1c
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+{% include 'partials/headerJefeTaller.html.twig' %}
+<body>
+<!-- Sección de errores -->
+{% if response is defined and response.errors is defined and response.errors is not empty %}
+    <div id="error-container" class="text-red-600 mt-4">
+        <ul id="error-list">
+            {% for error in response.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+<h1>Servicios Disponibles en el Taller</h1>
+    {% if serviciosDisp is not empty %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Tiempo Estimado (minutos)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for codigo, servicio in serviciosDisp %}
+                    <tr>
+                        <td>{{ codigo }}</td>
+                        <td>{{ servicio.descripcion }}</td>
+                        <td>${{ servicio.precio | number_format(2, '.', ',') }}</td>
+                        <td>{{ servicio.tiempo_estimado }} mins</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay servicios disponibles en este momento.</p>
+    {% endif %}
+</body>
+{% include 'partials/footer.html.twig' %}
+
+</html>
