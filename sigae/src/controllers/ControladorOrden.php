@@ -11,10 +11,30 @@ class ControladorOrden extends AbstractController{
     private $orden;
 
     function submitOrder(): Response{
+        $response=['success' => false, 'errors' => []];
+
         $rol=$_SESSION['rol'];
+
+        $productos = [];
+        $services = [];
+
         switch($rol){
             case 'cajero':
-                // TODO: Implementar el código para procesar la orden de compra y generar el número de orden
+                if(isset($_POST["product_ids"]) || isset($_POST["reservation_ids"]) && 
+                !empty($_POST["product_ids"]) || !empty($_POST["reservation_ids"])){
+
+                    $productos = $_POST["product_ids"];
+                    $servicios = $_POST["reservation_ids"];
+
+                    if (!is_array($productos) || !is_array($servicios)) {
+                       $response['errors'][] = "Lista de IDs contiene datos inválidos";
+                    } elseif(!$this->validarIds($productos) || !$this->validarIds($servicios)){
+                       $response['errors'][] = "Lista de IDs contiene datos inválidos";
+                    }
+
+                }else{
+                    $response['errors'][] = "La orden debe contener al menos un ID de producto o reserva.";
+                }
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
@@ -29,4 +49,9 @@ class ControladorOrden extends AbstractController{
                 return $this->render('errors/errorAcceso.html.twig');
         }
     }
+
+    private function validarIds($array){
+        return is_array($array);
+    }
+
 }
