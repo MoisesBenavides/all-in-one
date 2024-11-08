@@ -3,6 +3,8 @@
 namespace Sigae\Controllers;
 use Sigae\Models\Orden;
 use Sigae\Models\Producto;
+use Sigae\Models\Servicio;
+use Sigae\Models\EstadoPagoOrden;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,20 +34,64 @@ class ControladorOrden extends AbstractController{
                         $idCliente = $_POST["id_cliente"];
                         $fecha = $this->obtenerFechaHoraActual();
 
-                        if(!$this->validarListaIds($productosId) || !$this->validarListaIds($serviciosId)){
-                        $response['errors'][] = "Lista de IDs contiene datos inválidos";
+                        /* TODO: Valorar casos de solo ids productos recibidos, solo servicios, o ambos 
+                        (implementar para futuros procesos y comunicacion con modelo orden) */
+
+                        if(!$this->validarFormatoIds($productosId) || !$this->validarFormatoIds($serviciosId)){
+                            $response['errors'][] = "Lista de IDs contiene datos inválidos.";
+                        } elseif(!$this->validarFormatoIds($serviciosId)){
+                            $response['errors'][] = "Lista de servicios contiene IDs repetidos.";
                         } else{
                             try{
-                                $idsNoExistentes = [];
+                                /* TODO: Hacer arrays asociativos de productos con ids y cantidad, 
+                                no usar más en adelante array de productos con solo ids (reemplazar cuando se implemente)*/
+                                
+                                $idsNoExistentes = "";
                                 foreach($productosId as $id_producto){
                                     if (!Producto::existeId($rol, $id_producto)){
-                                        $idsNoExistentes = " ".$id_producto;
+                                        // TODO: Agregar espaciado entre IDs
+                                        $idsNoExistentes .= $id_producto;
                                     }
-                                    if (!empty($idsNoExistentes)){
-                                        throw new Exception("Los ids: ".$idsNoExistentes." no se encuentran registrados");
-                                    }
-                                    // TODO: implementar
                                 }
+                                foreach($serviciosId as $id_servicio){
+                                    if (!Servicio::existeId($rol, $id_servicio)){
+                                        // TODO: Agregar espaciado entre IDs
+                                        $idsNoExistentes .= $id_servicio;
+                                    }
+                                }
+                                if (!empty($idsNoExistentes)){
+                                    throw new Exception("Los IDs: ".$idsNoExistentes." no se encuentran registrados");
+                                } else{
+                                    // Calcular el total por cada producto y servicio
+                                    $total = 0.00;
+                                    foreach($productosId as $id_producto){
+                                        $total+=Producto::obtenerPrecio($rol, $id_producto);
+                                    }
+                                    foreach($serviciosId as $id_servicio){
+                                        $total+=Servicio::obtenerPrecio($rol, $id_servicio);
+                                    }
+
+                                    $this->orden = new Orden(null, $total, $fecha, EstadoPagoOrden::tryFrom('pago'));
+                                    $this->orden->setDBConnection($rol);
+                                    $this->orden->comenzarTransaccion();
+                                    try{
+                                        $this->orden->preparar($idCliente);
+                                        foreach($productosId as $producto_id){
+                                            $this->orden->agregarDetalleProducto($producto_id, $cantidad);
+                                        }
+                                        foreach($serviciosId as $servicio_id){
+                                            $this->orden->agregarDetalleServicio($servicio_id);
+                                        }
+                                        $this->orden->confirmarTransaccion();
+                                        
+                                    } catch(Exception $e){
+                                        $this->orden->deshacerTransaccion();
+                                        throw $e;
+                                    } finally{
+                                        $this->orden->cerrarDBConnection();
+                                    }
+                                }
+
                             } catch(Exception $e){
                                 $response['errors'][] = $e->getMessage();
                             }
@@ -81,11 +127,18 @@ class ControladorOrden extends AbstractController{
         return $dtActual->format('Y-m-d H:i:s');
     }
 
-    private function validarListaIds($idsRecibidos){
+    private function validarFormatoIds($idsRecibidos){
         // Verifica si los elementos del arreglo son numéricos enteros mayores a cero
         $idsValidos = array_filter($idsRecibidos, fn($id) => ctype_digit($id) && (int)$id > 0);
-        // Verifica si los arrays validados contienen la misma cantidad de elementos originales
+        // Verifica si el arreglo de ids validados contienen la misma cantidad de elementos originales
         return count($idsRecibidos) == count($idsValidos);
+    }
+
+    private function contieneRepeticionesIds($idsRecibidos){
+        // Obtiene array con ids que no se repiten
+        $idsUnicos = array_unique($idsRecibidos);
+        // Verifica si el arreglo de ids unicos contienen la misma cantidad de elementos originales
+        return count($idsUnicos) == count($idsRecibidos);
     }
 
 }
