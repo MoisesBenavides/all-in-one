@@ -145,16 +145,16 @@ class Taller extends Servicio{
         }
         try{
             $stmt = $conn->prepare('SELECT s.id, s.fecha_inicio, s.fecha_final, s.matricula , s.estado, 
-                                            t.tipo, t.descripcion, t.diagnostico, 
+                                            t.tipo, t.descripcion, t.diagnostico 
                                         FROM servicio s 
                                         JOIN taller t ON s.id=t.id_servicio  
                                         WHERE t.diagnostico <> "" 
                                         ORDER BY s.fecha_inicio DESC');
             $stmt->execute();
 
-            $servicios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $diagnosticos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            return $servicios;
+            return $diagnosticos;
 
         } catch(Exception $e){
             // Debug
