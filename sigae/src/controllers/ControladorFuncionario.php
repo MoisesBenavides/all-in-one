@@ -423,7 +423,7 @@ class ControladorFuncionario extends AbstractController {
                     $response['errors'][] = "Error al cargar funcionarios: ".$e->getMessage();
                 }
                 return $this->render('employee/workshopChief/listaEjecutivos.html.twig', [
-                    'ejecutivos' => $ejecutivos,
+                    'funcionarios' => $ejecutivos,
                     'response' => $response
                 ]);
             default:
