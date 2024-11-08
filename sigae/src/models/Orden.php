@@ -134,7 +134,7 @@ class Orden{
     public function agregarDetalleServicio($id_servicio){
         $id_orden = $this->getId();
         try {
-            $stmt = $this->conn->prepare('INSERT INTO detalle_orden_servicio (id_producto, id_orden) 
+            $stmt = $this->conn->prepare('INSERT INTO detalle_orden_servicio (id_servicio, id_orden) 
                                         VALUES (:id_serv :id_ord)');
 
             $stmt->bindParam(':id_serv', $id_servicio);
