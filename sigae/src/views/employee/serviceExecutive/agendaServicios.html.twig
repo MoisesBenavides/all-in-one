@@ -48,7 +48,7 @@
     {% for servicio in serviciosHoy %}
         <div class="mb-6 bg-white rounded-lg shadow-md p-6">
             <form action="{{ path('updateWorkshopService') }}" method="POST">
-                <input type="hidden" name="servicio_id" value="{{ servicio.id }}">
+                <input type="hidden" name="id" value="{{ servicio.id }}">
                 
                 {# Fila superior con ID, select y botón #}
                 <div class="flex items-center space-x-4 mb-4">
