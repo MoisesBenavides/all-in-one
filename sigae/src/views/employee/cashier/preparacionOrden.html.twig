@@ -40,31 +40,41 @@
    <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
     <div class="p-6 space-y-6">
-        <form method="POST" action="{{ path('prepareOrder') }}" class="space-y-6"> <!--  -->
-            {% if response.errors is defined and response.errors is not empty %}
-                    <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
-                        <ul id="error-list">
-                            {% for error in response.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
+      <form method="POST" action="{{ path('prepareOrder') }}" class="space-y-6">
+        {% if response.errors is defined and response.errors is not empty %}
+            <div id="error-container" class="text-[#950d03] p-4 rounded-md mb-4">
+                <ul id="error-list">
+                    {% for error in response.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
         <!-- Hidden inputs to store the arrays -->
         <div id="hidden-reservations"></div>
         <div id="hidden-products"></div>
 
+        <!-- Cliente ID Input -->
+        <div class="flex items-center space-x-2">
+            <input type="text" 
+                id="id_cliente"
+                name="id_cliente"
+                class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                placeholder="ID del Cliente">
+        </div>
+
         <!-- Reservation ID Input -->
         <div class="flex items-center space-x-2">
-          <input type="text" 
-                 id="reservation_id"
-                 class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                 placeholder="ID de Reserva">
-          <button type="button" 
-                  onclick="addReservation()"
-                  class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
-            +
-          </button>
+            <input type="text" 
+                id="reservation_id"
+                class="flex-1 rounded-md border border-gray-300 px-4 py-3 placeholder-gray-400 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                placeholder="ID de Reserva">
+            <button type="button" 
+                    onclick="addReservation()"
+                    class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                +
+            </button>
         </div>
 
         <!-- Product Section -->
