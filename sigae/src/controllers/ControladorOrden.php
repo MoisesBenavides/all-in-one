@@ -93,8 +93,15 @@ class ControladorOrden extends AbstractController{
                                         $this->orden->confirmarTransaccion();
                                         $response['success'] = true;
 
+                                        $ordenConfirm = [
+                                            'id' => $this->orden->getId(),
+                                            'id_cliente' => $idCliente,
+                                            'total' => $this->orden->getTotal(),
+                                            'fecha_orden' => $this->orden->getFecha_orden()
+                                        ];
+
                                         return $this->render('employee/cashier/confirmacionOrden.html.twig', [
-                                            'orden' => $this->orden
+                                            'orden' => $ordenConfirm
                                         ]);
 
                                     } catch(Exception $e){
