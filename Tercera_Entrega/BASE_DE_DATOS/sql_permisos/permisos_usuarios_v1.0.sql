@@ -52,7 +52,7 @@ GRANT SELECT, INSERT, UPDATE ON aio_db.orden TO 'cajero';
 GRANT SELECT, INSERT ON aio_db.detalle_orden_producto TO 'cajero';
 GRANT SELECT, INSERT ON aio_db.detalle_orden_servicio TO 'cajero';
 
-GRANT SELECT ON aio_db.producto TO 'cajero';
+GRANT SELECT, UPDATE ON aio_db.producto TO 'cajero';
 GRANT SELECT ON aio_db.neumatico TO 'cajero';
 GRANT SELECT ON aio_db.otro_producto TO 'cajero';
 
