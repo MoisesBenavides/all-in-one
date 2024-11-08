@@ -54,12 +54,12 @@ class ControladorTransaccion extends AbstractController{
                             if(!$this->transaccion->registrarTransaccion($idProd)){
                                 throw new Exception("Error al registrar la transacción.");
                             } else {
-                                $this->controladorProducto->continuarTransaccion($this->transaccion->getDBConnection());
+                                $this->controladorProducto->setDBConnection($this->transaccion->getDBConnection());
 
                                 if ($tipoTr == 'ingreso'){
                                     $this->controladorProducto->sumarStock($idProd, $cantidad);
                                 } elseif($tipoTr == 'egreso'){
-                                     $this->controladorProducto->restarStock($idProd, $cantidad);
+                                    $this->controladorProducto->restarStock($idProd, $cantidad);
                                 }
                                 
                                 $this->transaccion->confirmarTransaccion();
@@ -116,10 +116,8 @@ class ControladorTransaccion extends AbstractController{
         return filter_var($numeroSinCeros, FILTER_VALIDATE_INT) !== false && strlen($numeroSinCeros) <= $max;
     }
     
-
-    // TODO: validar
     private function validarIdProd($id){
-        return true;
+        return (preg_match("/^\d+$/", $id));
     }
 
     private function validarTipo($tipoTr){
