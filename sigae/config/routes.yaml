@@ -236,7 +236,7 @@ prepareOrder:
 submitOrder:
   path: /submitOrder
   controller: Sigae\Controllers\ControladorOrden::submitOrder
-  methods: GET
+  methods: POST
 
 orderConfirmation:
   path: /orderConfirmation
