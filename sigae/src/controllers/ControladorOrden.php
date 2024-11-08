@@ -17,7 +17,6 @@ class ControladorOrden extends AbstractController{
 
     function submitOrder(): Response{
         $response=['success' => false, 'errors' => []];
-
         $rol=$_SESSION['rol'];
 
         $productosId = [];
@@ -25,8 +24,8 @@ class ControladorOrden extends AbstractController{
 
         switch($rol){
             case 'cajero':
-                if(isset($_POST["product_ids"]) || isset($_POST["reservation_ids"]) && 
-                !empty($_POST["product_ids"]) || !empty($_POST["reservation_ids"])){
+                if((isset($_POST["product_ids"]) && !empty($_POST["product_ids"])) || 
+                    (isset($_POST["reservation_ids"]) && !empty($_POST["reservation_ids"]))) {
 
                     if(isset($_POST["id_cliente"]) && !empty($_POST["id_cliente"])){
                         $productosId = $_POST["product_ids"];
@@ -34,76 +33,90 @@ class ControladorOrden extends AbstractController{
                         $idCliente = $_POST["id_cliente"];
                         $fecha = $this->obtenerFechaHoraActual();
 
-                        /* TODO: Valorar casos de solo ids productos recibidos, solo servicios, o ambos 
-                        (implementar para futuros procesos y comunicacion con modelo orden) */
-
-                        if(!$this->validarFormatoIds($productosId) || !$this->validarFormatoIds($serviciosId)){
+                        if (!$this->validarFormatoIds($productosId) || !$this->validarFormatoIds($serviciosId)) {
                             $response['errors'][] = "Lista de IDs contiene datos inválidos.";
-                        } elseif(!$this->validarFormatoIds($serviciosId)){
+                        } elseif (!$this->contieneRepeticionesIds($serviciosId)){
                             $response['errors'][] = "Lista de servicios contiene IDs repetidos.";
-                        } else{
-                            try{
-                                /* TODO: Hacer arrays asociativos de productos con ids y cantidad, 
-                                no usar más en adelante array de productos con solo ids (reemplazar cuando se implemente)*/
-                                
-                                $idsNoExistentes = "";
-                                foreach($productosId as $id_producto){
-                                    if (!Producto::existeId($rol, $id_producto)){
-                                        // TODO: Agregar espaciado entre IDs
-                                        $idsNoExistentes .= $id_producto;
+                        } else {
+                            try {
+                                // Almacenar en arreglo asociativo los IDs recibidos y sus repeticiones
+                                $productosDetalle = [];
+                                $conteoProductos = array_count_values($productosId);
+                                foreach ($conteoProductos as $id_producto => $cantidad) {
+                                    $productosDetalle[] = ['id' => $id_producto, 'cantidad' => $cantidad];
+                                }
+    
+                                $serviciosDetalle = [];
+                                foreach ($serviciosId as $id_servicio) {
+                                    $serviciosDetalle[] = ['id' => $id_servicio];
+                                }
+    
+                                // Verificar existencia de IDs de productos y servicios
+                                $idsNoExistentes = [];
+                                foreach ($productosDetalle as $producto){
+                                    if (!Producto::existeId($rol, $producto['id'])) {
+                                        $idsNoExistentes[] = $producto['id'];
                                     }
                                 }
-                                foreach($serviciosId as $id_servicio){
-                                    if (!Servicio::existeId($rol, $id_servicio)){
-                                        // TODO: Agregar espaciado entre IDs
-                                        $idsNoExistentes .= $id_servicio;
+                                foreach ($serviciosDetalle as $servicio){
+                                    if (!Servicio::existeId($rol, $servicio['id'])){
+                                        $idsNoExistentes[]= $servicio['id'];
                                     }
                                 }
-                                if (!empty($idsNoExistentes)){
-                                    throw new Exception("Los IDs: ".$idsNoExistentes." no se encuentran registrados");
+    
+                                if (!empty($idsNoExistentes)) {
+                                    throw new Exception("Los IDs: " . var_dump($idsNoExistentes) . " no se encuentran registrados");
                                 } else{
                                     // Calcular el total por cada producto y servicio
                                     $total = 0.00;
-                                    foreach($productosId as $id_producto){
-                                        $total+=Producto::obtenerPrecio($rol, $id_producto);
+                                    foreach ($productosDetalle as $producto) {
+                                        $total += Producto::obtenerPrecio($rol, $producto['id']) * $producto['cantidad'];
                                     }
-                                    foreach($serviciosId as $id_servicio){
-                                        $total+=Servicio::obtenerPrecio($rol, $id_servicio);
+                                    foreach ($serviciosDetalle as $servicio) {
+                                        $total += Servicio::obtenerPrecio($rol, $servicio['id']);
                                     }
-
+    
                                     $this->orden = new Orden(null, $total, $fecha, EstadoPagoOrden::tryFrom('pago'));
                                     $this->orden->setDBConnection($rol);
                                     $this->orden->comenzarTransaccion();
-                                    try{
+                                    try {
                                         $this->orden->preparar($idCliente);
-                                        foreach($productosId as $producto_id){
-                                            $this->orden->agregarDetalleProducto($producto_id, $cantidad);
+
+                                        // Agregar detalles de la orden
+                                        foreach ($productosDetalle as $producto){
+                                            $this->orden->agregarDetalleProducto($producto['id'], $producto['cantidad']);
                                         }
-                                        foreach($serviciosId as $servicio_id){
-                                            $this->orden->agregarDetalleServicio($servicio_id);
+                                        foreach ($serviciosDetalle as $servicio){
+                                            $this->orden->agregarDetalleServicio($servicio['id']);
                                         }
+
                                         $this->orden->confirmarTransaccion();
-                                        
+                                        $response['success'] = true;
+
+                                        return $this->render('employee/cashier/confirmacionOrden.html.twig', [
+                                            'orden' => $this->orden
+                                        ]);
+
                                     } catch(Exception $e){
                                         $this->orden->deshacerTransaccion();
-                                        throw $e;
-                                    } finally{
-                                        $this->orden->cerrarDBConnection();
+                                        $response['errors'][] = "Error al procesar la orden: " . $e->getMessage();
                                     }
                                 }
-
-                            } catch(Exception $e){
+                            } catch (Exception $e) {
                                 $response['errors'][] = $e->getMessage();
                             }
-                            
                         }
-                    } else{
+                    } else {
                         $response['errors'][] = "Debe ingresar el ID del cliente.";
-                    }                    
-
-                }else{
+                    }
+                } else {
                     $response['errors'][] = "La orden debe contener al menos un ID de producto o reserva.";
                 }
+
+                return $this->render('employee/cashier/preparacionOrden.html.twig', [
+                    'response' => $response
+                ]);
+
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
