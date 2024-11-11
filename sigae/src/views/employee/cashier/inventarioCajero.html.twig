@@ -101,7 +101,7 @@
                     <div class="w-full h-48 bg-gray-100">
                         <img 
                             class="w-full h-full object-contain" 
-                            {# src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}" #}
+                            src="{{ asset('img/productos/' ~ producto.id ~ '.webp') }}"
                             alt="{{ producto.nombre|default(producto.modelo|default('Producto')) }}"
                             onload="this.style.display='block'"
                             onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'placeholder-image\'><p class=\'placeholder-text\'>Imagen no disponible</p></div>'"
