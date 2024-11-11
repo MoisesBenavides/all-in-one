@@ -40,9 +40,9 @@ class ControladorNeumatico extends AbstractController{
                         $response['errors'][] = "Por favor, ingrese un código UPC válido.";
                     } elseif (!$this->validarPrecio($precio)) {
                         $response['errors'][] = "Por favor, ingrese un precio válido.";
-                    } elseif (!$this->validarMarcaModelo($marca, 23)) {
+                    } elseif (!$this->validarMarca($marca, 23)) {
                         $response['errors'][] = "Por favor, ingrese una marca válida.";
-                    } elseif (!$this->validarMarcaModelo($modelo, 23)) {
+                    } elseif (!$this->validarModelo($modelo, 23)) {
                         $response['errors'][] = "Por favor, ingrese un modelo válido.";
                     } elseif (!$this->validarTamano($tamano)) {
                         $response['errors'][] = "Por favor, ingrese un tamaño con formato válido.";
@@ -125,9 +125,9 @@ class ControladorNeumatico extends AbstractController{
                         $response['errors'][] = "Por favor, ingrese un código UPC válido.";
                     } elseif (!$this->validarPrecio($precio)) {
                         $response['errors'][] = "Por favor, ingrese un precio válido.";
-                    } elseif (!$this->validarMarcaModelo($marca, 23)) {
+                    } elseif (!$this->validarMarca($marca, 23)) {
                         $response['errors'][] = "Por favor, ingrese una marca válida.";
-                    } elseif (!$this->validarMarcaModelo($modelo, 23)) {
+                    } elseif (!$this->validarModelo($modelo, 23)) {
                         $response['errors'][] = "Por favor, ingrese un modelo válido.";
                     } elseif (!$this->validarTamano($tamano)) {
                         $response['errors'][] = "Por favor, ingrese un tamaño con formato válido.";
@@ -230,7 +230,12 @@ class ControladorNeumatico extends AbstractController{
         return (preg_match("/^\d+$/", $id));
     }
 
-    private function validarMarcaModelo($str, $max) {
+    private function validarModelo($str, $max) {
+        /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (alfabético, admite guiones y numeros)
+        y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */
+        return (preg_match("/^[a-zA-Z0-9 -]+$/", $str) && strlen($str) <= $max);
+    }
+    private function validarMarca($str, $max) {
         /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene alfabético, admite guiones)
         y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */
         return (preg_match("/^[a-zA-Z -]+$/", $str) && strlen($str) <= $max);
