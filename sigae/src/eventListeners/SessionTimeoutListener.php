@@ -56,6 +56,8 @@ class SessionTimeoutListener {
 
         // Verifica si la sesión tiene el tiempo de última solicitud
         if (!isset($_SESSION["ultima_solicitud"])) {
+            // Debug logout
+            error_log("Sesión expirada");
             $this->logout($event);
             return;
         }
@@ -64,6 +66,8 @@ class SessionTimeoutListener {
         $inactividad = time() - $_SESSION["ultima_solicitud"];
         
         if ($inactividad > self::INACTIVIDAD_MAX_SESION) {
+            // Debug logout
+            error_log("Sesión expirada");
             $this->logout($event);
             return;
         }
