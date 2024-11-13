@@ -191,6 +191,26 @@ showWorkshopServices:
   controller: Sigae\Controllers\ControladorFuncionario::showWorkshopServices
   methods: GET
 
+showParkingAvailability:
+  path: /parkingAvailability
+  controller: Sigae\Controllers\ControladorFuncionario::showParkingAvailability
+  methods: GET
+
+showProductSalesReport:
+  path: /productSales
+  controller: Sigae\Controllers\ControladorFuncionario::showProductSalesReport
+  methods: GET
+
+showParkingSalesReport:
+  path: /parkingSales
+  controller: Sigae\Controllers\ControladorFuncionario::showParkingSalesReport
+  methods: GET
+
+showWorkshopServicesSalesReport:
+  path: /workshopServicesSales
+  controller: Sigae\Controllers\ControladorFuncionario::showWorkshopServicesSalesReport
+  methods: GET
+
 # Inventario y stock de productos
 stockManagement:
   path: /stockManagement

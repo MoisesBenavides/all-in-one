@@ -168,6 +168,47 @@ class ControladorFuncionario extends AbstractController {
         }
     }
 
+    function showParkingAvailability(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                // TODO: implementar
+                return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showProductSalesReport(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showParkingSalesReport(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
+    function showWorkshopServicesSalesReport(): Response{
+        $rol=$_SESSION['rol'];
+        switch($rol){
+            case 'gerente':
+                return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
+            default:
+                return $this->render('errors/errorAcceso.html.twig');
+        }
+    }
+
     function stockManagement(): Response{
         $rol=$_SESSION['rol'];
         switch($rol){
