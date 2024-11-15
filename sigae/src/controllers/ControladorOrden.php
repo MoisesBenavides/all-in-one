@@ -157,22 +157,30 @@ class ControladorOrden extends AbstractController{
         }
     }
 
-    function orderConfirmation(){
-        $rol=$_SESSION['rol'];
-        switch($rol){
-            case 'cajero':
-                // TODO: Implementar el código para procesar la orden de compra y generar el número de orden
-            default:
-                return $this->render('errors/errorAcceso.html.twig');
+    function obtenerIngresosBrutosProd($rol, $tipPeriodo){
+        try{
+            $fechaActual = $this->obtenerFechaHoraActual();
+            $dtActual = new DateTime($fechaActual);
+            switch($tipPeriodo){
+                case'mensual':
+                    $dtMesAntes = $dtActual->modify('-1 month');
+                    $fechaMesAntes = $dtMesAntes->format('Y-m-d H:i:s');
+                    return Orden::obtenerIngresosBrutosProd($rol, $fechaActual, $fechaMesAntes);
+                default:
+                    throw new Exception("Tipo de período no válido.");
+            }
+        } catch(Exception $e){
+            throw $e->getMessage();
         }
+
     }
 
-    private function obtenerFechaHoraActual(){
+    private function obtenerFechaHoraActual(): String{
         $uruguayTimezone = new DateTimeZone('America/Montevideo');
-        $dtActual = new DateTime('now', $uruguayTimezone);
+        $fechaActual = new DateTime('now', $uruguayTimezone);
 
         // Formatear la fecha
-        return $dtActual->format('Y-m-d H:i:s');
+        return $fechaActual->format('Y-m-d H:i:s');
     }
 
     private function validarFormatoIds($idsRecibidos){

@@ -258,11 +258,6 @@ submitOrder:
   controller: Sigae\Controllers\ControladorOrden::submitOrder
   methods: POST
 
-orderConfirmation:
-  path: /orderConfirmation
-  controller: Sigae\Controllers\ControladorOrden::orderConfirmation
-  methods: GET
-
 # Gestion de funcionarios
 employeeManagement:
   path: /employeeManagement
