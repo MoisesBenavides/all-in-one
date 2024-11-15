@@ -153,15 +153,18 @@ class Orden{
                 throw new Exception("No se puede conectar con la base de datos.");
             }
 
-            $stmt = $conn->prepare('WHERE dp. id_orden IN (SELECT o.id 
-                                    FROM orden o 
-                                    WHERE o.estado_pago = "pago" AND (
-                                        o.fecha_orden <= :fecha_actual AND o.fecha_orden >= :fecha_ini))');
+            $stmt = $conn->prepare('SELECT dp.id_producto
+                                    FROM detalle_orden_producto dp
+                                    WHERE dp.id_orden IN (
+                                        SELECT o.id 
+                                        FROM orden o 
+                                        WHERE o.estado_pago = "pago" AND (
+                                            o.fecha_orden <= :fecha_actual AND o.fecha_orden >= :fecha_ini))');
             $stmt->execute();
 
-            $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $ingresosBrutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            return $neumaticos;
+            return $ingresosBrutos;
 
         } catch(Exception $e){
             throw new Exception("Error al obtener ingresos de productos: ".$e->getMessage());
