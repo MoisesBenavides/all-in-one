@@ -146,6 +146,34 @@ class Orden{
         }
     }
         
+    public static function obtenerIngresosBrutosProd($rol, $fechaActual, $fechaMesAntes){
+        try{
+            $conn = conectarDB($rol);
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
+
+            $stmt = $conn->prepare('WHERE dp. id_orden IN (SELECT o.id 
+                                    FROM orden o 
+                                    WHERE o.estado_pago = "pago" AND (
+                                        o.fecha_orden <= :fecha_actual AND o.fecha_orden >= :fecha_ini))');
+            $stmt->execute();
+
+            $neumaticos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $neumaticos;
+
+        } catch(Exception $e){
+            throw new Exception("Error al obtener ingresos de productos: ".$e->getMessage());
+            return;
+        } finally {
+            $conn = null;
+        }
+
+
+
+    }
+
     public function getOrdenes(){
     }
     public function getProductosIncluidos(){
