@@ -112,7 +112,7 @@
                     
                     <div class="w-full p-6 flex flex-col gap-3">
                         <p class="text-base font-bold text-black">Cantidad de vendidos: {{ producto.cant_vendidos }}</p>
-                        <p class="text-base font-bold text-black">Ingreso bruto: {{ producto.ingreso_bruto }}</p>
+                        <p class="text-base font-bold text-black">Ingreso bruto: ${{ producto.ingreso_bruto }}</p>
                         <p class="text-base text-gray-600">{{ producto.marca }}</p>
                         
                         {% if producto.nombre is defined and producto.nombre %}
