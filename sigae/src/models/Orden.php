@@ -153,23 +153,29 @@ class Orden{
                 throw new Exception("No se puede conectar con la base de datos.");
             }
 
-            $stmt = $conn->prepare('SELECT SUM(p.precio * dp.cantidad) ingresos_brutos
-                                    FROM detalle_orden_producto dp
-                                    JOIN producto p ON dp.id_producto = p.id
+            $stmt = $conn->prepare('SELECT  p.id, p.marca, p.precio, p.archivado, 
+                                            n.modelo, n.tamano, n.tipo, op.nombre, 
+                                            SUM(dp.cantidad) AS cant_vendidos, SUM(p.precio * dp.cantidad) AS ingreso_bruto 
+                                    FROM detalle_orden_producto dp 
+                                    JOIN producto p ON dp.id_producto = p.id 
+                                    LEFT JOIN neumatico n ON p.id = n.id_producto 
+                                    LEFT JOIN otro_producto op ON p.id = op.id_producto 
                                     WHERE dp.id_orden IN (
                                         SELECT o.id 
                                         FROM orden o 
                                         WHERE o.estado_pago = "pago" 
                                         AND o.fecha_orden <= :fecha_fin 
                                         AND o.fecha_orden >= :fecha_ini
-                                    )');
+                                    ) 
+                                    GROUP BY p.id 
+                                    ORDER BY ingreso_bruto DESC');
 
             $stmt->bindParam(':fecha_fin', $fechaFin);
             $stmt->bindParam(':fecha_ini', $fechaIni);
 
             $stmt->execute();
 
-            $ingresosBrutos = $stmt->fetch(PDO::FETCH_COLUMN);
+            $ingresosBrutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $ingresosBrutos;
 
