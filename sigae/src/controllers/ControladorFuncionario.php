@@ -190,18 +190,23 @@ class ControladorFuncionario extends AbstractController {
                 try{
                     $this->controladorOrden = new ControladorOrden();
 
-                    // Obtener ingresos brutos, por predeterminado, mensual
-                    $ingresosBrutosProd = $this->controladorOrden->obtenerIngresosBrutosProd($rol, 'mensual');
+                    // Obtener información de ventas de productos, por predeterminado, mensual
+                    $infoPorProd = $this->controladorOrden->obtenerIngresosBrutosProd($rol, 'mensual');
 
-                    $reporteVentasProd = null;
+                    // Obtener total de ingresos brutos
+                    $ingresosBrutosTotal = 0;
+                    foreach($infoPorProd as $producto){
+                        $ingresosBrutosTotal =+ $producto['ingreso_bruto'];
+                    }
 
                     return $this->render('employee/manager/reports/ventasProducto.html.twig', [
                         'response' => $response,
-                        'reporteVentasProd' => $reporteVentasProd
+                        'ingresosBrutosTotal' => $ingresosBrutosTotal,
+                        'productos' => $infoPorProd
                     ]);
 
                 } catch(Exception $e){
-                    $response['errors'][] = "Error obteniendo los servicios disponibles: ".$e->getMessage();
+                    $response['errors'][] = "Error obteniendo reporte de ventas de productos: ".$e->getMessage();
                 }
                 return $this->render('employee/manager/reportes.html.twig', [
                     'response' => $response
