@@ -196,7 +196,7 @@ class ControladorFuncionario extends AbstractController {
                     // Obtener total de ingresos brutos
                     $ingresosBrutosTotal = 0;
                     foreach($infoPorProducto as $producto){
-                        $ingresosBrutosTotal =+ $producto['ingreso_bruto'];
+                        $ingresosBrutosTotal += $producto['ingreso_bruto'];
                     }
 
                     return $this->render('employee/manager/reports/ventasProducto.html.twig', [
