@@ -124,7 +124,9 @@
                         {% endif %}
 
                         <p class="text-base text-gray-600">{{ producto.id }}</p>
-                        <p class="text-base text-red-600">{{ producto.archivado ?? Producto Archivado}}</p>
+                        {% if producto.archivado == 1 %}
+                            <p class="text-base text-red-600">Producto Archivado</p>
+                        {% endif %}
                         <p class="mt-auto text-2xl font-bold text-black">${{ producto.precio }}</p>                            
                     </div>
                 </div>
