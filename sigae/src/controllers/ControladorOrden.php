@@ -164,7 +164,8 @@ class ControladorOrden extends AbstractController{
             switch($tipPeriodo){
                 case'mensual':
                     // Obtiene el inicio del mes anterior
-                    $principioMes = $dtActual->modify('-1 month');
+                    // $principioMes = $dtActual->modify('-1 month');
+                    $principioMes = $dtActual;
                     $principioMes->modify('first day of this month');
                     $fechaIni = $principioMes->format('Y-m-d H:i:s');
 
@@ -180,7 +181,11 @@ class ControladorOrden extends AbstractController{
         } catch(Exception $e){
             throw $e->getMessage();
         }
+    }
 
+    function obtenerIngresosBrutosReserva($rol, $tipPeriodo){
+        $infoPorReserva = [];
+        return $infoPorReserva;
     }
 
     private function obtenerFechaHoraActual(): String{
