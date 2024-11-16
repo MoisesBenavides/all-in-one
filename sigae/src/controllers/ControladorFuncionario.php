@@ -187,10 +187,11 @@ class ControladorFuncionario extends AbstractController {
         $rol=$_SESSION['rol'];
         switch($rol){
             case 'gerente':
-                try{                    
+                try{
                     $this->controladorOrden = new ControladorOrden();
-                    $ingresosProd = $this->controladorOrden->obtenerIngresosBrutosProd($rol, 'mensual');
-                    
+
+                    // Obtener ingresos brutos, por predeterminado, mensual
+                    $ingresosBrutosProd = $this->controladorOrden->obtenerIngresosBrutosProd($rol, 'mensual');
 
                     $reporteVentasProd = null;
 

@@ -146,23 +146,30 @@ class Orden{
         }
     }
         
-    public static function obtenerIngresosBrutosProd($rol, $fechaActual, $fechaMesAntes){
+    public static function obtenerIngresosBrutosProd($rol, $fechaIni, $fechaFin){
         try{
             $conn = conectarDB($rol);
             if($conn === false){
                 throw new Exception("No se puede conectar con la base de datos.");
             }
 
-            $stmt = $conn->prepare('SELECT dp.id_producto
+            $stmt = $conn->prepare('SELECT SUM(p.precio * dp.cantidad) ingresos_brutos
                                     FROM detalle_orden_producto dp
+                                    JOIN producto p ON dp.id_producto = p.id
                                     WHERE dp.id_orden IN (
                                         SELECT o.id 
                                         FROM orden o 
-                                        WHERE o.estado_pago = "pago" AND (
-                                            o.fecha_orden <= :fecha_actual AND o.fecha_orden >= :fecha_ini))');
+                                        WHERE o.estado_pago = "pago" 
+                                        AND o.fecha_orden <= :fecha_fin 
+                                        AND o.fecha_orden >= :fecha_ini
+                                    )');
+
+            $stmt->bindParam(':fecha_fin', $fechaFin);
+            $stmt->bindParam(':fecha_ini', $fechaIni);
+
             $stmt->execute();
 
-            $ingresosBrutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $ingresosBrutos = $stmt->fetch(PDO::FETCH_COLUMN);
 
             return $ingresosBrutos;
 

@@ -163,9 +163,15 @@ class ControladorOrden extends AbstractController{
             $dtActual = new DateTime($fechaActual);
             switch($tipPeriodo){
                 case'mensual':
-                    $dtMesAntes = $dtActual->modify('-1 month');
-                    $fechaMesAntes = $dtMesAntes->format('Y-m-d H:i:s');
-                    return Orden::obtenerIngresosBrutosProd($rol, $fechaActual, $fechaMesAntes);
+                    // Obtiene el inicio del mes anterior
+                    $principioMes = $dtActual->modify('-1 month');
+                    $principioMes->modify('first day of this month');
+
+                    // Obtiene el último segundo del mes anterior
+                    $finMes = clone $principioMes;
+                    $finMes->modify('+1 month -1 second');
+
+                    return Orden::obtenerIngresosBrutosProd($rol, $principioMes, $finMes);
                 default:
                     throw new Exception("Tipo de período no válido.");
             }
