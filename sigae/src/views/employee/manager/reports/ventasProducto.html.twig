@@ -118,12 +118,12 @@
                         {% if producto.nombre is defined and producto.nombre %}
                             <p class="text-base text-gray-600">{{ producto.nombre }}</p>
                         {% elseif producto.modelo is defined and producto.modelo %}
-                            <p class="text-base text-gray-600">{{ producto.modelo }}</p>
-                            <p class="text-base text-gray-600">{{ producto.tamano }}</p>
-                            <p class="text-base text-gray-600">{{ producto.tipo }}</p>                            
+                            <p class="text-base text-gray-600">Modelo: {{ producto.modelo }}</p>
+                            <p class="text-base text-gray-600">Tamaño: {{ producto.tamano }}</p>
+                            <p class="text-base text-gray-600">Tipo: {{ producto.tipo }}</p>                            
                         {% endif %}
 
-                        <p class="text-base text-gray-600">{{ producto.id }}</p>
+                        <p class="text-base text-gray-600">ID: {{ producto.id }}</p>
                         {% if producto.archivado == 1 %}
                             <p class="text-base text-red-600">Producto Archivado</p>
                         {% endif %}
