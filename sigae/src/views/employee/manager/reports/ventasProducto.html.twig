@@ -118,7 +118,7 @@
                         {% if producto.nombre is defined and producto.nombre %}
                             <p class="text-base text-gray-600">{{ producto.nombre }}</p>
                         {% elseif producto.modelo is defined and producto.modelo %}
-                            <p class="text-base text-gray-600">Modelo: {{ producto.modelo }}</p>
+                            <p class="text-base text-gray-600">{{ producto.modelo }}</p>
                             <p class="text-base text-gray-600">Tamaño: {{ producto.tamano }}</p>
                             <p class="text-base text-gray-600">Tipo: {{ producto.tipo }}</p>                            
                         {% endif %}
