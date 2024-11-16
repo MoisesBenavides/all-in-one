@@ -231,7 +231,7 @@ class ControladorFuncionario extends AbstractController {
                     // Obtener total de ingresos brutos
                     $ingresosBrutosTotal = 0;
                     foreach($infoPorReserva as $reserva){
-                        $ingresosBrutosTotal =+ $reserva['ingreso_bruto'];
+                        $ingresosBrutosTotal += $reserva['ingreso_bruto'];
                     }
 
                     return $this->render('employee/manager/reports/ventasParking.html.twig', [
