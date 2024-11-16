@@ -191,18 +191,18 @@ class ControladorFuncionario extends AbstractController {
                     $this->controladorOrden = new ControladorOrden();
 
                     // Obtener información de ventas de productos, por predeterminado, mensual
-                    $infoPorProd = $this->controladorOrden->obtenerIngresosBrutosProd($rol, 'mensual');
+                    $infoPorProducto = $this->controladorOrden->obtenerIngresosBrutosProd($rol, 'mensual');
 
                     // Obtener total de ingresos brutos
                     $ingresosBrutosTotal = 0;
-                    foreach($infoPorProd as $producto){
+                    foreach($infoPorProducto as $producto){
                         $ingresosBrutosTotal =+ $producto['ingreso_bruto'];
                     }
 
                     return $this->render('employee/manager/reports/ventasProducto.html.twig', [
                         'response' => $response,
                         'ingresosBrutosTotal' => $ingresosBrutosTotal,
-                        'productos' => $infoPorProd
+                        'productos' => $infoPorProducto
                     ]);
 
                 } catch(Exception $e){
@@ -217,10 +217,35 @@ class ControladorFuncionario extends AbstractController {
     }
 
     function showParkingSalesReport(): Response{
+        $response=['success' => false, 'errors' => []];
+
         $rol=$_SESSION['rol'];
         switch($rol){
             case 'gerente':
-                return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
+                try{
+                    $this->controladorOrden = new ControladorOrden();
+
+                    // Obtener información de ventas de productos, por predeterminado, mensual
+                    $infoPorReserva = $this->controladorOrden->obtenerIngresosBrutosReserva($rol, 'mensual');
+
+                    // Obtener total de ingresos brutos
+                    $ingresosBrutosTotal = 0;
+                    foreach($infoPorReserva as $reserva){
+                        $ingresosBrutosTotal =+ $reserva['ingreso_bruto'];
+                    }
+
+                    return $this->render('employee/manager/reports/ventasParking.html.twig', [
+                        'response' => $response,
+                        'ingresosBrutosTotal' => $ingresosBrutosTotal,
+                        'reservas' => $infoPorReserva
+                    ]);
+
+                } catch(Exception $e){
+                    $response['errors'][] = "Error obteniendo reporte de estacionamiento: ".$e->getMessage();
+                }
+                return $this->render('employee/manager/reportes.html.twig', [
+                    'response' => $response
+                ]);
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }
