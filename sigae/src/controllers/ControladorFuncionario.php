@@ -193,15 +193,19 @@ class ControladorFuncionario extends AbstractController {
                     // Obtener información de ventas de productos, por predeterminado, mensual
                     $infoPorProducto = $this->controladorOrden->obtenerIngresosBrutosProd($rol, 'mensual');
 
-                    // Obtener total de ingresos brutos
+                    // Obtener información adicional para el reporte
                     $ingresosBrutosTotal = 0;
+                    $cantidadVendidos = 0;
+
                     foreach($infoPorProducto as $producto){
                         $ingresosBrutosTotal += $producto['ingreso_bruto'];
+                        $cantidadVendidos += $producto['cant_vendidos'];
                     }
 
                     return $this->render('employee/manager/reports/ventasProducto.html.twig', [
                         'response' => $response,
                         'ingresosBrutosTotal' => $ingresosBrutosTotal,
+                        'cantidadVendidos' => $cantidadVendidos,
                         'productos' => $infoPorProducto
                     ]);
 
