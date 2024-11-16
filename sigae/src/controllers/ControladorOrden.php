@@ -173,7 +173,6 @@ class ControladorOrden extends AbstractController{
                     $finMes->modify('+1 month -1 second');
                     $fechaFin = $finMes->format('Y-m-d H:i:s');
 
-                    // Obtiene la información del modelo
                     return Orden::obtenerIngresosBrutosProd($rol, $fechaIni, $fechaFin);
                 default:
                     throw new Exception("Tipo de período no válido.");
