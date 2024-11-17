@@ -228,6 +228,47 @@ class Orden{
 
     }
 
+    public static function obtenerIngresosBrutosTaller($rol, $fechaIni, $fechaFin){
+        try{
+            $conn = conectarDB($rol);
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
+
+            $stmt = $conn->prepare('SELECT  s.id, s.matricula AS mat_vehiculo, s.precio AS ingreso_bruto, s.estado, 
+                                            t.tipo, t.descripcion, 
+                                            v.marca AS marca_vehiculo, v.modelo AS modelo_vehiculo, v.tipo AS tipo_vehiculo 
+                                    FROM detalle_orden_servicio ds 
+                                    JOIN servicio s ON ds.id_servicio = s.id 
+                                    JOIN taller t ON s.id = t.id_servicio 
+                                    JOIN vehiculo v ON s.matricula = v.matricula 
+                                    WHERE ds.id_orden IN (
+                                        SELECT id 
+                                        FROM orden 
+                                        WHERE estado_pago = "pago" 
+                                        AND fecha_orden <= :fecha_fin 
+                                        AND fecha_orden >= :fecha_ini
+                                    ) 
+                                    ORDER BY ingreso_bruto DESC');
+
+            $stmt->bindParam(':fecha_fin', $fechaFin);
+            $stmt->bindParam(':fecha_ini', $fechaIni);
+
+            $stmt->execute();
+
+            $ingresosBrutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $ingresosBrutos;
+
+        } catch(Exception $e){
+            throw new Exception("Error al obtener ingresos de productos: ".$e->getMessage());
+            return;
+        } finally {
+            $conn = null;
+        }
+
+    }
+
     public function getOrdenes(){
     }
     public function getProductosIncluidos(){

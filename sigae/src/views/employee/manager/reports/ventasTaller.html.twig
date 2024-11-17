@@ -61,7 +61,7 @@
             border: 1px solid #e5e7eb;
         }
 
-        #reservasContainer {
+        #serviciosContainer {
             min-height: 200px;
         }
     </style>
@@ -76,24 +76,24 @@
             <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosBrutosTotal }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
-            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Reservas pagadas</h1>
-            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">{{ detallesReporte.cantidadReservas }}</h1>
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Servicios pagadas</h1>
+            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">{{ detallesReporte.cantidadServicios }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
-            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos de reservas regulares</h1>
-            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosReservasRegulares }}</h1>
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos de servicios regulares</h1>
+            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosServiciosRegulares }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
-            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Reservas regulares realizadas</h1>
-            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">{{ detallesReporte.reservasRegulares }}</h1>
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Servicios regulares realizadas</h1>
+            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">{{ detallesReporte.serviciosRegulares }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
-            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos de reservas a largo plazo</h1>
-            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosReservasLargoPlazo }}</h1>
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos de servicios a largo plazo</h1>
+            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosServiciosLargoPlazo }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
-            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Reservas a largo plazo realizadas</h1>
-            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">{{ detallesReporte.reservasLargoPlazo }}</h1>
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Servicios a largo plazo realizadas</h1>
+            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">{{ detallesReporte.serviciosLargoPlazo }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
             <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos por tipo de vehículo</h1>
@@ -105,7 +105,7 @@
         </div>
 
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
-            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Reservas por tipo de vehículo</h1>
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Servicios por tipo de vehículo</h1>
             {% for tipo, ingresos in detallesReporte.ingresosPorTipoVehiculo %}
                 <h1 class="text-center text-black text-3xl md:text-4xl font-bold">
                     {{ tipo|capitalize }}: ${{ ingresos|number_format(2, '.', ',') }}
@@ -120,7 +120,7 @@
                     <input 
                         type="text" 
                         id="buscar" 
-                        placeholder="Buscar detalles de reserva..." 
+                        placeholder="Buscar detalles de servicio..." 
                         class="w-full h-14 px-6 pr-12 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300"
                     >
                     <img 
@@ -133,23 +133,17 @@
             </div>
         </div>
         
-        {# Contenedor de Reservas #}
-        <div id="reservasContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {% for reserva in detallesReporte.infoReservas %}
-                <div class="booking flex flex-col bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">                    
+        {# Contenedor de Servicios #}
+        <div id="serviciosContainer" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for servicio in detallesReporte.infoServicios %}
+                <div class="service flex flex-col bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">                    
                     <div class="w-full p-6 flex flex-col gap-3">
-                        <p class="text-base font-bold text-black">Ingreso bruto: ${{ reserva.ingreso_bruto }}</p>
-                        <p class="text-base text-gray-600">ID: {{ reserva.id }}</p>
-                        <p class="text-base text-gray-600">Tipo: 
-                            {% if reserva.largo_plazo == 0 %}
-                                Regular
-                            {% else %}
-                                Largo Plazo
-                            {% endif %}
-                        </p>
-                        <p class="text-base text-gray-600">Estado: {{ reserva.estado }}</p>
-                        <p class="text-base text-gray-600">Plaza: {{ reserva.tipo_plaza }}</p>
-                        <p class="text-base text-gray-600">Matrícula asoc.: {{ reserva.mat_vehiculo }}</p>
+                        <p class="text-base font-bold text-black">Ingreso bruto: ${{ servicio.ingreso_bruto }}</p>
+                        <p class="text-base text-gray-600">ID: {{ servicio.id }}</p>
+                        <p class="text-base text-gray-600">Tipo: {{ servicio.tipo }}</p>
+                        <p class="text-base text-gray-600">Estado: {{ servicio.estado }}</p>
+                        <p class="text-base text-gray-600">Plaza: {{ servicio.tipo_plaza }}</p>
+                        <p class="text-base text-gray-600">Matrícula asoc.: {{ servicio.mat_vehiculo }}</p>
                     </div>
                 </div>
             {% endfor %}
@@ -157,13 +151,13 @@
 
         {# Mensajes de estado #}
         <div id="noResults" class="hidden no-results mt-8">
-            <p class="text-gray-600 text-lg">No se encontraron reservas que coincidan con tu búsqueda.</p>
+            <p class="text-gray-600 text-lg">No se encontraron servicios que coincidan con tu búsqueda.</p>
         </div>
 
         {# Botón Ver Más #}
         <div class="flex justify-center mt-12">
             <button id="verMas" class="btn-ver-mas hidden">
-                Ver más reservas
+                Ver más servicios
             </button>
         </div>
     </div>
@@ -172,52 +166,52 @@
     document.addEventListener('DOMContentLoaded', function() {
         const inputBuscar = document.getElementById('buscar');
         const searchIcon = document.getElementById('searchIcon');
-        const reservasContainer = document.getElementById('reservasContainer');
-        const reservas = document.querySelectorAll('.booking');
+        const serviciosContainer = document.getElementById('serviciosContainer');
+        const servicios = document.querySelectorAll('.service');
         const verMasBtn = document.getElementById('verMas');
         const noResults = document.getElementById('noResults');
         
-        let reservasMostrados = 50;
-        let reservasVisiblesTotales = 0;
+        let serviciosMostrados = 50;
+        let serviciosVisiblesTotales = 0;
 
         function actualizarVisibilidad() {
-            let reservasVisibles = 0;
-            reservasVisiblesTotales = 0;
+            let serviciosVisibles = 0;
+            serviciosVisiblesTotales = 0;
             const textoBusqueda = inputBuscar.value.toLowerCase();
 
-            reservas.forEach((reserva, index) => {
-                const textoReserva = reserva.textContent.toLowerCase();
-                const coincideBusqueda = textoReserva.includes(textoBusqueda);
+            servicios.forEach((servicio, index) => {
+                const textoServicio = servicio.textContent.toLowerCase();
+                const coincideBusqueda = textoServicio.includes(textoBusqueda);
                 
                 if (coincideBusqueda) {
-                    reservasVisiblesTotales++;
-                    if (reservasVisiblesTotales <= reservasMostrados) {
-                        reserva.classList.remove('hidden');
-                        reservasVisibles++;
+                    serviciosVisiblesTotales++;
+                    if (serviciosVisiblesTotales <= serviciosMostrados) {
+                        servicio.classList.remove('hidden');
+                        serviciosVisibles++;
                     } else {
-                        reserva.classList.add('hidden');
+                        servicio.classList.add('hidden');
                     }
                 } else {
-                    reserva.classList.add('hidden');
+                    servicio.classList.add('hidden');
                 }
             });
 
             // Mostrar/ocultar mensaje de no resultados
-            noResults.classList.toggle('hidden', reservasVisibles > 0);
+            noResults.classList.toggle('hidden', serviciosVisibles > 0);
             
             // Actualizar visibilidad del botón Ver Más
-            verMasBtn.classList.toggle('hidden', reservasVisiblesTotales <= reservasMostrados);
+            verMasBtn.classList.toggle('hidden', serviciosVisiblesTotales <= serviciosMostrados);
         }
 
         // Evento de búsqueda
         inputBuscar.addEventListener('input', function() {
-            reservasMostrados = 50; // Reset al buscar
+            serviciosMostrados = 50; // Reset al buscar
             actualizarVisibilidad();
         });
 
         // Click en botón Ver Más
         verMasBtn.addEventListener('click', function() {
-            reservasMostrados += 50;
+            serviciosMostrados += 50;
             actualizarVisibilidad();
         });
 

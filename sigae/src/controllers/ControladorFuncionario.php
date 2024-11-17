@@ -2,6 +2,7 @@
 
 namespace Sigae\Controllers;
 use Sigae\Models\Funcionario;
+use Sigae\Models\TipoVehiculo;
 use Sigae\Controllers\ControladorProducto;
 use Sigae\Controllers\ControladorTaller;
 use Sigae\Controllers\ControladorOrden;
@@ -206,7 +207,6 @@ class ControladorFuncionario extends AbstractController {
                     }
 
                     $detallesReporte = [
-                        'fecha' => $fechaActual,
                         'ingresosBrutosTotal' => $ingresosBrutosTotal,
                         'cantidadVendidos' => $cantidadVendidos,
                         'infoProductos' => $infoPorProducto
@@ -244,37 +244,33 @@ class ControladorFuncionario extends AbstractController {
                     // Obtener información adicional para el reporte
                     $ingresosBrutosTotal = 0;
                     $cantidadReservas = 0;
-
-                    // Datos filtrando el tipo de vehículo asociado a las reservas
-                    $cantidadPorTipoVehiculo = [
-                        'moto' => 0,
-                        'auto' => 0,
-                        'camioneta' => 0,
-                        'camion' => 0,
-                        'utilitario' => 0
-                    ];
-
-                    $ingresosPorTipoVehiculo = [
-                        'moto' => 0,
-                        'auto' => 0,
-                        'camioneta' => 0,
-                        'camion' => 0,
-                        'utilitario' => 0
-                    ];
-
+                    
                     // Cantidad de reservas e ingresos de parking por tipo
                     $reservasRegulares = 0;
                     $ingresosReservasRegulares = 0;
                     $reservasLargoPlazo = 0;
                     $ingresosReservasLargoPlazo = 0;
 
-                    foreach($infoPorReserva as $reserva){
+
+                    // Datos filtrando el tipo de vehículo asociado a las reservas
+                    // Inicializar arreglos usando el enum
+                    $cantidadPorTipoVehiculo = [];
+                    $ingresosPorTipoVehiculo = [];
+
+                    // Poblar los arreglos con los casos del enum
+                    foreach (TipoVehiculo::cases() as $tipo) {
+                        $cantidadPorTipoVehiculo[$tipo->value] = 0;
+                        $ingresosPorTipoVehiculo[$tipo->value] = 0;
+                    }
+
+                    // Iterar sobre los datos de las reservas y actualizar los contadores
+                    foreach ($infoPorReserva as $reserva) {
                         $ingresosBrutosTotal += $reserva['ingreso_bruto'];
                         $cantidadReservas++;
 
-                        // Verificar el tipo de vehículo y actualizar los contadores
+                        // Parsear el tipo de vehículo a un caso del enum si es válido
                         $tipoVehiculo = $reserva['tipo_vehiculo'];
-                        if (array_key_exists($tipoVehiculo, $cantidadPorTipoVehiculo)) {
+                        if (TipoVehiculo::tryFrom($tipoVehiculo) !== null) {
                             $cantidadPorTipoVehiculo[$tipoVehiculo]++;
                             $ingresosPorTipoVehiculo[$tipoVehiculo] += $reserva['ingreso_bruto'];
                         }
@@ -317,10 +313,93 @@ class ControladorFuncionario extends AbstractController {
     }
 
     function showWorkshopServicesSalesReport(): Response{
+        $response=['success' => false, 'errors' => []];
+
         $rol=$_SESSION['rol'];
         switch($rol){
             case 'gerente':
-                return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
+                try{
+                    $this->controladorOrden = new ControladorOrden();
+                    $fechaActual = $this->obtenerFechaHoraActual();
+
+                    // Obtener información de ventas de productos, por predeterminado, mensual
+                    $infoPorServicio = $this->controladorOrden->obtenerIngresosBrutosTaller($rol, 'ultimo_mes', $fechaActual);
+
+                    // Obtener información adicional para el reporte
+                    $ingresosBrutosTotal = 0;
+                    $cantidadServicios = 0;
+
+                    // Obtener tipos o códigos de servicio
+                    $this->controladorTaller = new ControladorTaller();
+                    $serviciosDisp = $this->controladorTaller->getServiciosDisp();
+
+                    // Datos filtrando el tipo de servicio asociado a la reserva de servicio de taller                    
+                    $cantidadPorTipoServicio = [];
+                    $ingresosPorTipoServicio = [];
+
+                    // Inicializar arreglos con los tipos de servicios disponibles
+                    foreach ($serviciosDisp as $codigo => $servicio){
+                        $cantidadPorTipoServicio[$codigo] = [
+                            'descripcion' => $servicio['descripcion'],
+                            'cantidad' => 0
+                        ];
+                        $ingresosPorTipoServicio[$codigo] = [
+                            'descripcion' => $servicio['descripcion'],
+                            'ingresos_brutos' => 0
+                        ];
+                    }
+
+                    // Datos filtrando el tipo de vehículo asociado a los servicios
+                    // Inicializar arreglos usando el enum
+                    $cantidadPorTipoVehiculo = [];
+                    $ingresosPorTipoVehiculo = [];
+
+                    // Poblar los arreglos con los casos del enum
+                    foreach (TipoVehiculo::cases() as $tipo) {
+                        $cantidadPorTipoVehiculo[$tipo->value] = 0;
+                        $ingresosPorTipoVehiculo[$tipo->value] = 0;
+                    }
+
+                    // Itera sobre datos de los servicios y actualiza los contadores
+                    foreach ($infoPorServicio as $servicio){
+                        $ingresosBrutosTotal += $servicio['ingreso_bruto'];
+                        $cantidadServicios++;
+
+                        // Parsear el tipo de vehículo a un caso del enum, si es valido
+                        $tipoVehiculo = $servicio['tipo_vehiculo'];
+                        if (TipoVehiculo::tryFrom($tipoVehiculo) !== null) {
+                            $cantidadPorTipoVehiculo[$tipoVehiculo]++;
+                            $ingresosPorTipoVehiculo[$tipoVehiculo] += $servicio['ingreso_bruto'];
+                        }
+
+                        $tipo = $servicio['tipo'];
+                        if (array_key_exists($tipo, $cantidadPorTipoServicio)) {
+                            $cantidadPorTipoServicio[$tipo]['cantidad']++;
+                            $ingresosPorTipoServicio[$tipo]['ingresos_brutos'] += $servicio['ingreso_bruto'];
+                        }
+                    }
+
+                    $detallesReporte = [
+                        'ingresosBrutosTotal' => $ingresosBrutosTotal,
+                        'cantidadServicios' => $cantidadServicios,
+                        'cantidadPorTipoServicio' => $cantidadPorTipoServicio,
+                        'ingresosPorTipoServicio' => $ingresosPorTipoServicio,
+                        'cantidadPorTipoVehiculo' => $cantidadPorTipoVehiculo,
+                        'ingresosPorTipoVehiculo' => $ingresosPorTipoVehiculo,
+                        'infoServicios' => $infoPorServicio
+                    ];
+
+                    return $this->render('employee/manager/reports/ventasTaller.html.twig', [
+                        'response' => $response,
+                        'detallesReporte' => $detallesReporte
+                    ]);
+
+                } catch(Exception $e){
+                    $response['errors'][] = "Error obteniendo reporte de estacionamiento: ".$e->getMessage();
+                }
+                return $this->render('employee/manager/reportes.html.twig', [
+                    'response' => $response
+                ]);
             default:
                 return $this->render('errors/errorAcceso.html.twig');
         }

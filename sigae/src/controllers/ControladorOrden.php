@@ -206,6 +206,31 @@ class ControladorOrden extends AbstractController{
         }
     }
 
+    function obtenerIngresosBrutosTaller($rol, $tipPeriodo, $fechaActual){
+        try{
+            $dtActual = new DateTime($fechaActual);
+            switch($tipPeriodo){
+                case 'ultimo_mes':
+                    // Obtiene el inicio del mes anterior
+                    // $principioMes = $dtActual->modify('-1 month');
+                    $principioMes = $dtActual;
+                    $principioMes->modify('first day of this month');
+                    $fechaIni = $principioMes->format('Y-m-d H:i:s');
+
+                    // Obtiene el último segundo del mes anterior
+                    $finMes = clone $principioMes;
+                    $finMes->modify('+1 month -1 second');
+                    $fechaFin = $finMes->format('Y-m-d H:i:s');
+
+                    return Orden::obtenerIngresosBrutosTaller($rol, $fechaIni, $fechaFin);
+                default:
+                    throw new Exception("Tipo de período no válido.");
+            }
+        } catch(Exception $e){
+            throw $e->getMessage();
+        }
+    }
+
     private function obtenerFechaHoraActual(): String{
         $uruguayTimezone = new DateTimeZone('America/Montevideo');
         $fechaActual = new DateTime('now', $uruguayTimezone);
