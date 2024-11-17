@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use DateTimeZone;
+use DateTime;
 use PDOException;
 use Exception;
 
@@ -189,9 +191,10 @@ class ControladorFuncionario extends AbstractController {
             case 'gerente':
                 try{
                     $this->controladorOrden = new ControladorOrden();
+                    $fechaActual = $this->obtenerFechaHoraActual();
 
                     // Obtener información de ventas de productos, por predeterminado, mensual
-                    $infoPorProducto = $this->controladorOrden->obtenerIngresosBrutosProd($rol, 'mensual');
+                    $infoPorProducto = $this->controladorOrden->obtenerIngresosBrutosProd($rol, 'ultimo_mes', $fechaActual);
 
                     // Obtener información adicional para el reporte
                     $ingresosBrutosTotal = 0;
@@ -3014,6 +3017,14 @@ class ControladorFuncionario extends AbstractController {
                 return $this->render('errors/errorAcceso.html.twig');
         }
         
+    }
+
+    private function obtenerFechaHoraActual(): String{
+        $uruguayTimezone = new DateTimeZone('America/Montevideo');
+        $fechaActual = new DateTime('now', $uruguayTimezone);
+
+        // Formatear la fecha
+        return $fechaActual->format('Y-m-d H:i:s');
     }
 
     private function validarFormAltaFuncionario($usuario, $host, $contrasena){
