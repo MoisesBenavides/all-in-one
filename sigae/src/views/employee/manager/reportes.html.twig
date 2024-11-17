@@ -69,7 +69,51 @@
                 </div>
             </div>
 
-            <!-- Header Ventas u Órdenes -->
+            <!-- Header Reportes de Ventas u Órdenes -->
+            <div class="bg-neutral-400 rounded-2xl shadow-lg mb-8 p-8">
+                <h1 class="text-white text-4xl font-bold text-center">Reportes mesuales en curso</h1>
+            </div>
+            <!-- Informe de ventas de productos en curso -->
+            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                <div class="p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Ventas de productos</h2>
+                    <p class="text-gray-600 mb-6">Consulte los productos más vendidos y más detalles</p>
+                    <a href="{{ path('showProductSales') }}" class="block w-full">
+                        <button 
+                            class="w-full bg-red-600 hover:bg-red-700 text-white text-xl font-semibold py-4 px-6 rounded-xl transition-colors duration-300 flex items-center justify-center gap-2">
+                            Ver reporte
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!-- Informe de ventas de Parking en curso -->
+            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                <div class="p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Ventas de AIO Parking</h2>
+                    <p class="text-gray-600 mb-6">Consulte las ventas de reservas del estacionamiento</p>
+                    <a href="{{ path('showParkingSales') }}" class="block w-full">
+                        <button 
+                            class="w-full bg-red-600 hover:bg-red-700 text-white text-xl font-semibold py-4 px-6 rounded-xl transition-colors duration-300 flex items-center justify-center gap-2">
+                            Ver reporte
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!-- Informes de ventas de Taller en curso -->
+            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                <div class="p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Ventas de servicios del taller</h2>
+                    <p class="text-gray-600 mb-6">Consulte las ventas de servicios realizados del taller de alineación y balanceo</p>
+                    <a href="{{ path('showWorkshopServicesSales') }}" class="block w-full">
+                        <button 
+                            class="w-full bg-red-600 hover:bg-red-700 text-white text-xl font-semibold py-4 px-6 rounded-xl transition-colors duration-300 flex items-center justify-center gap-2">
+                            Ver reporte
+                        </button>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Header Reportes de Ventas u Órdenes mensual anterior -->
             <div class="bg-neutral-400 rounded-2xl shadow-lg mb-8 p-8">
                 <h1 class="text-white text-4xl font-bold text-center">Reportes del mes anterior</h1>
             </div>
@@ -78,7 +122,7 @@
                 <div class="p-8">
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Ventas de productos</h2>
                     <p class="text-gray-600 mb-6">Consulte los productos más vendidos y más detalles</p>
-                    <a href="{{ path('showProductSalesReport') }}" class="block w-full">
+                    <a href="{{ path('showProductSalesLastMonth') }}" class="block w-full">
                         <button 
                             class="w-full bg-red-600 hover:bg-red-700 text-white text-xl font-semibold py-4 px-6 rounded-xl transition-colors duration-300 flex items-center justify-center gap-2">
                             Ver reporte
@@ -91,7 +135,7 @@
                 <div class="p-8">
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Ventas de AIO Parking</h2>
                     <p class="text-gray-600 mb-6">Consulte las ventas de reservas del estacionamiento</p>
-                    <a href="{{ path('showParkingSalesReport') }}" class="block w-full">
+                    <a href="{{ path('showParkingSalesLastMonth') }}" class="block w-full">
                         <button 
                             class="w-full bg-red-600 hover:bg-red-700 text-white text-xl font-semibold py-4 px-6 rounded-xl transition-colors duration-300 flex items-center justify-center gap-2">
                             Ver reporte
@@ -104,7 +148,7 @@
                 <div class="p-8">
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Ventas de servicios del taller</h2>
                     <p class="text-gray-600 mb-6">Consulte las ventas de servicios realizados del taller de alineación y balanceo</p>
-                    <a href="{{ path('showWorkshopServicesSalesReport') }}" class="block w-full">
+                    <a href="{{ path('showWorkshopServicesSalesLastMonth') }}" class="block w-full">
                         <button 
                             class="w-full bg-red-600 hover:bg-red-700 text-white text-xl font-semibold py-4 px-6 rounded-xl transition-colors duration-300 flex items-center justify-center gap-2">
                             Ver reporte
