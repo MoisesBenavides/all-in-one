@@ -97,18 +97,18 @@
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
             <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos por tipo de vehículo</h1>
-            {% for tipo, cantidad in detallesReporte.cantidadPorTipoVehiculo %}
+            {% for tipo, ingresos in detallesReporte.ingresosPorTipoVehiculo %}
                 <h1 class="text-center text-black text-3xl md:text-4xl font-bold">
-                    {{ tipo|capitalize }}: {{ cantidad }}
+                    {{ tipo|capitalize }}: ${{ ingresos|number_format(2, '.', ',') }}
                 </h1>
             {% endfor %}
         </div>
 
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
             <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Reservas por tipo de vehículo</h1>
-            {% for tipo, ingresos in detallesReporte.ingresosPorTipoVehiculo %}
+            {% for tipo, cantidad in detallesReporte.cantidadPorTipoVehiculo %}
                 <h1 class="text-center text-black text-3xl md:text-4xl font-bold">
-                    {{ tipo|capitalize }}: ${{ ingresos|number_format(2, '.', ',') }}
+                    {{ tipo|capitalize }}: {{ cantidad }}
                 </h1>
             {% endfor %}
         </div>
