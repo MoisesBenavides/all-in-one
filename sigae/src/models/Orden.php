@@ -177,9 +177,6 @@ class Orden{
 
             $ingresosBrutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Debug
-            (!empty($ingresosBrutos))? error_log(print_r($ingresosBrutos)) : error_log("No se encontraron ingresos de productos");
-
             return $ingresosBrutos;
 
         } catch(Exception $e){
