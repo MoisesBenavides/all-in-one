@@ -7,7 +7,6 @@ use Sigae\Models\Servicio;
 use Sigae\Models\EstadoPagoOrden;
 use Sigae\Controllers\ControladorProducto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use DateTimeZone;
 use DateTime;
@@ -157,77 +156,47 @@ class ControladorOrden extends AbstractController{
         }
     }
 
-    function obtenerIngresosBrutosProd($rol, $tipPeriodo, $fechaActual){
-        try{
-            $dtActual = new DateTime($fechaActual);
-            switch($tipPeriodo){
-                case 'ultimo_mes':
-                    // Obtiene el inicio del mes anterior
-                    $principioMes = $dtActual->modify('-1 month');
-                    $principioMes->modify('first day of this month');
-                    $fechaIni = $principioMes->format('Y-m-d H:i:s');
-
-                    // Obtiene el último segundo del mes anterior
-                    $finMes = clone $principioMes;
-                    $finMes->modify('+1 month -1 second');
-                    $fechaFin = $finMes->format('Y-m-d H:i:s');
-
-                    return Orden::obtenerIngresosBrutosProd($rol, $fechaIni, $fechaFin);
-                default:
-                    throw new Exception("Tipo de período no válido.");
-            }
-        } catch(Exception $e){
-            throw $e->getMessage();
+    function obtenerIngresosBrutos($rol, $sector, $tipPeriodo, $fechaActual) {
+        try {
+            // Calcular las fechas según el tipo de período
+            list($fechaIni, $fechaFin) = $this->calcularFechasPeriodo($tipPeriodo, $fechaActual);
+    
+            // Obtener los ingresos brutos dependiendo del sector
+            return $this->obtenerIngresosBrutosPorSector($rol, $sector, $fechaIni, $fechaFin);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
-
-    function obtenerIngresosBrutosReserva($rol, $tipPeriodo, $fechaActual){
-        try{
-            $dtActual = new DateTime($fechaActual);
-            switch($tipPeriodo){
-                case 'ultimo_mes':
-                    // Obtiene el inicio del mes anterior
-                    // $principioMes = $dtActual->modify('-1 month');
-                    $principioMes = $dtActual;
-                    $principioMes->modify('first day of this month');
-                    $fechaIni = $principioMes->format('Y-m-d H:i:s');
-
-                    // Obtiene el último segundo del mes anterior
-                    $finMes = clone $principioMes;
-                    $finMes->modify('+1 month -1 second');
-                    $fechaFin = $finMes->format('Y-m-d H:i:s');
-
-                    return Orden::obtenerIngresosBrutosReserva($rol, $fechaIni, $fechaFin);
-                default:
-                    throw new Exception("Tipo de período no válido.");
-            }
-        } catch(Exception $e){
-            throw $e->getMessage();
+    
+    private function calcularFechasPeriodo($tipPeriodo, $fechaActual) {
+        $dtActual = new DateTime($fechaActual);
+        switch ($tipPeriodo) {
+            case 'este_mes':
+                $dtActual->modify('first day of this month');
+                $fechaIni = $dtActual->format('Y-m-d H:i:s');
+                $fechaFin = $fechaActual;
+                break;
+            case 'ultimo_mes':
+                $dtActual->modify('-1 month')->modify('first day of this month');
+                $fechaIni = $dtActual->format('Y-m-d H:i:s');
+                $fechaFin = $dtActual->modify('+1 month -1 second')->format('Y-m-d H:i:s');
+                break;
+            default:
+                throw new Exception("Tipo de período no válido.");
         }
+        return [$fechaIni, $fechaFin];
     }
-
-    function obtenerIngresosBrutosTaller($rol, $tipPeriodo, $fechaActual){
-        try{
-            $dtActual = new DateTime($fechaActual);
-            switch($tipPeriodo){
-                case 'ultimo_mes':
-                    // Obtiene el inicio del mes anterior
-                    // $principioMes = $dtActual->modify('-1 month');
-                    $principioMes = $dtActual;
-                    $principioMes->modify('first day of this month');
-                    $fechaIni = $principioMes->format('Y-m-d H:i:s');
-
-                    // Obtiene el último segundo del mes anterior
-                    $finMes = clone $principioMes;
-                    $finMes->modify('+1 month -1 second');
-                    $fechaFin = $finMes->format('Y-m-d H:i:s');
-
-                    return Orden::obtenerIngresosBrutosTaller($rol, $fechaIni, $fechaFin);
-                default:
-                    throw new Exception("Tipo de período no válido.");
-            }
-        } catch(Exception $e){
-            throw $e->getMessage();
+    
+    private function obtenerIngresosBrutosPorSector($rol, $sector, $fechaIni, $fechaFin) {
+        switch ($sector) {
+            case 'productos':
+                return Orden::obtenerIngresosBrutosProd($rol, $fechaIni, $fechaFin);
+            case 'parking':
+                return Orden::obtenerIngresosBrutosReserva($rol, $fechaIni, $fechaFin);
+            case 'taller':
+                return Orden::obtenerIngresosBrutosTaller($rol, $fechaIni, $fechaFin);
+            default:
+                throw new Exception("Sector no válido.");
         }
     }
 
