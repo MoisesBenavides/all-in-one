@@ -208,9 +208,9 @@ class ControladorOtroProducto extends AbstractController{
     }
 
     private function validarNombre($str, $max) {
-        /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene letras, espacios, tildes, apostrofes o guiones)
+        /* Verifica si la cadena $str cumple con ciertos criterios de caracteres (contiene letras, numeros, espacios, tildes, apostrofes o guiones)
         y si la extension de la cadena es menor o igual al maximo especificado por la variable $max. */
-        return (preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '-]+$/", $str) && strlen($str) <= $max);
+        return (preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9 '-]+$/", $str) && strlen($str) <= $max);
     }
 
     private function validarUpc($upc){
