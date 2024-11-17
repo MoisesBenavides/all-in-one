@@ -76,23 +76,39 @@
             <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosBrutosTotal }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
-            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Servicios pagadas</h1>
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Servicios de taller pagados</h1>
             <h1 class="text-center text-black text-3xl md:text-4xl font-bold">{{ detallesReporte.cantidadServicios }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
-            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos por tipo de vehículo</h1>
-            {% for tipo, cantidad in detallesReporte.cantidadPorTipoVehiculo %}
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos por tipo de servicio</h1>
+            {% for codigo, datos in detallesReporte.ingresosPorTipoServicio %}
                 <h1 class="text-center text-black text-3xl md:text-4xl font-bold">
-                    {{ tipo|capitalize }}: {{ cantidad }}
+                    {{ datos.descripcion }} ({{ codigo }}): ${{ datos.ingresos_brutos|number_format(2, '.', ',') }}
+                </h1>
+            {% endfor %}
+        </div>
+        <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Cantidad de servicios</h1>
+            {% for codigo, datos in detallesReporte.cantidadPorTipoServicio %}
+                <h1 class="text-center text-black text-3xl md:text-4xl font-bold">
+                    {{ datos.descripcion }} ({{ codigo }}): {{ datos.cantidad }}
+                </h1>
+            {% endfor %}
+        </div>
+        <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos por tipo de vehículo</h1>
+            {% for tipo, ingresos in detallesReporte.ingresosPorTipoVehiculo %}
+                <h1 class="text-center text-black text-3xl md:text-4xl font-bold">
+                    {{ tipo|capitalize }}: ${{ ingresos|number_format(2, '.', ',') }}
                 </h1>
             {% endfor %}
         </div>
 
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
-            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Servicios por tipo de vehículo</h1>
-            {% for tipo, ingresos in detallesReporte.ingresosPorTipoVehiculo %}
+            <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Reservas por tipo de vehículo</h1>
+            {% for tipo, cantidad in detallesReporte.cantidadPorTipoVehiculo %}
                 <h1 class="text-center text-black text-3xl md:text-4xl font-bold">
-                    {{ tipo|capitalize }}: ${{ ingresos|number_format(2, '.', ',') }}
+                    {{ tipo|capitalize }}: {{ cantidad }}
                 </h1>
             {% endfor %}
         </div>
