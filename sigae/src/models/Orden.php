@@ -161,11 +161,11 @@ class Orden{
                                     LEFT JOIN neumatico n ON p.id = n.id_producto 
                                     LEFT JOIN otro_producto op ON p.id = op.id_producto 
                                     WHERE dp.id_orden IN (
-                                        SELECT o.id 
-                                        FROM orden o 
-                                        WHERE o.estado_pago = "pago" 
-                                        AND o.fecha_orden <= :fecha_fin 
-                                        AND o.fecha_orden >= :fecha_ini
+                                        SELECT id 
+                                        FROM orden 
+                                        WHERE estado_pago = "pago" 
+                                        AND fecha_orden <= :fecha_fin 
+                                        AND fecha_orden >= :fecha_ini
                                     ) 
                                     GROUP BY p.id 
                                     ORDER BY ingreso_bruto DESC');
@@ -185,8 +185,46 @@ class Orden{
         } finally {
             $conn = null;
         }
+    }
 
+    public static function obtenerIngresosBrutosReserva($rol, $fechaIni, $fechaFin){
+        try{
+            $conn = conectarDB($rol);
+            if($conn === false){
+                throw new Exception("No se puede conectar con la base de datos.");
+            }
 
+            $stmt = $conn->prepare('SELECT  s.id, s.matricula AS mat_vehiculo, s.precio AS ingreso_bruto, s.estado, 
+                                            prk.largo_plazo, prk.tipo_plaza, 
+                                            v.marca AS marca_vehiculo, v.modelo AS modelo_vehiculo, v.tipo AS tipo_vehiculo 
+                                    FROM detalle_orden_servicio ds 
+                                    JOIN servicio s ON ds.id_servicio = s.id 
+                                    JOIN parking prk ON s.id = prk.id_servicio 
+                                    JOIN vehiculo v ON s.matricula = v.matricula 
+                                    WHERE ds.id_orden IN (
+                                        SELECT id 
+                                        FROM orden 
+                                        WHERE estado_pago = "pago" 
+                                        AND fecha_orden <= :fecha_fin 
+                                        AND fecha_orden >= :fecha_ini
+                                    ) 
+                                    ORDER BY ingreso_bruto DESC');
+
+            $stmt->bindParam(':fecha_fin', $fechaFin);
+            $stmt->bindParam(':fecha_ini', $fechaIni);
+
+            $stmt->execute();
+
+            $ingresosBrutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $ingresosBrutos;
+
+        } catch(Exception $e){
+            throw new Exception("Error al obtener ingresos de productos: ".$e->getMessage());
+            return;
+        } finally {
+            $conn = null;
+        }
 
     }
 

@@ -205,11 +205,16 @@ class ControladorFuncionario extends AbstractController {
                         $cantidadVendidos += $producto['cant_vendidos'];
                     }
 
-                    return $this->render('employee/manager/reports/ventasProducto.html.twig', [
-                        'response' => $response,
+                    $detallesReporte = [
+                        'fecha' => $fechaActual,
                         'ingresosBrutosTotal' => $ingresosBrutosTotal,
                         'cantidadVendidos' => $cantidadVendidos,
-                        'productos' => $infoPorProducto
+                        'infoProductos' => $infoPorProducto
+                    ];
+
+                    return $this->render('employee/manager/reports/ventasProducto.html.twig', [
+                        'response' => $response,
+                        'detallesReporte' => $detallesReporte
                     ]);
 
                 } catch(Exception $e){
@@ -231,20 +236,73 @@ class ControladorFuncionario extends AbstractController {
             case 'gerente':
                 try{
                     $this->controladorOrden = new ControladorOrden();
+                    $fechaActual = $this->obtenerFechaHoraActual();
 
                     // Obtener información de ventas de productos, por predeterminado, mensual
-                    $infoPorReserva = $this->controladorOrden->obtenerIngresosBrutosReserva($rol, 'mensual');
+                    $infoPorReserva = $this->controladorOrden->obtenerIngresosBrutosReserva($rol, 'ultimo_mes', $fechaActual);
 
-                    // Obtener total de ingresos brutos
+                    // Obtener información adicional para el reporte
                     $ingresosBrutosTotal = 0;
+                    $cantidadReservas = 0;
+
+                    // Datos filtrando el tipo de vehículo asociado a las reservas
+                    $cantidadPorTipoVehiculo = [
+                        'moto' => 0,
+                        'auto' => 0,
+                        'camioneta' => 0,
+                        'camion' => 0,
+                        'utilitario' => 0
+                    ];
+
+                    $ingresosPorTipoVehiculo = [
+                        'moto' => 0,
+                        'auto' => 0,
+                        'camioneta' => 0,
+                        'camion' => 0,
+                        'utilitario' => 0
+                    ];
+
+                    // Cantidad de reservas e ingresos de parking por tipo
+                    $reservasRegulares = 0;
+                    $ingresosReservasRegulares = 0;
+                    $reservasLargoPlazo = 0;
+                    $ingresosReservasLargoPlazo = 0;
+
                     foreach($infoPorReserva as $reserva){
                         $ingresosBrutosTotal += $reserva['ingreso_bruto'];
+                        $cantidadReservas++;
+
+                        // Verificar el tipo de vehículo y actualizar los contadores
+                        $tipoVehiculo = $reserva['tipo_vehiculo'];
+                        if (array_key_exists($tipoVehiculo, $cantidadPorTipoVehiculo)) {
+                            $cantidadPorTipoVehiculo[$tipoVehiculo]++;
+                            $ingresosPorTipoVehiculo[$tipoVehiculo] += $reserva['ingreso_bruto'];
+                        }
+                        // Verificar si la reserva es regular o de largo plazo
+                        if ($reserva['largo_plazo'] === 0) {
+                            $reservasRegulares++;
+                            $ingresosReservasRegulares += $reserva['ingreso_bruto'];
+                        } else {
+                            $reservasLargoPlazo++;
+                            $ingresosReservasLargoPlazo += $reserva['ingreso_bruto'];
+                        }
                     }
+
+                    $detallesReporte = [
+                        'ingresosBrutosTotal' => $ingresosBrutosTotal,
+                        'cantidadReservas' => $cantidadReservas,
+                        'cantidadPorTipoVehiculo' => $cantidadPorTipoVehiculo,
+                        'ingresosPorTipoVehiculo' => $ingresosPorTipoVehiculo,
+                        'reservasRegulares' => $reservasRegulares,
+                        'ingresosReservasRegulares' => $ingresosReservasRegulares,
+                        'reservasLargoPlazo' => $reservasLargoPlazo,
+                        'ingresosReservasLargoPlazo' => $ingresosReservasLargoPlazo,
+                        'infoReservas' => $infoPorReserva
+                    ];
 
                     return $this->render('employee/manager/reports/ventasParking.html.twig', [
                         'response' => $response,
-                        'ingresosBrutosTotal' => $ingresosBrutosTotal,
-                        'reservas' => $infoPorReserva
+                        'detallesReporte' => $detallesReporte
                     ]);
 
                 } catch(Exception $e){
