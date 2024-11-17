@@ -173,17 +173,6 @@ class ControladorFuncionario extends AbstractController {
         }
     }
 
-    function showParkingAvailability(): Response{
-        $rol=$_SESSION['rol'];
-        switch($rol){
-            case 'gerente':
-                // TODO: implementar
-                return $this->render('employee/manager/reports/horariosDispTaller.html.twig');
-            default:
-                return $this->render('errors/errorAcceso.html.twig');
-        }
-    }
-
     function showProductSalesReport(): Response{
         $response=['success' => false, 'errors' => []];
         

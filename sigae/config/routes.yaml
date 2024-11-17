@@ -191,11 +191,6 @@ showWorkshopServices:
   controller: Sigae\Controllers\ControladorFuncionario::showWorkshopServices
   methods: GET
 
-showParkingAvailability:
-  path: /parkingAvailability
-  controller: Sigae\Controllers\ControladorFuncionario::showParkingAvailability
-  methods: GET
-
 showProductSalesReport:
   path: /productSales
   controller: Sigae\Controllers\ControladorFuncionario::showProductSalesReport
