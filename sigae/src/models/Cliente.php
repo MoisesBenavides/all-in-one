@@ -372,6 +372,25 @@ class Cliente{
         }
     }
 
+    public static function existeId($id) {
+        try {
+            $conn = conectarDB("cliente");
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM cliente WHERE id = :id');
+            $stmt->bindParam(':id', $email);
+
+            $stmt->execute();
+            
+            $count = $stmt->fetchColumn();
+
+            return $count != 0;
+
+        } catch (Exception $e) {
+            return false; // False si hubo un error de base de datos
+        } finally {
+            $conn = null;
+        }
+    }
+
     public function getClientes(){
     }
 }

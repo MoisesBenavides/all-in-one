@@ -4,6 +4,7 @@ namespace Sigae\Controllers;
 use Sigae\Models\Orden;
 use Sigae\Models\Producto;
 use Sigae\Models\Servicio;
+use Sigae\Models\Cliente;
 use Sigae\Models\EstadoPagoOrden;
 use Sigae\Controllers\ControladorProducto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +31,9 @@ class ControladorOrden extends AbstractController{
 
                 if($incluyeProductos || $contieneServicios) {
 
-                    if(isset($_POST["id_cliente"]) && !empty($_POST["id_cliente"])){
+                    if(isset($_POST["id_cliente"]) && !empty($_POST["id_cliente"]) 
+                        && Cliente::existeId($_POST["id_cliente"])){
+                    
                         $productosId = $_POST["product_ids"] ?? null;
                         $serviciosId = $_POST["reservation_ids"] ?? null;
                         $idCliente = $_POST["id_cliente"];
@@ -141,7 +144,7 @@ class ControladorOrden extends AbstractController{
                             }
                         }
                     } else {
-                        $response['errors'][] = "Debe ingresar el ID del cliente.";
+                        $response['errors'][] = "El ID del cliente es incorrecto.";
                     }
                 } else {
                     $response['errors'][] = "La orden debe contener al menos un ID de producto o reserva.";
