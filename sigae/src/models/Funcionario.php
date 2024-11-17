@@ -622,12 +622,39 @@ class Funcionario{
     public static function getFuncionariosPorRol($rol_loggeado, $rol_a_buscar){
         try{
             $conn = conectarDB($rol_loggeado);
+
+            // Ruta al archivo JSON con usuarios predeterminados
+            $jsonFilePath = '/var/www/private/db/credencialesDB.json';
+            $jsonContent = file_get_contents($jsonFilePath);
+            $usuarios_json = json_decode($jsonContent, true);
+
+            if ($usuarios_json === null) {
+                throw new Exception("Error al decodificar el archivo JSON de usuarios predeteminados.");
+            }
+
+            // Obtener la lista de usuarios a excluir
+            $usuarios_excluir = [];
+            foreach ($usuarios_json as $rol => $datos) {
+                if (isset($datos['user'])) {
+                    $usuarios_excluir[] = $datos['user'];
+                }
+            }
+
+            // Construir el placeholder para la cláusula NOT IN
+            $placeholders = implode(',', array_fill(0, count($usuarios_excluir), '?'));
+
             $stmt = $conn->prepare('SELECT to_user AS usuario, to_host AS host
                                     FROM mysql.role_edges
                                     WHERE from_user = :rolBuscado
+                                    AND to_user NOT IN (' . $placeholders . ') 
                                     ORDER BY to_user;');
 
             $stmt->bindParam(':rolBuscado', $rol_a_buscar);
+
+            // Vincula los valores de usuarios a excluir
+            foreach ($usuarios_excluir as $index => $usuario) {
+                $stmt->bindValue($index + 1, $usuario);
+            }
 
             $stmt->execute();
 
