@@ -73,7 +73,7 @@
     <div class="container mx-auto px-4 py-8">
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
             <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos</h1>
-            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosBrutosTotal }}</h1>
+            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosBrutosTotal|number_format(2, '.', ',') }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
             <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Reservas pagadas</h1>
@@ -81,7 +81,7 @@
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
             <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos de reservas regulares</h1>
-            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosReservasRegulares }}</h1>
+            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosReservasRegulares|number_format(2, '.', ',') }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
             <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Reservas regulares realizadas</h1>
@@ -89,7 +89,7 @@
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
             <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Ingresos brutos de reservas a largo plazo</h1>
-            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosReservasLargoPlazo }}</h1>
+            <h1 class="text-center text-black text-3xl md:text-4xl font-bold">${{ detallesReporte.ingresosReservasLargoPlazo|number_format(2, '.', ',') }}</h1>
         </div>
         <div class="w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-8">
             <h1 class="text-center text-gray-600 text-3xl md:text-4xl mb-2">Reservas a largo plazo realizadas</h1>
