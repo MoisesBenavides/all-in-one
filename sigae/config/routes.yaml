@@ -191,19 +191,34 @@ showWorkshopServices:
   controller: Sigae\Controllers\ControladorReporte::showWorkshopServices
   methods: GET
 
-showProductSalesReport:
+showProductSales:
   path: /productSales
-  controller: Sigae\Controllers\ControladorReporte::showProductSalesReport
+  controller: Sigae\Controllers\ControladorReporte::showProductSales
   methods: GET
 
-showParkingSalesReport:
+showParkingSales:
   path: /parkingSales
-  controller: Sigae\Controllers\ControladorReporte::showParkingSalesReport
+  controller: Sigae\Controllers\ControladorReporte::showParkingSales
   methods: GET
 
-showWorkshopServicesSalesReport:
+showWorkshopServicesSales:
   path: /workshopServicesSales
-  controller: Sigae\Controllers\ControladorReporte::showWorkshopServicesSalesReport
+  controller: Sigae\Controllers\ControladorReporte::showWorkshopServicesSales
+  methods: GET
+
+showProductSalesLastMonth:
+  path: /productSalesLastMonth
+  controller: Sigae\Controllers\ControladorReporte::showProductSalesLastMonth
+  methods: GET
+
+showParkingSalesLastMonth:
+  path: /parkingSalesLastMonth
+  controller: Sigae\Controllers\ControladorReporte::showParkingSalesLastMonth
+  methods: GET
+
+showWorkshopServicesSalesLastMonth:
+  path: /workshopServicesSalesLastMonth
+  controller: Sigae\Controllers\ControladorReporte::showWorkshopServicesSalesLastMonth
   methods: GET
 
 # Inventario y stock de productos
