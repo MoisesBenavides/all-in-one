@@ -187,7 +187,8 @@ class ControladorOrden extends AbstractController{
             switch($tipPeriodo){
                 case 'ultimo_mes':
                     // Obtiene el inicio del mes anterior
-                    $principioMes = $dtActual->modify('-1 month');
+                    // $principioMes = $dtActual->modify('-1 month');
+                    $principioMes = $dtActual;
                     $principioMes->modify('first day of this month');
                     $fechaIni = $principioMes->format('Y-m-d H:i:s');
 
