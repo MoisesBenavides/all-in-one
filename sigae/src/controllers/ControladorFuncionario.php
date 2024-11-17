@@ -4,19 +4,13 @@ namespace Sigae\Controllers;
 use Sigae\Models\Funcionario;
 use Sigae\Controllers\ControladorProducto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use DateTimeZone;
-use DateTime;
-use PDOException;
 use Exception;
 
 class ControladorFuncionario extends AbstractController {
     private $funcionario;
     private $controladorProducto;
-    private $controladorTaller;
-    private $controladorOrden;
 
     function loginAioEmployee(): Response{
         return $this->render('employee/loginEmpleado.html.twig');
