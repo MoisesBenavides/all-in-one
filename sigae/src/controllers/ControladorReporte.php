@@ -308,6 +308,9 @@ class ControladorReporte extends AbstractController {
                         'infoProductos' => $infoPorProducto
                     ];
 
+                    // Debug
+                    error_log(print_r($detallesReporte));
+
                     return $this->render('employee/manager/reports/ventasProducto.html.twig', [
                         'response' => $response,
                         'detallesReporte' => $detallesReporte
