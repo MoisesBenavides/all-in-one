@@ -75,7 +75,7 @@ class ControladorOrden extends AbstractController{
                                 }
 
                                 if (!empty($idsNoExistentes)) {
-                                    throw new Exception("Los IDs: " . var_dump($idsNoExistentes) . " no se encuentran registrados");
+                                    throw new Exception("Los IDs: " . print_r($idsNoExistentes) . " no se encuentran registrados");
                                 } else{
                                     // Calcular el total por cada producto y servicio
                                     $total = 0.00;
