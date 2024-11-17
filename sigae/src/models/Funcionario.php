@@ -629,7 +629,7 @@ class Funcionario{
             $usuarios_json = json_decode($jsonContent, true);
 
             if ($usuarios_json === null) {
-                throw new Exception("Error al decodificar el archivo JSON de usuarios predeteminados.");
+                throw new Exception("Error al decodificar el archivo JSON.");
             }
 
             // Obtener la lista de usuarios a excluir
@@ -640,20 +640,23 @@ class Funcionario{
                 }
             }
 
-            // Construir el placeholder para la cláusula NOT IN
-            $placeholders = implode(',', array_fill(0, count($usuarios_excluir), '?'));
+            // Construir de la lista de parámetros nombrados
+            $placeholders = [];
+            foreach ($usuarios_excluir as $index => $usuario) {
+                $placeholders[] = ':usuario' . $index;
+            }
 
             $stmt = $conn->prepare('SELECT to_user AS usuario, to_host AS host
                                     FROM mysql.role_edges
                                     WHERE from_user = :rolBuscado
-                                    AND to_user NOT IN (' . $placeholders . ') 
+                                    AND to_user NOT IN (' . implode(',', $placeholders) . ') 
                                     ORDER BY to_user;');
 
             $stmt->bindParam(':rolBuscado', $rol_a_buscar);
 
-            // Vincula los valores de usuarios a excluir
+            // Vincula los valores de los usuarios a excluir usando parámetros nombrados
             foreach ($usuarios_excluir as $index => $usuario) {
-                $stmt->bindValue($index + 1, $usuario);
+                $stmt->bindValue(':usuario' . $index, $usuario);
             }
 
             $stmt->execute();
