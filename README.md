@@ -1,2 +1,2 @@
-# AIO, SIGAE
-Proyecto de egreso BT3, Sistema Informático de Gestión Automotriz y Estacionamiento.
+# SIGAE - All In One
+Proyecto de egreso de BT3, Sistema Informático de Gestión Automotriz y Estacionamiento.
