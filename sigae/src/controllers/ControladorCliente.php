@@ -101,7 +101,7 @@ class ControladorCliente extends AbstractController {
         // Configurar cliente Google
         $client = new Client();
         $client->setAuthConfig('/var/www/private/credencialesOAuth.json');
-        $client->setRedirectUri('https://aio.ngrok.app/doLoginOAuth');
+        $client->setRedirectUri('https://simply-tough-bear.ngrok-free.app/doLoginOAuth');
         $client->addScope(['email', 'profile']);
 
         if (!isset($_GET['code'])) {
