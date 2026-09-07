@@ -7,8 +7,10 @@ let transporter = nodemailer.createTransport({
     port: 587,  // Puerto SMTP de Brevo
     secure: false,  // true para puerto 465, false para otros puertos
     auth: {
-        user: '7d34b2001@smtp-brevo.com',  // Aquí va tu API Key de Brevo
-        pass: 'p7SgRFachNk8K5nD',  // Usar la misma API Key como contraseña
+        // Las credenciales se leen del entorno, nunca se escriben en el codigo.
+        // Definir BREVO_SMTP_USER y BREVO_SMTP_KEY antes de ejecutar.
+        user: process.env.BREVO_SMTP_USER,  // Login SMTP de Brevo
+        pass: process.env.BREVO_SMTP_KEY,   // API Key de Brevo
     },
 });
 
