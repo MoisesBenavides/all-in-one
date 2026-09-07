@@ -1,1 +1,13 @@
 sigae/tree.txt
+
+# Dependencias instaladas (se reconstruyen con npm ci / composer install)
+node_modules/
+vendor/
+
+# Entorno local
+.env.local
+.env.*.local
+.env.local.php
+
+# Symfony
+sigae/var/
